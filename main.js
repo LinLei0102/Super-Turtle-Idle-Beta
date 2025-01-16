@@ -247,13 +247,6 @@ function turtleClick(alt){
 
 
 
-document.addEventListener("keydown", (event) => {
-    
-      if (event.code === 'Space') {
-        turtleClick("spacebar");
-      }
-    
-  });
 
 
 
