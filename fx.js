@@ -377,8 +377,13 @@ class Particle {
         ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.alpha})`;
         if (this.simpleColor != undefined) ctx.fillStyle = this.simpleColor;
         ctx.beginPath();
-        ctx.arc(this.x*this.offsetX, this.y*this.offsetY, this.size, 0, Math.PI * 2);
-
+        ctx.arc(
+            this.x * this.offsetX, 
+            this.y * this.offsetY, 
+            Math.max(0, this.size),  // Asegurarte de que el radio no sea negativo
+            0, 
+            Math.PI * 2
+        );
         if (this.metaimage !==undefined ){
             const pattern = ctx.createPattern(this.metaimage, "repeat");
             ctx.fillStyle = pattern;
