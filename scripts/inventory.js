@@ -1202,9 +1202,9 @@ function sellSelectedItem(mode){
           divRect = item.div;
           selectedItemRect = divRect.getBoundingClientRect();
   
-          if (toSell > 9) particleTrackers.push(new TrackerSellCoins());
-          if (toSell > 99) particleTrackers.push(new TrackerSellCoins());
-          if (toSell > 999) particleTrackers.push(new TrackerSellCoins());
+          if (toSell > 9) particleTrackers.push(new ParticleSellCoins());
+          if (toSell > 99) particleTrackers.push(new ParticleSellCoins());
+          if (toSell > 999) particleTrackers.push(new ParticleSellCoins());
 
           //if (item.constructor.count===0) toSell = 1 //non stackable items
   
@@ -1235,9 +1235,9 @@ function sellSelectedItem(mode){
           divRect = item.div;
           selectedItemRect = divRect.getBoundingClientRect();
   
-          if (item.constructor.count > 9) particleTrackers.push(new TrackerSellCoins());
-          if (item.constructor.count > 99) particleTrackers.push(new TrackerSellCoins());
-          if (item.constructor.count > 999) particleTrackers.push(new TrackerSellCoins());
+          if (item.constructor.count > 9) particleTrackers.push(new ParticleSellCoins());
+          if (item.constructor.count > 99) particleTrackers.push(new ParticleSellCoins());
+          if (item.constructor.count > 999) particleTrackers.push(new ParticleSellCoins());
 
           let toSell = item.constructor.count
           if (item.constructor.count===0) toSell = 1 //non stackable items
@@ -1269,7 +1269,7 @@ function sellSelectedItem(mode){
     void itemDiv.offsetWidth;
     itemDiv.style.animation = "gelatineHigh 0.3s 1";
   
-    particleTrackers.push(new TrackerSellCoins());
+    particleTrackers.push(new ParticleSellCoins());
     particleTrackers.push(new ParticleSellPulse());
     
     
@@ -1324,7 +1324,7 @@ function scrapSelectedItem(){
         item.constructor.count = 0;
         itemInventory.splice(i, 1);
 
-        particleTrackers.push(new TrackerSellCoins(undefined, undefined, { image, enemyCenterX:goalCenterX, enemyCenterY: goalCenterY, tSpeed: 0.018 }));
+        particleTrackers.push(new ParticleSellCoins(undefined, undefined, { image, enemyCenterX:goalCenterX, enemyCenterY: goalCenterY, tSpeed: 0.018 }));
         particleTrackers.push(new ParticleSellPulse());
 
 

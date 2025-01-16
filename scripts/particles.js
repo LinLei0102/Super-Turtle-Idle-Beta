@@ -1602,6 +1602,40 @@ class ParticleAmbienceLeaf extends NewParticle {
 }
 
 
+
+
+class ParticleSellCoins extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+
+        this.tSpeed = 0.025; // Track Speed
+        this.freeflow = false
+        this.simpleColor = "transparent"
+        this.playerCenterX = selectedItemRect.left - containerRect.left + selectedItemRect.width / 2;
+        this.playerCenterY = selectedItemRect.top - containerRect.top + selectedItemRect.height / 2;
+        this.enemyCenterX = coinTrackerRect.left - containerRect.left + coinTrackerRect.width / 2;
+        this.enemyCenterY = coinTrackerRect.top - containerRect.top + coinTrackerRect.height / 2;
+        this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2 - rngD(-300,100); //2 default
+        this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) *25;
+        this.trailParticle = ParticleSimpleTrail;
+        this.particleConfig = {
+            targetCanvas : "globalParticles"
+        }
+        this.particleDensity = 1;
+        this.image = new Image();
+        this.image.src = "img/src/icons/goldmedal.png"; 
+        this.size = 6;
+        this.targetCanvas = 'globalParticles'
+
+
+        Object.assign(this, options);
+
+    }
+}
+
+
+
+
 class ParticleMoonNecklace extends NewParticle {
     constructor(x, y, options = {}) {
         super(x, y);
