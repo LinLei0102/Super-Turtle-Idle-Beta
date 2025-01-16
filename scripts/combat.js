@@ -158,7 +158,7 @@ function playerUpdate(){ //updates player HP and checks if its dead
 function clickTarget(target){
 
 
-    
+    if (!rpgPlayer.alive) return
 
     //voidAnimation("target"+target,"targetTriangle 4s 1, gelatineHigh 0.3s 1")
     
@@ -167,6 +167,10 @@ function clickTarget(target){
     if (target==="Add2") enemy = document.getElementById('enemyAdd2');
     
     enemyRect = enemy.getBoundingClientRect();
+
+
+
+    
 
 
 
