@@ -1,0 +1,3342 @@
+<html>
+    
+<head>
+    
+    <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="main.js" as="script">
+    <link rel="icon" href="img/src/icons/favicon.png" type="image">
+
+
+    <canvas id="globalParticles"></canvas>
+
+
+
+<div id="tooltip" style="display: none">
+
+    <div id="contextList">
+        
+
+
+    </div>
+
+    <img src="img/src/projectiles/none.png" id="tooltipAlign">
+
+    <div id="upperTooltip">
+
+    <div class="upperTooltipLeft"><img id="tooltipImage" src="img/src/upgrades/C21.jpg"></div>
+    <div class="upperTooltipRight">
+    <div id="tooltipPrice">9.999e99<img src="img/sys/Coin.png"></div>
+    <div id="tooltipTitle"><span id="tooltipName">Talar madera o algun tipo de</span>
+    <br><div id="tooltipRarity">Common</div>  
+    </div>    
+    </div>
+    
+    
+    </div>
+
+    <div class="lowerTooltip">
+    <div id="tooltipDescription">texto texto texto texto texto texto texto texto texto texto texto</div>
+    <div id="tooltipFlavor">"texto texto texto texto texto texto texto texto texto texto texto"</div>
+    </div>
+    
+    <img id=tooltipArrow src="img/sys/triangulo.png">
+    <img id=tooltipArrowUp src="img/sys/triangulo.png" style="display: none;">
+    <img id=tooltipArrowRight src="img/sys/triangulo.png" style="display: none;">
+
+
+    
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="shopTooltip" class="interactableTooltip" style="display: none; max-width: 22rem;" ></div>
+
+<div id="quickItemTooltip" class="interactableTooltip" style="display: none; max-width: 10rem;" >
+    
+</div>
+
+
+<div id="questTooltip" class="interactableTooltip" style="display: none;"></div>
+
+
+<div id="itemContextMenu" class="itemContextMenu" style="display: none;">
+    <img class="itemcontextMenuArrow" src="img/src/icons/contextTriangle.png">
+    <div id ="itemContextMenuButtonEquip" class="itemContextMenuButton" onclick="equipSelectedItem()">Equip</div>
+    <!-- <div onclick='lockSelectedItem()' id ="itemContextMenuButtonLock" class="itemContextMenuButton">Lock</div> --> 
+    <div onclick='useSelectedItem()' id ="itemContextMenuButtonUse" class="itemContextMenuButton">Use</div>
+    <div onclick='mergeSelectedItem()' id ="itemContextMenuButtonMerge" class="itemContextMenuButton">Merge</div>
+
+
+
+
+    <div id ="itemContextMenuButtonUseMenu" class="itemContextMenuSell">
+        <input id="itemContextUseInput" type="text" autocomplete="off" placeholder="1" maxlength="3" onclick="itemContextUseInput.value=''">
+        <div onclick='useSelectedItem(itemContextUseInput.value)' class="itemContextMenuButton" style="width: 4rem; display: flex;">Use</div>
+    </div>
+
+
+    <div id ="itemContextMenuButtonBuyMenu" class="itemContextMenuSell">
+        <input id="itemContextBuyInput" type="text" autocomplete="off" placeholder="1" maxlength="3" onclick="itemContextBuyInput.value=''">
+        <div onclick='buySelectedItem(itemContextBuyInput.value)' class="itemContextMenuButton" style="width: 4rem; display: flex;">Buy</div>
+    </div>
+
+
+    <div id ="itemContextMenuButtonSellMenu" class="itemContextMenuSell">
+        <input id="itemContextSellInput" type="text" autocomplete="off" placeholder="1" maxlength="3" onclick="itemContextSellInput.value=''">
+        <div onclick='sellSelectedItem("amount")' class="itemContextMenuButton" style="width: 4rem; display: flex;">Sell</div>
+    </div>
+
+
+
+    <div onclick='sellSelectedItem("all")' id ="itemContextMenuButtonSellAll" class="itemContextMenuButton" style="color: white; background: rgb(199, 55, 55); outline: white solid 2px;">Sell All</div>
+    <div onclick='upgradeSelectedItem()' id ="itemContextMenuButtonUpgrade" class="itemContextMenuButton" style="color: white; background: rgb(167, 115, 80); outline: white solid 2px;">Upgrade</div>
+    <div onclick='reforgeSelectedItem()' id ="itemContextMenuButtonReforge" class="itemContextMenuButton" style="color: white; background: rgb(85, 136, 87); outline: white solid 2px;">Reforge</div>
+    <div onclick='scrapSelectedItem()' id ="itemContextMenuButtonScrap" class="itemContextMenuButton" style="color: white; background: rgb(68, 90, 119); outline: white solid 2px;">Scrap</div>
+    <div onclick='sellSelectedItem("all")' id ="itemContextMenuButtonSell" class="itemContextMenuButton" style="color: white; background: rgb(199, 55, 55); outline: white solid 2px;"><div></div>Sell</div>
+
+    <div onclick='contextEquipHat()' id ="itemContextMenuButtonHatEquip" class="itemContextMenuButton">Equip</div>
+    <div onclick='contextFavoriteHat()' id ="itemContextMenuButtonHatFavorite" class="itemContextMenuButton">Favorite</div>
+
+    <div onclick='sellSelectedHat()' id ="itemContextMenuButtonHatSell" class="itemContextMenuButton" style="color: white; background: rgb(199, 55, 55); outline: white solid 2px;"><div></div>Sell</div>
+
+
+    <div id="tipJarInfo"><span>1.29K Left</span><div class="separator" style="margin: 0.2rem 0; width: 80%;"></div>More Stock</div>
+
+    <div id ="itemContextMenuButtonTipMenu" class="itemContextMenuSell" style="width: 7rem;">
+        <input style="width: 6rem;" id="itemContextTipInput" type="text" autocomplete="off" placeholder="0" maxlength="99" onclick="itemContextTipInput.value='';itemContextTipInputHidden=0;itemContextTipInput.placeholder=0;      "  oninput="itemContextTipInputHidden += itemContextTipInput.value; itemContextTipInput.value = ''; itemContextTipInput.placeholder = beautify(itemContextTipInputHidden); if (rpgPlayer.coins<itemContextTipInputHidden) {itemContextTipInput.placeholder=beautify(rpgPlayer.coins)} ">
+        <div onclick='tipJar()' class="itemContextMenuButton" style="width: 6rem; display: flex;">Tip</div>
+    </div>
+
+</div>
+
+
+
+
+<div id="itemContextMenuScreensaver" class="screensaver" style="z-index: 98;"></div>
+
+
+
+
+
+
+
+
+
+
+
+<div id="tooltip2" class="tooltip" style="display: none">
+   eeeeeeeeeeeeeee
+</div>
+
+<div id="tooltipMagic" class="tooltip" style="display: none">
+    eeeeeeeeeeeeeee
+ </div>
+
+    <div id="stampMenu" class="tooltip" style="display: none">
+        <div id="upperTooltip">
+        <div class="upperTooltipLeft"><img id="stampMenuImg" src="img/src/upgrades/C21.jpg"></div>
+        <div class="upperTooltipRight">
+        <div id="tooltipTitle"> <span id="stampMenuName">Talar madera o algun tipo de</span>
+        <br><div id="stampMenuRarity">Stamp Weapon</div>  
+        </div>    
+        </div>
+        </div>
+        
+        <div class="separador"></div>
+        
+        <div class="lowerTooltip">
+        <div id="stampMenuDescription">{texto texto texto texto texto texto texto texto texto texto texto}</div>
+        
+        </div>
+</div>
+
+    
+    <div class="dedicatedShop" id="achievementShop">
+        <div class="dedicatedShopBanner">
+                <svg onclick='closeDedicatedShop("achievementShop")' class="dedicatedShopTab" style="background: rgba(0, 0, 0, 0.2); margin-right: 3rem;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M6.545.998a1 1 0 0 0 0 2h2.728a2.638 2.638 0 0 1 0 5.275H4.817V6.545a1 1 0 0 0-1.707-.707L.384 8.564a1 1 0 0 0-.22 1.09q.073.18.218.327l2.728 2.728a1 1 0 0 0 1.707-.707v-1.729h4.456a4.638 4.638 0 1 0 0-9.275z" clip-rule="evenodd"/></svg>
+                <svg id="achievementShopButton1" onclick="achievementShopSwitch('achievementShopButton1')" class="dedicatedShopTabActive" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M21.083 4.585a2.62 2.62 0 0 0-1.904-.69h-1.426a2.7 2.7 0 0 0-.768-1.162a2.68 2.68 0 0 0-1.924-.69H8.979a2.7 2.7 0 0 0-1.994.69a2.6 2.6 0 0 0-.748 1.161H4.831a2.64 2.64 0 0 0-1.934.69A2.73 2.73 0 0 0 2 6.497a7.6 7.6 0 0 0 .997 3.682a8.4 8.4 0 0 0 2.642 2.862l.848.57l.638.391a6.2 6.2 0 0 0 2.083 2.002v1.76H8.82c-.714 0-1.4.285-1.904.792a2.7 2.7 0 0 0-.788 1.91v.33a1.23 1.23 0 0 0 .359.881c.233.232.549.361.877.36h9.272a1.22 1.22 0 0 0 1.145-.764c.062-.15.093-.313.091-.476v-.33a2.7 2.7 0 0 0-.788-1.91a2.7 2.7 0 0 0-1.903-.792h-.39v-1.771a6.2 6.2 0 0 0 2.094-2.002l.658-.4l.808-.55a8.5 8.5 0 0 0 2.652-2.873A7.7 7.7 0 0 0 22 6.447a2.76 2.76 0 0 0-.917-1.861M4.303 9.458a6.1 6.1 0 0 1-.768-2.902a1.22 1.22 0 0 1 .825-1.08c.151-.05.312-.072.471-.06h1.306v5.343q.013.427.07.85a6.8 6.8 0 0 1-1.904-2.151m15.414 0a7.15 7.15 0 0 1-1.904 2.152q.057-.435.07-.871V5.415h1.335a1.15 1.15 0 0 1 .868.31c.227.2.37.48.399.781a6.2 6.2 0 0 1-.768 2.952"/></svg>
+                <svg id="achievementShopButton2" onclick="achievementShopSwitch('achievementShopButton2')" class="dedicatedShopTab" style="background: #AE5656" xmlns="http://www.w3.org/2000/svg" width="1.13em" height="1em" viewBox="0 0 576 512"><path fill="currentColor" d="m528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681"/></svg>
+                <div class="dedicatedShopLevelBox" id="achievementShopLevelBox">
+                    <div class="dedicatedShopLevel"><span id="achievementShopLevel">5</span></div>
+                    <div class="dedicatedShopBarBox">
+                        <span id="achievementShopExp">1389 / 1000 🏆</span>
+                        <div><div id="achievementShopExpBar"></div></div>
+                    </div>
+                </div>
+                <div class="currencyElement">
+                    <img src="img/src/icons/scutes.jpg">
+                    <span id="prismCounter3">1391</span>
+                </div>
+            </div>
+
+        <div class="dedicatedShopContent" id="achievementListing" style="display: flex;">
+            <div class="achievementCategory" id="achievementListing1">
+                <div class="bannerTitle" style="position: absolute; top: -10%; left: -5%; color: white;">Cradle Hills</div>
+
+            </div>
+        </div>
+
+        <div class="dedicatedShopContent" id="achievementInsideShop" style="display: none;">
+        <div class="achievementInsideShopHeader"><img src="img/src/icons/achievementshopping.png"></div>
+
+        <div class="dedicatedShopContent" id="achievementInsideShopListing" style="gap: 1.2rem; margin: 0; padding: 1rem;">
+            
+        </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="dedicatedShop" id="bestiaryShop" style="display: none; height: 0%;">
+        <div id="bestiaryShopBg"></div>
+        <div class="dedicatedShopBanner" style="background: linear-gradient(90deg, #B77394 0%, #694C81 100%);">
+                <svg onclick='closeDedicatedShop("bestiaryShop")' class="dedicatedShopTab" style="background: rgba(0, 0, 0, 0.2); margin-right: 3rem;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M6.545.998a1 1 0 0 0 0 2h2.728a2.638 2.638 0 0 1 0 5.275H4.817V6.545a1 1 0 0 0-1.707-.707L.384 8.564a1 1 0 0 0-.22 1.09q.073.18.218.327l2.728 2.728a1 1 0 0 0 1.707-.707v-1.729h4.456a4.638 4.638 0 1 0 0-9.275z" clip-rule="evenodd"/></svg>
+                <div class="dedicatedShopLevelBox" id="bestiaryShopLevelBox">
+                    <div class="dedicatedShopLevel"><span id="bestiaryShopLevel">5</span></div>
+                    <div class="dedicatedShopBarBox">
+                        <span id="bestiaryShopExp">1389 / 1000 📖</span>
+                        <div><div id="bestiaryShopExpBar"></div></div>
+                    </div>
+                </div>
+                <div class="currencyElement">
+                    <img src="img/src/icons/scutes.jpg">
+                </div>
+            </div>
+
+        <div class="dedicatedShopContent" id="bestiaryContent" style="display: flex;">
+            <div id="bestiaryDisplay">
+
+
+                <div id="bestiaryEnemyKills">
+
+                    <div id="bestiaryEnemyKillsBar">
+                        <span id="bestiaryEnemyKillsExp"> </span>
+                        <div id="bestiaryEnemyKillsExpBar"></div>
+                    </div>
+
+                    <img src="img/src/icons/bestiaryBadge1.png" id="bestiaryMedal">
+
+                </div>
+
+
+                <div id="bestiaryEnemyInfo">
+
+                    <div class="bestiaryEnemyInfoTab" style="width: 80%; background: #877698; border-right-color: #35A9EB; color: white;    font-size: 1.5rem;">
+                        
+                        <span  id="bestiaryEnemyName">
+                        Caulislug
+                        </span>
+                        <div id="bestiaryInfo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 8 8"><path fill="currentColor" d="M3.5 0C1.57 0 0 1.57 0 3.5S1.57 7 3.5 7c.59 0 1.17-.14 1.66-.41a1 1 0 0 0 .13.13l1 1a1.02 1.02 0 1 0 1.44-1.44l-1-1a1 1 0 0 0-.16-.13c.27-.49.44-1.06.44-1.66c0-1.93-1.57-3.5-3.5-3.5zm0 1C4.89 1 6 2.11 6 3.5c0 .66-.24 1.27-.66 1.72l-.03.03a1 1 0 0 0-.13.13c-.44.4-1.04.63-1.69.63c-1.39 0-2.5-1.11-2.5-2.5s1.11-2.5 2.5-2.5z"/></svg>
+                        </div>
+
+                    </div>
+                    
+                    <div class="bestiaryEnemyInfoTab">
+                        <span id="bestiaryEnemyDesc" style="font-weight: 500;">50</span>
+
+                    </div>
+                    
+                    
+                    <div class="bestiaryEnemyInfoTab" style="border-right: solid 6px #35eb72;">
+                        <span id="bestiaryEnemyLoot">50</span>
+
+                    </div>
+      
+                    
+                </div>
+
+                
+
+                <div id="bestiaryEnemyDisplay">
+
+                <div id="bestiaryCards">
+
+
+                    <div class="bestiaryCard" >
+                        <div class="bestiaryCardHeader">HOOPPEROONA</div>
+                        <div class="bestiaryCardBody">
+                            <img class="bestiaryCardBody1" src="img/src/enemies/E4.png">
+                            <img class="bestiaryCardBody2" src="img/src/areas/A1M.png">
+                        </div>
+                        <div class="bestiaryCardFooter">
+                            <span>x1.05 Occult Damage</span>
+                            <strong>The Super Turtle Idle Company co. ltd. © etc.</strong>
+                        </div>
+                    </div>
+
+
+                    <div class="bestiaryCard">
+                        <div class="bestiaryCardHeader">HOOPPEROONA&nbsp&nbsp✧</div>
+                        <div class="bestiaryCardBody">
+                            <img class="bestiaryCardBody1" src="img/src/enemies/E4.png">
+                            <img class="bestiaryCardBody2" src="img/src/areas/A1M.png">
+                        </div>
+                        <div class="bestiaryCardFooter">
+                            <span>x1.15 Occult Damage</span>
+                            <strong>The Super Turtle Idle Company co. ltd. © etc.</strong>
+                        </div>
+
+                        <div class="bestiaryCardHeaderBg bgCardT2"></div>
+                        <div class="bestiaryCardHeaderBg"></div>
+                    </div>
+
+                    <div class="bestiaryCardNotUnlocked">
+                        
+                    </div>
+
+
+                    <div class="bestiaryCard bgCardT3">
+                        <div class="bestiaryCardHeader">HOOPPEROONA&nbsp&nbsp☆</div>
+                        <div class="bestiaryCardBody">
+                            <img class="bestiaryCardBody1" src="img/src/enemies/E4.png">
+                            <img class="bestiaryCardBody2" src="img/src/areas/A1M.png">
+                        </div>
+                        <div class="bestiaryCardFooter">
+                            <span>x1.2 Occult Damage</span>
+                            <strong>The Super Turtle Idle Company co. ltd. © etc.</strong>
+                        </div>
+
+                        <div class="bestiaryCardHeaderBgT3"></div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+                    
+
+                <img src="img/src/enemies/E1.png" id="bestiaryMonster">
+                <img src="img/src/enemies/bestiarySpotlight.png" id="bestiarySpotlight">
+
+                </div>
+
+
+
+            </div>
+            <div id="bestiaryListingNew"></div>
+
+        </div>
+        
+
+        <div class="dedicatedShopContent" id="achievementInsideShop" style="display: none;">
+        <div class="achievementInsideShopHeader">🏆 Spend your Prism Scutes!<div class="separator" style="margin-left: 1rem; background: rgb(128, 128, 128);"></div></div>
+        <div class="dedicatedShopContent" id="achievementInsideShopListing" style="gap: 1.2rem; margin: 0; padding: 1rem;">
+            
+        </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+    <div class="itemContextMenu" id="loadoutMenu" style="display: none;">
+        <div onclick="changeLoadout(1)">🔥</div>
+        <div onclick="changeLoadout(2)">🍃</div>
+        <div onclick="changeLoadout(3)">🌙</div>
+        <div onclick="changeLoadout(4)">⛏️</div>
+        <div onclick="changeLoadout(5)">🎣</div>
+        <div onclick="changeLoadout(6)">💎</div>
+        <div onclick="changeLoadout(7)">💕</div>
+        <div onclick="changeLoadout(8)">🌟</div>
+        <div onclick="changeLoadout(9)">🔰</div>
+    </div>
+
+
+    <div class="itemContextMenu" id="selectionContextMenu">
+        Click or drag items to select them
+        <div onclick='selectAllItems()' class="itemContextMenuButton">💠 Select All</div>
+        <div onclick='lockSelectedItem()' class="itemContextMenuButton">🔒 Lock Selected</div>
+        <div class="separator" style="background: white; width: 90%; opacity: 0.3; margin: 0.5rem 0;"></div>
+        <div onclick='sellSelectedItem("all")' class="itemContextMenuButton">💵 Sell Selected</div>
+        <div onclick='scrapSelectedItem()' class="itemContextMenuButton">♻️ Scrap Selected</div>
+    </div>
+    
+
+        <div id="opciones" class="panelOpciones" style="display:none">
+              
+            <h1>SETTINGS</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <img src="img/sys/opciones.png">
+
+            <h2><br></h2>
+            <h3 style="background: #363a5e;">Discord server</strong><button style="background: #454179;" onclick='window.open("https://discord.gg/VnukKfSs3S", "_blank"); logTrackClickDiscord=true'>Join</button></h3>
+
+            <h2 class="specialSettings" style="display: flex;">Game Modifiers 🧬</h2>
+            <h3 class="gamemodeToggle">Fast mode <strong style="color: rgb(146, 134, 134);">(Increased game pacing)</strong><button id="nofarmToggle" onclick="toggleSettings('nofarmToggle'); updateDroprates()">OFF</button></h3>
+
+            <h2>General</h2>
+            <h3>Save manually <strong style="color: rgb(85, 80, 80);">[Shortcut: "S"]</strong><button onclick="autosave(); playSound('audio/button1.mp3')">Save</button></h3>
+            <h3 id="exportSave">Export save in a JSON file<button onclick="exportJSON(); playSound('audio/button1.mp3')">Export</button></h3>
+            <!--<h3>Import JSON file <strong style="color: rgb(240, 92, 92);"> [⚠ Only import trusted saves!]</strong><button onclick="importJSON(); playSound('audio/button1.mp3')">Import</button></h3>-->
+            <h3 id="warningButton">Wipe all progress<button onclick="deleteSavePrompt();" style="background: #B23E3E;">DELETE</button></h3>
+
+            <h2>Game Settings</h2>
+            <h3>Game audio<button id="volumeSliderBox"><input type="range" id="volumeSlider" min="0" max="100" value="30" oninput="changeVolume()"></button></h3>
+            <h3>Mute game<button id="disableAudio" onclick="toggleSettings('disableAudio')">OFF</button></h3>
+            <h3>Disable autosave <strong style="color: rgb(85, 80, 80);"> (Autosaves every minute)</strong><button id="disableAutosave" onclick="toggleSettings('disableAutosave')">OFF</button></h3>
+            <h3>Colorblind Mode<button id="disableColorblind" onclick="toggleSettings('disableColorblind')">OFF</button></h3>
+
+            <h2>Visual Settings</h2>
+            <h3>Disable custom cursor<button id="disableCustomCursor" onclick="toggleSettings('disableCustomCursor'); setCursor()">OFF</button></h3>
+            <h3>Game quality<button id="qualityToggle" onclick="switchQuality();" style="width: 8rem;">High</button></h3>
+            <h3>Disable floating damage numbers<button id="disableDamageNumbers" onclick="toggleSettings('disableDamageNumbers')">OFF</button></h3>
+            <h3>Disable animated backgrounds<button id="disableAnimatedBg" onclick="toggleSettings('disableAnimatedBg'); setCursor()">OFF</button></h3>
+            <h3>Disable combat animations<button id="disableAnimations" onclick="toggleSettings('disableAnimations')">OFF</button></h3>
+
+            <!--
+            <h2 class="specialSettings" style="display: flex;">Special</h2>
+            <h3 class="specialToggle">Disable mastery<button id="masteryToggle" onclick="toggleSettings('masteryToggle'); statsUpdate(); updateStatsUI();">OFF</button></h3>
+            <h3 class="specialToggle">Disable seasonal events<button id="sEventToggle" onclick="toggleSettings('sEventToggle')">OFF</button></h3>
+            <h3 class="specialToggle">Disable gilded and present spawns<button id="randomEventToggle" onclick="toggleSettings('randomEventToggle')">OFF</button></h3>
+            <h3 class="specialToggle" id="wubblySettings" style="display: none;">Wobbly cursor <strong style="color: #d790dd;"> [⚜️ Dedicated Content: WubbleBubble]</strong><button id="wubblyCursorToggle" onclick="toggleSettings('wubblyCursorToggle'); setCursor()">OFF</button></h3>
+            -->
+
+
+
+
+
+
+            </span>
+
+
+
+
+
+        </div>
+
+
+
+
+        <div id="masteryGuide" class="panelOpciones" style="display:none">
+              
+            <h1>MASTERY GUIDE</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <div style="display: flex; margin-right: auto; font-size: 1.5rem; font-family: fredoka; color: rgb(194, 194, 194); background: transparent; font-weight: 400; flex-shrink: 0; position: relative;"><img src="img/src/icons/masteryGuide.png">< Take your time and get your mastery going!<span id="masteryCompletion">dddddddddd</span></div>
+            <div class="separator"></div>
+            <div class="masteryGuideBox" id="MGQuesting"><img src="img/src/items/quest.jpg"><h1>Questing</h1><h2><strong><img src="img/src/icons/insight.png">330/550</strong> 32/82 (15%)</h2><div class="masteryGuideProgress"><div></div></div></div>
+            <div class="masteryGuideBox" id="MGCollection"><img src="img/src/icons/collection.jpg"><h1>Collection</h1><h2><strong><img src="img/src/icons/insight.png">330/550</strong> 32/82 (15%)</h2><div class="masteryGuideProgress"><div></div></div></div>
+            <div class="masteryGuideBox" id="MGGrandArchive"><img src="img/src/items/I0.jpg" style="outline: white solid 1px;"><h1 style="color: gray;">?????</h1><div class="masteryGuideProgress"><div></div></div></div>
+            <div class="masteryGuideBox" id="MGArmory"><img src="img/src/items/I0.jpg" style="outline: white solid 1px;"><h1 style="color: gray;">?????</h1><div class="masteryGuideProgress"><div></div></div></div>
+            <div class="masteryGuideBox" id="MGBestiary"><img src="img/src/items/I0.jpg" style="outline: white solid 1px;"><h1 style="color: gray;">?????</h1><div class="masteryGuideProgress"><div></div></div></div>
+            <div class="masteryGuideBox" id="MGGarden"><img src="img/src/items/I0.jpg" style="outline: white solid 1px;"><h1 style="color: gray;">?????</h1><div class="masteryGuideProgress"><div></div></div></div>
+
+
+            </span>
+
+
+
+
+
+        </div>
+
+
+        <div style="display: none;">
+            <div class="optionsWrapper">
+                <h1>GAME OPTIONS <a href="https://discord.gg/VnukKfSs3S" target="_blank" title="Join the Discord" onclick="logTrackClickDiscord=true"><img src="img/sys/discord.png"></a> </h1>
+                <p>(click outside this window to close)</p>
+                <img src="img/sys/opciones.png">
+    
+                
+    
+                </div>  
+        </div>
+
+        <div id="boughtUpgradesPanel" class="panelOpciones" style="display:none">
+        
+            <h1>UPGRADES</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <div class="optionsWrapper" id="boughtUpgrades">
+                
+            </div>
+        </div>
+        
+        
+        <div id="estadisticas" class="panelOpciones" style="display:none">
+
+            <h1>STATISTICS</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <img src="img/sys/estadisticas.png">
+            <br>
+            <div id="boughtUpgradesButton">Check obtained upgrades</div>
+            <h2>General</h2>
+            <h3>Active playtime: <button id="estadisticaPlaytime"></button></h3>
+            <h3>Total playtime: <button id="statTotalPlaytime"></button></h3>
+            <h3>Started on: <button id="estadisticaStartDate"></button></h3>
+            <h3>Turtle pats made: <button id="estadisticaClicks"></button></h3>
+            <h3>Total coins gained: <button id="totalCoins"></button></h3>
+            <h3>Total prism scutes gained: <button id="totalScutes"></button></h3>
+            <h3>Total sheddings gained: <button id="totalSheddings"></button></h3>
+            <h3>Total Shellshine Co. Boxes Opened: <button id="totalPulls"></button></h3> 
+            <h3>Items crafted: <button id="statCrafted"></button></h3>
+            <h3>Items sold: <button id="statSold"></button></h3>
+            <h3>Quests completed: <button id="statQuestCompleted"></button></h3>
+            <h3>Balloons turtles clicked: <button id="statJester"></button></h3> 
+            <h3>Mystery presents opened: <button id="statPresents"></button></h3> 
+            <h3>Plants harvested: <button id="statPlants"></button></h3>
+            <h3>Total researches: <button id="statResearch"></button></h3>
+
+            <h2>Combat</h2>
+            <h3>Total kills: <button id="statKills"></button></h3>
+            <h3>Total boss kills: <button id="statBossKills"></button></h3>
+            <h3>Total defeats: <button id="statDeaths"></button></h3>
+            <h3>Dungeons cleared: <button id="statDungeons"></button></h3>
+            <h3>Total Steals: <button id="statThief"></button></h3>
+
+
+<!--
+            <h2>Stats</h2>
+            <h3>Coins per pat: <button id="statCoinsClick"></button></h3>
+            <h3>Pat multiplier: <button id="statCoinsClickMultiplier"></button></h3>
+            <h3>Offline multiplier: <button id="statOfflineMultiplier"></button></h3>
+            <h3>Health multiplier: <button id="statHealthMultiplier"></button></h3>
+            <h3>Strength multiplier: <button id="statStrengthMultiplier"></button></h3>
+            <h3>Spellpower multiplier: <button id="statSpellpowerMultiplier"></button></h3>
+            <h3>EXP bonus multiplier: <button id="statExpMultiplier"></button></h3>
+            <h3>Nature bonus multiplier: <button id="statNatureMultiplier"></button></h3>
+            <h3>Might bonus multiplier: <button id="statMightMultiplier"></button></h3>
+            <h3>Elemental bonus multiplier: <button id="statElementalMultiplier"></button></h3>
+            <h3>Deific bonus multiplier: <button id="statDeificMultiplier"></button></h3>
+            <h3>Occult bonus multiplier: <button id="statOccultMultiplier"></button></h3>
+
+-->
+
+            </span>
+        </div>
+
+        <div id="gameGuide" class="panelOpciones" style="display:none">
+
+            <h1>GAME GUIDE</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="gameGuideFlex">
+                <div id="gameGuideListing">
+                    <div class="gametip" style="margin-bottom: 1rem; background: #ce2a74; font-weight: 800; color: white;" onclick='window.open("https://superturtleidle.wiki.gg/wiki/Super_Turtle_Idle_Wiki", "_blank");'>Check The Wiki</div>
+                </div>
+                <div id="gameGuideLeft" style="display: none;">
+                    <img id="gameGuideImage" src="img/src/gametips/1.jpg">
+                    <div id="gameGuideDescription"></div>
+                </div>
+
+            </span>
+            
+        </div>
+
+
+
+        <div id="support" class="panelOpciones" style="display:none">
+            <h1>SUPPORT THE GAME!</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <img src="img/src/icons/supportTurtle.png">
+
+            <h2><br></h2>
+            <h3 style="background: #5e4536;">Patreon</strong><button style="background: #FF5900;" onclick='window.open("https://www.patreon.com/SuperTurtleIdle", "_blank");'>Support</button></h3>
+            <h3 style="background: #36555e;">Ko-Fi</strong><button style="background: #00AFF1;" onclick='window.open("https://ko-fi.com/superturtleidle", "_blank");'>Support</button></h3>
+
+
+            <br><div class="bannerTitle">Patreon Supporters</div><br>
+            <h3 style="font-size: 1.2rem; justify-content: center;">A big thank you for everyone willing to support the development of the game!</h3>
+
+            <div id="patreonList1" class="patreonList"></div>
+            <div id="patreonList2" class="patreonList"></div>
+            <div id="patreonList3" class="patreonList"></div>
+</span>
+        </div>
+
+        <div id="changelog" class="panelOpciones" style="display:none">
+                <h1>VERSION HISTORY</h1>
+                <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+                <span class="settingsFlex">
+                <img src="img/sys/changelog.png">
+
+            <p style="justify-self: center; justify-content: center; "><a href="https://discord.gg/KvpQ7W2hS8">(Full Changelog in the Discord Server)</a></p>
+            <h2>v 0.40</h2>
+            <div class="separator" style="margin: 0.4rem; margin-right: auto;"></div>
+            <p>Reworked progression and gear leveling</p> 
+            <p>Reworked bosses with custom AI </p> 
+            <p>Reworked professions</p> 
+            <p>Reworked Talent system</p> 
+            <p>Reworked UI</p> 
+            <p>Reworked dungeons</p> 
+            <p>Reworked player stats</p> 
+            <p>Reworked collectibles</p> 
+            <p>Reworked garrisons and research</p> 
+            <p>Added two new areas and a dungeon</p> 
+            <p>Added arround 300 new items</p> 
+            <p>Added the garden</p> 
+            <p>Added an in-game guide</p> 
+            <p>Added the item vault</p> 
+            <p>Added loadouts</p> 
+            <p>Added mastery</p> 
+            <p>Removed boss summon items, recipes, crit chance, garrison boxes, dungeon and boss caches, cooking, anvils, regeneration stat, and much more</p> 
+            <h2>v 0.3</h2>
+            <div class="separator" style="margin: 0.4rem; margin-right: auto;"></div>
+            <p>Added three new areas, hundreds of items, achievements, yada yada</p> 
+            <p>Removed max item limit</p> 
+            <p>Overhauled the graphical aspect of the game... again</p> 
+            <p>Added Stamps</p> 
+            <p>Added Crit Chance</p> 
+            <p>Added Mystery Presents</p> 
+            <p>Added Fishing</p> 
+            <p>Added Mail</p> 
+            <p>Added Classes and Skills</p> 
+            <p>Added Dungeons</p> 
+            <p>Added Garrisons</p> 
+            <p>Added Insight</p> 
+            <p>Added Jester Turtles</p> 
+            <p>Added Penguin Helpers, Penguin power, and other penguin nonsense</p>
+            <p>Added the Collection and the Armory</p>
+            <h2>v 0.2</h2>
+            <div class="separator" style="margin: 0.4rem; margin-right: auto;"></div>
+            <p>This is basically a code test, surely wont take much of my time</p>    
+            <p>Remade everything</p>    
+            <p>Revamped the entire graphical aspect of the game</p>    
+            <p>Added the rpg maingame</p>
+            <p>Added professions</p>
+            <p>Added day cycles and a weather system (not very used for now)</p>
+            <p>Added SFX</p>
+            <p>Added the first two areas (acting as some sort of tutorial)</p>
+            <p>Added and then reworked the achievement system</p>
+            <p>Added a bunch of stats for nerds</p>
+            <p>Added import and export save functionality</p>
+            <h2>v 0.1</h2>
+            <div class="separator" style="margin: 0.4rem; margin-right: auto;"></div>
+            <p>Oh god what did i do</p><br><br>
+            <p onclick="logTrackClickDuck=true; playSound('audio/quack.mp3')" style="color: gray;">Made by "duck" [drvcx] &#129414 </p>
+            <p onclick="logTrackClickDuck=true; playSound('audio/lily.mp3')" style="color: gray;">Turtle Voice by "lily" [.lilynee] &#128017 </p>
+                    
+        
+        </span>
+        </div>
+
+        <div id="deleteData" class="panelOpciones" style="display:none">
+            <h1>DELETE DATA</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <img src="img/sys/deleteData.png">
+            <p><br>Are you sure you want to delete <strong>all</strong> saved data?<br><br> This action is <strong>irreversible</strong> and will <strong>forever</strong> delete all progress of the game with the exception of <strong style="color: #B5DD7B;">Soulbound</strong> items</p>
+            <button style="border: white solid 2px; color:white; background: red; font-weight: 400;" onclick="deleteSave()">DELETE DATA</button>
+            </span>
+        </div>
+
+        <div id="outdatedData" class="panelOpciones" style="display:none; height: 80%; width: 40%;">
+            <h1>OUTDATED SAVEDATA</h1>
+            <div class="separatorHeader"><div class="separator"></div><div class="separator"></div></div>
+            <span class="settingsFlex">
+            <img src="img/sys/deleteData.png">
+            <p><br>With the release of 0.4, the game got overhauled and 0.3 saves became outdated, as the two versions are too fundamentally different from each other. It is <strong>very advised</strong> that you start over a new savefile by deleting the current data.<br><br><strong style="color: #B5DD7B;">Soulbound</strong> items such as the completition medal and some extra goodies will carry over this new save automatically. For more information, check the game's Discord.<br><br>Sorry for the trouble.</p>
+            <button style="border: white solid 2px; color:white; background: red; font-weight: 400;" onclick="closePanels()">UNDERSTOOD</button>
+            </span>
+        </div>
+
+        <div id="tipPanel" class="panelOpciones" style="display:none;">
+            <h1 id="tipPanelName">🐢 Welcome! 🐢</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <img src="img/sys/nerd.png">
+            <p id="tipPanelDesc"><br>Welcome to Super Turtle Idle, an incremental idle RPG. Complete quests, gather materials by idling, and tackle mighty foes!<br><br>Upgrade any weapon or armor you want, no pressure or strings attached. Is the foe too mighty? Engage with the different systems of the game to gain Mastery or try your luck getting new gear you never got before.<br><br>Getting rare items can be a daunting task at first, so dont hesitate to come back later when you're able to efficiently farm them. Do not worry, as said gear will always be useful no matter when you decide to get it!</p>
+            </span>
+        </div>
+
+        <div id="introPanel" style="display:none;">
+            <img src="img/sys/nerd.png">
+            <span>Select your preferred playstyle<br>(This can be changed at any moment from the Settings menu)</span>
+            <div class="introPanel2">
+                <div class="introCard" onclick="startGameCard()"><span>Normal Mode</span><img src="img/sys/nerd2.png">The intended game experience. Sit back, relax and have fun.</div>
+                <div style="display: none;" class="introCard" onclick="startGameCard('nofarm')"><span>Fast Mode</span><img src="img/sys/nerd3.png">Increased game pacing. Ideal for quicker playthroughs.</div>
+
+            </div>
+
+
+
+
+
+        </div>
+
+        <div id="fertiliserMenu" class="panelOpciones" style="display:none">
+            <h1>SELECT FERTILISER</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex" id="fertiliserList">
+            </span>
+        </div>
+
+
+
+
+        <div id="mailMenu" class="panelOpciones" style="display:none">
+            <h1>MAILBOX</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="mailFlex">
+
+                <div id="mailList">
+
+                </div>
+
+                <div id="mailLeft" style="display: flex; visibility: hidden;">
+                </div>
+
+            </span>
+        </div>
+
+
+        <div id="upgradeMenu" class="panelOpciones" style="display:none">
+            <h1>UPGRADE GEAR</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+
+            <div class="upgradeBox">
+
+                <div id="upgradeName"><img src="img/src/items/I64.jpg" style="left:1rem;"><img src="img/src/icons/occult.png" style="right:1rem;">Terrorscythe<br><strong>Malevolent Series</strong></div>
+                <img id="upgradeItem" src="img/src/weaponModels/I64.png">
+                <div id="upgradeItemDescription"><div id="revealWeaponSkills"></div><span id="upgradeItemDescription2">Aqui van los stats y los niveles y todo eso</span></div>
+
+            </div>
+
+            <div class="upgradeBox2">
+
+                <div id="upgradeLevel">Level 12/20</div>
+
+                <div id="upgradeRequired">Required materials to level up:<br>- 2.9K Lesser Monster Soul</div>
+
+                <div id="upgradeButtons"><button onclick="upgradeOnce(event)">Level Up</button><button onclick="upgradeMax(event)">Max</button></div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+            </span>
+        </div>
+
+
+
+        
+
+
+        <div id="rankMenu" class="panelOpciones" style="display:none">
+            <h1>SUPER TURTLE RANK</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex" id="rankList">
+
+
+                
+
+
+            </span>
+        </div>
+
+
+
+        <div id="mailLetter" class="panelOpciones" style="display:none">
+        <span id="closeMail">X</span>
+        <span id="mailTitle">Thank you for enrolling in the Super Turtle Adventure program!</span>
+        <span id="mailBody">We are appreciative of your participation in our program. Turtles all across the world will be happy rely on your help and will reward you handsomely for your bravery!<br><br>Make every effort to assist your fellow turtles, as the adventure guild will bestow upon you a unique reward when you fulfill all of their requests in a given area.<br><br>We sincerely hope you continue with our program and have a wonderful journey! Here is a welcome gift:</span>
+        <span id="mailItem"><div class="blackLine"></div><div class="itemSlot"><img src="img/src/items/I119.jpg"></div></span>    
+        </div>
+
+        <div id="resetTalentMenuOpen" class="panelOpciones" style="display:none">
+            <h1>RESET STARS</h1>
+            <span class="settingsFlex">
+                <p>All your Talent Points will be refunded. This operation will consume one <strong style="color: orange;">Dreamwoven Gamba</strong></p>
+                <img src="img/src/items/I26.jpg">
+                
+                <button onclick="if (items.I26.count>0){ resetTalentPoints(); did('resetTalentMenuOpen').style.display = 'none'; items.I26.count-- } else {playSound('audio/thud.mp3')}">RESET</button>
+                <button style="background: #36555e; margin-top: 0.7rem;" onclick="did('resetTalentMenuOpen').style.display = 'none'; playSound('audio/close.mp3')">NEVERMIND</button>
+
+            </span>
+        </div>
+
+        <div id="importStarsMenu" class="panelOpciones" style="display:none">
+            <h1>IMPORT STARS</h1>
+            <span class="settingsFlex">
+                <p>This operation will consume one <strong style="color: orange;">Dreamwoven Gamba</strong></p>
+                <img src="img/src/items/I26.jpg"></img>
+                <input type="text" id="importStarsBox" placeholder="Paste here the code..." autocomplete="off">
+                <button style="margin-top: 0.8rem;" onclick="if (items.I26.count>0){ importStars(importStarsBox.value) } else {playSound('audio/thud.mp3')}">IMPORT</button>
+                <button style="background: #36555e; margin-top: 0.7rem;" onclick="did('importStarsMenu').style.display = 'none'; playSound('audio/close.mp3')">NEVERMIND</button>
+                
+            </span>
+        </div>
+
+        <div id="skillMenu" class="panelOpciones" style="display:none">
+
+            <div class="skillTurtle"></div>
+            <div class="skillMenuSub">
+                <div class="skillMenuSubButton" id="exitSkillMenu">
+                    <img src="img/src/icons/returnIcon.png">
+                 </div>
+                 <span style="display: none;">
+                <div class="skillMenuSubButton" id="importStars" onclick="did('importStarsMenu').style.display = 'flex'; playSound('audio/button3.mp3'); did('resetTalentMenuOpen').style.display = 'none';">IMPORT STARS</div>
+                <div class="skillMenuSubButton" id="exportStars" onclick="exportStars()">EXPORT STARS</div>
+            </span>
+                <div class="skillMenuSubButton" id="resetTalentMenu" onclick="did('resetTalentMenuOpen').style.display = 'flex'; playSound('audio/button3.mp3'); did('importStarsMenu').style.display = 'none';">RESET STARS</div>
+                <div class="skillMenuSubButton" id="talentCounter">CURRENT SP: <strong></strong></div>
+            
+            
+            </div>
+            <div class="skillCounter" style="display: none;"><span id="talentCounter">You have 10 unspent Talent Points</span><button ">RESET TALENTS</button></div>
+            <div class="skillCounter2" style="display: none;"><span >Next Talent Point:</span><span id="talentPointBar"></span></div>
+            <div  class="panelOpciones" style="display:none"><p>All your Talent Points will be refunded.<br><br>This operation will consume one <h1 style="color: orange;">Dreamwoven Gamba</h1><div class="itemSlot" style="border: 1px solid #a335ee;"><img src="img/src/items/I26.jpg"></div><button onclick="if (items.I26.count>0){ resetTalentPoints(); items.I26.count-- } else {playSound('audio/thud.mp3')}">RESET</button> <span onclick="did('resetTalentMenu').style.display = 'none'; playSound('audio/close.mp3')">X</span> </div>
+            <div id="skillContainer"> <canvas id="myCanvas" width="5000" height="5000" class="starCanvas"></canvas>
+            
+            
+            </div>
+        </div>
+
+
+        <div id="gachaMenu" class="panelOpciones" style="display:none">
+
+            <div id="gachaBg"></div>
+            <div id="gachaBg2"></div>
+
+            <div id="bannerResources">
+                <div id="exitGachaMenu" onclick="openGacha('close')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><path fill="currentColor" d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16m-32 96a8 8 0 0 1-8 8H99.31l10.35 10.34a8 8 0 0 1-11.32 11.32l-24-24a8 8 0 0 1 0-11.32l24-24a8 8 0 0 1 11.32 11.32L99.31 128H168v-24a8 8 0 0 1 16 0Z"/></svg>
+                </div>
+                <div class="bannerResource" id="sheddingsCounter"><img src="img/src/icons/sheddings.jpg"> 1.2K</div>
+            </div>
+
+            <div id="currentBanner">
+
+                <div id="bannerInfo">
+                    <h1>Shellshine Co <br> <strong>Hat Delivery</strong> </h1>
+
+                    <br>
+                    <h2>
+                        Cosmetic Galore!<br><br>
+                        <span>Spend sheddings to get random hats. Hats have a 5% chance to carry a glimmer!</span>
+                    </h2>
+
+                </div>
+
+                <div id="featuredGacha" style="display: none;">
+                    <span>✨ Featured Item ✨</span>
+                    <img src="img/src/items/I502.jpg" id="I502gachaItem99" class="featuredGachaItem">
+                </div>
+
+
+
+                <div id="gachaSummons">
+                
+
+                </div>
+                
+
+
+            </div>
+            <div id="bannerPull">
+                <div class="gachaPull" onclick='rollGacha(1)'>Delivery x1<br><img src="img/src/icons/sheddings.jpg"> x800</div>
+                <div class="gachaPull" onclick='rollGacha(10)'>Delivery x10<br><img src="img/src/icons/sheddings.jpg"> x7200</div>
+            </div>
+            <div id="bannerList"></div>
+
+
+        </div>
+
+
+        <div id="scratcherMenu" class="panelOpciones" style="display:none">
+
+            <div class="scratcherUI" id="scratcherMoves" style="top: 1.5rem; left: 1.5rem;">Scratches Left : 10</div>
+            <div class="scratcherUI" id="scratcherGains" style="top: 1.5rem; left: 15.5rem;">0<img src="img/src/icons/scutes.jpg"></div>
+
+            <div id="scratcherList">
+            
+
+             </div>
+
+        </div>
+
+        
+        <div id="honorShop" class="panelOpciones honorShop" style="display:none">
+            <h1>HONOR SHOP</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <div class="shopLockedListing" id="honorShopListing1" style="margin-top: 5rem;"><div class="shopLockedListingCover" id="honorShopListing1Cover"><img src="img/src/icons/gladr2.jpg">Achieve <strong style="background: #ffb759;">Rank 2</strong> Gladiator Rank to unlock</div></div>
+            <div class="shopLockedListing" id="honorShopListing2"><div class="shopLockedListingCover" id="honorShopListing2Cover"><img src="img/src/icons/gladr3.jpg">Achieve <strong style="background: #ffb759;">Rank 3</strong> Gladiator Rank to unlock</div></div>
+            <div class="shopLockedListing" id="honorShopListing3"><div class="shopLockedListingCover" id="honorShopListing3Cover"><img src="img/src/icons/gladr4.jpg">Achieve <strong style="background: #ffb759;">Rank 4</strong> Gladiator Rank to unlock</div></div>
+            
+            <div class="shopLockedListing" id="honorShopListing4"><div class="shopLockedListingCover" id="honorShopListing4Cover"><img src="img/src/icons/gladr5.jpg">Achieve <strong style="background: #ffb759;">Rank 5</strong> Gladiator Rank to unlock</div></div>
+            <div style="display: none;">
+            <div class="shopLockedListing" id="honorShopListing5"><div class="shopLockedListingCover" id="honorShopListing5Cover"><img src="img/src/icons/gladr6.jpg">Achieve <strong style="background: #ffb759;">Rank 6</strong> Gladiator Rank to unlock</div></div>
+        </div>
+             </span>
+        </div>
+        
+        <div id="gardenShop" class="panelOpciones honorShop" style="display:none">
+            <h1>GARDEN SHOP</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+            <div class="shopLockedListing" id="gardenShopListing0" style="margin-top: 5rem;"></div>
+            <div class="shopLockedListing" id="gardenShopListing1"><div class="shopLockedListingCover" id="gardenShopListing1Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 2</strong> to unlock</div></div>
+            <div class="shopLockedListing" id="gardenShopListing2"><div class="shopLockedListingCover" id="gardenShopListing2Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 3</strong> to unlock</div></div>
+            <div class="shopLockedListing" id="gardenShopListing3"><div class="shopLockedListingCover" id="gardenShopListing3Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 4</strong> to unlock</div></div>
+            <div class="shopLockedListing" id="gardenShopListing4"><div class="shopLockedListingCover" id="gardenShopListing4Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 5</strong> to unlock</div></div>
+            <div class="shopLockedListing" id="gardenShopListing5"><div class="shopLockedListingCover" id="gardenShopListing5Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 6</strong> to unlock</div></div>
+            <div class="shopLockedListing" id="gardenShopListing6"><div class="shopLockedListingCover" id="gardenShopListing6Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 7</strong> to unlock</div></div>
+            <div class="shopLockedListing" id="gardenShopListing7"><div class="shopLockedListingCover" id="gardenShopListing7Cover"><img src="img/src/garden/gardenIcon.jpg">Achieve <strong style="background: #97ECA5;">Gardening Level 8</strong> to unlock</div></div>
+            </span>
+        </div>
+        
+        <div id="catalogue" class="panelOpciones" style="display:none">
+
+
+            <h1>COLLECTION</h1>
+            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
+            <span class="settingsFlex">
+                
+            <div class="catalogueWrapper">
+            <div class="bannerTitle" style="margin-bottom: 2rem;">Ancient Relic Collection<span id="catalogue1Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue1"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Precious Gems Collection<span id="catalogue2Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue2"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Tiny Friends Collection<span id="catalogue3Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue3"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Shiny Rocks Collection<span id="catalogue10Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue10"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Big Catch Collection<span id="catalogue4Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue4"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Lost and Found Collection<span id="catalogue9Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue9"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Arts and Crafts Collection<span id="catalogue8Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue8"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Dungeon Souvenir Collection<span id="catalogue6Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue6"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Jackpot Collection<span id="catalogue7Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue7"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Peculiar Flowers Collection<span id="catalogue12Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue12"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Prehistoric Collection<span id="catalogue5Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue5"></div>
+            <div class="bannerTitle" style="margin-bottom: 2rem; margin-top: 2rem;">Shoebox Critters Collection<span id="catalogue11Count">[0/0]</span></div>
+            <div class="catalogueListing" id="catalogue11"></div>
+            </div>
+            
+        </div>
+
+        <div id="settingsDarken" class="screenDarken" onclick='playSound("audio/close.mp3");voidAnimation("settingsDarken","shrinkFadeOut 0.2s 1"); voidAnimation("settingsMenu","shrinkFadeOut 0.2s 1"); setTimeout(() => { did("settingsDarken").style.display = "none"; did("settingsMenu").style.display = "none";  voidAnimation("settingsDarken","unlockPanel 0.4s 1"); voidAnimation("settingsMenu","growFadeInNoOpacity 0.5s");  }, 190);'></div>
+
+        <div id="afkDarken" class="screenDarken"><span>Farming In Progress</span>Graphics have been paused to save resources</div>
+
+        <div id="settingsMenu">
+
+            <div class="settingsCard" id="supportCard">
+                <img src="img/src/icons/supportTurtle.png"> <div class="separator" style="height: 0.2rem; background: rgba(255,255,255,0.2);"></div> Support the game!
+            </div>
+
+            <div class="settingsCard" style="animation-delay: 0.1s;" id="settingsCard">
+                <img src="img/src/icons/settingsSettings.png"> <div class="separator" style="height: 0.2rem; background: rgba(255,255,255,0.2);"></div> Game settings
+            </div>
+
+            <div class="settingsCard" style="animation-delay: 0.2s;" id="changelogCard">
+                <img src="img/src/icons/settingsChangelog.png"> <div class="separator" style="height: 0.2rem; background: rgba(255,255,255,0.2);"></div> Version history
+            </div>
+
+            <div class="settingsCard" style="animation-delay: 0.3s;" id="statsCard">
+                <img src="img/src/icons/settingsStats.png"> <div class="separator" style="height: 0.2rem; background: rgba(255,255,255,0.2);"></div> Statistics
+            </div>
+
+        </div>
+
+        <div id="hatsDarken" class="screenDarken" onclick='hatMenu("close")'></div>
+
+        <div id="hatMenu">
+            <div id="hatListing"></div>
+            <div id="randomHat" onclick="rpgPlayer.hat = 'random'; equipHat(); voidAnimation('randomHat','gelatine 0.3s 1'); playSound('audio/button3.mp3')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="4rem" height="4rem" viewBox="0 0 24 24"><path fill="#fff" d="M10.998 1.58a2 2 0 0 1 2.004 0l7.5 4.342a2 2 0 0 1 .998 1.731v8.694a2 2 0 0 1-.998 1.73l-7.5 4.343a2 2 0 0 1-2.004 0l-7.5-4.342a2 2 0 0 1-.998-1.731V7.653a2 2 0 0 1 .998-1.73zM5.25 8.092a.5.5 0 0 0-.751.433v6.669a2 2 0 0 0 .998 1.73l5.751 3.33a.5.5 0 0 0 .751-.432v-6.669a2 2 0 0 0-.998-1.73zm10.517-2.575c-.478-.276-1.254-.276-1.732 0s-.478.724 0 1s1.254.276 1.732 0s.478-.724 0-1m-5.8 0c-.478-.276-1.254-.276-1.732 0s-.478.724 0 1s1.254.276 1.732 0c.479-.276.479-.724 0-1m7.025 10.328c.597-.345 1.082-1.184 1.082-1.875c0-.69-.485-.97-1.082-.625S15.91 14.53 15.91 15.22s.485.97 1.082.625M6.365 12.2c.478.277.866.053.866-.5c0-.552-.388-1.223-.866-1.5s-.866-.052-.866.5c0 .553.388 1.224.866 1.5m4.33 5.498c0 .552-.389.776-.867.5s-.866-.948-.866-1.5s.388-.776.866-.5s.866.948.866 1.5M7.231 15.7c0 .553-.388.777-.866.5c-.478-.276-.866-.947-.866-1.5c0-.552.388-.776.866-.5c.478.277.866.948.866 1.5m3.463-2c0 .553-.388.777-.866.5c-.479-.275-.866-.947-.866-1.5c0-.551.387-.775.866-.5c.478.277.866.949.866 1.5"/></svg>
+            </div>
+        </div>
+
+
+    <div id="gachaOpenDarken" class="screenDarken" style="display: none; transition: all 0.5s; z-index: 80;"></div>
+
+    <div id="gachaOpenMenu" style="z-index: 80;">
+
+
+    </div>
+
+
+        <div id="bestiary" class="panelOpciones" style="display:none">
+            <div class="bestiaryPage">
+                <div class="craftBookHeader">
+
+
+                    
+                        <img src="img/src/items/I290.jpg">
+                        <div class="craftBookHeaderInfo" id="craftBookHeaderInfo">
+                            <div><span>BESTIARY</span><span style="background: #FF993C; font-weight: 500;" id="bestiaryProgress">LVL 20</span><span style="background: #464ACB; font-weight: 500; display:none" id="bestiaryMastery">Mastery</span></div>
+                            <div><div><div id="bestiaryProgressBar"></div></div></div>
+                            <div><span style="background: transparent; font-weight: 500; color: #FF993C; display:none" id="bestiaryProgress2">2503 / 2750 EXP</span></div>
+                        </div>
+                    
+                    
+                    <div class="bestiaryProgress"  style="display: none;"><span>[50%] Completion</span></div>
+                    <img src="img/src/items/I290.jpg"  style="display: none;">
+
+
+                </div>
+                <div class="bestiaryListing" id="bestiaryListing">
+                    
+
+                </div>
+
+            </div>
+            <div class="bestiaryPage" style="overflow: scroll; padding-bottom: 5rem; ">
+
+                <div id="bestiaryName">Caulislug</div>
+
+                <div id="bestiaryImage">
+
+                    <div id="bestiaryHealth" class="bestiaryStat">20 HP</div>
+                    <div id="bestiaryAttack" class="bestiaryStat">20 ATK</div>
+                    <div id="bestiaryExp" class="bestiaryStat">90 EXP</div>
+                    <div id="bestiaryKills" class="bestiaryStat">💀 12.2K</div>
+                    <img id="bestiaryBadge" style="display: none;" src="img/src/icons/bestiaryBadge2.png">
+
+                    <div id="bestiaryBackground">
+                        <img id="bestiaryEnemy" src="img/src/enemies/E1.png">
+                        <img id="bestiaryEnemyAlign" src="img/src/icons/nature.png">
+                    </div> 
+
+                </div>
+
+                <div class="bestiaryTitle">DESCRIPTION</div>
+                <div class="bestiaryText" id="bestiaryDescription">A slug so passionate about vegetables that he raised one on its shell. Scientists are in absolute awe.</div>
+                <div class="bestiaryTitle" style="background: #56D179;" id="bestiarySkillsTitle">SKILLS</div>
+                <div class="bestiaryText" id="bestiarySkills">❖ Fleming Bite: Applies poison on attack.</div>
+                <div class="bestiaryTitle" style="background: #5C95EB;" id="bestiaryDropsTitle">DROPS</div>
+                <div class="bestiaryText" id="bestiaryDrops"></div>
+
+            </div>
+            
+        </div>
+
+
+        <div id="plantCatalogue" class="panelOpciones" style="display:none">
+            <div class="bestiaryPage">
+
+                <div class="craftBookHeader">
+
+
+                    
+                    <img src="img/src/items/I305.jpg">
+                    <div class="craftBookHeaderInfo">
+                        <div><span>COMPENDIUM</span><span style="background: #FF993C; font-weight: 500;" id="plantCatalogueProgress"> 50%</span><span style="background: #464ACB; font-weight: 500; display:flex" id="compendiumMastery">Mastery</span></div>
+                        <div><div><div id="plantCatalogueProgressBar"></div></div></div>
+                        <div><span style="background: transparent; font-weight: 500; color: #FF993C; display:flex" id="compendiumProgress2">2503 / 2750 EXP</span></div>
+                    </div>
+                
+                
+                <div class="bestiaryProgress"  style="display: none;"><span>[50%] Completion</span></div>
+                <img src="img/src/items/I290.jpg"  style="display: none;">
+
+
+            </div>
+
+    
+                <div class="bestiaryListing" id="plantCatalogueListing">
+                    
+
+                </div>
+
+            </div>
+            
+        </div>
+
+
+
+        <div id="armory" class="panelOpciones" style="display:none">
+
+
+            <h1>ARMORY</h1>
+            <div class="separatorHeader"><div class="separator" style="background: white;"></div>(Click outside the window to close)<div class="separator" style="background: white;"></div></div>
+            <span class="settingsFlex">
+                
+            <div class="catalogueWrapper">
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 5rem; border: solid #6D6D6D 0.15rem;">Heirloom Series<span id="heirloomArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="heirloomArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border: solid #9E8244 0.15rem;">Millionaire Series<span id="millionaireArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="millionaireArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border: solid #957256 0.15rem;">Masterwork Series<span id="masterworkArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="masterworkArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border: solid #886386 0.15rem;">Forgotten Series<span id="forgottenArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="forgottenArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border: solid #8E4D60 0.15rem;">Beastfallen Series<span id="beastfallenArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="beastfallenArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border: solid #5A8C98 0.15rem;">Revered Series<span id="reveredArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="reveredArmory"></div>
+
+
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, rgba(240, 71, 5, 1), rgba(240, 169, 10, 1)) 30%; ">Solstice Series<span id="solsticeArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="solsticeArmory"></div>
+
+            
+
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, rgba(193,121,17,1), rgba(56,126,53,1)) 30%; ">Ancient Series<span id="ancientArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="ancientArmory"></div>
+
+            
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, rgba(54,55,77,1), rgba(126,53,117,1)) 30%; ">Malevolent Series<span id="malevolentArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="malevolentArmory"></div>
+            <div style="display: none;"> 
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, rgba(77,54,128,1), rgba(187,48,159,1)) 30%; ">Runic Series<span id="runicArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="runicArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, rgba(210,171,17,1), rgba(41,159,112,1)) 30%; ">Chosen Series<span id="chosenArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="chosenArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, rgba(255,151,19,1), rgba(41,159,112,1)) 30%; ">Toybox Series<span id="toyboxArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="toyboxArmory"></div>
+            <div class="armoryTitle" style="margin-bottom: 0rem; margin-top: 2rem; border-image: linear-gradient(90deg, #5F2FB0, #5F2FB0) 30%; ">Omega Series<span id="omegaArmoryCount">[0/0]</span></div>
+            <div class="catalogueListing" id="omegaArmory"></div>
+        </div>
+
+
+            </div>
+
+            </span>
+            
+        </div>
+
+
+        
+        
+        
+        </div>
+        
+        
+        <div id="turtleRename" class="panelOpciones" style="display:none">
+            <h1>RENAME YOUR TURTLE</h1>
+            <div class="separatorHeader"><div class="separator" style="background: white;"></div>(Click outside the window to close)<div class="separator" style="background: white;"></div></div>
+            <span class="settingsFlex" style="flex-direction: row; justify-content: center; align-items: center; padding: 0; margin: 0;">
+            <span id="namingBoxArea"><input style="width: 18rem; height: 3rem;" type="text" id="namingBox" placeholder="Jeffrey" autocomplete="off" maxlength="20" onkeydown="enterName(event)"></span><div id="randomiseName">🎲</div>
+             
+            </span>
+            
+        </div>
+        
+        
+        
+
+        <div id="panelAutosave" class="panelOpciones" style="display:none">
+            
+        </div>
+
+
+        <div id="popupListing">
+
+            
+            </div>
+
+
+
+        <div id="popUpList"></div>
+    
+        <div id="achievementPopup" class="panelOpciones">
+            <span><img src="img/sys/achievements.png">ACHIEVEMENT UNLOCKED</span>
+            <span><h2 id="achievementName">Alone No More</h2></span>
+        </div>
+    
+        
+        
+        <div id="penguinRecap" class="panelOpciones" style="display:none">
+            <h2 id="closeRecap">X</h2>
+            
+            <img src="img/sys/penguinRecap.png" onclick='logs.P53A.unlocked=true; this.style.animation = "gelatine 0.3s 1";' id="recapImage" style="display: none;">
+            <div class="flex" id="recapMsg">
+            </div>    
+            
+        </div>
+
+        <div class="panelOpciones" id="cheatPanel" style="display:none">
+            <h3>modo diablo &#128520;</h3>
+            <button onclick="cheat(1)">1min</button><button onclick="cheat(10)">10min</button><button onclick="cheat(60)">1h</button><button onclick="cheat(600)">10h</button><button onclick="cheat(6000)">100h</button><button onclick="cheat(60000)">1000h</button><button onclick="cheat(600000)">10000h</button><button onclick="cheat(6000000)">100000h</button><button onclick="increaseCoins(3600)">1h (i)</button><button onclick="increaseCoins(36000)">10h (i)</button><button onclick="cheat2(1)">coins</button><button onclick="cheat2(2)">resour</button><button onclick="cheat2(3)">food</button><button onclick="cheat2(4)">energy</button>
+            time skipped: <span id="timeskip">0</span>horas
+       
+        </div>  
+    
+        <div id="unlockPanel" style="display: none" onclick="closeUnlockAnimation()">
+    
+         <img src="img/sys/unlockAnimation.gif" id="unlockBall" style="margin-top: -7rem;">
+         
+         <div><img src="img/sys/sunRays.png" id="unlockedAura"><img id="unlockedItem" src="img/src/icons/afk.jpg"></div>
+
+         <h1 id="unlockedName">Turtlebot Unlocked!</h1>
+         <h2 id="unlockedDescription">Once you defeated an enemy 100 times, recolect materials, gear and experience from it while youre offline.</h2>
+         <h3 id="unlockedClose">Click anywhere to close</h3>
+         
+  
+    </div>     
+
+        
+        <div class="dynamicSpark"></div>
+    
+    
+    <div id="debugPanel" style="display: none"><button class="itemSlot" onclick="levelUp(1)">+1 Level</button><button class="itemSlot" onclick="rpgClass[stats.currentClass].level+=10;">+10 Level</button><button class="itemSlot" onclick="rpgClass[stats.currentClass].level-=5;">-5 Level</button><button class="itemSlot" onclick="enemies[stats.currentEnemy].killCount=10000; createBestiary()">medal</button><button class="itemSlot" onclick="revive()">Revive</button><button class="itemSlot" onclick="deleteEnemy()">Banish</button><button class="itemSlot" onclick="godmode=true">God</button><button class="itemSlot" onclick="unlockAll()">Unlock</button><button class="itemSlot" onclick="currentHP=0; enemyUpdate()">Kill</button><button class="itemSlot" onclick="for (i in items) if ('cd' in items[i]) {items[i].cd=0}">CD</button><button class="itemSlot" onclick="learnAllTalents()">Skills</button><button class="itemSlot" onclick="rpgPlayer.coins = 999999999999; stats.totalCoins=999999999999">Money</button><button class="itemSlot" onclick="disableArmory=true">Armory</button></div>
+    
+
+</head>
+ 
+
+<body>
+    
+    
+    
+    
+    <div id="bodyCover" style="display: none;"></div>
+    <div id="blackScreen"></div>
+    <div id="mysteryRewardPanel"></div>
+    <div id="presentMinigame">
+<div id="presentBlocker" class="clickBlocker"></div>
+<div id="mysteryCloth"></div>
+<div id="mysteryList"></div>
+
+
+
+
+
+
+
+
+
+
+    </div>
+    <span id="body">
+
+
+        <div id="mainScreen">
+
+        <div class="currencyUI">
+
+            <div class="currencyElement" id="currencyShells">
+                <img src="img/src/icons/coin.png" id="currencyCoinImg">
+                <span id="contadorMonedas">0</span>
+            </div>
+
+            <div class="currencyElement" id="currencyScutes">
+                <img src="img/src/icons/scutes.jpg">
+                <span id="prismCounter">0</span>
+            </div>
+
+
+        </div>
+
+        <div class="widgetUI" style="right: 0; left: auto;">
+
+            <span style="display: none;"><img src="img/src/icons/presentIcon.png"></span>
+            <span style="display: none;"><img onclick='openDedicatedShop("bestiaryShop"); updateBestiary()' src="img/src/icons/monsterIcon.png" id="bestiaryShopWidget"></span>
+            <span style="display: none;" id="exportWidget" onclick='exportJSON()'><img src="img/src/icons/exportIcon.png" ></span>
+            <span><img onclick='openDedicatedShop("achievementShop"); did("achievementShopWidget").style.animation = "none"' src="img/src/icons/achievementIcon.png" id="achievementShopWidget" ></span>
+            <span style="display: none;"><img src="img/src/icons/collectibleIcon.png"></span>
+            <span style="display: none;" id="gachaWidget"><img onclick="openGacha()" src="img/src/icons/gachaIcon.png" ></span>
+            <span style="display: none;" id="mailButton" onclick='did("mailWidget").style.animation = "none"'><img src="img/src/icons/mailIcon.png" id="mailWidget"></span>
+            <span><img onclick="openSettings()" src="img/src/icons/settingsIcon.png"  id="settingsWidget"></span>
+
+
+
+        </div>
+
+
+        <div id="mainUI">
+
+            
+
+            <div id="mainUILeft">
+                <div class="mainUISquare" id="inventoryMainPageSquare">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="-5 -2 24 24">
+                        <path fill="#492615" d="M6 14a1 1 0 0 0 2 0h3c.729 0 1.412-.195 2-.535V18a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-4.535c.588.34 1.271.535 2 .535zm2-1v-3a1 1 0 1 0-2 0v3H3a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3zM5 3H3q-.519.002-1 .126V1.5a1.5 1.5 0 0 1 3 0zm7 .126A4 4 0 0 0 11 3H9V1.5a1.5 1.5 0 0 1 3 0z" />
+                    </svg>
+                </div>
+                <div class="mainUISquare" id="inventoryCraftingPageSquare" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="#492615" d="M9 5v5c4.03 2.47-.56 4.97-3 6v3h15v-3c-6.41-2.73-3.53-7 1-8V5zM2 6c.81 2.13 2.42 3.5 5 4V6z" />
+                    </svg>
+                </div>
+
+                <span class="inventoryPage" id="inventoryMainPage" style="display: none;">
+
+
+                <div class="mainUISlot" style="height: 45%;">
+                    <div id="expPanel">
+
+                        <img id="classIcon" src="img/src/talents/noClass.jpg">
+                        <div id="expPanelHalf2">   
+                            <div id="expPanelSlot1">
+                                <div id="turtleName"></div> 
+                                <div id="editName">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="m290.74 93.24l128.02 128.02l-277.99 277.99l-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.7-114.22zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55l128.02 128.02l56.55-56.55c18.75-18.76 18.75-49.16 0-67.91"/></svg>
+                                </div>
+                            </div>
+                            <div id="expPanelSlot2">
+                                <div id="expPanelClass"></div><div id="expPanelExp"><span id="currentExp">9999/9999</span>EXP</div>
+                            </div>
+                            <div id="expPanelSlot3">
+                                <div id="expBar"></div>
+                            </div>
+                        </div>
+    
+     
+                        
+        
+                        </div>
+
+
+                    <span class="statsPanelFlex">
+                    
+                    <div id="gearFlex">
+
+            
+                        <div class="gearRow" id="gearRow1">
+                        <div class="slotButtonHolder" onclick='hatMenu("open"); sortInventory(); updateHatInventory(); sortInventory()'>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5.707 3.879A3 3 0 0 1 7.828 3c.79 0 1.948-.22 2.302.711a2.001 2.001 0 0 0 3.74 0c.354-.93 1.513-.71 2.302-.71a3 3 0 0 1 2.12.878L22 7.586a2 2 0 0 1 0 2.828l-1.478 1.478c-.52.52-1.246.689-1.9.526l.272 5.432A3 3 0 0 1 15.898 21H8.102a3 3 0 0 1-2.996-3.15l.272-5.432a2 2 0 0 1-1.9-.526L2 10.414a2 2 0 0 1 0-2.828z"/></g></svg>
+                            </div>
+                        </div>
+                        <div id="rpgHeadSlot">  </div>
+                        <div class="slotButtonHolder" onclick="toggleLoadoutMenu()" style="visibility: hidden;">
+                            <div id="loadoutButton" style="background: #A6637F;">
+                                🔥
+
+                            </div>
+                        </div>
+                        </div>
+                           
+                        <div class="gearRow" id="gearRow2">
+                        <div id="rpgOffhandSlot">  </div>
+                            
+                        <div id="rpgChestSlot">  </div>
+                            
+                        <div id="rpgWeaponSlot">  </div>
+                        </div>
+                           
+                       <div class="gearRow" id="gearRow3"> 
+                       <div id="rpgRingSlot"> </div>
+                            
+                       <div id="rpgLegsSlot">  </div>
+                            
+                       <div id="rpgTrinketSlot">  </div>
+                       </div>   
+                           
+                        <div class="gearRow" id="gearRow4"> 
+
+                        <div id="rpgLumaSlot">  </div>
+
+                       <div id="rpgFeetSlot">  </div>
+
+                       <div id="rpgHandsSlot">  </div>
+
+
+                       </div>
+                           
+                       </div>
+
+
+
+                       <div class="newStatFlex">
+
+                        <div class="newDamageStat" id="statDisplayPower">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>
+                            <span>
+                                POWER<br>
+                            <strong id="statPower">192K</strong>
+                            </span>
+                        </div>
+
+                        <div class="newStatPanel" id="statPanel">
+
+                            <div class="newStat" id="statDisplayMaxHealth">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M2 9.137C2 14 6.02 16.591 8.962 18.911C10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138S16.5.825 12 5.501C7.5.825 2 4.274 2 9.137"/></svg>
+                                 Max Health: <span id="statMaxHealth">192K</span>
+                            </div>
+
+                            <div class="newStat" style="display: none;">
+                                <svg style="background: rgb(219, 154, 79);" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18.34S4 7.09 7 3l5 1l-1 3.09H9v7.16h1c2-3.07 6.14-4.19 8.64-3.07c3.3 1.53 3 6.14 0 8.18C16.24 21 9 22.43 3 18.34"/></svg>
+                                Strength: 192K
+                            </div>
+
+                            <div class="newStat" id="statDisplayNatureBonus">
+                                <svg style="background: #62B26A;" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M20.998 3v2c0 9.627-5.373 14-12 14H7.096c.212-3.012 1.15-4.835 3.598-7.001c1.204-1.065 1.102-1.68.509-1.327C7.119 13.102 5.09 16.386 5 21.63l-.003.37h-2c0-1.363.116-2.6.346-3.732Q2.999 16.327 2.998 13c0-5.523 4.477-10 10-10c2 0 4 1 8 0"/></svg>
+                                Nature Bonus: <span id="statNatureBonus">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayElementalBonus">
+                                <svg style="background: #DD794E;" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 16 16"><path fill="currentColor" d="m4.111 6.19l-.002.003l-.005.006l-.015.02l-.052.071q-.066.091-.169.256a6 6 0 0 0-.462.926c-.31.78-.56 1.885-.281 3.137c.264 1.19.774 2.294 1.658 3.104C5.675 14.529 6.9 15 8.504 15c1.617 0 2.884-.543 3.743-1.473c.852-.924 1.257-2.18 1.257-3.527c0-.859-.286-1.689-.67-2.464c-.365-.738-.839-1.464-1.284-2.147l-.066-.1c-.473-.725-.903-1.395-1.19-2.033c-.285-.637-.397-1.18-.301-1.658A.5.5 0 0 0 9.503 1c-.422 0-1.126.148-1.793.493c-.673.349-1.376.933-1.682 1.849c-.39 1.17.06 2.49.443 3.323c.171.37.023.78-.26.922a.54.54 0 0 1-.727-.242L4.95 6.276a.5.5 0 0 0-.839-.087"/></svg>
+                                Elem. Bonus: <span id="statElementalBonus">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayOccultBonus">
+                                <svg style="background: #9758df;" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69c.12.362.12.752 0 1.113c-1.487 4.471-5.705 7.697-10.677 7.697c-4.97 0-9.186-3.223-10.675-7.69a1.76 1.76 0 0 1 0-1.113M17.25 12a5.25 5.25 0 1 1-10.5 0a5.25 5.25 0 0 1 10.5 0" clip-rule="evenodd"/></g></svg>
+                                Occult Bonus: <span id="statOccultBonus">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayNatureResist">
+                                <svg style="background: #62B26A;" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M20.998 3v2c0 9.627-5.373 14-12 14H7.096c.212-3.012 1.15-4.835 3.598-7.001c1.204-1.065 1.102-1.68.509-1.327C7.119 13.102 5.09 16.386 5 21.63l-.003.37h-2c0-1.363.116-2.6.346-3.732Q2.999 16.327 2.998 13c0-5.523 4.477-10 10-10c2 0 4 1 8 0"/></svg>
+                                Nature Resist: <span id="statNatureResist">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayElementalResist">
+                                <svg style="background: #DD794E;" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 16 16"><path fill="currentColor" d="m4.111 6.19l-.002.003l-.005.006l-.015.02l-.052.071q-.066.091-.169.256a6 6 0 0 0-.462.926c-.31.78-.56 1.885-.281 3.137c.264 1.19.774 2.294 1.658 3.104C5.675 14.529 6.9 15 8.504 15c1.617 0 2.884-.543 3.743-1.473c.852-.924 1.257-2.18 1.257-3.527c0-.859-.286-1.689-.67-2.464c-.365-.738-.839-1.464-1.284-2.147l-.066-.1c-.473-.725-.903-1.395-1.19-2.033c-.285-.637-.397-1.18-.301-1.658A.5.5 0 0 0 9.503 1c-.422 0-1.126.148-1.793.493c-.673.349-1.376.933-1.682 1.849c-.39 1.17.06 2.49.443 3.323c.171.37.023.78-.26.922a.54.54 0 0 1-.727-.242L4.95 6.276a.5.5 0 0 0-.839-.087"/></svg>
+                                Elem. Resist: <span id="statElementalResist">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayOccultResist">
+                                <svg style="background: #9758df;" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"/><path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69c.12.362.12.752 0 1.113c-1.487 4.471-5.705 7.697-10.677 7.697c-4.97 0-9.186-3.223-10.675-7.69a1.76 1.76 0 0 1 0-1.113M17.25 12a5.25 5.25 0 1 1-10.5 0a5.25 5.25 0 0 1 10.5 0" clip-rule="evenodd"/></g></svg>
+                                Occult Resist: <span id="statOccultResist">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayLuck">
+                                <svg style="background: rgb(89, 184, 155);" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M12 11.18c3.3-3 5-4.54 5-6.49C17 3.19 15.75 2 14.25 2c-.86 0-1.68.36-2.25 1c-.57-.64-1.39-1-2.31-1C8.19 2 7 3.25 7 4.75c0 1.89 1.7 3.43 5 6.43m-.82.82c-3-3.3-4.54-5-6.49-5C3.19 7 2 8.25 2 9.75c0 .86.36 1.68 1 2.25c-.64.57-1 1.39-1 2.31C2 15.81 3.25 17 4.75 17c1.89 0 3.43-1.7 6.43-5m1.65 0c2.99 3.3 4.53 5 6.48 5c1.5 0 2.69-1.25 2.69-2.75c0-.86-.36-1.68-1-2.25c.64-.57 1-1.39 1-2.31C22 8.19 20.75 7 19.25 7c-1.89 0-3.43 1.7-6.42 5m-.83.82c-3.3 3-5 4.54-5 6.49C7 20.81 8.25 22 9.75 22c.86 0 1.68-.36 2.25-1c.57.64 1.39 1 2.31 1c1.5 0 2.69-1.25 2.69-2.75c0-1.89-1.7-3.43-5-6.43"/></svg>
+                                Luck: <span id="statLuck">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayGatheringPower">
+                                <svg style="background: #ac743f;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><g fill="none"><path fill="white" d="m8.99 11.91l2.92-2.92l-1.48-1.48a.646.646 0 0 0-.91 0L7.51 9.52c-.25.25-.25.66 0 .91zm19.18 17.81l1.55-1.55c.37-.38.37-.99 0-1.37L15.81 12.89L12 12.5l.89 3.31L26.8 29.72c.38.38.99.38 1.37 0"/><path fill="white" d="M21.98 2.02c-4.13 1.02-9.03 3.5-12.74 7.22s-6.2 8.61-7.22 12.74c-.16.66.65 1.12 1.14.64l7.27-7.27c.15-.15.4-.15.55 0l.82.82c.2.2.53.2.73 0l3.65-3.65c.2-.2.2-.53 0-.73l-.82-.82a.39.39 0 0 1 0-.55l7.27-7.27c.47-.48.02-1.29-.65-1.13"/></g></svg>
+                              Gathering Power: <span id="statGatheringPower">6</span>
+                            </div>
+
+                            <div class="newStat" id="statDisplayFishingLevel">
+                                <svg style="background: #5893df;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16.202 2.074c1.04.05 1.958.272 2.673.535c.675.249 1.28.575 1.61.906c.33.33.657.935.905 1.61a9 9 0 0 1 .536 2.673c.085 1.79-.345 3.927-1.92 5.969l-.018.047l-1.437 2.876a1 1 0 0 1-1.855-.169a11.7 11.7 0 0 1-4.14 1.178l-.51.042l-.583.039l-.976.053l-1.052.05c-.503.024-1.014.048-1.508.074a21 21 0 0 1-.184 1.653a5 5 0 0 1-.231.952c-.191.502-.597.923-1.169.923c-.752 0-1.436-.53-1.993-1.057l-.268-.26l-.38-.381c-.564-.58-1.187-1.315-1.187-2.13c0-.46.267-.758.436-.897c.297-.245.681-.36 1.062-.437l.376-.066a21 21 0 0 1 1.654-.184l.14-2.896l.037-.64l.038-.583q.02-.275.043-.51c.138-1.454.541-2.88 1.178-4.14a1 1 0 0 1-.168-1.855l2.828-1.415a1 1 0 0 1 .094-.04c2.041-1.575 4.179-2.006 5.969-1.92m.748 4.976a1.5 1.5 0 1 0-2.122 2.121a1.5 1.5 0 0 0 2.122-2.12Z"/></g></svg>
+                              Fishing Level: <span id="statFishingLevel">6</span>
+                            </div>
+                            
+                            <div class="newStat" id="statDisplayExpBonus">
+                                <svg style="background: #b262ab;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 9A7 7 0 1 1 5 9a7 7 0 0 1 14 0"/><path fill="currentColor" d="m7.093 15.941l-.379 1.382c-.628 2.292-.942 3.438-.523 4.065c.147.22.344.396.573.513c.652.332 1.66-.193 3.675-1.243c.67-.35 1.006-.524 1.362-.562a2 2 0 0 1 .398 0c.356.038.691.213 1.362.562c2.015 1.05 3.023 1.575 3.675 1.243c.229-.117.426-.293.573-.513c.42-.627.105-1.773-.523-4.065l-.379-1.382A8.46 8.46 0 0 1 12 17.5a8.46 8.46 0 0 1-4.907-1.559"/></svg>
+                                EXP Bonus: <span id="statExpBonus">192K</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayExtraLives">
+                                <svg style="background: #c29d65;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m10 2l-.117.007A1 1 0 0 0 9 3v4H5a1 1 0 0 0-1 1v4l.007.117A1 1 0 0 0 5 13h4v8a1 1 0 0 0 1 1h4l.117-.007A1 1 0 0 0 15 21v-8h4a1 1 0 0 0 1-1V8l-.007-.117A1 1 0 0 0 19 7h-4V3a1 1 0 0 0-1-1z"/></svg>
+                                Extra Lives: <span id="statExtraLives">192K</span>
+                            </div>
+
+                            <div class="newStat" id="statDisplayHealingBonus">
+                                <svg style="background: #d36969;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-3v3a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-3H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h3z"/></g></svg>
+                                Healing Bonus: <span id="statHealingBonus">20%</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayDodgeChance">
+                                <svg style="background: #494677;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M11.992 14.65a2.65 2.65 0 0 1-1.87-4.53a.753.753 0 1 1 1.06 1.07a1.13 1.13 0 0 0-.34.81a1.14 1.14 0 0 0 2 .81a.76.76 0 0 1 1.07 0a.77.77 0 0 1 0 1.07a2.67 2.67 0 0 1-1.92.77"/><path fill="currentColor" d="M22.242 12a10.25 10.25 0 0 1-10.25 10.25a10.25 10.25 0 0 1 0-20.5a.75.75 0 0 1 .75.75v3.8a.76.76 0 0 1-.75.75a4.86 4.86 0 0 0-2.75.83a4.93 4.93 0 0 0-2.11 5.08a5 5 0 0 0 9.81-1a.74.74 0 0 1 .75-.75h3.8a.75.75 0 0 1 .75.79"/><path fill="currentColor" d="M21.882 6.13a1.06 1.06 0 0 1-.23.53l-2.17 2.17a2.6 2.6 0 0 1-1.11.66a2.5 2.5 0 0 1-.76.11a3 3 0 0 1-.53 0l-1.33-.26l-2.28 2.29a.8.8 0 0 1-.53.22a.75.75 0 0 1-.53-.22a.74.74 0 0 1 0-1.06l2.29-2.3l-.27-1.32a2.76 2.76 0 0 1 .06-1.28a2.6 2.6 0 0 1 .66-1.11l2.15-2.15a1 1 0 0 1 .53-.25a.9.9 0 0 1 .54.09a1 1 0 0 1 .4.37a1 1 0 0 1 .12.58l-.32 2.26l2.25-.31a.94.94 0 0 1 .93.51a1 1 0 0 1 .13.47"/></svg>
+                             Dodge Chance: <span id="statDodgeChance">20%</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayAttackSpeed">
+                                <svg style="background: #8bbe50;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m12 13.333l-9.223 6.149A.5.5 0 0 1 2 19.066V4.934a.5.5 0 0 1 .777-.416L12 10.667V4.934a.5.5 0 0 1 .777-.416l10.599 7.066a.5.5 0 0 1 0 .832l-10.599 7.066a.5.5 0 0 1-.777-.416z"/></svg>
+                             Attack Speed: <span id="statAttackSpeed">20%</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayDebuffBonus">
+                                <svg style="background: #9758df;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16 15a3 3 0 1 1 0 6a3 3 0 0 1 0-6m-9-4a4 4 0 1 1 0 8a4 4 0 0 1 0-8m9-8a5 5 0 1 1 0 10a5 5 0 0 1 0-10"/></g></svg>
+                             Debuff Bonus: <span id="statDebuffBonus">20%</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayIncome">
+                                <svg style="background: #4d6648;" xmlns="http://www.w3.org/2000/svg" width="0.54em" height="1em" viewBox="0 0 960 1792"><path fill="currentColor" d="M946 1185q0 153-99.5 263.5T588 1585v175q0 14-9 23t-23 9H421q-13 0-22.5-9.5T389 1760v-175q-66-9-127.5-31T160 1509.5t-74-48t-46.5-37.5t-17.5-18q-17-21-2-41l103-135q7-10 23-12q15-2 24 9l2 2q113 99 243 125q37 8 74 8q81 0 142.5-43t61.5-122q0-28-15-53t-33.5-42t-58.5-37.5t-66-32t-80-32.5q-39-16-61.5-25T317 948.5t-62.5-31T198 882t-53.5-42.5t-43.5-49t-35.5-58t-21-66.5t-8.5-78q0-138 98-242t255-134V32q0-13 9.5-22.5T421 0h135q14 0 23 9t9 23v176q57 6 110.5 23t87 33.5T849 302t39 29t15 14q17 18 5 38l-81 146q-8 15-23 16q-14 3-27-7q-3-3-14.5-12t-39-26.5t-58.5-32t-74.5-26T505 430q-95 0-155 43t-60 111q0 26 8.5 48t29.5 41.5t39.5 33t56 31t60.5 27t70 27.5q53 20 81 31.5t76 35t75.5 42.5t62 50t53 63.5T933 1091t13 94"/></svg>
+                             Income: <span id="statIncome">20</span>
+                            </div>
+
+                            <div class="newStat" id="statDisplayCritChance">
+                                <svg style="background: rgb(153, 46, 46);" xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7a5 5 0 0 0-4.607 3.053C11.963 11.07 12.896 12 14 12h6c1.105 0 2.037-.93 1.607-1.947A5 5 0 0 0 17 7m0 10a5 5 0 0 0-3.053-4.607C12.93 11.963 12 12.896 12 14v6c0 1.105.93 2.037 1.947 1.607A5 5 0 0 0 17 17M7 17a5 5 0 0 0 4.607-3.053C12.037 12.93 11.104 12 10 12H4c-1.105 0-2.037.93-1.607 1.947A5 5 0 0 0 7 17M7 7a5 5 0 0 0 3.053 4.607C11.07 12.037 12 11.104 12 10V4c0-1.105-.93-2.037-1.947-1.607A5 5 0 0 0 7 7"/></svg>
+                                Crit Chance: <span id="statCritChance">20</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayThorns">
+                                <svg style="background: #31493a;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" d="M256 16c-5.718 51.466-24.204 93.997-32.813 124.687c-8.896 2.525-17.386 5.918-25.312 10.313c-27.803-15.645-71.13-32.34-111.563-64.688c32.348 40.434 49.043 83.76 64.688 111.563c-4.395 7.926-7.788 16.416-10.313 25.312C109.997 231.797 67.467 250.282 16 256c51.466 5.718 93.997 24.204 124.687 32.812c2.525 8.897 5.918 17.387 10.313 25.313c-15.645 27.802-32.34 71.128-64.688 111.562c40.434-32.347 83.76-49.042 111.563-64.687c7.926 4.395 16.416 7.788 25.312 10.312c8.61 30.69 27.095 73.22 32.813 124.688c5.718-51.467 24.204-93.998 32.812-124.688c8.897-2.524 17.387-5.917 25.313-10.312c27.802 15.645 71.128 32.34 111.562 64.687c-32.347-40.434-49.042-83.76-64.687-111.562c4.395-7.926 7.788-16.416 10.312-25.313c30.69-8.608 73.22-27.094 124.688-32.812c-51.467-5.718-93.998-24.204-124.688-32.813c-2.524-8.896-5.917-17.386-10.312-25.312c15.645-27.803 32.34-71.13 64.687-111.563c-40.434 32.348-83.76 49.043-111.562 64.688c-7.926-4.395-16.416-7.788-25.313-10.313C280.204 109.997 261.718 67.467 256 16m0 180c16.57 0 31.798 6.486 42.657 17.343S316 239.43 316 256s-6.486 31.798-17.343 42.657C287.797 309.515 272.57 316 256 316s-31.8-6.486-42.657-17.343C202.483 287.797 196 272.57 196 256s6.486-31.8 17.343-42.657C224.2 202.483 239.43 196 256 196"/></svg>
+                                Thorns: <span id="statThorns">20%</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayStealLevel">
+                                <svg style="background: #242424;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6H5C3.346 6 2 7.346 2 9v5c0 2.206 1.794 4 4 4h1.637c1.166 0 2.28-.557 2.981-1.491c.66-.879 2.104-.88 2.764.001A3.74 3.74 0 0 0 16.363 18H18c2.206 0 4-1.794 4-4V9c0-1.654-1.346-3-3-3M7.5 13C6.119 13 5 12.328 5 11.5S6.119 10 7.5 10s2.5.672 2.5 1.5S8.881 13 7.5 13m9 0c-1.381 0-2.5-.672-2.5-1.5s1.119-1.5 2.5-1.5s2.5.672 2.5 1.5s-1.119 1.5-2.5 1.5"/></svg>
+                               Steal Level: <span id="statStealLevel">6</span>
+                            </div>
+
+                            <div class="newStat" id="statDisplayLifesteal">
+                                <svg  style="background: #dd4f62;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M19.89 12.006a1 1 0 0 1 1.104.884l1 9a1 1 0 0 1-1.988.22l-1-9a1 1 0 0 1 .884-1.104"/><path d="M13.388 11c.153 6.107 2.212 7.23 6.938 8l-.299-2.935l-.413-.988c1.613-.674 2.971-1.07 4.38-1.077c1.413-.007 2.777.376 4.404 1.083l-.425.978l-.3 2.939c4.727-.77 6.786-1.893 6.94-8C41.142 11 44 17.5 44 27c-7.333-1.875-11.5 2.5-11.5 6.4H27L24 39l-3-5.6h-5.5c0-3.9-4.167-8.275-11.5-6.4c0-9.5 2.857-16 9.388-16"/><path d="M28.11 12.006a1 1 0 0 0-1.104.884l-1 9a1 1 0 0 0 1.988.22l1-9a1 1 0 0 0-.884-1.104"/></g></svg>
+                               Lifesteal: <span id="statLifesteal">6</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayOfflineBonus">
+                                <svg  style="background: #5060bb;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M3.603 1.412A.75.75 0 1 0 2.897.088A9.4 9.4 0 0 0 .182 2.261a.75.75 0 1 0 1.136.978a7.9 7.9 0 0 1 2.285-1.827M7 14A6 6 0 1 0 7 2a6 6 0 0 0 0 12M10.088.398a.75.75 0 0 1 1.015-.31a9.4 9.4 0 0 1 2.715 2.173a.75.75 0 0 1-1.136.978a7.9 7.9 0 0 0-2.285-1.827a.75.75 0 0 1-.309-1.014M7.625 5a.625.625 0 1 0-1.25 0v3c0 .345.28.625.625.625h2.5a.625.625 0 1 0 0-1.25H7.625z" clip-rule="evenodd"/></svg>
+                                Offline Bonus: <span id="statOfflineBonus">6</span>%
+                            </div>
+
+                            <div class="newStat" id="statDisplayLumaPower">
+                                <svg style="background: #95bb50;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m12.434 21.112l.008-.006l.021-.015l.08-.058q.104-.075.295-.219a38.5 38.5 0 0 0 4.197-3.674c1.148-1.168 2.315-2.533 3.199-3.981c.88-1.44 1.516-3.024 1.516-4.612c0-1.885-.585-3.358-1.62-4.358c-1.03-.994-2.42-1.439-3.88-1.439c-1.725 0-3.248.833-4.25 2.117C10.998 3.583 9.474 2.75 7.75 2.75c-3.08 0-5.5 2.639-5.5 5.797c0 1.588.637 3.171 1.516 4.612c.884 1.448 2.051 2.813 3.199 3.982a38.5 38.5 0 0 0 4.492 3.892l.08.058l.021.015l.008.006a.75.75 0 0 0 .867 0M12 9.25a.75.75 0 0 1 .75.75v1.25H14a.75.75 0 0 1 0 1.5h-1.25V14a.75.75 0 0 1-1.5 0v-1.25H10a.75.75 0 0 1 0-1.5h1.25V10a.75.75 0 0 1 .75-.75"/></svg>
+                                Luma Power: <span id="statLumaPower">6</span>%
+                            </div>
+
+
+
+
+
+                        </div>
+
+
+
+
+                       </div>
+
+
+
+
+
+
+
+                    </span>
+
+                </div>
+                <div class="mainUISlot" style="height: 55%;">
+                    <div class="inventoryTop">
+                    <div class="inventoryTopButtons">
+
+                        
+
+
+
+                        <div class="inventoryTab inventoryTabActive" onclick='changeSort("Material")' id="inventoryMaterialTarget">
+                            <div id="inventoryMaterialIndicator">0</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M13.462 9.692C13.462 12.664 10.77 14 7 14S.537 12.664.537 9.713c0-2.825 1.235-4.432 3.705-5.885a4.59 4.59 0 0 0 5.52-.004c2.467 1.438 3.7 3.045 3.7 5.868M8.743 3.008l1.27-1.985A.7.7 0 0 0 9.41 0H4.843a.7.7 0 0 0-.603 1.077l1.047 1.95c1.061.635 2.4.629 3.456-.019" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div class="inventoryTab" onclick='changeSort("Consumable")' id="inventoryConsumableTarget">
+                            <div id="inventoryConsumableIndicator">0</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M18.68 22H5.32a2.318 2.318 0 0 1-1.96-3.55L4.27 17L9 9.46V3H7V1h10v2h-2v6.46L19.73 17l.91 1.45A2.318 2.318 0 0 1 18.68 22"/></svg>
+                                                </div>
+                        <div class="inventoryTab" onclick='changeSort("Weapon")' id="inventoryWeaponTarget">
+                            <div id="inventoryWeaponIndicator">0</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="m7.048 13.406l3.535 3.536l-1.413 1.414l1.415 1.415l-1.414 1.414l-2.475-2.475l-2.829 2.829l-1.414-1.414l2.829-2.83l-2.475-2.474l1.414-1.414l1.414 1.413zM3 3l3.546.003l11.817 11.818l1.415-1.414l1.415 1.414l-2.475 2.475l2.828 2.829l-1.414 1.414l-2.829-2.829l-2.474 2.475l-1.415-1.414l1.414-1.415L3.002 6.531zm14.457 0L21 3.003l.002 3.523l-4.053 4.052l-3.536-3.535z"/></svg>
+                                                                        </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Offhand")' id="inventoryOffhandTarget">
+                            <div id="inventoryOffhandIndicator">0</div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M111.9 33.4c24.8 45.04 23.8 88 8.4 124.5c-16.3 38.6-47.47 70.4-78.91 94.6c1.8 12.4 11.15 31.8 26.2 52.9c16.81 23.7 40.01 49.9 64.81 74.6c24.7 24.8 51 48.1 73.9 66.1c21.1 16.5 39.6 28.2 49.7 32.5c10.1-4.3 28.6-16 49.7-32.5c22.9-18 49.2-41.3 73.9-66.1c24.8-24.7 48-50.9 64.8-74.6c15.1-21.1 24.4-40.5 26.2-52.9c-31.4-24.2-62.6-56-78.9-94.6c-15.4-36.5-16.4-79.46 8.4-124.5H354c-64.8 31.74-131.2 31.74-196 0zm49.2 46h49l1.9.95c22.1 11.01 33.7 15.75 44 15.75s21.9-4.74 44-15.75l1.9-.95h49l-1.6 10.38c-11.9 76.52 25 129.12 67.5 161.02l3.6 2.7v4.5c0 15.2-8.9 30.9-21.3 48.3c-12.4 17.5-29 36.1-46.5 53.7c-17.6 17.6-36.2 34.1-52.7 47c-16.5 13-30 22.3-41.1 25.9l-2.8 1l-2.8-1c-11.1-3.6-24.6-12.9-41.1-25.9c-16.4-12.9-35-29.4-52.6-47s-34.2-36.2-46.6-53.7c-12.4-17.4-21.19-33.1-21.19-48.3v-4.5l3.59-2.7c42.4-31.9 79.4-84.5 67.4-161.01zm20.6 18c7.9 75.5-28.9 130.8-71.3 164.4c1.5 7.8 7.4 20.3 17.2 34.1c11.5 16.2 27.6 34.3 44.6 51.4c17.1 17.1 35.3 33.2 51 45.6c13.9 10.8 26.1 18.6 32.8 21.6c6.7-3 18.9-10.8 32.8-21.6c15.8-12.4 33.9-28.5 51-45.6s33.1-35.2 44.7-51.4c9.8-13.8 15.7-26.3 17.2-34.1c-42.5-33.6-79.2-88.9-71.4-164.4h-24.2c-21.2 10.5-35.1 16.7-50.1 16.7s-28.9-6.2-50.1-16.7zm74.3 26.3l44.7 44.7l-44.7 44.7l-44.7-44.7l38.3-38.4zm0 25.4l-19.3 19.3l19.3 19.3l19.3-19.3zm0 86.6l76.7 76.7l-76.7 76.7l-76.7-76.7l70.3-70.4zm0 25.4l-51.3 51.3l51.3 51.3l51.3-51.3z"/></svg>
+                                                </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Head")' id="inventoryHeadTarget">
+                            <div id="inventoryHeadIndicator">0</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M258.094 18.5c-74.34 0-138.073 62.498-156.188 148.438c52.758-7.697 102.23-22.044 153.938-45.094l4.125-1.813l3.967 2.064c49.424 25.667 97.648 41.026 150.657 46.406c-17.66-86.744-81.71-150-156.5-150zm1.28 122.156c-57.41 25.148-112.883 39.993-172.53 47c6.724 32.847 6.91 65.935-.5 98.938c89.29 41.602 231.648 43.154 340.594-.125c-10.762-32.516-11.727-65.66-1.188-98.408c-59.03-4.235-112.628-20.06-166.375-47.406zm-13.5 33.125h18.72v127.75h-18.72V173.78zm-58.78 11.19h18.687v101.655h-18.686V184.97zm115.72 0H321.5v101.655h-18.688V184.97zm-171.72 14.905h18.687v79.28h-18.686zm227.72 0H377.5v79.28h-18.688v-79.28zm38.748 116.75c-14.302 4.282-28.96 7.873-43.78 10.844l-19.22 64.06c26.114-17.337 48.002-43.31 63-74.905zm-277.53 2.875c13.95 28.257 33.448 51.85 56.562 68.53l-17.688-58.905c-13.397-2.61-26.387-5.826-38.875-9.625zm213.156 11.656c-51.63 8.175-104.745 8.588-153.72 1.438l20.845 69.5c18 8.52 37.49 13.187 57.78 13.187c18.588 0 36.507-3.92 53.22-11.124zm-195.5 47.156c-19.436 21.562-36.416 44.367-48.594 72.157c70.233-8.736 133.743 14.684 168.03 50.75c39.684-35.607 103.71-55.685 170.876-44.25c-15.08-29.372-33.32-51.982-53.938-74c-31.187 31.75-71.53 51-115.968 51c-46.568 0-88.65-21.142-120.406-55.658z"/></svg>
+                                                    </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Chest")' id="inventoryChestTarget">
+                            <div id="inventoryChestIndicator">0</div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M156.7 25.83L89 39.38c-.1 58.57-1.74 119.32-43.49 167.22C104.4 246.5 189 260.7 247 248.8v-99L108.3 88.22l7.4-16.44L256 134.2l140.3-62.42l7.4 16.44L265 149.8v99c58 11.9 142.6-2.3 201.5-42.2c-41.8-47.9-43.4-108.65-43.5-167.22l-67.7-13.55c-12.9 13.88-20.6 28.15-32.9 40.53C308.9 79.78 289.5 89 256 89s-52.9-9.22-66.4-22.64c-12.3-12.38-20-26.65-32.9-40.53M53.88 232.9C75.96 281 96.07 336.6 102.7 392.8l65 22.8c4.2-52.7 28.2-104 63.7-146.1c-55.1 6.3-122.7-5.8-177.52-36.6m404.22 0c-54.8 30.8-122.4 42.9-177.5 36.6c35.5 42.1 59.5 93.4 63.7 146.1l65.2-22.9c6.6-56.8 26.6-111.8 48.6-159.8M256 269c-40.5 43.1-67.7 97.9-70.7 152.7l61.7 21.6V336h18v107.3l61.7-21.6c-3.1-54.8-30.2-109.6-70.7-152.7m151.7 143.4L297 451.1v18.8l110.2-44.1c.1-4.5.3-8.9.5-13.4m-303.3.1c.3 4.5.4 8.9.5 13.4l110.1 44v-18.7zM279 457.4l-23 8.1l-23-8v19.6l23 9.2l23-9.2z"/></svg>
+                                                        </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Legs")' id="inventoryLegsTarget">
+                            <div id="inventoryLegsIndicator">0</div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M89.452 32v44.667l166.75 28.9l166.75-28.9V32l-166.75 28.902zm-.405 69.444v186.712c49.478 16.004 90.187 8.72 139.67 0c1.14-34.244 12.925-60.635 27.09-60.672c14.165.04 25.95 26.428 27.09 60.672c49.472 16.003 90.173 8.72 139.65 0V101.444l-166.74 28.813zm0 212.25v69.186c45.914 7.332 85.747 13.896 131.648 0v-69.186c-45.915 7.33-85.747 13.895-131.648 0m201.853 0v69.186c45.914 7.332 85.747 13.896 131.648 0v-69.186c-45.915 7.33-85.747 13.895-131.648 0m-198.44 94.55v64.2c43.532 6.802 81.302 12.893 124.823 0v-64.2c-43.534 6.8-81.303 12.893-124.824 0zm201.854 0v64.2c43.533 6.802 81.3 12.893 124.822 0v-64.2c-43.534 6.8-81.3 12.893-124.822 0"/></svg>
+                            </div>
+
+                            <div class="inventoryTab" onclick='changeSort("Feet")' id="inventoryFeetTarget">
+                                <div id="inventoryFeetIndicator">0</div>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M334.5 85.22c-31.403.523-69.44 13.372-100.563 42.81l17.594 215.407l-6.468 77.657h58.125l15.282-37.72l21.124 37.72h151.53c7.896-58.587-44.23-130.167-74.53-130.375l-16.53 1.124c-36.103 7.265-49.647 27.03-66.314 49.78l-4.28 5.845l-6.72-2.69l-13.03-5.25l-14.283 36.595l-17.406-6.78l14.376-36.783l-11.906-4.78l-8.563-3.438l3.313-8.594c7.98-20.727 20.735-40.35 38.906-54.156c14.907-11.326 33.593-18.483 55.156-18.688c1.438-.013 2.88.014 4.344.063c1.917.063 3.856.167 5.813.343l2.5-18.157c-26.083-16.097-67.526-14.873-103.72-.72l-6.78-17.405c20.11-7.864 41.785-12.5 62.655-12.56c17.98-.054 35.357 3.307 50.563 10.874l5.593-40.656c-31.286-27.418-77.42-24.612-119.374-.594l-9.28-16.22c23.566-13.49 49.485-21.265 74.312-21.31c20.46-.04 40.183 5.176 57.28 16.78l2.188-15.844c.354-1.526.61-3.013.78-4.47c.002-.02 0-.04.002-.06c.357-10.548-4.066-18.356-12.938-25c-9.483-7.103-24.383-11.937-42.03-12.657a117 117 0 0 0-6.72-.094zm-194.406 77.31c-.838.01-1.678.03-2.5.064c-13.162.537-24.16 4.175-30.938 9.25c-6.776 5.075-9.702 10.64-8.937 18.844l-.595.062c.132 1.234.324 2.514.625 3.813l2.313 16.718c10.807-7.494 23.1-11.163 35.53-11.093c17.786.102 35.61 7.284 51.782 19.25l-11.094 15c-13.73-10.16-28.064-15.49-40.81-15.562c-11.988-.068-22.776 4.042-32.407 14.344l4.406 31.843c8.974-4.182 18.787-6.078 28.843-6.063c14.792.022 30.092 4.157 44 11.188l-8.438 16.687c-21.797-11.02-45.487-12.505-61.688-2l2.032 14.72a88 88 0 0 1 2.5-.064c14.633-.1 27.16 4.06 37.343 11.25c14.48 10.227 24.226 25.514 32.625 41.595l4.28 8.25l-8.218 4.344l-8.47 4.467L186 394.875l-16.438 8.875l-13.812-25.594l-9.156 4.844l-6.344 3.344l-4.875-5.25c-16.32-17.62-29.136-32.608-60.406-35.188l-9-.75c-32.087 15.312-47.556 38.284-42.44 76.25h190.44l-5.095-59.687l-.03-.064l13.593-162.625c-24.97-26.094-56.98-36.796-82.344-36.5zm229.344 99.032c-17.593.075-31.926 5.756-43.97 14.907c-12.36 9.39-22.03 22.778-29 37.592l26.657 10.72c14.056-18.898 30.816-38.795 61.813-48.344l-8.032-14.47c-1.3-.105-2.638-.295-3.906-.343a87 87 0 0 0-3.563-.063zM116.594 318c-4.288-.028-9.038.543-14.28 1.625l-9 10.656c23.388 6.11 38.254 19.727 50.75 32.94l10.655-5.626l8.843-4.688c-6.628-11.382-13.846-20.917-22.282-26.875c-6.494-4.586-13.685-7.535-22.874-7.967c-.593-.028-1.2-.06-1.812-.063z"/></svg>
+                                                            </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Ring")' id="inventoryRingTarget">
+                            <div id="inventoryRingIndicator">0</div>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M102.6 34.33c-7.03 7-19.03 19.24-32.07 34.6c25.53 3.3 56.47 11.09 84.97 19.76c18.8 5.72 36.4 11.81 50.2 17.41c7 2.8 13 5.5 17.9 7.9c4.9 2.5 8.4 4.4 11.6 7.6l-12.6 12.8c-.1-.1-3-2.2-7.2-4.3c-4.1-2.1-9.8-4.6-16.4-7.3c-13.2-5.3-30.4-11.3-48.7-16.9c-32.4-9.84-68.89-18.34-93.24-20.24c-9.14 12.07-17.4 24.64-22.72 35.84c63.22 13.9 134.16 40.1 173.46 79.3l3.4 3.4l-1 4.8s-3 15.4-3 33.8s3.8 38.8 13.5 48.5c9.7 9.8 30.2 13.6 48.6 13.6s33.8-3 33.8-3l4.8-1l3.4 3.4c39.2 39.3 65.4 110.1 79.3 173.4c11.2-5.3 23.7-13.6 35.8-22.7c-1.9-24.4-10.3-60.8-20.2-93.1c-5.6-18.4-11.6-35.6-16.9-48.8c-2.7-6.6-5.2-12.3-7.3-16.4c-2.1-4.2-4.2-7.1-4.3-7.2l12.8-12.6c3.2 3.2 5.1 6.7 7.6 11.6c2.4 4.9 5.1 10.9 7.9 17.9c5.6 13.8 11.7 31.4 17.4 50.2c8.6 28.4 16.4 59.4 19.7 85c15.4-13.1 27.6-25.1 34.6-32.1c-12.7-64.7-26.1-151.4-62.6-212.2l-1.8-3l.7-3.4s3-15.4 3.1-33.8c0-8.3-.8-17-2.5-25c1.6 11-.2 23.4-4.4 36c-7.6 22.8-23.4 47.5-45.6 69.8c-22.3 22.2-47 38-69.8 45.6s-45.2 7.3-59.4-6.9c-14.1-14.1-14.5-36.6-6.8-59.3c7.5-22.8 23.3-47.5 45.6-69.8s46.9-38.1 69.8-45.6c12.3-4.19 24.6-5.97 35.4-4.51C371.6 95.74 363.1 95 355 95c-18.4 0-33.8 3.06-33.8 3.06l-3.5.68l-2.9-1.79c-60.9-36.55-147.5-49.9-212.2-62.62M371.9 115c-6.4-.1-13.9 1.2-22.3 4c-14.2 4.7-30.3 13.7-46 26.3c5.1-3.1 10.2-5.7 15.2-7.8c7.9-3.2 15.4-5.1 22.5-5.2c7.2 0 14.5 2 19.7 7.3c1.7 1.7 3 3.5 4.1 5.5c-9-3.9-19.5-1.8-26.4 5.1c-9.4 9.4-9.4 24.6 0 34c5.3 5.2 12.6 7.7 20 6.8c-6.8 13-17 26.6-29.9 39.4c-15.9 16-33 27.8-48.6 34.3c-7 2.9-13.7 4.7-20.2 5c7.6 1.5 17.4.6 29.1-3.3c19.4-6.4 42.2-20.7 62.7-41.3c20.6-20.6 34.9-43.3 41.3-62.7c6.4-19.3 4.8-33.7-2.5-40.9c-4.1-4.1-10.5-6.4-18.7-6.5M30.64 135.9c-.48 5.1.53 12.6 4.04 22.1c5.19 14.2 15.06 32.1 28.35 51.7C89.6 249 129.7 295.6 173.1 338.9c43.3 43.4 89.9 83.5 129.2 110.1c19.6 13.3 37.5 23.1 51.7 28.3c9.5 3.5 17 4.5 22.1 4c-5.1-23.3-12.1-47.8-20.7-71.2c-49.3-29.2-92.9-61.9-131.9-99.1c-4.7-2.5-9.2-5.6-13.1-9.5a50.9 50.9 0 0 1-9.5-13.2c-37.2-38.9-69.8-82.5-99-131.7c-23.36-8.7-47.92-15.7-71.26-20.7M130 168c19.1 30.3 39.7 58.2 62 84c-.2-4-.3-8-.3-11.8c0-15.7 1.7-26.8 2.6-32.2c-16.1-15-38.7-28.5-64.3-40m174 149.7c-5.4.9-16.5 2.6-32.2 2.6c-3.8 0-7.8-.1-11.9-.4c25.9 22.4 53.8 43 84.1 62.1c-11.5-25.5-25-48.2-40-64.3"/></svg>
+                        </div>
+                        <div class="inventoryTab" onclick='changeSort("Trinket")' id="inventoryTrinketTarget">
+                            <div id="inventoryTrinketIndicator">0</div>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 512 512"><path fill="currentColor" d="M50.826 18C63.09 37.645 78.948 61.515 97.252 85.465c8.806 11.522 18.178 23.057 27.992 34.156a27.1 27.1 0 0 1 5.83-7.068a27.1 27.1 0 0 1 7.824-4.688c-9.537-10.77-18.713-22.036-27.345-33.33C96.514 54.86 83.159 35.21 72.133 18zm389.041 0c-11.026 17.21-24.381 36.859-39.42 56.535c-8.631 11.294-17.806 22.559-27.343 33.328a27.1 27.1 0 0 1 7.824 4.688a27.1 27.1 0 0 1 5.83 7.068c9.813-11.098 19.184-22.633 27.99-34.154c18.304-23.95 34.163-47.82 46.426-67.465zm-78.385 105.752a19 19 0 0 0-3.462.459c-4.923 1.087-10.623 4.336-15.194 9.654s-6.93 11.445-7.265 16.475c-.336 5.03 1.081 8.54 3.648 10.746s6.247 3.079 11.17 1.992s10.626-4.338 15.197-9.656s6.929-11.443 7.264-16.473s-1.08-8.541-3.647-10.748c-1.925-1.655-4.477-2.559-7.71-2.45zm-210.964.002c-3.233-.11-5.784.794-7.71 2.45c-2.566 2.206-3.983 5.715-3.648 10.745s2.695 11.155 7.266 16.473s10.27 8.57 15.193 9.656s8.607.216 11.174-1.99s3.98-5.718 3.645-10.748c-.336-5.03-2.691-11.155-7.262-16.473s-10.275-8.57-15.197-9.656a19 19 0 0 0-3.461-.457m43.199 35.035c-1.272 5.96-4.184 11.532-8.965 15.738c12.015 8.42 24.372 15.304 36.965 19.95l-4.297-21.487c-7.848-3.8-15.778-8.584-23.703-14.2zm124.568 0c-7.925 5.617-15.857 10.402-23.705 14.201l-4.297 21.487c12.593-4.646 24.95-11.53 36.965-19.95c-4.781-4.206-7.69-9.778-8.963-15.738M234.98 169l12.4 62h17.242l12.4-62zm-8.141 51.082c-2.807 3.896-5.507 8.361-8.043 13.434C208.032 255.04 201 285.87 201 320s7.032 64.959 17.795 86.484C229.558 428.01 243.19 439 256 439s26.442-10.99 37.205-32.516C303.968 384.96 311 354.13 311 320s-7.032-64.959-17.795-86.484c-2.536-5.073-5.236-9.538-8.043-13.434L279.38 249h-46.76zm-43.127 8.217a87 87 0 0 0-4.041.058c-28.134 1.064-52.15 15.419-73.293 35.168c-19.685 18.388-35.63 41.18-48.29 61.676c21.541-12.732 46.572-26.079 70.741-35.183c18.61-7.01 36.408-11.642 52.168-10.774c1.722.095 3.422.274 5.102.518c2.933-18.506 7.86-35.372 14.42-49.733c-5.759-1.105-11.364-1.682-16.807-1.73m144.578 0c-5.443.048-11.048.625-16.807 1.73c6.56 14.36 11.487 31.227 14.42 49.733c1.68-.244 3.38-.423 5.102-.518c15.76-.868 33.558 3.763 52.168 10.774c24.17 9.104 49.2 22.451 70.74 35.183c-12.66-20.495-28.604-43.288-48.289-61.676c-21.143-19.75-45.159-34.104-73.293-35.168a87 87 0 0 0-4.04-.058zM235.916 263h40.168L295 284.62v69.962l-39 62.398l-39-62.398V284.62zm8.168 18L235 291.38v58.038l21 33.6l21-33.6v-58.037L267.916 281zm-61.055 41.436c-35.701 3.372-54.91 22.392-68.078 47.367c-9.357 17.748-14.703 38.448-18.797 58.22c14.458-18.095 29.949-35.572 45.639-48.222c12.3-9.918 24.722-17.233 37.904-18.688a34.3 34.3 0 0 1 6.535-.076c-1.98-12.225-3.083-25.174-3.203-38.601m145.942 0c-.12 13.427-1.222 26.376-3.203 38.601a34.3 34.3 0 0 1 6.535.076c13.182 1.455 25.603 8.77 37.904 18.688c15.69 12.65 31.181 30.127 45.639 48.222c-4.094-19.772-9.44-40.472-18.797-58.22c-13.168-24.975-32.377-43.995-68.078-47.367m-92.84 129.7L256 491.874l19.87-39.736C269.69 455.27 263.05 457 256 457s-13.69-1.729-19.87-4.863z"/></svg>
+                                                    </div>
+                        <div class="inventoryTab" onclick='changeSort("Luma")' id="inventoryLumaTarget">
+                            <div id="inventoryLumaIndicator">0</div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="m12.434 21.112l.008-.006l.021-.015l.08-.058A36 36 0 0 0 13.879 20a39 39 0 0 0 3.156-2.858c1.148-1.169 2.315-2.534 3.199-3.982c.88-1.44 1.516-3.024 1.516-4.612c0-1.885-.585-3.358-1.62-4.358c-1.03-.994-2.42-1.439-3.88-1.439c-1.725 0-3.248.833-4.25 2.117C10.998 3.583 9.474 2.75 7.75 2.75c-3.08 0-5.5 2.639-5.5 5.797c0 1.588.637 3.171 1.516 4.612c.884 1.448 2.051 2.813 3.199 3.982a38.5 38.5 0 0 0 4.492 3.892l.08.058l.021.015l.008.006a.75.75 0 0 0 .867 0M9.97 10.47a.75.75 0 0 1 1.06 0l.884.884l.884-.884a.75.75 0 0 1 1.06 1.06l-.883.884l.884.884a.75.75 0 0 1-1.06 1.06l-.885-.883l-.884.884a.75.75 0 1 1-1.06-1.06l.884-.885l-.884-.884a.75.75 0 0 1 0-1.06"/></svg>
+                                                </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Key")' id="inventoryKeyTarget">
+                            <div id="inventoryKeyIndicator">0</div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M8.95 8.6a6.554 6.554 0 0 1 6.55-6.55c3.596 0 6.55 2.819 6.55 6.45a6.554 6.554 0 0 1-6.55 6.55a6.2 6.2 0 0 1-1.552-.204A1.25 1.25 0 0 1 12.7 16.05h-1.75v1.75c0 .69-.56 1.25-1.25 1.25H7.95v1.25a1.75 1.75 0 0 1-1.75 1.75H3.7a1.75 1.75 0 0 1-1.75-1.75v-2.172c0-.73.29-1.429.806-1.944L8.99 9.948a.28.28 0 0 0 .07-.244A6.4 6.4 0 0 1 8.95 8.6m9.3-1.6a1.25 1.25 0 1 0-2.5 0a1.25 1.25 0 0 0 2.5 0"/></svg>
+                                                                        </div>
+
+
+
+
+
+
+                    </div>
+
+                    <div class="inventorySelectButtons">
+
+                        <div class="inventoryTopButton" onclick="inventoryQuickSelect()" id="inventoryTopButtonQuickSelect">
+
+                            
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 256 256"><path fill="currentColor" d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16M104 200H72a16 16 0 0 1-16-16v-32a8 8 0 0 1 16 0v32h32a8 8 0 0 1 0 16m0-128H72v32a8 8 0 0 1-16 0V72a16 16 0 0 1 16-16h32a8 8 0 0 1 0 16m96 112a16 16 0 0 1-16 16h-32a8 8 0 0 1 0-16h32v-32a8 8 0 0 1 16 0Zm0-80a8 8 0 0 1-16 0V72h-32a8 8 0 0 1 0-16h32a16 16 0 0 1 16 16Z"/></svg>
+                                                </div>
+
+                        <!-- <div class="inventoryTopButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M14 12v7.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0l-2.01-2.01a.99.99 0 0 1-.29-.83V12h-.03L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L14.03 12z"/></svg>
+                        </div> -->
+
+                    </div>
+
+                </div>
+
+                    
+                    <div class="inventoryContainer">
+                    <div id="inventoryListing"></div>
+                    </div>
+
+                </div>
+
+
+
+
+            </span>
+
+
+
+
+            <span class="inventoryPage" id="inventoryCraftingPage">
+
+
+
+
+                    
+              
+                        <div class="craftBookPage">
+                            <div class="craftBookHeader">
+                                <img src="img/src/icons/blacksmith.png" id="professionTitleIcon">
+                                <div class="craftBookHeaderInfo" id="craftBookHeaderInfo">
+                                    <div><span id="professionTitle">BLACKSMITHING</span><span style="background: #FF993C; font-weight: 500;" id="professionLevel">LVL 20</span></div>
+                                    <div><div><div id="professionSkillBar"></div></div></div>
+                                    <div><span style="background: transparent; font-weight: 500; color: #FF993C;" id="professionSkillExp">2503 / 2750 EXP</span></div>
+                                </div>
+                            </div>
+
+                                <span class="craftBookContent" id="blacksmithRecipes">
+
+                            
+
+                        </span>
+
+                        <div class="craftBookContent" id="alchemyRecipes" style="display: none"></div>
+                        <div class="craftBookContent" id="engineeringRecipes" style="display: none"></div>
+
+
+                        </div>
+
+                        <div class="craftBookPage">
+
+                            <div class="craftBookmarkList">
+                                <div class="craftBookmark" id="blacksmithBookmark"><img src="img/src/icons/blacksmith.png"><div class="craftBookmarkEnd"></div></div>
+                                <div class="craftBookmark" id="alchemyBookmark"><img src="img/src/icons/alchemy.png"><div class="craftBookmarkEnd"></div></div>
+                                <div class="craftBookmark" id="engineeringBookmark"><img src="img/src/icons/engineering.png"><div class="craftBookmarkEnd"></div></div>
+                            </div>
+
+                            <div class="craftBookRecipe" id="recipePanel" style="display: none;">
+                                <div class="craftBookRecipeInfo" >
+                                    <img src="img/src/items/I105.jpg" id="recipeImage">
+                                    <div class="craftBookRecipeDetails">
+                                        <div id="recipeTitle">Plated Explorer Cuirass</div>
+                                        <div id="recipeTimer">⏱️ 1m 21s</div>
+                                        <div id="recipeExp" style="font-size: 1.1rem; color: gray; font-weight: 600;"> 78 + 17 XP</div>
+                                    </div>
+                                </div>
+
+                                <div class="craftBookRecipeDescription" id="recipeDescription">
+                                    Requires Blacksmithing Level 30<br>
+                                    Craft a Saltwater Bathbomb, used to open Medium Crates
+                                </div>
+
+                                <div class="craftBookRecipeBar">Requires</div>
+                                <div class="craftBookRecipeReagents" id="recipeReagents">
+                                    <img class="itemSlot" src="img/src/items/I101.jpg">
+                                    <img class="itemSlot" src="img/src/items/I102.jpg">
+                                    <img class="itemSlot" src="img/src/items/I103.jpg">
+                                </div>
+                                <div class="craftBookRecipeBar">Creates</div>
+                                <div class="craftBookRecipeReagents" id="recipeOutcome"> <img class="itemSlot" src="img/src/items/I109.jpg"> </div>
+                                <span>
+
+                                <input id="craftingQueue" type="text" autocomplete="off" placeholder="1" maxlength="3" onclick="craftingQueue.value=''">
+
+                                <div class="craftBookButtonWrapper">
+                                    <div id="craftButtonOne"><img src="img/src/icons/anvil.png">Craft</div>
+                                    <div id="craftButtonAll">All</div>
+                                    <div id="craftButtonCancel" style="font-family: fredoka;" >X</div>
+                                </div>
+
+                                </span>
+
+
+                                <div id="craftBookBarBox">
+                                    <div class="craftBookBarBoxFlair"></div>
+                                    <div class="craftBookBarBoxFlair" style="left: -1rem;"></div>
+                                    <div class="craftBookBar" id="craftBar"></div>
+                                </div>
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </span>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+            </div>
+
+
+
+
+            <div id="mainUITop"></div>
+            <div id="mainUIRight"></div>
+        </div>
+
+        <canvas id="rpgParticles"></canvas>
+
+        <span id="rpgScreen">
+
+
+        <span id="jesterTurtleWrapper">
+        </span>
+
+        <span id="globalBuffWrapper">
+
+        </span>
+
+
+
+        <div class="areaWidget" id="areaWidget">
+            <div class="areaName">
+                <div class="areaArrow" style="left: -3rem; display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m4.431 12.822l13 9A1 1 0 0 0 19 21V3a1 1 0 0 0-1.569-.823l-13 9a1.003 1.003 0 0 0 0 1.645"/></svg>
+                </div>
+                <div class="areaArrow" style="right: -3rem; display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5.536 21.886a1 1 0 0 0 1.033-.064l13-9a1 1 0 0 0 0-1.644l-13-9A1 1 0 0 0 5 3v18a1 1 0 0 0 .536.886"/></svg>
+                </div>
+                <span id="areaName" style="pointer-events: none;"></span>
+                <div id="areaSwitch" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18v-2h18v2zm0-5v-2h18v2zm0-5V6h18v2z"/></svg>
+                </div>
+                
+            </div>
+            <div class="areaEncounters">
+                <div id="encounterEasy"></div>
+                <div id="encounterMedium"></div>
+                <div id="encounterHard"></div>
+                <div id="bossButton"><div class="itemContextMenu" id="bossTimer"><img src="img/sys/triangulo.png">3</div></div>
+                <div id="herbNode"></div>
+                <div id="pondNode"></div>
+                <div id="miningNode"></div>
+            </div>
+
+
+
+            <div id="turtleBot">
+                <img src="img/src/icons/turtlebot.png">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 20">
+                        <path fill="#ff5151" d="M16 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-2.939 12.789L10 11.729l-3.061 3.06l-1.729-1.728L8.271 10l-3.06-3.061L6.94 5.21L10 8.271l3.059-3.061l1.729 1.729L11.729 10l3.06 3.061z" />
+                    </svg>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="#57ff74" d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2m-7.933 13.481l-3.774-3.774l1.414-1.414l2.226 2.226l4.299-5.159l1.537 1.28z"/></svg>
+
+
+            </div>
+
+
+
+
+            <div id="rpgWidget2"><div id="heatIcon" onclick="switchHeat()"><img src="img/src/icons/heatStatic.png" id="heatLevel"><img src="img/src/icons/heat4.png"id="heatTurtle"><span id="heatNumber">4</span></div></div>
+
+            <div class="areaListing" id="areaListing">
+                <div class="areaSelect">
+                    <div>Areas</div>
+                    <div>Dungeons</div>
+                </div>
+
+                <div id="areaList">
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div id="mainGroundFront"></div>
+
+
+        <div id="areaBg"></div>
+        <div id="dayNightCycle"></div>
+        <div id="dayNightCycleTint"></div>
+
+
+
+        <div id="mainGround" style="overflow:visible">
+
+
+
+                <div class="interactableFloor" style=" left: 15%; height: 17rem; bottom: 13.5%;">
+
+
+                    <div class="interactableFloorButton" id="interactableQuestButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-6">
+                            <path fill-rule="evenodd" d="M3 2.25a.75.75 0 0 1 .75.75v.54l1.838-.46a9.75 9.75 0 0 1 6.725.738l.108.054A8.25 8.25 0 0 0 18 4.524l3.11-.732a.75.75 0 0 1 .917.81 47.784 47.784 0 0 0 .005 10.337.75.75 0 0 1-.574.812l-3.114.733a9.75 9.75 0 0 1-6.594-.77l-.108-.054a8.25 8.25 0 0 0-5.69-.625l-2.202.55V21a.75.75 0 0 1-1.5 0V3A.75.75 0 0 1 3 2.25Z" clip-rule="evenodd" />
+                          </svg>
+                    </div>
+
+
+                    <img src="img/src/backgrounds/quest1.png" style="height: 13rem;">
+                    <img src="img/src/backgrounds/quest2.png" style="animation: paperSway 6s infinite ease-out; height: 13rem;">
+
+
+
+                </div>
+
+                <div class="interactableFloor" style=" right: 7%; height: 17rem; bottom: 6%; display: none;" id="shopInteractable">
+
+
+                    <div class="interactableFloorButton" id="interactableShopButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-6">
+                            <path d="M10.464 8.746c.227-.18.497-.311.786-.394v2.795a2.252 2.252 0 0 1-.786-.393c-.394-.313-.546-.681-.546-1.004 0-.323.152-.691.546-1.004ZM12.75 15.662v-2.824c.347.085.664.228.921.421.427.32.579.686.579.991 0 .305-.152.671-.579.991a2.534 2.534 0 0 1-.921.42Z" />
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
+                          </svg>
+                          
+                    </div>
+
+
+                    <img src="img/src/backgrounds/shop1.png" style="height: 16rem;">
+                    <img id="pokomuni" src="img/src/backgrounds/shop2.png" style="height: 16rem; animation: breathingHigh 5s infinite ease-out; pointer-events: initial !important;">
+                    <div id="tipJar">lvl 4</div>
+
+
+
+                </div>
+
+                <canvas id="rpgParticlesBehind"></canvas>
+
+
+            <div id="areaFloor">
+                
+                <div id="areaFloor1"></div>
+                <div id="areaFloor2"></div>
+                <div id="areaFloor3"></div>
+            </div>
+
+
+
+
+
+            <div class="rpgScreenspace" style="overflow:visible">
+
+
+                <div class="npcScreenspace" style="overflow:visible">
+
+
+                    <div class="npcInfo">
+
+
+                        <div class="enemyInfo" id="quickItemAccess" onclick="openQuickAccessMenu()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M13.462 9.692C13.462 12.664 10.77 14 7 14S.537 12.664.537 9.713c0-2.825 1.235-4.432 3.705-5.885a4.59 4.59 0 0 0 5.52-.004c2.467 1.438 3.7 3.045 3.7 5.868M8.743 3.008l1.27-1.985A.7.7 0 0 0 9.41 0H4.843a.7.7 0 0 0-.603 1.077l1.047 1.95c1.061.635 2.4.629 3.456-.019" clip-rule="evenodd"/></svg>
+                                                </div>
+
+
+                        <div class="npcInfo1">
+                            <div class="npcName" id="turtleName2"></div><div class="npcLevel" id=turtleLevel></div>
+                        </div>
+                        <div class="npcInfo2">
+                            <div id="playerHpBar"></div>
+                        </div>
+
+                        <div id="playerBuffWrapper"></div>
+
+                    </div>
+
+
+
+                    <div class="npcArea" style="overflow:visible">
+                    <span id="playerBreathing" style="overflow:visible">
+                    <span id="playerAnimation" style="overflow:visible">
+
+
+                    <img src="img/src/armor/A0.png" id="rpgPlayerImg">
+                    <img id="playerHat" src="img/src/projectiles/none.png">
+                    <img id="armorFlair" src="img/src/projectiles/none.png">
+                    
+                    <span id="weaponAnimation">
+                    <img id="playerWeapon" src="img/src/weaponModels/W0.png">
+                    <img id="playerWeaponEnchantT3" class="playerWeaponEnchant" src="img/src/weaponModels/W0.png">
+                    <img id="playerWeaponEnchantT2" class="playerWeaponEnchant" src="img/src/weaponModels/W0.png">
+                    </span>
+                    </span>
+                    </span>
+                    </div>
+                </div>
+
+
+                <div class="npcScreenspace">
+
+
+                    <div class="npcInfo">
+                        <div class="enemyAttack" id="enemyAttack">
+                            <div id="enemyAttackBox"><div id="enemyAttackType"></div><div id="enemyAttackProgress"></div><img style="position:absolute" id="enemyAttackImg"></div>
+                        </div>
+
+                        <div id="enemyBreakDiamond">
+                        </div>
+
+                        <div class="enemyInfo" id="enemyInfo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 8 8"><path fill="currentColor" d="M3.5 0C1.57 0 0 1.57 0 3.5S1.57 7 3.5 7c.59 0 1.17-.14 1.66-.41a1 1 0 0 0 .13.13l1 1a1.02 1.02 0 1 0 1.44-1.44l-1-1a1 1 0 0 0-.16-.13c.27-.49.44-1.06.44-1.66c0-1.93-1.57-3.5-3.5-3.5zm0 1C4.89 1 6 2.11 6 3.5c0 .66-.24 1.27-.66 1.72l-.03.03a1 1 0 0 0-.13.13c-.44.4-1.04.63-1.69.63c-1.39 0-2.5-1.11-2.5-2.5s1.11-2.5 2.5-2.5z"/></svg>
+                        </div>
+
+                        <div class="npcInfo1">
+                            <div class="npcName" id=enemyName></div><div class="npcLevel" id=enemyLevel></div>
+                        </div>
+                        <div class="npcInfo2" id="enemyHpBg">
+                            <div id="enemyHpBarLoss" class="enemyHpBar"></div>
+                            <div id="enemyHpBar" class="enemyHpBar"></div>
+
+                        </div>
+
+                        <div id="enemyBuffWrapper"></div>
+                    </div>
+
+
+                    <div class="npcArea">
+
+                        <div class="enemyAdd" style="left: -110%;" >
+                            <div class="targetTriangle" id="targetAdd1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" fill-opacity="0" stroke-dasharray="28" stroke-dashoffset="28" d="M12 10l4 7h-8Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"/><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="28;0"/></path><path d="M12 10l4 7h-8Z" opacity="0"><animate attributeName="d" begin="0.4s" dur="0.8s" keyTimes="0;0.25;1" repeatCount="indefinite" values="M12 10l4 7h-8Z;M12 4l9.25 16h-18.5Z;M12 4l9.25 16h-18.5Z"/><animate attributeName="opacity" begin="0.4s" dur="0.8s" keyTimes="0;0.1;0.75;1" repeatCount="indefinite" values="0;1;1;0"/></path></g></svg>
+                            </div>
+                            
+                            <div class="addHealthBar"></div> <div id="enemyAdd1" onclick='clickTarget("Add1")'></div> </div>
+
+                        <div class="enemyAdd" style="right: -110%;" >
+                            <div class="targetTriangle" id="targetAdd2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" fill-opacity="0" stroke-dasharray="28" stroke-dashoffset="28" d="M12 10l4 7h-8Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"/><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="28;0"/></path><path d="M12 10l4 7h-8Z" opacity="0"><animate attributeName="d" begin="0.4s" dur="0.8s" keyTimes="0;0.25;1" repeatCount="indefinite" values="M12 10l4 7h-8Z;M12 4l9.25 16h-18.5Z;M12 4l9.25 16h-18.5Z"/><animate attributeName="opacity" begin="0.4s" dur="0.8s" keyTimes="0;0.1;0.75;1" repeatCount="indefinite" values="0;1;1;0"/></path></g></svg>
+                            </div>
+                            
+                            <div class="addHealthBar"></div> <div id="enemyAdd2" onclick='clickTarget("Add2")'></div> </div>
+                        <span id="npcPanel" onclick='clickTarget("Enemy")'>
+
+                            <div class="targetTriangle" style="margin-top: -120%;" id="targetEnemy">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" fill-opacity="0" stroke-dasharray="28" stroke-dashoffset="28" d="M12 10l4 7h-8Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"/><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="28;0"/></path><path d="M12 10l4 7h-8Z" opacity="0"><animate attributeName="d" begin="0.4s" dur="0.8s" keyTimes="0;0.25;1" repeatCount="indefinite" values="M12 10l4 7h-8Z;M12 4l9.25 16h-18.5Z;M12 4l9.25 16h-18.5Z"/><animate attributeName="opacity" begin="0.4s" dur="0.8s" keyTimes="0;0.1;0.75;1" repeatCount="indefinite" values="0;1;1;0"/></path></g></svg>
+                            </div>
+
+                        <div id="enemyAnimation" ></div>
+                        </span>
+                    </div>
+                    
+                </div>
+
+
+            </div>
+
+
+        </span>
+
+
+            
+        <span id="lumaArea"></span>
+
+        <div id="lumaCharge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><rect width="10" height="10" x="1" y="1" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksShuffle30" fill="freeze" attributeName="x" begin="0;svgSpinnersBlocksShuffle3b.end" dur="0.2s" values="1;13"/><animate id="svgSpinnersBlocksShuffle31" fill="freeze" attributeName="y" begin="svgSpinnersBlocksShuffle38.end" dur="0.2s" values="1;13"/><animate id="svgSpinnersBlocksShuffle32" fill="freeze" attributeName="x" begin="svgSpinnersBlocksShuffle39.end" dur="0.2s" values="13;1"/><animate id="svgSpinnersBlocksShuffle33" fill="freeze" attributeName="y" begin="svgSpinnersBlocksShuffle3a.end" dur="0.2s" values="13;1"/></rect><rect width="10" height="10" x="1" y="13" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksShuffle34" fill="freeze" attributeName="y" begin="svgSpinnersBlocksShuffle30.end" dur="0.2s" values="13;1"/><animate id="svgSpinnersBlocksShuffle35" fill="freeze" attributeName="x" begin="svgSpinnersBlocksShuffle31.end" dur="0.2s" values="1;13"/><animate id="svgSpinnersBlocksShuffle36" fill="freeze" attributeName="y" begin="svgSpinnersBlocksShuffle32.end" dur="0.2s" values="1;13"/><animate id="svgSpinnersBlocksShuffle37" fill="freeze" attributeName="x" begin="svgSpinnersBlocksShuffle33.end" dur="0.2s" values="13;1"/></rect><rect width="10" height="10" x="13" y="13" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksShuffle38" fill="freeze" attributeName="x" begin="svgSpinnersBlocksShuffle34.end" dur="0.2s" values="13;1"/><animate id="svgSpinnersBlocksShuffle39" fill="freeze" attributeName="y" begin="svgSpinnersBlocksShuffle35.end" dur="0.2s" values="13;1"/><animate id="svgSpinnersBlocksShuffle3a" fill="freeze" attributeName="x" begin="svgSpinnersBlocksShuffle36.end" dur="0.2s" values="1;13"/><animate id="svgSpinnersBlocksShuffle3b" fill="freeze" attributeName="y" begin="svgSpinnersBlocksShuffle37.end" dur="0.2s" values="1;13"/></rect></svg>                </div>
+
+
+
+            
+        </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+        <!-- ------------------Barra lateral--------- -->
+
+        <div class=bLateral id="lateralMenu" style="display: none;">
+            
+            
+            <div class=listaLateral>
+
+                <div id="tortulogo"><div id="hideMenu"></div></div>
+
+
+                <div class=sinBoton id="botonChangelog">
+                    <p>v 0.4 <strong style="background: transparent; color: orange; font-weight: 900;">(Version History)</strong></p>
+                </div>
+
+                <div class=sinBoton id="botonSupport">
+
+                    <p>Support the game ❤️</p>
+                </div>
+
+                <div class=sinBoton id="botonOpciones" onclick='difficultyUi()'>
+
+
+                    <p>Settings</p>
+                </div>
+
+                <div class=sinBoton id="botonEstadisticas">
+
+                    <p>Statistics</p>
+                </div>
+
+                <div class=sinBoton id="botonGameGuide">
+
+                    <p>Game Guide</p>
+                </div>
+
+                
+
+                <div class="separator"></div>
+                
+                <div class=botonLateral id="rpgTab">
+                    <img src="img/src/icons/expedition.png">
+                    <p>Exploration</p>
+                </div>
+
+                
+                <div class=botonLateral id="achievementsTab" style="display:none">
+                    <img src="img/src/icons/achievement.png">
+                    <p>Grand Archive</p>
+                </div>
+                
+                <div class=botonLateral id="jobTab" style="display:none" onclick="updateRecipeButton(currentRecipe)">
+                    <img src="img/src/icons/job.png">
+                    <p>Guildwork</p>
+                </div>
+
+                <div class=botonLateral id="campTab" style="display:none">
+                    <img src="img/src/icons/garrison.jpg">
+                    <p>Garrison</p>
+                </div>
+
+                
+
+                <div class=botonLateral id="townshipTab" style="display:none">
+                    <img src="img/sys/township.png">
+                    <p>Arcanum Liber</p>
+                </div>
+
+               
+
+            </div>
+            <div class=panelRecursos id="panelRecursos">
+
+                
+
+                <div class=recursosLateral>
+
+                    
+
+                    <div class="resourceCounter" id="coinCounter">
+                        <img src="img/sys/coin.png"><strong id="contadorMonedas">0</strong><p translate="no">Shells</p>
+                    </div>
+
+                    <div class="resourceCounter"  style="margin-top: 0.5rem; display: flex;">
+                        <img src="img/src/icons/scutes.jpg"><strong >0</strong><p translate="no">Prism Scutes</p>
+                    </div>
+                   
+                    <div class="resourceCounter" id="coinCounter2" style="margin-top: 0.5rem;  display: none;">
+                        <img src="img/src/icons/sheddings.jpg"><strong >0</strong><p translate="no">Sheddings</p>
+                    </div>
+                    
+
+
+
+                </div>
+                <div class=panelTortuga>
+                    <div class=nombreTortuga>
+                        <p id="turtleName">Jeffrey</p>
+                    </div>
+                    <img id="turtleCosmetic" src="img/src/hats/H0.jpg" draggable="false">                    
+                    <img id="tortugaClick" src="img/src/tortugasdefault/img1.png" draggable="false">                    
+                    <div id="turtleBuffWrapper">
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+        <!-- --------------Barra Superior ------------>
+
+        <div class=bSuperior style="display: none;">
+            <div class=categoria>
+                <div id="titleBanner"></div>
+                <div class=tCategoria id="campTitle" style="display: none">
+                    <img src="img/src/icons/garrison.jpg">
+                    <h1 translate="no">Garrison
+                    </h1>
+                </div>
+                <div class=tCategoria id="achievementsTitle" style="display: none">
+                    <img src="img/src/icons/achievement.png" />
+                    <h1 translate="no">Grand Archive
+                    </h1>
+                </div>
+                <div class=tCategoria id="townshipTitle" style="display: none">
+                    <img src="img/sys/township.png" />
+                    <h1 translate="no">Township
+                    </h1>
+                </div>
+                <div class=tCategoria id="rpgTitle" style="display: none">
+                    <img src="img/src/icons/expedition.png" />
+                    <h1 translate="no">Exploration
+                    </h1>
+                </div>
+                <div class=tCategoria id="jobTitle" style="display: none">
+                    <img src="img/src/icons/job.png" />
+                    <h1 translate="no">Guildwork
+                    </h1>
+                </div>
+            </div>
+            <div class="recursosSuperior">
+                <div class="topWidget"  id="gachaButton" onclick="openGacha()"><img src="img/src/icons/gacha.jpg"></div>
+                <div class="topWidget"  id="masteryButton" onclick="masteryGuide()"><img src="img/src/icons/insight.png"></div>
+                <div class="topWidget"  id="bestiaryButton" onclick=" bestiaryEntry(stats.currentEnemy); createBestiary(); playSound('audio/book.mp3');"><img src="img/src/items/I290.jpg"></div>
+                <div class="topWidget" id="armoryButton" style="display: none;" onclick="createArmory()"><img src="img/src/icons/armory.jpg"></div>
+                <div class="topWidget" id="collectionButton"><img src="img/src/icons/collection.jpg"></div>
+                <div class="topWidget" id="weatherButton"><img id="currentWeather" src="img/src/projectiles/none.png"/></div></div>
+            </div>
+
+            <div id="versionNumber">BETA 1.00</div>
+        </div>
+        <!-- ---------------Barra Inferior------------ -->
+
+
+        <div id="bInferior" style="display: none;">
+
+            <span id="jesterWrapper"></span>
+            
+            <div class="categoryContent" style='display: none' id="campContainer">
+
+
+                <div class="categoryContentColumn" style="width: 60%; margin-right: 0.3rem;">
+
+                    <div class="contentPanel" style="height: 100%;" id="buildingPanel">
+                        <span style="padding: 1.5rem; display: flex; background: transparent; gap: 1.2rem; flex-wrap: wrap;" id="buildingList">
+                            
+                            
+            
+                        
+                                                
+                        
+                        </span>
+                    </div>
+                    
+                    
+                </div>
+
+                <div class="categoryContentColumn" style="width: 40%;">
+
+                    <div class="contentHeader">
+                        <div class="contentHeaderLeft"><img src="img/src/icons/researchIcon.jpg">Research Laboratory
+                        </div>
+                        <div class="contentHeaderCenter"></div>
+                        <div class="contentHeaderRight">
+                        </div>
+                    </div>
+
+                    <div class="contentPanel" style="height: 50%; margin-bottom: 0.3rem;" id="researchPanel">
+                    <span id="researchList"></span>
+                    </div>
+                    <div class="contentPanel" style="height: 50%;"><div class="lockedPanel"><div class="lock">&#128274;</div></div></div>
+
+                </div>
+            
+            
+            
+            
+            
+            </div>
+            
+            <div class="aldeaTortugaContenido" style='display: none'>
+
+                <!-- ---------------ALDEA TORTUGA------------ -->
+
+                <div class="panelInferiorAldea" >
+                    <div class="panelConstruccion" id="buildingPanel">
+                        <div class="panelConstruccionTitulo">
+                            <span>Camp Construction</span>
+                        </div>
+
+
+                       
+                        <div class="listaEdificios" id="buildingList" style="display:flex">
+
+                            <!--<div class="building">
+                                <div class="building1">
+                                    <div class="buildingLeft">
+                                        <span>14/20</span>
+                                        <img src="img/src/upgrades/R10.png"></div>
+                                    <p>
+                                    <strong>Lumberjack Post</strong>
+                                    <br>
+                                    <span>❖ 12K [Turtle Coins]</span>
+                                    <br>
+                                    <span>❖ 310K [Spooky Wood]</span>
+                                    <br>
+                                    <span>❖ 281 [Copper Ingot]</span>
+                                    <span style="background: transparent; font-size: 1.5vh; padding: 0%">Increases Max HP by 0.1% per level<br><br></span>
+                                    <strong class="logStat">[Current Bonus: 10%]</strong>
+                                    </p>
+                                </div>
+                                <div class="building2">Left Click to <FONT COLOR="lawngreen">&nbsp;Buy</FONT></div>
+                               </div>-->
+
+
+                        </div>
+
+                    </div>
+
+                    <!-- ---------------MEJORAS------------ -->
+                    <div class="panelMejoras">
+
+
+                        <div class="panelMejorasTitulo"><span>Research Facility</span></div>
+                        
+                        <div id="researchList">
+
+                            <!--<div class="researchItem"><img src="img/src/upgrades/C12.png"><p><span>Ghostwood Logs</span><span>1500M <img src="img/sys/coin.png" /></span><span style="background: rgb(180, 87, 58);">8:25:00</span><span style="background: rgb(180, 87, 58);">&#8987;</span><br><br></p><div class="researchBar"></div></div>-->
+
+
+                        </div>
+
+                       
+
+                    </div>
+
+                    <div class="lockedPanel" id="expeditionPanel">
+
+
+                        <div class="lock">&#128274;</div>
+
+
+                       
+
+                    </div>
+
+
+
+
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+            <div class="categoryContent" id="achievementContainer" style='display: none' >
+
+                <div class="categoryContentColumn" style="width: 100%;">
+                <div class="contentHeader" id="achievementHeader" >
+                    <div class="contentHeaderLeft">
+                        <span id="logHeaderBooks">Books Collected : 18/29 <strong >20%</strong></span>
+                    </div>
+                    <div class="contentHeaderCenter"></div>
+                    <div class="contentHeaderRight">
+                        <span id="logHeaderInsight">Insight Gained :<strong style="color: #6dcdde;">770</strong><img src="img/src/icons/insight.png"></span>
+                    </div>
+                </div>
+
+                <div class="contentPanel" id="logPanel">
+                
+                
+                    <div class="logListing" id="achievementListing"></div>
+
+                
+                </div> 
+
+
+
+
+
+
+
+
+
+
+            </div>
+            </div>
+
+
+
+
+
+
+            
+         
+
+
+
+
+
+
+
+
+
+
+            <!-- ---------------ARCANUM TAB------------ -->
+            <div class="aldeaTortugaContenido" id="townshipContainer" style='display: none' >
+            
+            <div class="panelInferiorAldea" id=townshipWrapper>
+                
+             <div class="panelConstruccion" id="legislationPanel">
+             <div class="panelConstruccionTitulo" id="legislationLine"><span>Blue Magic</span>
+             </div> 
+                 
+                 
+             
+             <div class="bannerAldeaRecursos" id="legislationBanner">
+              <p>Treaties allow the potential of your turtle empire to reach new heights by focusing on specific elements of your kingdom.<br><br>
+              When you sign a treaty, a set of <strong style="color:#edd585">boons and banes will apply</strong>. Furthermore, treaties can be ranked up to further boost their effects. <br><br><strong style="color:FD5151">You can only switch treaty after an hour.</strong></p>
+            </div>
+                 
+                 
+             <div class=separador></div><div class="achievementWrapper" id="treatiesList"></div> 
+             
+                 
+                <button id="signButton">SIGN</button>
+                 
+                 
+                 
+                 
+             </div>
+                
+            <div class="panelConstruccion" id="syndicatePanel">
+             <div class="panelConstruccionTitulo" id="syndicateLine"><span>Blood Magic</span></div>
+               
+             
+                
+             </div>
+            <div class="panelConstruccion" id="legacyPanel">
+             <div class="panelConstruccionTitulo" id="legacyLine"><span>Time Magic</span></div>
+                <span style="display: none">
+              <div class="bannerAldeaRecursos" id="legacyBanner">
+                  
+              <p>
+              Your <strong style="color:FFC061">Turtle Coins</strong> are slowly filling up the <strong style="color:D989FF">Astral gauge</strong>.<br> When the Astral gauge completes, you can get access to the <strong style="color:D989FF">Planetarium</strong>, and <strong style="color:FD5151">leave behind all activities, upgrades, coins, resources and exploration levels</strong>.<br><br> You will step down from your position as leader of the turtles, and three <strong style="color:5176D4"> Constellations </strong> will be born in honor of your dynasty, alongside increased <strong style="color:D989FF">Astral level</strong>.  <br><br> On the <strong style="color:D989FF">Planetarium</strong>, you can spend the <strong style="color:5176D4">Constellations</strong> in perks to carry over your next legacy.  <br><br>     
+
+              You are currently missing 7.123e99 <strong style="color:FFC061">Turtle Coins</strong> for the next <strong style="color:D989FF">Astral level</strong></p>
+                      
+            </div>  
+              
+                
+              <div id="constellationMeter">
+                  <div id="constellationBall"></div>
+                <div id="constellationProgress"></div>
+                  
+                  
+                </div>  
+                
+             <button id="endLegacyButton">NEXT ASTRAL LEVEL:</button>
+                    
+                    
+                    
+                    
+                </span>  
+               
+             
+                
+             </div>
+ 
+                
+                
+                
+                
+                
+                    
+             </div>
+            
+            </div>
+             <!-- ---------------JOB TAB------------ -->
+
+
+
+            <div id="jobContainer" class="categoryContent" style='display: none'>
+
+                <div class="categoryContentColumn" style="width: 40%; margin-right: 0.3rem;">
+
+                    <div class="contentPanel" style="height: 55%; margin-bottom: 0.3rem;" id="gardenPanel">
+
+                        <div class="lockedPanel" id="gardenLockedPanel"><div class="lock">&#128274;</div></div>
+                        
+                    
+                    <div class="gardenHeader">
+                        <div class="gardenTab" id="gardenShopButton"> <img src="img/src/garden/gardenShop.jpg"></div>
+                        <div class="gardenTab" id="gardenShipButton" onclick="createPlantCatalogue()" style='display: none'> <img src="img/src/garden/gardenShip.jpg"></div>
+                        <div class="gardenTab" id="gardenFertiliserButton" style='display: none' onclick="createFertiliser()"><img id="currentFertiliser" src="img/src/garden/f1.jpg"></div>
+                        <div class="gardenTab" id="gardenExpButton"><span id="gardeningExp">🌳 Gardening Level 1 🌳</span><div id="gardeningExpBar"></div></div>
+                        <div class="gardenTab" id="gardenTokenCount">🌸</div>
+                        <div class="gardenTab" id="flowerPower">🌸</div>
+
+
+                    </div>
+
+                    <span class="gardenWrapper">
+
+                    <div id="gardenList"></div>
+
+                    <div class="gardenRows" id="gardenSquare">
+                        <span class="gardenWood1"></span><span class="gardenWood2"></span><span class="gardenWood3"></span><span class="gardenWood4"></span>
+                        <div id="gardenRow1"></div>
+                        <div id="gardenRow2"></div>
+                        <div id="gardenRow3" style="display: none;"></div>
+                        <div id="gardenRow4" style="display: none;"></div>
+                        <div id="gardenRow5" style="display: none;"></div>
+                    </div>
+
+                    
+                    
+                    </span>
+                    
+                    </div>
+
+
+                    <div class="contentPanel" style="height: 45%;"><div class="lockedPanel"><div class="lock">&#128274;</div></div></div>
+
+                </div>
+
+                <div class="categoryContentColumn" style="width: 60%;">
+                    
+                    <div id="craftBook">
+
+                        <div class="craftBookPage">
+                            <div class="craftBookHeader">
+                                <img src="img/src/icons/blacksmith.png" id="professionTitleIcon">
+                                <div class="craftBookHeaderInfo" id="craftBookHeaderInfo">
+                                    <div><span id="professionTitle">BLACKSMITHING</span><span style="background: #FF993C; font-weight: 500;" id="professionLevel">LVL 20</span></div>
+                                    <div><div><div id="professionSkillBar"></div></div></div>
+                                    <div><span style="background: transparent; font-weight: 500; color: #FF993C;" id="professionSkillExp">2503 / 2750 EXP</span></div>
+                                </div>
+                            </div>
+
+                                <span class="craftBookContent" id="blacksmithRecipes">
+
+                            
+
+                        </span>
+
+                        <div class="craftBookContent" id="alchemyRecipes" style="display: none"></div>
+                        <div class="craftBookContent" id="engineeringRecipes" style="display: none"></div>
+
+
+                        </div>
+
+                        <div class="craftBookPage">
+
+                            <div class="craftBookmarkList">
+                                <div class="craftBookmark" id="blacksmithBookmark"><img src="img/src/icons/blacksmith.png"><div class="craftBookmarkEnd"></div></div>
+                                <div class="craftBookmark" id="alchemyBookmark"><img src="img/src/icons/alchemy.png"><div class="craftBookmarkEnd"></div></div>
+                                <div class="craftBookmark" id="engineeringBookmark"><img src="img/src/icons/engineering.png"><div class="craftBookmarkEnd"></div></div>
+                            </div>
+
+                            <div class="craftBookRecipe" id="recipePanel" style="display: none;">
+                                <div class="craftBookRecipeInfo" >
+                                    <img src="img/src/items/I105.jpg" id="recipeImage">
+                                    <div class="craftBookRecipeDetails">
+                                        <div id="recipeTitle">Plated Explorer Cuirass</div>
+                                        <div id="recipeTimer">⏱️ 1m 21s</div>
+                                        <div id="recipeExp" style="font-size: 1.1rem; color: gray; font-weight: 600;"> 78 + 17 XP</div>
+                                    </div>
+                                </div>
+
+                                <div class="craftBookRecipeDescription" id="recipeDescription">
+                                    Requires Blacksmithing Level 30<br>
+                                    Craft a Saltwater Bathbomb, used to open Medium Crates
+                                </div>
+
+                                <div class="craftBookRecipeBar">Requires</div>
+                                <div class="craftBookRecipeReagents" id="recipeReagents">
+                                    <img class="itemSlot" src="img/src/items/I101.jpg">
+                                    <img class="itemSlot" src="img/src/items/I102.jpg">
+                                    <img class="itemSlot" src="img/src/items/I103.jpg">
+                                </div>
+                                <div class="craftBookRecipeBar">Creates</div>
+                                <div class="craftBookRecipeReagents" id="recipeOutcome"> <img class="itemSlot" src="img/src/items/I109.jpg"> </div>
+                                <span>
+
+
+                                <div class="craftBookButtonWrapper">
+                                    <div id="craftButtonOne"><img src="img/src/icons/anvil.png">Craft</div>
+                                    <div id="craftButtonAll">All</div>
+                                    <div id="craftButtonCancel" style="font-family: fredoka;" >X</div>
+                                </div>
+
+                                </span>
+
+
+                                <div id="craftBookBarBox">
+                                    <div class="craftBookBarBoxFlair"></div>
+                                    <div class="craftBookBarBoxFlair" style="left: -1rem;"></div>
+                                    <div class="craftBookBar" id="craftBar"></div>
+                                </div>
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="aldeaTortugaContenido" style='display: none' >
+            
+            <div class="panelInferiorAldea" id=townshipWrapper>
+                
+             
+                
+            <div class="panelConstruccion" id="jobPanel" >
+            
+               
+             
+               <div class="jobBook">
+                <div class="bookPage1">
+                 <div class="bookPage1Head">
+                    
+                    <div id="professionTitleBox">
+                     <div id="professionTitleIcon"></div>
+                     <p id="professionTitle">Novice Blacksmith <span>[Level 5]</span></p>
+                        <p id="professionSkillExp">3003/7200 exp</p>
+                     
+                     </div>
+                    </div>  
+                   <div class="recipeWrapper" id="blacksmithRecipes">
+                  
+                       
+                   </div>
+                    
+                     <div class="recipeWrapper" id="cookingRecipes" style="display: none">
+                   
+                   </div>
+                    
+                     <div class="recipeWrapper" id="alchemyRecipes" style="display: none">
+                  
+                   </div>
+                    
+                     <div class="recipeWrapper" id="engineeringRecipes" style="display: none">
+                  
+                   </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                   
+                </div>
+                <div class="bookPage2">
+                 <div class="bookPageSelector">
+                     
+                     
+                    
+                  <div class="bookmarkCurrent" id="blacksmithBookmark">
+                      <div class="bookmarkIcon"></div>
+                     <div class="bookmarkEnd"></div>
+                     </div>  
+                    
+             <div class="bookmark" id="cookingBookmark" style="display: none;">
+                      <div class="bookmarkIcon"></div>
+                     <div class="bookmarkEnd"></div>
+                     </div>         
+                    
+             <div class="bookmark" id="alchemyBookmark">
+                      <div class="bookmarkIcon"></div>
+                     <div class="bookmarkEnd"></div>
+                     </div>   
+                     
+         <div class="bookmark" id="engineeringBookmark">
+                      <div class="bookmarkIcon"></div>
+                     <div class="bookmarkEnd"></div>
+                     </div>                
+                    </div>    
+                   
+                   
+             <div class="recipePanel" id="recipePanel" style="display:none">
+                    <div class="recipeTop"><img id="recipeImage" src="img/src/items/I31.jpg"><p id="recipeTitle">Copper Bar [0]</p><div id="recipeTimer">99m 99s</div></div>
+                    
+                    <p id="recipeDescription"><span style="color: lawngreen">Requires Novice Blacksmith [0]</span><br>Smelt ore into an ingot of copper.</p>
+                    <div class="recipeSeparator">Requires:</div>
+                    <div class="recipeBox" id="recipeReagents"><div class="itemSlot"></div><div class="itemSlot"></div></div>
+                    <div class="recipeSeparator">Creates:</div>
+                    <div class="recipeBox" id="recipeOutcome"><div class="itemSlot"></div><div class="itemSlot"></div></div>
+                 
+                    <div id="craftBarWrap"><div class="craftBarBg"><div id="craftBar"></div></div><div class="craftBar1"><div class="craftBarDiamond"></div></div><div class="craftBar2"><div class="craftBarDiamond"></div></div></div>
+                 
+                 
+                    
+                    </div>       
+                    
+                    
+                    
+                    
+                    
+                   
+                   </div>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                </div> 
+                
+                
+                
+                
+                
+                
+                
+             </div>
+                
+                
+                
+                
+            <div class="lockedPanel" id="miningPanel">
+                <div class="lock">&#128274;</div>
+             
+         
+             </div>
+ 
+                
+                
+                
+                
+                
+                    
+             </div>
+            
+            </div>
+            
+
+
+
+
+           
+            <!-- ---------------RPG TAB------------ -->
+            
+            <div class="categoryContent" id="rpgContainer" style='display: none' >
+
+            <div class="categoryContentColumn" style="width: 65%; margin-right: 0.3rem;">
+
+                <div class="contentHeader" id="rpgBannerTitle" >
+                    
+                    <div class="contentHeaderLeft"><img src="img/src/icons/afk.jpg" id="penguinIndicatorButton"><img src="img/src/upgrades/P1.jpg" id="minipenguin1" style="display:none" class="minipenguin"><img src="img/src/upgrades/P1.jpg" id="minipenguin2" style="display:none" class="minipenguin"><img src="img/src/upgrades/P1.jpg" id="minipenguin3" style="display:none" class="minipenguin">
+                    
+                    </div>
+                    <div class="contentHeaderCenter">
+                        <img src="img/src/areas/A1M.png" id="areaImage"><span id="areaName">Lush Passageway</span><span id="areaLevel">lvl 5</span>
+                    </div>
+                    <div class="contentHeaderRight">
+
+                        <span id="areaEffect">🌫️ Esoteric Brume</span>
+                    </div>
+                
+                
+                    
+                </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+
+                <div id="rpgCanvas">
+
+                    <canvas id="fxCanvas"></canvas>
+
+                    <div class="extraBattleUI" id="dungeonUI"> <div class="dungeonBar"><div class="dungeonBox"></div><div id="dungeonMeter"></div></div><img id="dungeonBox2" src="img/src/icons/skull5.png"> </div>
+                        
+                    <div class="extraBattleUI" id="showdownUI" style="display: none;"> 00:00 </div>
+    
+                    <div class="extraBattleUI" id="skirmishUI" style="display: none;"><div id="skirmishTimer">Wave 1 - 01:30</div><div class="dungeonBar"><div class="dungeonBox"></div><div id="skirmishMeter"></div><div class="dungeonBox2"></div></div> </div>
+    
+                    <div id="honorCounter" style="display: none;">Honor: 2392<img src="img/src/icons/honor.jpg"></div>
+    
+                    <img id="honorSign" src="img/src/icons/honorShop.png"></img>
+    
+                    <div id="honorPilar" src="img/src/icons/honorRank.png"><img id="honorRank" src="img/src/icons/gladr1.jpg"></div>
+                    
+    <!-- ---------------rpgbelow------------ -->
+                    
+                
+
+                <div id="rpgWidget"><img src="img/src/icons/mail.png" id="mailButton"><img src="img/src/icons/adventure.png" id="rankButton" onclick="createARank()"></div>
+
+
+                <div id="rpgWidget2"><div id="heatIcon" onclick="switchHeat()"><img src="img/src/icons/heatStatic.png" id="heatLevel"><img src="img/src/icons/heat4.png"id="heatTurtle"><span id="heatNumber">4</span></div></div>
+    
+                  <div id="weatherOverlay"></div> <div id="weatherEffectOverlay"></div>
+                      
+                  <div class="npcSlot" id="playerPanel"><img src="img/src/icons/might.png" id="turtleAlign"><div class="npcPanel" id="playerNpcPanel"><p><span id="turtleName2">NombreTortuga</span> <span id=turtleLevel>[lvl 8]</span></p><div class="npcHpBar" id="playerHpBar"></div></div><div id="playerBuffWrapper"></div><div class="throwParticle"></div><div class="npcImg" id="playerAnimation"><img id="rpgPlayerImg" src="img/src/armor/A0.png"><img id="armorFlair" src="img/src/projectiles/none.png"><img id="playerWeapon" src="img/src/weaponModels/W0.png"></div></div>
+                  
+                  <div class="npcSlot" id="enemyPanel"><div class="npcPanel" id="npcPanel"><p><span id="enemyName">Stern Cricket</span> <span id=enemyLevel>[lvl 8]</span></p><div class="npcHpBar" id="enemyHpBar"></div></div><div id="enemyBuffWrapper"></div><div></div><div class="npcImg" id="enemyAnimation"></div></div>     
+                  
+                
+                  <div id="rpgCanvasUnder" style="display: flex;">
+
+                    <div id="rpgCanvasSkills">
+
+                       <div id="skillButton0"><div id="skillSlot0CD"></div><img id="skillSlot0" src="img/src/icons/skill0Slot.png"></div>
+                       <div id="skillButton1"><div id="skillSlot1CD"></div><img id="skillSlot1" src="img/src/icons/skill1Slot.png"></div>
+                       <div id="skillButton2"><div id="skillSlot2CD"></div><img id="skillSlot2" src="img/src/icons/skill2Slot.png"></div>
+                       <div id="skillButton3"><div id="skillSlot3CD"></div><img id="skillSlot3" src="img/src/icons/skill3Slot.png"></div>
+                       <div id="skillButton4"><div id="skillSlot4CD"></div><img id="skillSlot4" src="img/src/icons/skill4Slot.png"></div>
+
+                    </div> 
+
+                       <div id="encounterWrapper">
+
+                        <div class= "encounterButton" id="miningNode"></div>
+                       <div class= "encounterButton" id="pondNode"></div><div class= "encounterButton" id="herbNode"></div>
+                       <div class= "encounterButton" id="encounterEasy"></div> <div class= "encounterButton" id="encounterMedium"></div>
+                       <div class= "encounterButton" id="encounterHard"></div><div id="bossButton"></div>
+
+                   </div>
+
+                       
+                   </div>
+                
+                
+                
+                
+                </div> 
+
+
+                 
+
+                   <div class="contentHeader" id="manaBox"><div id="magicBar"></div> </div>
+
+<!-- ---------------inventory------------ -->
+
+<div class="contentHeaderFused" style="background: #714F39;">
+    <div class="contentHeaderLeft"><img src="img/sys/storage.png">Inventory
+
+        <div id="inventorySorters">
+            <button onclick="did('inventory').innerHTML=''; currentSort='all'; addItem(); playSound('audio/button2.mp3');inventoryCulling()"><img src="img/src/icons/sortAll.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='material'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortMaterials.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='consumable'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortBattle.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='equipable'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortEquip.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='CE'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortCE.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='misc'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortMisc.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='favorites'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortFavorites.png"></button>
+                <button onclick="did('inventory').innerHTML=''; currentSort='vault'; addItem(); playSound('audio/button2.mp3');inventoryCulling()" class="extraSorter" style="display: none;"><img src="img/src/icons/sortVault.png"></button>
+                <button onclick="toggleUpgrade()" id="toggleUpgradeButton"><img src="img/src/icons/upgradeButton.png"> Upgrade  </button></div>
+
+    
+    </div>
+    <div class="contentHeaderCenter"></div>
+    <div class="contentHeaderRight" style="padding-right: 1rem;">
+        <span class="helpingDuck" id="inventoryHelpingDuck" style="display: none;">&#129414</span>
+        <div id="sellModeText"> <span>Sell Mode</span> Click to sell an item, Hold Click to sell multiple</div>
+        <div id="lockModeText"><span>Lock Mode</span> Click an item to prevent selling it</div>
+        <div id="favoriteModeText"><span>Favorite Mode</span> Click an item to add to the Favorites tab</div>
+        <div id="vaultModeText"><span>Vault Mode</span> Click an item to add to the Vault tab</div>
+                
+        <input id="inventorySearch" type="text" placeholder=" Search for an Item..." autocomplete="off" maxlength="30" onkeypress="if(event.key === 'Enter') {this.blur(); addItem();}if(event.key === 'Enter' && this.value === 'the secret') {logs.P61A.unlocked=true;}" onclick="inventorySearch.value=''; emptySearchBar = true; addItem();">
+        <div id="inventorySorters3"><button onclick="toggleVault()" id="addVaultButton" style="display: none;" class="extraSorter"><img src="img/src/icons/vaultAdd.png"></button><button onclick="toggleFavorite()" id="addFavoriteButton" style="display: none;" class="extraSorter"><img src="img/src/icons/favoritesAdd.png"></button><button onclick="toggleLock()" id="toggleLockButton"><img src="img/src/icons/lockButton.png"></button><button onclick="toggleSell()" id="toggleSellButton"><img src="img/src/icons/shopButton.png"></button>
+        </div>
+
+
+    </div>
+
+</div>
+
+    <div class="contentPanel" id="inventory"></div>  
+                  
+ <!-- ---------------combatlog------------ -->
+
+<div class="contentHeaderFused" id="combatLogHeader">
+    <div class="contentHeaderLeft"><img src="img/src/icons/combatLog.jpg">Combat Log
+    </div>
+    <div class="contentHeaderCenter"></div>
+    <div class="contentHeaderRight">
+        <img id="combatLogArrow" src="img/sys/contraer.png">
+    </div>
+</div>
+
+ <div class="contentPanel" id="combatLog"></div>
+
+
+
+
+            </div>
+
+
+            <div class="categoryContentColumn" style="width: 35%;">
+            
+            
+            <!-- ---------------equipment-------------->
+            
+            <div class="contentHeaderButtonMenu">
+                <div class="contentHeaderButton" style="width: 49.6%; background: #284740;" id="equipmentButton"><img src="img/src/icons/equipmentIcon.jpg">Equipment</div>
+                <div class="contentHeaderButton gearButtonLocked" style="width: 49.6%; background: #2B2B50;" id="skillsButton"><img src="img/src/items/I0.jpg" style="margin-right: 0.3rem;">?????</div>
+            </div>
+
+
+
+
+
+
+
+
+            
+
+            <div id="skillsTab" class="contentPanel" style="display: none;">
+
+
+            <div id="planetariumPanel">
+
+                <div id="planetariumButton" onclick="createTalent()">🔮</div>
+                <p>
+                <span>Click to enter the planetarium and gain new skills</span>
+                <span>Levels left for the next Wish: <strong style="color: white; background: #7D61ED;" id="nextTalent">20</strong></span>
+                <span>Current Wishes: <strong id="unspentTalent2">20</strong></span>
+                </p>
+
+            </div>
+
+            <div class="skillsTabWrapperTitle">Classes</div>
+            <div class = "skillsTabWrapper" id="classWrapper">
+                
+               
+            </div>
+            
+            <div class="skillsTabWrapperTitle" style="background: #462B3E;">Skills</div>
+            <div class = "skillsTabWrapper" id="skillWrapper" style="background: #402B33;">
+                
+               
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            </div>
+
+
+
+
+
+
+
+
+            
+
+            <div class="contentPanel" id="equipmentTab">
+
+                <div id="expPanel">
+
+                    <img id="classIcon" src="img/src/talents/noClass.jpg">
+                    <div id="expPanelHalf2">   
+                        <div id="expPanelSlot1">
+                            <div id="expPanelLevel">LEVEL <span id="turtleLevel2" >30</span></div>
+                        </div>
+                        <div id="expPanelSlot2">
+                            <div id="expPanelClass"></div><div id="expPanelExp"><span id="currentExp">9999/9999</span>EXP</div>
+                        </div>
+                        <div id="expPanelSlot3">
+                            <div id="expBar"></div>
+                        </div>
+                    </div>
+
+                    <div id="expPanelBg2"></div> 
+                    <div id="expPanelBg"></div>
+                    
+    
+                    </div>
+
+                    <div id="equipmentTabHalf">
+
+                        <div id="equipmentTabGear">
+
+                        <div class="contentPanel" style="height: 100%; align-items: center; flex-direction: column;">
+                        
+                            <div id="gearLoadouts" style="display: none;">
+                                <button id="loadout1" onClick="updateLoadout(1);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #46CB4C;">1</span></button>
+                                <button id="loadout2" onClick="updateLoadout(2);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #446CC9;">2</span></button>
+                                <button id="loadout3" onClick="updateLoadout(3);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #AD44C8;">3</span></button>
+                                <button id="loadout4" onClick="updateLoadout(4);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #CBA746;">4</span></button>
+                                <button id="loadout5" onClick="updateLoadout(5);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #CB5E46;">5</span></button>
+                                <button id="loadout6" onClick="updateLoadout(6);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #464ACB;">6</span></button>
+                                <button id="loadout7" onClick="updateLoadout(7);"><img src="img/src/icons/loadoutIcon.png"><span style="color: #CB4646;">7</span></button>
+                            </div>
+
+                            <div id="gearFlex">
+
+            
+
+                                <div class="gearRow" id="gearRow1">
+                                <div id="rpgHeadSlot"> <div class="equipmentSlot"><img src="img/sys/headSlot.png"></div> </div>
+                                </div>
+                                   
+                                <div class="gearRow" id="gearRow2">
+                                <div id="rpgHandsSlot"> <div class="equipmentSlot"><img src="img/sys/handsSlot.png"></div> </div>
+                                    
+                                <div id="rpgChestSlot"> <div class="equipmentSlot"><img src="img/sys/chestSlot.png"></div> </div>
+                                    
+                                <div id="rpgWeaponSlot"> <div class="equipmentSlot"><img src="img/sys/weaponSlot.png"></div> </div>
+                                </div>
+                                   
+                               <div class="gearRow" id="gearRow3"> 
+                               <div id="rpgRingSlot"> <div class="equipmentSlot"><img src="img/sys/ringSlot.png"></div> </div>
+                                    
+                               <div id="rpgLegsSlot"> <div class="equipmentSlot"><img src="img/sys/legsSlot.png"></div> </div>
+                                    
+                               <div id="rpgTrinketSlot"> <div class="equipmentSlot"><img src="img/sys/trinketSlot.png"></div> </div>
+                               </div>   
+                                   
+                                <div class="gearRow" id="gearRow4"> 
+
+                                <div id="rpgLumaSlot"> <div class="equipmentSlot"><img src="img/sys/lumaSlot.png"></div> </div>
+
+                               <div id="rpgFeetSlot"> <div class="equipmentSlot"><img src="img/sys/feetSlot.png"></div> </div>
+
+                               <div id="rpgOffhandSlot"> <div class="equipmentSlot"><img src="img/sys/lumaSlot.png"></div> </div>
+
+
+                               </div>
+                                   
+                               </div>
+
+                        
+                        </div>
+
+                        </div>
+
+
+
+                        <div id="equipmentTabStats" >
+
+
+                            <div class="contentHeaderFused" id="statsPanelTitle" style="background: #4F2A37; margin: 0;">
+                                <div class="contentHeaderLeft"><img src="img/src/icons/statsIcon.jpg" style="margin: 0 0.3rem;">Stats
+                                </div>
+                                <div class="contentHeaderCenter"></div>
+                                <div class="contentHeaderRight"><span class="helpingDuck" id="statsHelpingDuck">&#129414</span></div>
+                            </div>
+
+                            <div class="contentPanel" id="equipmentTabStatsPanel">
+                                <p id="statsOmni"></p>
+                                <p id="statsHealth"></p>  
+                                <p id="statsNatureDamage"></p>
+                                <p id="statsStrength"></p>
+                                <p id="statsSpellpower"></p>
+                                <p id="statsHaste"></p>     
+                                <p id="statsNatureBonus"></p>
+                                <p id="statsMightBonus"></p>
+                                <p id="statsElementalBonus"></p>
+                                <p id="statsOccultBonus"></p>
+                                <p id="statsDeificBonus"></p>
+                                <p id="statsMiningDamage"></p>
+                                <p id="statsMiningBonus" style="display: none;"></p>
+                                <p id="statsHerbloreDamage" style="display: none;"></p>
+                                <p id="statsHerbloreBonus" style="display: none;"></p>
+                                <p id="statsNatureResist"></p>
+                                <p id="statsMightResist"></p>
+                                <p id="statsElementalResist"></p>
+                                <p id="statsOccultResist"></p>
+                                <p id="statsDeificResist"></p>
+                                <p id="statsDropChance"></p>
+                                <p id="statsExpMultiplier"></p>
+                                <p id="statsFishingLevel"></p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="contentHeaderButtonMenu">
+                <div class="contentHeaderButton" style="width: 23.5%; background: #443925;" id="questButton"><img src="img/src/items/quest.jpg" style="margin-right: 0.3rem;">Quest</div>
+                <div class="contentHeaderButton gearButtonLocked" style="width: 23.5%; background: #552D2D;" id="shopButton"><img src="img/src/items/I0.jpg" style="margin-right: 0.3rem;">?????</div>
+                <div class="contentHeaderButton gearButtonLocked" style="width: 23.5%; background: #2E522B;" id="areaButton" onclick="createAreaPanel()"><img src="img/src/items/I0.jpg" style="margin-right: 0.3rem;">?????</div>
+                <div class="contentHeaderButton gearButtonLocked" style="width: 26.5%; background: #323551;" id="dungeonButton"><img src="img/src/items/I0.jpg" style="margin-right: 0.3rem;">?????</div>
+            </div>
+
+            <div class="contentPanel" id="questTab">    
+
+            <div class="questBoard">
+                <div class="questBoardPin"></div>
+                <div class="questBoardBox">
+                    <img src="img/src/items/I121.jpg">
+                    <div class="questBoardDetails">Quest About<br>A Cat<br>★★☆☆☆</div>
+                </div>
+            </div>
+
+            
+            </div>
+
+            <div class="contentPanel" id="skirmishTab">   </div>  
+            <div class="contentPanel" id="showdownTab">   </div>
+                
+            
+            <div class="contentPanel" style="height: 100%; display: none;" id="shopTab" >
+
+                <div id="shopRestock"> ⏱️ Shop restocks in <span id="restockTimer"></span></div>
+                
+            <div class="shopCarpet">
+
+                <span id="shopListing">
+                <div class="shopBox"> <div class=restockIcon>🔄</div> <div class=soldOut>SOLD OUT</div><img src="img/src/items/I104.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I105.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I107.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I108.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I109.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I106.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I102.jpg"></div>
+
+                <div class="shopBox"><img src="img/src/items/I104.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I105.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I107.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I108.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I109.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I106.jpg"></div>
+                <div class="shopBox"><img src="img/src/items/I102.jpg"></div>
+
+                </span>
+
+            </div>
+
+            
+            </div>
+            
+        
+            <div class="contentPanel" style="height: 100%; display: none;" id="areaTab" ></div>
+                    
+            <div class="contentPanel" style="height: 100%; display: none;" id="dungeonTab" ></div>            
+                    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            </div>
+            
+            <div class="panelInferiorAldea" id="rpgWrapper" style="display: none;">
+                
+             <div class="panelConstruccion" id="explorationPanel">
+             
+                 
+                
+            
+               
+           <div class="rpgTitle" id="combatLogTitle">Combat Log<img id="combatLogArrow" src="img/sys/contraer.png"></div>       
+           <div class="rpgPanel" id="combatLog"></div>       
+                 
+             </div>
+                
+                
+            <div class="panelConstruccion" id="yourTurtlePanel">
+            <div class="panelConstruccionTitulo" id="yourTurtleLine" style="display:none"><span>Nameoftheturtle</span></div>
+            
+            <div id="gearWrapper">    
+            <div  class="gearButtonActive">Equipment</div>    
+            <div  class="gearButtonLocked">?????</div>    
+            </div> 
+                
+            <div  class="gearTab">
+                
+            
+                
+            <div id="equipmentFlex">
+                
+            
+            <div id="statsFlex">
+                
+             <div id="statsTitle">Statistics</div>   
+             
+                
+                
+            </div>
+                
+            
+                
+                
+            </div>
+                
+            </div>    
+                
+            <div id="skillsTab" class="gearTab" style="display: none;">
+            <div class="skillBG"></div>
+            
+        <div class="separador"></div>
+            
+
+
+
+
+
+            </div>
+            
+               
+             
+            </div>     
+             
+            <div class="panelConstruccion" id="travelPanel">
+             <div class="panelConstruccionTitulo" id="travelLine" style="display:none"><span>Travel</span></div>
+                
+               <div id="travelWrapper">
+            <div id="questButton" class="gearButtonActive" >Quest</div>
+            <div id="shopButton" class="gearButtonLocked" >?????</div>       
+            <div id="areaButton" class="gearButtonLocked" >?????</div>    
+            <div id="dungeonButton" class="gearButtonLocked">?????</div> 
+                   
+            </div>  
+            <div class="travelTab" style="display: none;"></div>
+                
+                
+                
+                
+            
+            
+            <div id="shopTab" class="travelTab" style="display: none"> <div class="shopHeader">
+                <div id="itemOfTheDay" style="display: none;"><div id="titleOfTheDay">Item Of The Day</div><img id="itemOfTheDayFlair" src="img/src/projectiles/sunray.png"><img id="imageOfTheDay"src="img/src/items/I103.jpg"><div class="soldOut" id="itemOfTheDayTag" style="display: flex;">SOLD OUT</div><div id="nameOfTheDay">Recipe: Epicardo Item</div><div id="priceOfTheDay">29.12K Turtle Coins</div></div>
+                <div class="shopTitle">✦✧✦✧✦<div class="separador"></div></div></div> <div ></div></div>
+            <div id="showdownTab" class="travelTab" style="display: none">
+            
+            
+            
+            </div>
+            <div id="skirmishTab" class="travelTab" style="display: none"></div>    
+                
+                  
+                
+                
+                
+                
+                
+            <span id="presentSwitch" display="position:absolute !important; z-index:-10">this span is basically like the 2fort cow. if you delete it, the game explodes. i dont know when this code appeared. i dont know what causes the code error, its better to just leave it here</span>
+
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                
+                
+                
+                    
+             </div>
+            
+            </div>
+
+
+        </div>
+
+    </span>
+
+
+
+    <script src="scripts/HackTimer.js"></script>
+    <script type="text/javascript" src="scripts/fuse.js"></script>
+    <script type="text/javascript" src="scripts/initialisation.js"></script>
+    <script src="patreon.js"></script>
+    <script src="itemDictionary.js"></script>
+    <script type="text/javascript" src="scripts/offline.js"></script>
+    <script type="text/javascript" src="scripts/stats.js"></script>
+    <script src="gameObjects.js"></script>
+    <script type="text/javascript" src="scripts/enemyDictionary.js"></script>
+    <script type="text/javascript" src="scripts/buffDictionary.js"></script>
+    <script src="spellList.js"></script>
+    <script type="text/javascript" src="scripts/panzoom.js"></script>
+    <script type="text/javascript" src="scripts/vanilla-tilt.js"></script>
+    <script src="main.js"></script>
+    <script type="text/javascript" src="scripts/combat.js"></script>
+    <script type="text/javascript" src="scripts/inventory.js"></script>
+    <script type="text/javascript" src="scripts/achievements.js"></script>
+    <script type="text/javascript" src="scripts/questing.js"></script>
+    <script src="rpg.js"></script>
+    <script src="garden.js"></script>
+    <script src="job.js"></script>
+    <script src="logs.js"></script>
+    <script src="garrison.js"></script>
+    <script src="fx.js"></script>
+    <script type="text/javascript" src="scripts/particles.js"></script>
+    <script type="text/javascript" src="scripts/shop.js"></script>
+    <script type="text/javascript" src="scripts/bestiary.js"></script>
+    <script type="text/javascript" src="scripts/crafting.js"></script>
+    <script src="gacha.js"></script>
+
+
+
+
+</body>
+
+</html>
