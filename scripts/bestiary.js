@@ -206,7 +206,7 @@ function updateBestiary() {
     const i = div.replace("bestiary", "");
 
 
-    if (div && div.id && div.endsWith("bestiary")){
+    if (div && div.id && event.target.parentElement && div.endsWith("bestiary")){
         currentBestiaryEntry = i
         voidAnimation(div,"areaClick 0.3s 1")
         voidAnimation("bestiaryMonster", "gelatine 0.3s 1")

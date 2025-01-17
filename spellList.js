@@ -2240,7 +2240,9 @@ function createEnemyAttack(image, turns){
          voidAnimation("enemyAttackBox", "shrinkFadeOut 0.3s 1")
          did("enemyAttackProgress").style.transition = "none"
          did("enemyAttackProgress").style.height = "0%"
-
+        setTimeout(() => {
+         did("enemyAttackBox").style.display = "none"
+         }, 300);
     }, turns*enemyTurnSpeed);
 
 

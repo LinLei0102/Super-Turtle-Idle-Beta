@@ -8,7 +8,7 @@ stats.logsGotLog = 0
 
 logs.L1P1 = {}
 logs.L1P1.name = "Cultivated Mind";
-logs.L1P1.description = "Collect 10 Books";
+logs.L1P1.description = "Complete 10 Achievements";
 logs.L1P1.hint = '"What do I like more than materialistic things? Knowledge."';
 logs.L1P1.logic = 'stats.logsGotLog>9';
 logs.L1P1.tag = '📕';
@@ -20,7 +20,7 @@ logs.L1P1.progressDescription = function() { return `${beautify(stats.logsGotLog
 
 logs.L1P2 = {}
 logs.L1P2.name = "Big Brain";
-logs.L1P2.description = "Collect 25 Books";
+logs.L1P2.description = "Complete 25 Achievements";
 logs.L1P2.hint = '"Oh yeah it is time."';
 logs.L1P2.logic = 'stats.logsGot>24';
 logs.L1P2.tag = '📕';
@@ -29,7 +29,7 @@ logs.L1P2.category = 1;
 
 logs.L1P3 = {}
 logs.L1P3.name = "Knowledge Garden";
-logs.L1P3.description = "Collect 50 Books";
+logs.L1P3.description = "Complete 50 Achievements";
 logs.L1P3.hint = '"Have you been studying a lot?"';
 logs.L1P3.logic = 'stats.logsGot>49';
 logs.L1P3.tag = '📕';
@@ -129,7 +129,7 @@ logs.L1P5.logic = 'stats.questsCompletedLog>4';
 logs.L1P5.tag = '📜';
 logs.L1P5.category = 1;
 logs.L1P5.repeatable = true;
-logs.L1P5.repeatableClick = function() {return stats.questsCompletedLog  = 0};
+logs.L1P5.repeatableClick = function() {return stats.questsCompletedLog  -= 5};
 logs.L1P5.progressDescription = function() { return `${beautify(stats.questsCompletedLog )}/5` };
 
 
@@ -183,7 +183,7 @@ logs.B1.logic = 'stats.areaBossKillsLog>9';
 logs.B1.tag = '💀';
 logs.B1.category = 1;
 logs.B1.repeatable = true;
-logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  = 0};
+logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  -= 10};
 logs.B1.progressDescription = function() { return `${beautify(stats.areaBossKillsLog )}/10` };
 
 logs.B2 = {}
@@ -256,11 +256,11 @@ logs.HAT2 = {}
 logs.HAT2.name = "The Bigger Wardrobe";
 logs.HAT2.description = "Buy 25 Shell Co. Delivery Boxes";
 logs.HAT2.hint = '"I\'m considering getting the prime subscription."';
-logs.HAT2.logic = 'stats.hatsGotLog>0';
+logs.HAT2.logic = 'stats.hatsGotLog>24';
 logs.HAT2.tag = '🧢';
 logs.HAT2.category = 1;
 logs.HAT2.repeatable = true;
-logs.HAT2.repeatableClick = function() {return stats.hatsGotLog = 0};
+logs.HAT2.repeatableClick = function() {return stats.hatsGotLog -= 25};
 logs.HAT2.progressDescription = function() { return `${beautify(stats.hatsGotLog)}/25` };
 logs.HAT2.category = 1;
 
@@ -313,7 +313,7 @@ logs.L1P17.hint = '"Where will it take me?"';
 logs.L1P17.logic = 'stats.activeSecondsLog>54000';
 logs.L1P17.tag = '⌛';
 logs.L1P17.repeatable = true;
-logs.L1P17.repeatableClick = function() {return stats.activeSecondsLog = 0};
+logs.L1P17.repeatableClick = function() {return stats.activeSecondsLog -= 54000};
 logs.L1P17.progressDescription = function() { return `${beautify(stats.activeSecondsLog/60/60)}/15` };
 logs.L1P17.category = 1;
 
@@ -351,7 +351,7 @@ logs.UPG1.logic = 'stats.upgradedItemsLog>9';
 logs.UPG1.tag = '⬆️';
 logs.UPG1.category = 1;
 logs.UPG1.repeatable = true;
-logs.UPG1.repeatableClick = function() {return stats.upgradedItemsLog  = 0};
+logs.UPG1.repeatableClick = function() {return stats.upgradedItemsLog  -= 10};
 logs.UPG1.progressDescription = function() { return `${beautify(stats.upgradedItemsLog )}/10` };
 
 logs.UPG2 = {}
@@ -476,7 +476,7 @@ logs.J2.logic = 'stats.jesterTurtleClicksLog>9';
 logs.J2.tag = '🎈';
 logs.J2.category = 1;
 logs.J2.repeatable = true;
-logs.J2.repeatableClick = function() {return stats.jesterTurtleClicksLog  = 0};
+logs.J2.repeatableClick = function() {return stats.jesterTurtleClicksLog  -= 10};
 logs.J2.progressDescription = function() { return `${beautify(stats.jesterTurtleClicksLog )}/10` };
 
 logs.J3 = {}
@@ -521,7 +521,7 @@ logs.P45.logic = 'stats.stampsUsedLog>49';
 logs.P45.tag = '🗳️';
 logs.P45.category = 1;
 logs.P45.repeatable = true;
-logs.P45.repeatableClick = function() {return stats.stampsUsedLog  = 0};
+logs.P45.repeatableClick = function() {return stats.stampsUsedLog  -= 50};
 logs.P45.progressDescription = function() { return `${beautify(stats.stampsUsedLog )}/49` };
 
 
@@ -1435,6 +1435,7 @@ function createLog() {
         if (logs[i].repeatableClick!==undefined) {
 
           logs[i].repeatableClick()
+          logCheck()
           rpgPlayer.scutes+=100;
           updateCounters()
           resetTooltip()

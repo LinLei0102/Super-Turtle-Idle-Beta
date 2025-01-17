@@ -571,7 +571,8 @@ function updateHatInventory() {
 
         if (item.sort!=="Hat") return
   
-  
+        item.index = index; 
+
   
       const itemDiv = document.createElement("div");
       
@@ -651,9 +652,24 @@ function sellSelectedHat(){ //called w context menu
     if (rpgPlayer.hat = contextSelectedItem.item) rpgPlayer.hat = undefined
     contextSelectedItem.item.locked = false
 
-    rpgPlayer.sheddings += 200
+
+    if (contextSelectedItem.item.quality==="Rare"){
+        rpgPlayer.sheddings += 400
+        createPopup('💎 Cosmetic sold for 400 Sheddings')
+    }
+    
+    else if (contextSelectedItem.item.quality==="Epic"){
+        rpgPlayer.sheddings += 700
+        createPopup('💎 Cosmetic sold for 700 Sheddings')
+    }
+
+    else{
+        rpgPlayer.sheddings += 150
+        createPopup('💎 Cosmetic sold for 150 Sheddings')
+    }
 
     itemInventory.splice(contextSelectedItem.item.index, 1);
+
 
 
     equipHat()

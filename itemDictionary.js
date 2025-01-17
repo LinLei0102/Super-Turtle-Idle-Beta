@@ -804,7 +804,7 @@ class Weapon extends Equipable {
         this.skillChance = 1;
         this.skillDamage = 1;
 
-        this.finalDamage = function() {return Math.floor(  ( (this.baseDamage * this.damage) * Math.pow(2, this.prefixTier) ) * (  Math.pow(1.5, this.constructor.upgrade)  )  ) }
+        this.finalDamage = function() {return Math.floor(  ( (this.baseDamage * this.damage) * Math.pow(1.5, this.prefixTier) ) * (  Math.pow(1.8, this.constructor.upgrade)  )  ) }
 
 
         this.slot = `Weapon`
@@ -867,11 +867,11 @@ class Weapon extends Equipable {
         if (this.prefix2 === "Double") {this.multishot +=1; }
         if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.8; }
         if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.5; }
-        if (this.prefix2 === "Titanic") {this.skillDamage *= 2; }
+        if (this.prefix2 === "Titanic") {this.skillDamage *= 1.5; }
 
         if (this.prefix3 === "THE") {this.skillMultishot += 2; }
         if (this.prefix3 === "Ultimate") {this.multishot +=2; }
-        if (this.prefix3 === "Final") {this.skillDamage *= 3; }
+        if (this.prefix3 === "Final") {this.skillDamage *= 2; }
         if (this.prefix3 === "Polychrome") {this.multishot +=1; this.skillMultishot += 1; }
         if (this.prefix3 === "Godslaying") {this.damage *= 2; }
 
@@ -905,7 +905,7 @@ class Armor extends Equipable {
 
         //these are multipliers
         this.hp = 1;
-        this.finalHp = function() {return ( (this.baseHp * this.hp) * Math.pow(2, this.prefixTier)  ) * (  Math.pow(1.5, this.constructor.upgrade) ) }
+        this.finalHp = function() {return ( (this.baseHp * this.hp) * Math.pow(1.5, this.prefixTier)  ) * (  Math.pow(1.8, this.constructor.upgrade) ) }
 
         Object.assign(this, properties);
 
@@ -1331,7 +1331,7 @@ class Stamp1 extends Key {
         super(properties);
         this.name = `Ornated Stamper`;
         this.flavor = `"Pluck."`;
-        this.source = `Dropped from presents, dungeons and other rare sources. Tier 1 reroll material`;
+        this.source = `Dropped from presents, dungeons and other rare sources. Can reroll Tier 1 (⭐) modifiers`;
         this.description = function() { return `<span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>`}
         this.mergeStack = 10;
         this.img = 91;
@@ -1349,7 +1349,7 @@ class Stamp2 extends Key {
         super(properties);
         this.name = `Spirit Stamper`;
         this.flavor = `"Doink."`;
-        this.source = `Dropped from presents, dungeons and other rare sources. Tier 2 reroll material`;
+        this.source = `Dropped from presents, dungeons and other rare sources. Can reroll Tier 1 (✨) modifiers`;
         this.description = function() { return `<span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>`}
         this.mergeStack = 10;
         this.img = 92;
@@ -1367,7 +1367,7 @@ class Stamp3 extends Key {
         super(properties);
         this.name = `Sacred Stamper`;
         this.flavor = `"Tunk."`;
-        this.source = `Dropped from presents, dungeons and other rare sources. Tier 3 reroll material`;
+        this.source = `Dropped from presents, dungeons and other rare sources. Can reroll Tier 3 (🌠) modifiers`;
         this.img = 93;
         this.quality = `Mythic`;
         Object.assign(this, properties);
@@ -1676,6 +1676,7 @@ function updateOffhandDurability(item){
 
     if (item.uses<1){
         itemInventory.splice(item.index, 1);
+        equippedOffhand=undefined
         changeLoadout()
     }
 
@@ -2312,7 +2313,7 @@ class ChrysalisRecurver extends Weapon {
         this.flavor = `"A short, ominous bow splintered with red crystals."`
         this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to fire a volley of ${5+this.skillMultishot} heat-seeking shards dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 83
-        this.baseDamage = 200
+        this.baseDamage = 160
         this.baseSkillChance = 5
         this.baseSkillDamage = 1
         this.quality = `Uncommon`
@@ -2372,7 +2373,7 @@ class FoliarBlade extends Weapon {
         this.flavor = `"A blossoming blade emerging from the heart of the forest."`
         this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to shoot ${3+this.skillMultishot} razor-sharp leaves  dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 33
-        this.baseDamage = 220
+        this.baseDamage = 190
         this.baseSkillChance = 5
         this.baseSkillDamage = 1
         this.quality = `Uncommon`
@@ -2450,6 +2451,8 @@ class FoliarBlade extends Weapon {
 
 function attackAnimation(type){
 
+    if (settings.disableCombatAnimations) return
+
     if (!document.hasFocus()) return
 
     if(type==="ranged"){
@@ -2464,6 +2467,9 @@ function attackAnimation(type){
 }
 
 function enemyDamageAnimation(type, target){
+
+    if (settings.disableCombatAnimations) return
+    if (settings.quality === "Low" || settings.quality === "Very Low") return
 
     let miau = enemy
     if (target === "player") miau = did("playerAnimation")

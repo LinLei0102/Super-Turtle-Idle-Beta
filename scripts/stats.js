@@ -1083,27 +1083,27 @@ function updateStatsUI() {
 
       if (id==="statDisplayMaxHealth") statDesc = `Determines your total HP. Your passive regeneration is 5% of this stat per second (${beautify(stat.MaxHealth/20)})`;
       if (id==="statDisplayPower") statDesc = `Determines your attack damage, aswell as item and skill damage, before modifiers such as align bonuses;<br><span style="color:#62B26A">Nature</span> is effective against <span style="color:#9758df">Occult</span>, <span style="color:#9758df">Occult</span> is effective against <span style="color:#DD794E">Elemental</span> and <span style="color:#DD794E">Elemental</span> is effective against <span style="color:#62B26A">Nature</span>`;
-      if (id==="statDisplayNatureBonus") statDesc = `Increases the damage dealt of all Nature Damage sources`;
-      if (id==="statDisplayElementalBonus") statDesc = `Increases the damage dealt of all Elemental Damage sources`;
-      if (id==="statDisplayOccultBonus") statDesc = `Increases the damage dealt of all Occult Damage sources`;
-      if (id==="statDisplayNatureResist") statDesc = `Decreases the damage received from all Nature Damage sources`;
-      if (id==="statDisplayElementalResist") statDesc = `Decreases the damage received from all Elemental Damage sources`;
-      if (id==="statDisplayOccultResist") statDesc = `Decreases the damage received from all Occult Damage sources`;
+      if (id==="statDisplayNatureBonus") statDesc = `Increases damage dealt of all Nature Damage sources`;
+      if (id==="statDisplayElementalBonus") statDesc = `Increases damage dealt of all Elemental Damage sources`;
+      if (id==="statDisplayOccultBonus") statDesc = `Increases damage dealt of all Occult Damage sources`;
+      if (id==="statDisplayNatureResist") statDesc = `Decreases damage received from all Nature Damage sources`;
+      if (id==="statDisplayElementalResist") statDesc = `Decreases damage received from all Elemental Damage sources`;
+      if (id==="statDisplayOccultResist") statDesc = `Decreases damage received from all Occult Damage sources`;
       if (id==="statDisplayExpBonus") statDesc = `Increases the amount of EXP received from defeated foes`;
       if (id==="statDisplayHealingBonus") statDesc = `Increases the amount of HP received from all healing sources`;
-      if (id==="statDisplayLuck") statDesc = `Increases the chance of item drops from defeated foes. Does not affect containers, collectibles or other drop sources`;
-      if (id==="statDisplayGatheringPower") statDesc = `Increases the damage dealt to gathering nodes such as herbs and ores`;
-      if (id==="statDisplayFishingLevel") statDesc = `Increases the quality of fished loot. Decreases trash fished and might allow for new loot`;
+      if (id==="statDisplayLuck") statDesc = `Increases the chance of item drops from defeated foes. Does not affect containers, collectibles or other drop sources, and can not reduce the rate past 1/100`;
+      if (id==="statDisplayGatheringPower") statDesc = `Increases damage dealt to gathering nodes such as herbs and ores`;
+      if (id==="statDisplayFishingLevel") statDesc = `Increases quality of fished loot. Decreases trash fished and might allow for new loot`;
       if (id==="statDisplayExtraLives") statDesc = `Automatically revive a set amount of times during bosses with 30% of your Max Health. Refreshes afterwards`;
       if (id==="statDisplayDodgeChance") statDesc = `Increases the chance to completely negate incoming damage`;
       if (id==="statDisplayAttackSpeed") statDesc = `Determines the speed of your attacks`;
       if (id==="statDisplayDebuffBonus") statDesc = `Increases the damage dealt of all debuff sources`;
-      if (id==="statDisplayIncome") statDesc = `Determines how many Shells will drop from a defeated foe. Higher leveled enemies drop more shells `; //Red-colored-level enemies drop 1.5x the amount while green ones drop 1.5x less. Gray-colored-level ones do not drop shells
+      if (id==="statDisplayIncome") statDesc = `Determines how many Shells will drop from a defeated foe`; //Red-colored-level enemies drop 1.5x the amount while green ones drop 1.5x less. Gray-colored-level ones do not drop shells
       if (id==="statDisplayCritChance") statDesc = `Increases the chance to deal double damage. Critical hits are marked with a (!)`;
-      if (id==="statDisplayThorns") statDesc = `Determines how much of all the damage received gets returned to the foe, capped at 200% of your Power`;
+      if (id==="statDisplayThorns") statDesc = `Determines how much of all damage received gets returned to the foe, capped at 200% of your Power`;
       if (id==="statDisplayStealLevel") statDesc = `Determines how easy the Thief minigame is`;
-      if (id==="statDisplayLifesteal") statDesc = `Determines how much of all the damage dealt gets converted into HP`;
-      if (id==="statDisplayLumaPower") statDesc = `Increases the damage dealt by clicking on the enemy`;
+      if (id==="statDisplayLifesteal") statDesc = `Determines how much of all damage dealt gets converted into HP`;
+      if (id==="statDisplayLumaPower") statDesc = `Increases damage dealt by clicking on the enemy`;
       if (id==="statDisplayOfflineBonus") statDesc = `Increases offline production`;
 
         

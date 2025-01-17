@@ -73,6 +73,7 @@
 <div id="itemContextMenu" class="itemContextMenu" style="display: none;">
     <img class="itemcontextMenuArrow" src="img/src/icons/contextTriangle.png">
     <div id ="itemContextMenuButtonEquip" class="itemContextMenuButton" onclick="equipSelectedItem()">Equip</div>
+    <div id ="itemContextMenuButtonUnequip" class="itemContextMenuButton" onclick="UnequipSelectedItem()">Unequip</div>
     <!-- <div onclick='lockSelectedItem()' id ="itemContextMenuButtonLock" class="itemContextMenuButton">Lock</div> --> 
     <div onclick='useSelectedItem()' id ="itemContextMenuButtonUse" class="itemContextMenuButton">Use</div>
     <div onclick='mergeSelectedItem()' id ="itemContextMenuButtonMerge" class="itemContextMenuButton">Merge</div>
@@ -389,7 +390,7 @@
             <h2>General</h2>
             <h3>Save manually <strong style="color: rgb(85, 80, 80);">[Shortcut: "S"]</strong><button onclick="autosave(); playSound('audio/button1.mp3')">Save</button></h3>
             <h3 id="exportSave">Export save in a JSON file<button onclick="exportJSON(); playSound('audio/button1.mp3')">Export</button></h3>
-            <!--<h3>Import JSON file <strong style="color: rgb(240, 92, 92);"> [⚠ Only import trusted saves!]</strong><button onclick="importJSON(); playSound('audio/button1.mp3')">Import</button></h3>-->
+            <h3>Import JSON file <strong style="color: rgb(240, 92, 92);"> [⚠ Only import trusted saves!]</strong><button onclick="importJSON(); playSound('audio/button1.mp3')">Import</button></h3>
             <h3 id="warningButton">Wipe all progress<button onclick="deleteSavePrompt();" style="background: #B23E3E;">DELETE</button></h3>
 
             <h2>Game Settings</h2>
@@ -398,12 +399,15 @@
             <h3>Disable autosave <strong style="color: rgb(85, 80, 80);"> (Autosaves every minute)</strong><button id="disableAutosave" onclick="toggleSettings('disableAutosave')">OFF</button></h3>
             <h3>Colorblind Mode<button id="disableColorblind" onclick="toggleSettings('disableColorblind')">OFF</button></h3>
 
+            <h2>Notifications</h2>
+            <h3>Disable auto-scrap notifications<button id="disableScrapPopup" onclick="toggleSettings('disableScrapPopup')">OFF</button></h3>
+
             <h2>Visual Settings</h2>
             <h3>Disable custom cursor<button id="disableCustomCursor" onclick="toggleSettings('disableCustomCursor'); setCursor()">OFF</button></h3>
             <h3>Game quality<button id="qualityToggle" onclick="switchQuality();" style="width: 8rem;">High</button></h3>
             <h3>Disable floating damage numbers<button id="disableDamageNumbers" onclick="toggleSettings('disableDamageNumbers')">OFF</button></h3>
             <h3>Disable animated backgrounds<button id="disableAnimatedBg" onclick="toggleSettings('disableAnimatedBg'); setCursor()">OFF</button></h3>
-            <h3>Disable combat animations<button id="disableAnimations" onclick="toggleSettings('disableAnimations')">OFF</button></h3>
+            <h3>Disable combat animations<button id="disableCombatAnimations" onclick="toggleSettings('disableCombatAnimations')">OFF</button></h3>
 
             <!--
             <h2 class="specialSettings" style="display: flex;">Special</h2>

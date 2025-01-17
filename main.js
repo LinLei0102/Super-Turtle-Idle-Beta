@@ -377,9 +377,10 @@ did("priceOfTheDay").innerHTML = beautify(eval(itemOfTheDay.price))+" Shells";
 
  }
 
- if (cd.BossCharge<=0 && rpgPlayer.BossCharges<5){
+ if (cd.BossCharge<=0 && rpgPlayer.BossCharges<10){
     rpgPlayer.BossCharges++
     cd.BossCharge = 300
+    if (rpgPlayer.BossCharges>5) cd.BossCharge = 900
     encounterButtonPress()
  }
 
@@ -740,7 +741,7 @@ function playSong(filename) {
         stopSong(); 
     }
 
-    if (!settings.disableAudio && document.hasFocus()) {
+    if (!settings.disableAudio) {
         currentAudio = new Audio(filename);
 
         if (savedSound !== undefined) {
@@ -755,7 +756,7 @@ function playSong(filename) {
 }
 
 function stopSong(fadeDuration = 2000) {
-    if (currentAudio) {
+    if (currentAudio!==null) {
         const startVolume = currentAudio.volume;
         const fadeStep = 50; // Tiempo entre cada paso en ms
 
@@ -961,7 +962,7 @@ cd.BossCharge = 300
     did("tooltipDescription").style.textAlign = "center";
 
     let rechargeText= ""
-    if (rpgPlayer.BossCharges<5) rechargeText= `and will gain another chance in ${ convertSecondsToHMS(cd.BossCharge,"mini")}`
+    if (rpgPlayer.BossCharges<10) rechargeText= `and will gain another chance in ${ convertSecondsToHMS(cd.BossCharge,"mini")}`
 
     did("tooltipDescription").innerHTML = `<span style="white-space: nowrap; display:inline-block;justify-content:center;align-items:center;">
     Fight the boss of the area
@@ -969,7 +970,7 @@ cd.BossCharge = 300
     <div class="separator" style="margin:0; margin-bottom:0.5rem"></div>
     
     <span style="color:gray">
-    Can only be defeated${colorTag( rpgPlayer.BossCharges+"/5", "orange")}more times
+    Can only be defeated${colorTag( rpgPlayer.BossCharges+"/10", "orange")}more times
     <br>
     ${rechargeText}
     
@@ -3000,7 +3001,7 @@ function retroactiveUpdate(){
     if (stats.currentVersion<0.44){for (var i in research) if (research[i].status === "completed") {research[i].status = "waiting"; research[i].unlocked = false; research[i].timer = research[i].timerMax; } }
 
     //sanityCheck()
-    stats.currentVersion = 1.00;
+    stats.currentVersion = 1.01;
     did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(2)}`
 }
 

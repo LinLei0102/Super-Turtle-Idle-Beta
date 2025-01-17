@@ -282,10 +282,10 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
           giveShells(returnEnemyShells())
 
 
-          if (chance(1/1000)) spawnItem(VendorTrash)
+          if (chance(1/1000)) {spawnItem(VendorTrash,1,"noPopup"); flyingLoot()}
           
           
-          lootTable(areas[stats.currentArea].lootTable())
+          lootTable(areas[stats.currentArea].lootTable(),"enemy")
 
           combatActions = 5
           extraLivesUsed = stat.ExtraLives
@@ -885,10 +885,10 @@ function returnEnemyShells(){
 
 let givenExp = stat.Income
 
-if (returnEnemyLevelGap()==="red") givenExp = stat.Income * 1.5
-if (returnEnemyLevelGap()==="orange") givenExp = stat.Income
-if (returnEnemyLevelGap()==="green") givenExp = stat.Income * 0.5
-if (returnEnemyLevelGap()==="gray") givenExp = stat.Income * 0.1
+//if (returnEnemyLevelGap()==="red") givenExp = stat.Income * 1.5
+//if (returnEnemyLevelGap()==="orange") givenExp = stat.Income
+//if (returnEnemyLevelGap()==="green") givenExp = stat.Income * 0.5
+//if (returnEnemyLevelGap()==="gray") givenExp = stat.Income * 0.1
 
 return givenExp
 }
@@ -1085,7 +1085,7 @@ function enemyDamage(damage, align, icon, type){
   damageDealt = damage /* * Math.pow(1.005, playerMastery) */ * enemyDefenseMultiplier * crit
   if (type==="zeroScale") damageDealt = damage * enemyDefenseMultiplier * crit
 
-  if (returnEnemyLevelGap()==="red") damageDealt *= 0.5
+  if (returnEnemyLevelGap()==="red") damageDealt *= 0.3
 
 
   //if (gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) damageDealt = 0
@@ -1317,7 +1317,7 @@ let proudIncreasedDamage = 1.3
 function finalPlayerDamage(damageDealt){
 
 
-  if (returnEnemyLevelGap()==="red") return damageDealt*2
+  if (returnEnemyLevelGap()==="red") return damageDealt*3
 
   //if (enemies[stats.currentEnemy].killCount===0 && settings.proudToggle && (bossTime || dungeonTime)) damageDealt *= 1.15
 
@@ -1664,7 +1664,7 @@ function damageText(number, type, color, icon, target) {
   if (icon==="strong") mark = " ▲"
 
 
-particleTrackers.push(new ParticleDamageText(posX, posY, {text: number+mark, finalColor : { r: r, g: g, b: b } }));
+ if (!settings.disableDamageNumbers)  particleTrackers.push(new ParticleDamageText(posX, posY, {text: number+mark, finalColor : { r: r, g: g, b: b } }));
 
 
 }
@@ -4011,6 +4011,9 @@ function difficultyButton(div, difficulty){
 
     playSound("audio/button4.mp3")
 
+    did("enemyAttackBox").style.display = "none";
+    enemyTurn = 0;
+
 
     if (difficulty === "boss" && rpgPlayer.BossCharges<1) {playSound("audio/thud.mp3"); return}
 
@@ -4074,7 +4077,8 @@ did("bossButton").onclick = function() {
   if (rpgPlayer.BossCharges<1) return
 
   playSound("audio/arena.mp3")
-  if (rpgPlayer.BossCharges===5) cd.BossCharge = 300
+  if (rpgPlayer.BossCharges<6 && cd.BossCharge>300) cd.BossCharge = 300
+  if (rpgPlayer.BossCharges===10) cd.BossCharge = 900
 
 
 

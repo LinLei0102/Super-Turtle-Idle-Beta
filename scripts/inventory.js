@@ -297,6 +297,8 @@ function spawnItem(id,amount,source){
 
     item.constructor.timesGot += toAdd
 
+    if (source!=="noPopup") createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} x${amount} got!</span>`)
+
 
   } else {
 
@@ -306,26 +308,18 @@ function spawnItem(id,amount,source){
     function loop(){
 
       const iteminstance = new id()
-      if (item.init) iteminstance.init(source)
+      if (item.init && source==="container") iteminstance.init(source)
+      else if (item.init) iteminstance.init(source)
 
 
 
-        function areItemsEqual(item1, item2) {
-          return item1.canReforge !== undefined &&
-                 item1.slot !== "Offhand" &&
-                 item1.img === item2.img &&
-                 item1.prefix1 === item2.prefix1 &&
-                 item1.prefix2 === item2.prefix2 &&
-                 item1.prefix3 === item2.prefix3 &&
-                 item1.prefix4 === item2.prefix4 &&
-                 item1.align === item2.align;
-      }
+        
       
       // autoscrapping
       if (itemInventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
 
-         
-         spawnItem(returnScrapMaterial(iteminstance))
+        if (source!=="noPopup" && !settings.disableScrapPopup) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${iteminstance.name} got! <span style="color:lawngreen;background:transparent; margin-left:1rem"> [ Scrapped ] </span></span>`)
+         spawnItem(returnScrapMaterial(iteminstance),1,"noPopup")
          item.constructor.timesGot ++
           return;
       }
@@ -333,7 +327,7 @@ function spawnItem(id,amount,source){
 
 
 
-
+      if (source!=="noPopup") createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${iteminstance.name} got!</span>`)
       itemInventory.push(iteminstance)
       item.constructor.timesGot ++
 
@@ -389,6 +383,19 @@ function purgeItems(){ //failsafe handler
 
 }
 
+
+
+function areItemsEqual(item1, item2) {
+  return item1.canReforge !== undefined &&
+         item1.slot !== "Offhand" &&
+         item1.img === item2.img &&
+         item1.prefix1 === item2.prefix1 &&
+         item1.prefix2 === item2.prefix2 &&
+         item1.prefix3 === item2.prefix3 &&
+         item1.prefix4 === item2.prefix4 &&
+         item1.align === item2.align;
+}
+
 function resetInventory(){
   itemInventory.forEach((item, index) => { item.constructor.count=0; item.constructor.timesGot=0; })
   itemInventory = []
@@ -421,6 +428,10 @@ did(`inventory${sort}Target`).className = "inventoryTab inventoryTabActive"
   endSelectionMode()
   currentSort=sort;
   updateInventory();
+  setTimeout(() => {
+    sortInventory()
+    updateInventory();
+  }, 1);
   did(`inventory${sort}Indicator`).style.display = "none"
   did(`inventory${sort}Indicator`).innerHTML = 0
 
@@ -442,7 +453,7 @@ function updateInventory(mode) {
   if (quickSelectMode===true) return 
 
   purgeItems()
-  sortInventory()
+  //sortInventory()
   did("inventoryListing").innerHTML = "";
 
   itemInventory.forEach((item, index) => {
@@ -652,6 +663,9 @@ function quickSelectItem(itemDiv, mode){
   const itemSelect = itemDiv.querySelector('.itemSelect');
 
 
+  if (itemDiv.item.loadouts && itemDiv.item.loadouts.includes(rpgPlayer.currentLoadout)) return
+
+
   if (itemSelect && itemSelect.style.display === 'flex' && mode!=="swipe"){
 
     playSound("audio/thud.mp3")
@@ -747,7 +761,13 @@ document.addEventListener('click', function(event) { //context menus
 
 
 
-
+  //if (itemDiv && itemDiv.item && itemDiv.item.loadouts.includes(rpgPlayer.currentLoadout)) { //equipped items context
+    
+    
+    
+    
+    
+  //}
 
 
 
@@ -812,7 +832,7 @@ document.addEventListener('click', function(event) { //context menus
 
     const item = itemDiv.item; 
 
-    if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout)) return //context menu wont open on equipped items
+    //if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout)) return //context menu wont open on equipped items
       
       
       contextSelectedItem = itemDiv
@@ -820,10 +840,22 @@ document.addEventListener('click', function(event) { //context menus
       playSound("audio/button8.mp3")
 
 
-    if (item.slot!=undefined) { //if its equipable
+
+      if (itemDiv.item.loadouts && itemDiv.item.loadouts.includes(rpgPlayer.currentLoadout)) { //equipped item 
+
+         did("itemContextMenuButtonUnequip").style.display = "flex"
+         if (itemDiv.item.constructor.upgrade!==undefined) did("itemContextMenuButtonUpgrade").style.display = "flex"
+
+
+
+
+      } 
+
+
+    else if (item.slot!=undefined) { //if its equipable
       did("itemContextMenuButtonEquip").style.display = "flex"
       if (item.slot!=="Offhand" && item.noScrap !== true) did("itemContextMenuButtonScrap").style.display = "flex"
-      if ( ( returnUpgradeMaterial(item.quality).constructor.count >= returnUpgradeMaterialAmount(item.constructor.upgrade) ) || ( UpgradeMaterial0.count >= returnUpgradeMaterialAmount(item.constructor.upgrade) ))  did("itemContextMenuButtonUpgrade").style.display = "flex"
+      if (itemDiv.item.constructor.upgrade!==undefined) did("itemContextMenuButtonUpgrade").style.display = "flex"
       if ( item.prefixTier && item.prefixTier<4 && returnStamper(item.prefixTier).constructor.count >= 1 ) did("itemContextMenuButtonReforge").style.display = "flex"
       did("itemContextMenuButtonSell").style.display = "flex"
     } else if (item.isStackable && item.constructor.count>1){
@@ -838,6 +870,8 @@ document.addEventListener('click', function(event) { //context menus
 
     if (item.mergeStack<=item.constructor.count) did("itemContextMenuButtonMerge").style.display = "flex"
 
+
+    
 
 
     did("itemContextMenu").style.display = "flex";
@@ -928,12 +962,12 @@ function upgradeMenuTooltip(){
   let materialToUseCount = beautify(returnUpgradeMaterial(item.quality).constructor.count)
 
   let dmgorhp = "";
-  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(2, item.prefixTier)  ) * (  Math.pow(1.5, item.constructor.upgrade+1) ) );
-  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(2, item.prefixTier) ) * ( Math.pow(1.5, item.constructor.upgrade+1) )  );
+  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(1.5, item.prefixTier)  ) * (  Math.pow(1.8, item.constructor.upgrade+1) ) );
+  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(1.5, item.prefixTier) ) * ( Math.pow(1.8, item.constructor.upgrade+1) )  );
 
   const dmgorhpnext = dmgorhp
 
-  if (  returnUpgradeMaterial(item.quality).constructor.count < returnUpgradeMaterialAmount(item.constructor.upgrade) ) {
+  if ( UpgradeMaterial0.count>=returnUpgradeMaterialAmount(item.constructor.upgrade) &&  returnUpgradeMaterial(item.quality).constructor.count < returnUpgradeMaterialAmount(item.constructor.upgrade) ) {
 
     let universalupgradeitem = new UpgradeMaterial0()
     materialToUseName = `&nbsp;<span style="color:${returnQualityColor(universalupgradeitem.quality)}">${universalupgradeitem.name}</span>&nbsp;`
@@ -952,7 +986,7 @@ function upgradeMenuTooltip(){
 
   <div class="separator"></div>
   <div class="upgradeTooltipWidget3" style="outline:none;color:gray"><strong>✨</strong>Upgrade the base stats of all items of the same type by using same-quality materials</span></div>
-  <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg">Will use ${materialToUseName} x${returnUpgradeMaterialAmount(item.constructor.upgrade)}  &nbsp;<span style="color:gray">(${materialToUseCount} in bag)</span></div>
+  <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg">Will use${materialToUseName}x${returnUpgradeMaterialAmount(item.constructor.upgrade)}  &nbsp;<span style="color:gray">(${materialToUseCount} in bag)</span></div>
   `;
 
   if (item.constructor.upgrade===5) did("tooltipDescription").innerHTML = `
@@ -1564,6 +1598,38 @@ function equipSelectedItem(){
 }
 
 
+
+function UnequipSelectedItem(){
+
+
+    const item = contextSelectedItem.item; 
+
+    if (item.slot != undefined) { //if its equipable
+
+    if (item.loadouts.includes(rpgPlayer.currentLoadout)) {  //if its already equipped
+
+
+      playSound("audio/use.mp3")
+
+
+      item.loadouts = item.loadouts.filter(num => num !== rpgPlayer.currentLoadout);
+
+
+
+      did(`rpg${item.slot}Slot`).innerHTML = ""; 
+      equipGear()
+      resetTooltip()
+      updateInventory()
+    } 
+
+  }
+
+
+itemContextMenuBegone()
+
+}
+
+
 function changeLoadout(number){
 
       playSound("audio/use.mp3")
@@ -1617,6 +1683,7 @@ function itemContextMenuBegone(){
     did("itemContextMenuButtonScrap").style.display = "none";
     did("itemContextMenuButtonReforge").style.display = "none"
     did("itemContextMenuButtonUpgrade").style.display = "none"
+    did("itemContextMenuButtonUnequip").style.display = "none"
     did("itemContextMenuButtonSell").style.display = "none";
     did("itemContextMenuButtonSellMenu").style.display = "none";
     did("itemContextMenuButtonSellAll").style.display = "none";
@@ -1900,7 +1967,7 @@ function returnPrefixSkills(item){
   if (item.prefix1 === `Powerful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x0.5 Attack Speed, x3 Weapon Damage</span>`;}
   if (item.prefix1 === `Echoing`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, x0.5 Weapon Damage</span>`;}
   if (item.prefix1 === `Masterful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Chance, x0.5 Weapon Skill Damage</span>`;}
-  if (item.prefix1 === `Technical`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x3 Weapon Skill Damage, x0.5 Weapon Skill Chance</span>`;}
+  if (item.prefix1 === `Technical`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Damage, x0.5 Weapon Skill Chance</span>`;}
   if (item.prefix1 === `Recursive`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x0.3 weapon attack speed, +4 extra attacks</span>`;}
 
   //t2
@@ -1909,12 +1976,12 @@ function returnPrefixSkills(item){
   if (item.prefix2 === `Double`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack</span>`;}
   if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Attack Speed</span>`;}
   if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Chance</span>`;}
-  if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Damage</span>`;}
+  if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
 
   //t3
   if (item.prefix3 === `THE`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+2 Extra Weapon Skill Attacks</span>`;}
   if (item.prefix3 === `Ultimate`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+2 Extra Attacks</span>`;}
-  if (item.prefix3 === `Final`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x3 Weapon Skill Damage</span>`;}
+  if (item.prefix3 === `Final`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Damage</span>`;}
   if (item.prefix3 === `Polychrome`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, +1 Extra Weapon Skill Attack</span>`;}
   if (item.prefix3 === `Godslaying`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Damage</span>`;}
  
@@ -2070,37 +2137,7 @@ const itemDivNoParent = event.target;
 });
 
 
-document.addEventListener('click', function(event) { //unequip code i think
-  const itemDiv = event.target.closest('.inventoryItem'); 
-  if (itemDiv && itemDiv.tag === "inventory") {
 
-
-    const item = itemDiv.item; 
-
-    if (item.slot != undefined) { //if its equipable
-
-    if (item.loadouts.includes(rpgPlayer.currentLoadout)) {  //if its already equipped
-
-
-      playSound("audio/use.mp3")
-
-
-      item.loadouts = item.loadouts.filter(num => num !== rpgPlayer.currentLoadout);
-
-
-
-      did(`rpg${item.slot}Slot`).innerHTML = ""; 
-      equipGear()
-      resetTooltip()
-      updateInventory()
-    } 
-
-  }
-
-
-      
-  }
-});
 
 let equippedWeapon = undefined
 let equippedHead = undefined
@@ -2407,12 +2444,19 @@ function lootTable(table, source){
     const id = eval(i)
     const item = new id()
 
-    if (source==="container") {spawnItem(eval(i), table[i].a, "container")}
-    else spawnItem(eval(i), table[i].a)
+    let isHidden = ""
+    if (source==="hidden") isHidden = "noPopup"
 
-    if (source!=="hidden") createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} got!</span>`)
+    if (source==="container") {spawnItem(eval(i), table[i].a, "container")}
+    else spawnItem(eval(i), table[i].a,isHidden)
+
     
     if (document.hasFocus() && source==="enemy") flyingLoot()
+
+    //if (itemInventory.some(existingItem => areItemsEqual(existingItem, item))) continue
+
+    //if (source!=="hidden") createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} got!</span>`)
+
 
 }
 }

@@ -3,7 +3,7 @@
 
 function returnEnemyHp(level){
     //return Math.floor(1000 * Math.pow(1.5, (level-1)))
-    return Math.floor(100 * (level*1.5))
+    return Math.floor(100 * (level*2))
 }
 
 function returnEnemyAttack(level){
@@ -11,8 +11,8 @@ function returnEnemyAttack(level){
 
 
   let baseAtk = 5
-  if (level>=6) baseAtk = 6
-  if (level>=14) baseAtk = 9
+  //if (level>=6) baseAtk = 6
+  if (level>=14) baseAtk = 8
 
   return Math.floor(baseAtk * (level*1))
 }
@@ -83,7 +83,18 @@ enemies.E1 = {
     lootTable: function() { return { CaesarSalad : { c : 100, a : 1, l : function(){return (areas[stats.currentArea].heat>3 && quests.A1QN13.state!=="completed")}}, SlimyResidue : { c : chances.enemies.poor, a : 1}, WoodenSword : { c : chances.enemies.poor, a : 1}, ClothHead : { c : chances.enemies.poor, a : 1},  CabbageBoots : { c : chances.enemies.uncommon, a : 1} } },
     align: 'nature',
     passive: true,
-    attack : function() {return 0},
+    ai: function () {
+      if (areas[stats.currentArea].heat===1) return;
+      playSound("audio/enemyAttack.mp3")
+      var damageDealt = rng(enemies[stats.currentEnemy].attack(), (enemies[stats.currentEnemy].attack()*1.05))*enemyDamageMultiplier //damage variance
+      if (enemies[stats.currentEnemy].align==='nature') playerNatureDamage(damageDealt)
+      voidAnimation("playerAnimation", "gelatine 0.3s 1")
+      voidAnimation("enemyAnimation", "enemyAttack 0.5s 1")
+      playerUpdate()
+
+
+
+     },
     card1 : { description:"x1.05 Nature Bonus", effect: function() {stat.NatureBonus*=1.05} },
     card2 : { description:"x1.1 Nature Bonus", effect: function() {stat.NatureBonus*=1.1}},
     card3 : { description:"x1.15 Nature Bonus", effect: function() {stat.NatureBonus*=1.15} },
@@ -138,8 +149,8 @@ enemies.E4 = {
   ai: function () { castHoopperoona() },
   lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : chances.boss.upgradeMaterial},  HopperoonaPhylactery : { c : chances.boss.uncommon, a : 1},  WebthreadedPromise : { c : chances.boss.uncommon, a : 1}, PoisonScroll : { c : chances.boss.rare, a : 1}, ChrysalisRecurver : { c : chances.boss.rare, a : 1}, PoisonScroll2 : { c : chances.boss.epic, a : 1}, } },
   align: 'occult',
-  bestiarySkills : function() { return `❖${buffIcon("B57")}Ravenous Bite: Inflicts 2 ${heatDesc(`(5 in${colorTag("🔥3","orange")})`,3)} stacks of${buffIcon("B1")}Poison<br>
-  ${heatDesc(`❖${buffIcon("B58")}Web Shot${colorTag("🔥2","orange")}: Inflicts 2 ${heatDesc(`(5 in${colorTag("🔥4","orange")})`,4)}  stacks of${buffIcon("B36")}Slow`,2)}` },
+  bestiarySkills : function() { return `❖${buffIcon("B57")}Ravenous Bite: Inflicts 2 ${heatDesc(`(4 in${colorTag("🔥3","orange")})`,3)} stacks of${buffIcon("B1")}Poison<br>
+  ${heatDesc(`❖${buffIcon("B58")}Web Shot${colorTag("🔥2","orange")}: Inflicts 2 ${heatDesc(`(4 in${colorTag("🔥4","orange")})`,4)}  stacks of${buffIcon("B36")}Slow`,2)}` },
   contextTooltip: [`<img src="img/src/buffs/B1.jpg"> <span style="color:lawngreen">Poison</span> takes 1/100 of your Max Health as Nature Damage per second per stack`,
     `<img src="img/src/buffs/B36.jpg"> <span style="color:lawngreen">Slow</span> reduces your Attack Speed by 5% per stack`,
   ],
@@ -148,7 +159,11 @@ enemies.E4 = {
   //card1 : { description:"x1.05 Occult Damage", effect: function() {stat.OccultResist+=3}, got:true },
   //card2 : { description:"x1.1 Occult Damage", effect: function() {stat.OccultResist+=2}, got:true },
   //card3 : { description:"x1.15 Occult Damage", effect: function() {stat.OccultResist+=1}, got:true },
-  breakBar: function () { return areas[stats.currentArea].heat>1 ? 1 : 0},
+  breakBar: function () { 
+      if (areas[stats.currentArea].heat<2) return 0
+      if (areas[stats.currentArea].heat===4) return 2
+      else return 1
+  },
   onDeath: function () { if (areas[stats.currentArea].heat>2) sendMail("Shellshine")},
 
 }

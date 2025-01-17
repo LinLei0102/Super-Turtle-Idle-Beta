@@ -67,7 +67,12 @@ function playerUpdate(){ //updates player HP and checks if its dead
 
 
 
+    did("enemyAttackBox").style.display = "none";
+    enemyTurn = 0;
 
+    setTimeout(() => {
+      updateOfflineIndicator()
+    }, 1);
 
 
 
@@ -303,13 +308,16 @@ function enemyAttackTurn() {
     
       //gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty) || !rpgPlayer.alive || (stats.currentArea === "A7" && !skirmishTime && !showdownTime) || (buffs.B6.time>0 || buffs.B44.time>0)) { //conditions to not attack
 
-      if (enemies[stats.currentEnemy].passive) return
       if (!rpgPlayer.alive) return
 
-      if (!settings.disableCombatAudio) playSound("audio/enemyAttack.mp3")
-      if (enemies[stats.currentEnemy].ai!==undefined) {enemyTurn++; enemies[stats.currentEnemy].ai();}
 
-      if (document.hasFocus()) enemies[stats.currentEnemy].animation === "ranged" ? voidAnimation("enemyAnimation", "gelatine 0.4s 1") : voidAnimation("enemyAnimation", "enemyAttack 0.5s 1")
+      if (enemies[stats.currentEnemy].ai!==undefined) {enemyTurn++; enemies[stats.currentEnemy].ai();}
+      if (enemies[stats.currentEnemy].passive) return
+
+
+      if (!settings.disableCombatAudio) playSound("audio/enemyAttack.mp3")
+
+      if (!settings.disableCombatAnimations) voidAnimation("enemyAnimation", "enemyAttack 0.5s 1")
 
 
 

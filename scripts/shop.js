@@ -307,7 +307,7 @@ function createShopItem() {
 
 
       if (source==="achievementShop") {spawnItem(item.constructor, toBuy, "container"); return}
-      spawnItem(item.constructor, toBuy)
+      spawnItem(item.constructor, toBuy, "noPopup")
       
   
   
