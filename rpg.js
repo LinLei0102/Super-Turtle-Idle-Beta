@@ -842,10 +842,13 @@ document.getElementById("combatLog").addEventListener('scroll', function() {
 
 
 
-function returnEnemyLevelGap(){
+function returnEnemyLevelGap(mode){
 
   const playerLevel = rpgClass[stats.currentClass].level;
   const enemyLevel = enemies[stats.currentEnemy].level;
+
+
+  if (mode==="difference") return rpgClass[stats.currentClass].level - enemies[stats.currentEnemy].level;
 
   if (enemyLevel >= playerLevel + 3) {
     return "red";
@@ -857,17 +860,13 @@ if (enemyLevel >= playerLevel - 3) {
     return "green";
 }
 return "gray";
-
-      
-  
-
 }
 
 
 function returnEnemyExp(){
 
 
-const expRate = 10 * (1+stat.ExpBonus/100)
+const expRate = (10 * (1+stat.ExpBonus/100)) * nofarmToggleBonus
 
 
 let givenExp = 0
@@ -1085,7 +1084,11 @@ function enemyDamage(damage, align, icon, type){
   damageDealt = damage /* * Math.pow(1.005, playerMastery) */ * enemyDefenseMultiplier * crit
   if (type==="zeroScale") damageDealt = damage * enemyDefenseMultiplier * crit
 
-  if (returnEnemyLevelGap()==="red") damageDealt *= 0.3
+  //if (returnEnemyLevelGap()==="red") damageDealt *= 0.3
+
+  if (returnEnemyLevelGap("difference")>0) damageDealt *= 1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2)
+
+  if (returnEnemyLevelGap()==="red") damageDealt *= Math.max(0.1, 1 + (returnEnemyLevelGap("difference")+2) *0.2 )
 
 
   //if (gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) damageDealt = 0
@@ -1317,7 +1320,7 @@ let proudIncreasedDamage = 1.3
 function finalPlayerDamage(damageDealt){
 
 
-  if (returnEnemyLevelGap()==="red") return damageDealt*3
+  //if (returnEnemyLevelGap()==="red") return damageDealt*3
 
   //if (enemies[stats.currentEnemy].killCount===0 && settings.proudToggle && (bossTime || dungeonTime)) damageDealt *= 1.15
 
@@ -4029,6 +4032,8 @@ function difficultyButton(div, difficulty){
 
     setTimeout(() => {
       updateOfflineIndicator()
+      statsUpdate();
+      updateStatsUI();
     }, 1);
     
   });

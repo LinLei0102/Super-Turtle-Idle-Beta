@@ -317,7 +317,7 @@ function enemyAttackTurn() {
 
       if (!settings.disableCombatAudio) playSound("audio/enemyAttack.mp3")
 
-      if (!settings.disableCombatAnimations) voidAnimation("enemyAnimation", "enemyAttack 0.5s 1")
+      if (document.hasFocus() && !settings.disableCombatAnimations) voidAnimation("enemyAnimation", "enemyAttack 0.5s 1")
 
 
 

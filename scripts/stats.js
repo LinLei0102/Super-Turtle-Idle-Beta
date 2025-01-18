@@ -741,7 +741,19 @@ function statsUpdate(){
 
 
 
+  if (returnEnemyLevelGap()==="red") {
 
+    const diff = returnEnemyLevelGap("difference") * 15
+
+    stat.NatureResist += diff
+    stat.ElementalResist += diff
+    stat.OccultResist += diff
+
+
+
+
+
+  }
 
 
 
@@ -1144,26 +1156,39 @@ function updateStatsUI() {
   chances.reforges = {}
   chances.chest = {}
 
+
+  let nofarmToggleBonus = 1
+
   function updateDroprates(){
 
     let heatMultiplier = 1
     if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(1.5, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
   
   
-    let fastBonus = 1
-    if (settings.nofarmToggle) fastBonus = 2
+    nofarmToggleBonus = 1
+    if (settings.nofarmToggle) nofarmToggleBonus = 2
   
-    heatMultiplier *= fastBonus
+    heatMultiplier *= nofarmToggleBonus
     if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
   
-    chances.enemies.poor = 100
+    chances.enemies.poor = 100 / nofarmToggleBonus
     chances.enemies.common = Math.floor(500 / heatMultiplier)
     chances.enemies.uncommon = Math.floor(1000 / heatMultiplier)
     chances.enemies.rare = Math.floor(5000 / heatMultiplier)
     chances.enemies.epic = Math.floor(10000 / heatMultiplier)
     chances.enemies.mythic = Math.floor(40000 / heatMultiplier)
     chances.enemies.legendary = Math.floor(80000 / heatMultiplier)
-  
+
+
+    chances.chest.poor = 2 / nofarmToggleBonus
+    chances.chest.common = 5 / nofarmToggleBonus
+    chances.chest.uncommon = 15 / nofarmToggleBonus
+    chances.chest.rare = 30 / nofarmToggleBonus
+    chances.chest.epic = 60 / nofarmToggleBonus
+    chances.chest.mythic = 100 / nofarmToggleBonus
+    chances.chest.legendary = 200 / nofarmToggleBonus
+
+
     chances.boss.upgradeMaterial = Math.floor(5 * areas[stats.currentArea].heat)
     chances.boss.poor = 50
     chances.boss.common = Math.floor(10 / heatMultiplier)
@@ -1173,14 +1198,9 @@ function updateStatsUI() {
     chances.boss.mythic = Math.floor(300 / heatMultiplier)
     chances.boss.legendary = Math.floor(1000 / heatMultiplier)
 
-    chances.chest.poor = 2
-    chances.chest.common = 5
-    chances.chest.uncommon = 15
-    chances.chest.rare = 30
-    chances.chest.epic = 60
-    chances.chest.mythic = 100
-    chances.chest.legendary = 200
 
+
+    heatMultiplier /= nofarmToggleBonus
 
 
 
@@ -1194,7 +1214,7 @@ function updateStatsUI() {
   
   
   
-    chances.enemies.materialCount = 1 + (areas[stats.currentArea].heat-1) * fastBonus
+    chances.enemies.materialCount = 1 + (areas[stats.currentArea].heat-1) * nofarmToggleBonus
   
   }
 

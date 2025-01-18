@@ -81,7 +81,7 @@ class Equipable extends Item {
         if (this.prefix2===`Hopeful`) stat.LumaPower += 20
 
         if (this.prefix3===`Lazaro`) stat.ExtraLives += 1
-        if (this.prefix3===`Vampiric`) stat.Lifesteal += 10
+        if (this.prefix3===`Vampiric`) stat.Lifesteal += 5
         if (this.prefix3===`Lucky`) stat.Luck += 15
 
         
@@ -478,12 +478,10 @@ class CoinPile1 extends Consumable {
         super(properties);
         this.name = `Shell Bundle`;
         this.flavor = `"A modest, neatly-staked tower of Shells. They say money doesnt bring happiness, but Shells do."`;
-        this.source = `Dropped from presents, dungeons and other rare sources. Can be sold for shells`;
+        this.source = `Dropped from presents, dungeons and other rare sources. Can be sold for 2000 shells`;
         this.img = 541;
         this.quality = `Uncommon`;
-        this.value = function() { return 1000 }
-        this.canMultiuse = true;
-        this.quickAccess = true;
+        this.value = function() { return 2000 }
 
         Object.assign(this, properties);
     }
@@ -494,10 +492,10 @@ class CoinPile2 extends Consumable {
         super(properties);
         this.name = `Shell Pile`;
         this.flavor = `"A generous, neatly-staked tower of Shells. They say money doesnt bring happiness, but Shells do."`;
-        this.source = `Dropped from presents, dungeons and other rare sources. Can be sold for shells`;
+        this.source = `Dropped from presents, dungeons and other rare sources. Can be sold for 20000 shells`;
         this.img = 542;
         this.quality = `Rare`;
-        this.value = function() { return 10000 }
+        this.value = function() { return 20000 }
         Object.assign(this, properties);
     }
 }
@@ -694,10 +692,10 @@ class AreaChest1 extends Consumable {
         this.name = `Small Wooden Lockbox`;
         this.flavor = `"Life is like a Small Wooden Lockbox."`;
         this.source = `Rarely dropped by foes at Cradle Hills and Lost Dojo`;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Unlock with a${itemIcon("I41")}Copper Key to open</span><FONT COLOR="#edd585"><br>${bestiaryTag("🎲 Possible Contents 🎲", "#815C42")+generateContainerTable(this.lootTable)}`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Unlock with a${itemIcon("I41")}Copper Key to open</span><FONT COLOR="#edd585"><br>${bestiaryTag("🎲 Possible Contents 🎲", "#815C42")+generateContainerTable(this.lootTable())}`}
         this.img = 10;
         this.quality = `Uncommon`;
-        this.lootTable = { Potara : { c : chances.chest.mythic, a : 1}, FoliarBlade : { c : chances.chest.uncommon, a : 1}, ThornBinding : { c : chances.chest.uncommon, a : 1}, DruidSkirt : { c : chances.chest.uncommon, a : 1},  Geode1 : { c : chances.chest.common, a : 1},  FoodCheese : { c : chances.chest.poor, a : 1} }; //geode
+        this.lootTable = function() { return { Potara : { c : chances.chest.mythic, a : 1}, FoliarBlade : { c : chances.chest.uncommon, a : 1}, ThornBinding : { c : chances.chest.uncommon, a : 1}, DruidSkirt : { c : chances.chest.uncommon, a : 1},  Geode1 : { c : chances.chest.common, a : 1},  FoodCheese : { c : chances.chest.poor, a : 1} } }; 
         this.canMultiuse = true;
         this.value = function() { return 500 }
         Object.assign(this, properties);
@@ -804,7 +802,7 @@ class Weapon extends Equipable {
         this.skillChance = 1;
         this.skillDamage = 1;
 
-        this.finalDamage = function() {return Math.floor(  ( (this.baseDamage * this.damage) * Math.pow(1.5, this.prefixTier) ) * (  Math.pow(1.8, this.constructor.upgrade)  )  ) }
+        this.finalDamage = function() {return Math.floor(  ( (this.baseDamage * this.damage) * Math.pow(1.4, this.prefixTier) ) * (  Math.pow(1.8, this.constructor.upgrade)  )  ) }
 
 
         this.slot = `Weapon`
@@ -866,7 +864,7 @@ class Weapon extends Equipable {
         if (this.prefix2 === "Kingslaying") {this.damage *= 1.5; }
         if (this.prefix2 === "Double") {this.multishot +=1; }
         if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.8; }
-        if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.5; }
+        if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.8; }
         if (this.prefix2 === "Titanic") {this.skillDamage *= 1.5; }
 
         if (this.prefix3 === "THE") {this.skillMultishot += 2; }
@@ -905,7 +903,7 @@ class Armor extends Equipable {
 
         //these are multipliers
         this.hp = 1;
-        this.finalHp = function() {return ( (this.baseHp * this.hp) * Math.pow(1.5, this.prefixTier)  ) * (  Math.pow(1.8, this.constructor.upgrade) ) }
+        this.finalHp = function() {return ( (this.baseHp * this.hp) * Math.pow(1.4, this.prefixTier)  ) * (  Math.pow(1.8, this.constructor.upgrade) ) }
 
         Object.assign(this, properties);
 
@@ -974,7 +972,7 @@ class Armor extends Equipable {
         if (this.prefix1 === "Heirloom") {this.skillDamage = 2; }
         if (this.prefix1 === "Hexed") {this.skillChance = 0.8;}
         if (this.prefix1 === "Voodoo") {this.skillChance = 0.5; this.skillDamage = 0.5; }
-        if (this.prefix1 === "Mystic") {this.skillChance = 2; this.skillDamage = 5; }
+        if (this.prefix1 === "Mystic") {this.skillChance = 2; this.skillDamage = 3; }
    
     }
 
@@ -1013,10 +1011,10 @@ class HopperoonaPhylactery extends ArmorTrinket {
         super(properties);
         this.name = `Hopperoona's Phylactery`;
         this.flavor = `"Remains of a forbidden friendship."`;
-        this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to inflict Poisoned for ${this.baseSkillDamage*3*this.skillDamage} seconds and dealing x${this.baseSkillDamage*this.skillDamage} of your Power as Nature Damage` };
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to inflict Poisoned for ${this.baseSkillDamage*3*this.skillDamage} seconds and dealing x${1+this.baseSkillDamage*this.skillDamage} of your Power as Nature Damage` };
         this.img = 47;
         this.baseSkillChance = 10;
-        this.baseSkillDamage = 3;
+        this.baseSkillDamage = 2;
         this.quality = `Uncommon`;
         this.contextTooltip = function() { return [ `<img src="img/src/buffs/B1.jpg"> <span style="color:lawngreen">Poisoned</span> enemies take 1/3 of your Power per second as Nature Damage` ] };
         Object.assign(this, properties);
@@ -1575,13 +1573,13 @@ class LuckyCloverRing extends ArmorRing {
         super(properties);
         this.name = `Lucky Clover Ring`;
         this.flavor = `"Bears the symbol of fortune."`;
-        this.skillDescription = function() { return `+ 5% Luck` };
+        this.skillDescription = function() { return `+ 15% Luck` };
         this.img = 193;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
     }
     stats(){
-        stat.Luck += 5
+        stat.Luck += 15
     }
 }
 
@@ -1590,13 +1588,13 @@ class ScorpionRing extends ArmorRing {
         super(properties);
         this.name = `Scorpion Ring`;
         this.flavor = `"Hardened, sharp cobweb in the shape of a ring."`;
-        this.skillDescription = function() { return `+ 5% Crit Chance` };
+        this.skillDescription = function() { return `+ 10% Crit Chance` };
         this.img = 561;
         this.quality = `Common`;
         Object.assign(this, properties);
     }
     stats(){
-        stat.CritChance += 5
+        stat.CritChance += 10
     }
 }
 
@@ -1623,7 +1621,7 @@ class MoonNecklace extends ArmorTrinket {
         super(properties);
         this.name = `Moon Necklace`;
         this.flavor = `"A delicate pendant depicting the moon. It makes you feel at ease just by looking at it."`;
-        this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to gain Blessing of the Moon for 15 seconds, summoning stars with your attacks that deal x${this.baseSkillDamage*this.skillDamage} of your Power as Occult Damage` };
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to gain Blessing of the Moon for 15 seconds, summoning stars with your attacks that deal x${this.baseSkillDamage*this.skillDamage} of your Power as Occult Damage` };
         this.img = 412;
         this.baseSkillChance = 10;
         this.baseSkillDamage = 1;
@@ -2204,7 +2202,7 @@ class WoodenSword extends Weapon {
         super(properties);
         this.name = `Wooden Sword`
         this.flavor = `"A wooden stick shaped like a sword, retaining all the properties of a wooden stick and none of a sword."`
-        this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to deal an align-infused slash ${1+this.skillMultishot} times dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to deal an align-infused slash ${1+this.skillMultishot} times dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 8
         this.baseDamage = 20
         this.baseSkillChance = 5
@@ -2259,7 +2257,7 @@ class WoodenBow extends Weapon {
         super(properties);
         this.name = `Wooden Bow`
         this.flavor = `"It should hold together for a few shots before falling apart entirely."`
-        this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to fire ${2+this.skillMultishot} explosive arrows dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to fire ${2+this.skillMultishot} explosive arrows dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 9
         this.baseDamage = 45
         this.baseSkillChance = 5
@@ -2311,9 +2309,9 @@ class ChrysalisRecurver extends Weapon {
         super(properties);
         this.name = `Chrysalis Recurver`
         this.flavor = `"A short, ominous bow splintered with red crystals."`
-        this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to fire a volley of ${5+this.skillMultishot} heat-seeking shards dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to fire a volley of ${5+this.skillMultishot} heat-seeking shards dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 83
-        this.baseDamage = 160
+        this.baseDamage = 90
         this.baseSkillChance = 5
         this.baseSkillDamage = 1
         this.quality = `Uncommon`
@@ -2371,7 +2369,7 @@ class FoliarBlade extends Weapon {
         super(properties);
         this.name = `Foliar Blade`
         this.flavor = `"A blossoming blade emerging from the heart of the forest."`
-        this.skillDescription = function() { return `1/${this.baseSkillChance*this.skillChance} chance to shoot ${3+this.skillMultishot} razor-sharp leaves  dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to shoot ${3+this.skillMultishot} razor-sharp leaves  dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 33
         this.baseDamage = 190
         this.baseSkillChance = 5
@@ -2408,7 +2406,8 @@ class FoliarBlade extends Weapon {
             particleTrackers.push(new ParticleSparks(enemyRect.left - containerRect.left + enemyRect.width / 2 * rngD(0.8,1.2), enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 * rngD(0.9,1.1)));
 
 
-
+            enemyDamageAnimation("low")
+            returnWeaponDamageType(i.align,i.finalDamage())
 
 
 
@@ -2419,8 +2418,7 @@ class FoliarBlade extends Weapon {
 
 
                 particleTrackers.push(new ParticleLeaf(undefined,undefined,{imageHue:miau}));
-                enemyDamageAnimation("low")
-                returnWeaponDamageType(e.align,e.finalDamage())
+                
     
                 setTimeout(() => {
                     returnWeaponDamageType(e.align,e.finalDamage()*(e.baseSkillDamage*e.skillDamage))

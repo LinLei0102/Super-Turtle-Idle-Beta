@@ -3,15 +3,15 @@
 
 function returnEnemyHp(level){
     //return Math.floor(1000 * Math.pow(1.5, (level-1)))
-    return Math.floor(100 * (level*2))
+    return Math.floor(100 * (level*1.7))
 }
 
 function returnEnemyAttack(level){
   //return Math.floor(1000 * Math.pow(1.5, (level-1)))
 
 
-  let baseAtk = 5
-  //if (level>=6) baseAtk = 6
+  let baseAtk = 4
+  if (level>=8) baseAtk = 5
   if (level>=14) baseAtk = 8
 
   return Math.floor(baseAtk * (level*1))

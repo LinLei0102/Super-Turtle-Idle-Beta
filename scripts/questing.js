@@ -54,7 +54,7 @@ quests.A1QN3 = {
     logic : function() {return enemies.E3.killCount>19},
     effect: function() {
         spawnItem(ClothChest);
-        spawnItem(VendorTrash)
+        spawnItem(VendorTrash,1,"noPopup")
 
     },
     reward: `${itemData(ClothChest)} x1`
@@ -1122,6 +1122,7 @@ function createQuest() {
         const questsvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#57ff74" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path fill="#57ff74" fill-opacity="0" stroke-dasharray="64" stroke-dashoffset="64" d="M4 12v-7c0 -0.55 0.45 -1 1 -1h14c0.55 0 1 0.45 1 1v14c0 0.55 -0.45 1 -1 1h-14c-0.55 0 -1 -0.45 -1 -1Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.6s" dur="0.15s" values="0;0.3"/><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"/></path><path stroke-dasharray="14" stroke-dashoffset="14" d="M8 12l3 3l5 -5"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.75s" dur="0.2s" values="14;0"/></path></g></svg>`
         createPopup(questsvg+'Quest Completed: '+quests[q].name)
         playSound("audio/ring.mp3");
+        did("interactableQuestButton").style.animation = "widgetAlert2 1s infinite"
         quests[q].once=true}
       did(q + "questl").innerHTML = colorTag("REDEEM", "#51BD4B", "nobr"); 
     }

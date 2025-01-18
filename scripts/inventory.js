@@ -297,7 +297,7 @@ function spawnItem(id,amount,source){
 
     item.constructor.timesGot += toAdd
 
-    if (source!=="noPopup") createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} x${amount} got!</span>`)
+    if (source!=="noPopup") createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} x${toAdd} got!</span>`)
 
 
   } else {
@@ -962,8 +962,8 @@ function upgradeMenuTooltip(){
   let materialToUseCount = beautify(returnUpgradeMaterial(item.quality).constructor.count)
 
   let dmgorhp = "";
-  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(1.5, item.prefixTier)  ) * (  Math.pow(1.8, item.constructor.upgrade+1) ) );
-  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(1.5, item.prefixTier) ) * ( Math.pow(1.8, item.constructor.upgrade+1) )  );
+  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(1.4, item.prefixTier)  ) * (  Math.pow(1.8, item.constructor.upgrade+1) ) );
+  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(1.4, item.prefixTier) ) * ( Math.pow(1.8, item.constructor.upgrade+1) )  );
 
   const dmgorhpnext = dmgorhp
 
@@ -1363,7 +1363,7 @@ function scrapSelectedItem(){
 
 
        
-        spawnItem(returnScrapMaterial(item))
+        spawnItem(returnScrapMaterial(item),1,"noPopup")
 
 
     }
@@ -1975,7 +1975,7 @@ function returnPrefixSkills(item){
   if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Damage</span>`;}
   if (item.prefix2 === `Double`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack</span>`;}
   if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Attack Speed</span>`;}
-  if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Chance</span>`;}
+  if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Chance</span>`;}
   if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
 
   //t3
@@ -2032,7 +2032,7 @@ function returnPrefixSkills(item){
   if (item.prefix1 === `Heirloom`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Trinket Power</span>`;}
   if (item.prefix1 === `Hexed`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Trinket Skill Chance</span>`;}
   if (item.prefix1 === `Voodoo`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Trinket Skill Chance, x0.5 Trinket Power</span>`;}
-  if (item.prefix1 === `Mystic`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x5 Trinket Power, x0.5 Trinket Skill Chance</span>`;}
+  if (item.prefix1 === `Mystic`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x3 Trinket Power, x0.5 Trinket Skill Chance</span>`;}
 
 
   //misc
@@ -2049,7 +2049,7 @@ function returnPrefixSkills(item){
   if (item.prefix2 === `Hopeful`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 20% Luma Power</span>`;}
   
   if (item.prefix3 === `Lucky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Luck</span>`;}
-  if (item.prefix3 === `Vampiric`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Lifesteal</span>`;}
+  if (item.prefix3 === `Vampiric`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 5% Lifesteal</span>`;}
   if (item.prefix3 === `Lazaro`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 1 Extra Life</span>`;}
 
   

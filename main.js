@@ -2900,7 +2900,7 @@ VanillaTilt.init(document.querySelectorAll(".introCard"), {
 
 function startGameCard(mode){
 
-    if (mode==="nofarm") toggleSettings('nofarmToggle')
+    if (mode==="nofarm") {toggleSettings('nofarmToggle'); statsUpdate()}
 
     playSound("audio/button5.mp3","all")
     playSound("audio/lily.mp3","all")
@@ -3001,7 +3001,7 @@ function retroactiveUpdate(){
     if (stats.currentVersion<0.44){for (var i in research) if (research[i].status === "completed") {research[i].status = "waiting"; research[i].unlocked = false; research[i].timer = research[i].timerMax; } }
 
     //sanityCheck()
-    stats.currentVersion = 1.01;
+    stats.currentVersion = 1.02;
     did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(2)}`
 }
 
