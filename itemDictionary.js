@@ -794,7 +794,7 @@ class Weapon extends Equipable {
         this.baseSkillDamage = 1;
         this.prefixTier = 0
 
-        //these are multipliers
+        //these are prefix mods, do not touch please
         this.damage = 1;
         this.attackSpeed = 1;
         this.multishot = 0;
@@ -852,6 +852,13 @@ class Weapon extends Equipable {
     }
 
     invInit(){
+
+        this.damage = 1;
+        this.attackSpeed = 1;
+        this.multishot = 0;
+        this.skillMultishot = 0;
+        this.skillChance = 1;
+        this.skillDamage = 1;
 
         if (this.prefix1 === "Light") {this.attackSpeed *= 0.5; this.damage *= 0.5;}
         if (this.prefix1 === "Powerful") {this.attackSpeed *= 2; this.damage *= 3; }

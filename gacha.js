@@ -649,7 +649,7 @@ function sellSelectedHat(){ //called w context menu
     playSound("audio/use.mp3")
     playSound("audio/coins.mp3")
 
-    if (rpgPlayer.hat = contextSelectedItem.item) rpgPlayer.hat = undefined
+    if (rpgPlayer.hat.paint === contextSelectedItem.item.paint && rpgPlayer.hat.img === contextSelectedItem.item.img) rpgPlayer.hat = undefined
     contextSelectedItem.item.locked = false
 
 
@@ -669,6 +669,12 @@ function sellSelectedHat(){ //called w context menu
     }
 
     itemInventory.splice(contextSelectedItem.item.index, 1);
+
+
+
+    const itemDiv = contextSelectedItem
+    selectedItemRect = itemDiv.getBoundingClientRect();
+    particleTrackers.push(new ParticleSellPulse());
 
 
 

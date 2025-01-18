@@ -1089,6 +1089,7 @@ function createQuest() {
             playSound("audio/button5.mp3");
             stats.questsCompleted++;
             stats.questsCompletedLog++
+            did("interactableQuestButton").style.animation = "none"
           did(q + "questl").innerHTML = "Completed";
 
           quests[q].state = "completed";

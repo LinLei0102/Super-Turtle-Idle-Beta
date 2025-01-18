@@ -331,6 +331,16 @@ function spawnItem(id,amount,source){
       itemInventory.push(iteminstance)
       item.constructor.timesGot ++
 
+      if (item.sort!=currentSort && item.sort!="Hat"){ // got inventory notification
+        setTimeout(() => {
+          if (item.sort!=currentSort){
+          did(`inventory${item.sort}Indicator`).style.display = "flex"
+          did(`inventory${item.sort}Indicator`).innerHTML = parseInt(did(`inventory${item.sort}Indicator`).innerHTML) + toAdd
+          voidAnimation(`inventory${item.sort}Indicator`, 'areaClick 0.5s 1')   
+          }
+        }, 1000);
+       }
+
     }
 
 
@@ -349,7 +359,7 @@ function spawnItem(id,amount,source){
 
 
 
-   if (item.sort!=currentSort && item.sort!="Hat"){ // got inventory notification
+   if (item.sort!=currentSort && item.sort!="Hat" && item.isStackable){ // got inventory notification
     setTimeout(() => {
       if (item.sort!=currentSort){
       did(`inventory${item.sort}Indicator`).style.display = "flex"
@@ -1187,9 +1197,12 @@ function reforgeSelectedItem(){
       if (invItem.prefixTier===2) {invItem.prefix1 = returnArrayPick(armorPrefix1); invItem.prefix2 = returnArrayPick(armorPrefix2);}
       if (invItem.prefixTier===3) {invItem.prefix1 = returnArrayPick(armorPrefix1); invItem.prefix2 = returnArrayPick(armorPrefix2); invItem.prefix3 = returnArrayPick(armorPrefix3);}
     }
+
+
+
     
 
-
+    invItem.invInit()
 
 
 
