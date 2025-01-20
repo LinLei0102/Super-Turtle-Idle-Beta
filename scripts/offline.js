@@ -75,7 +75,7 @@ function tooltipTurtleBot() {
     voidAnimation("turtleBot","gelatine 0.3s 1")
     did('tooltip').style.display = "flex";
     did("upperTooltip").style.display = 'none';
-    did('tooltip').style.width = "30vh";
+    //did('tooltip').style.width = "30vh";
 
     
        
@@ -105,8 +105,8 @@ function tooltipTurtleBot() {
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipWidth = movingDiv.offsetWidth;
     
-    const newLeft = referenceRect.left + referenceRect.width / 2 - tooltipWidth / 2;
-    const newTop = referenceRect.bottom; // Punto inferior del turtleBot
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + referenceRect.width / 2 - tooltipWidth / 2;
+    const newTop = referenceRect.bottom/(stats.zoomLevel/100); // Punto inferior del turtleBot
     
     movingDiv.style.left = newLeft + 'px';
     movingDiv.style.top = newTop + 10 + 'px';

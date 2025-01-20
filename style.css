@@ -163,8 +163,8 @@
 }
 
 .npcInfo{
-    height: 20%;
-    width: 140%;
+    height: 3.5rem;
+    width: 19rem;
     background: #363636;
     position: absolute;
     border-radius: 0.3rem;
@@ -458,6 +458,20 @@
     animation: bgPatternDiagonal 10s infinite linear reverse, t2Fade 15s infinite linear ;
 }
 
+#playerWeaponEnchantGlitch{
+    mask-image: url(img/src/weaponModels/I169.png);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: 100%;
+    display: none;
+    scale: 0.86;
+
+    overflow: visible;
+    mix-blend-mode: difference;
+}
+
+
+
 @keyframes t2Fade{
     0%,100%{opacity: 0;}
     45%{opacity: 0;}
@@ -582,6 +596,7 @@ justify-content: center;
     flex-direction: column;
     gap: 0.2rem;
     pointer-events: none;
+    overflow: scroll;
 }
 
 #achievementShop{
@@ -1043,6 +1058,14 @@ justify-content: center;
     box-shadow: rgba(0, 0, 0, 0.4) 0 5px 3px -1px;
     animation: popupSlideIn 1s 1 ease;
     animation-fill-mode: forwards;
+    font-size: 1rem;
+    flex-shrink: 0;
+    pointer-events: auto;
+
+}
+
+#popupListing span{
+font-size: 1rem;
 }
 
 @keyframes popupSlideIn{
@@ -2636,7 +2659,9 @@ color: #008cff;
     width: 26%;
     min-width: 30rem;
     min-width: 45rem;
+    max-width: 30%;
     height: 88%;
+
     background: #9B6145;
     border: dashed #5B3827 3px;
     border-left: none;
@@ -3000,7 +3025,7 @@ background: transparent;
 #tooltip, .tooltip { 
     position: absolute;
     z-index: 999;
-    width: 30vw;
+    min-width: 30rem;
     height: auto;
     border-radius: 0.4rem;
     background: black;
@@ -3054,8 +3079,8 @@ background: transparent;
 
 #upperTooltip{
     background: rgba(0, 0, 0, 0.6);
-    box-shadow: rgba(0, 0, 0, 0.6) 0 20px 20px 0px;
-    height: min(8.7vw, 8.7vh);
+    box-shadow: rgba(0, 0, 0, 0.6) 0 20px 20px 0px,rgba(0, 0, 0, 0.6) 0 -20px 20px 0px;
+    height: 5.5rem;
     width: 100%;
     display: flex;
     padding-left: 0.4rem;
@@ -3110,27 +3135,28 @@ background: transparent;
 
 .upperTooltipLeft{
     background: transparent;
-    height: 100%;
+    height: 6rem;
     width: auto;
     display: flex;
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
-    margin-left: 0.5rem;
+    margin-left: 0.3rem;
     margin-right: 0.5rem;
-    margin-top: 0.3rem;
-    border-radius: 0.3rem !important;
+    margin-top: -0.3rem;
+    font-size: 1rem;
+
 
 }
 
 #tooltipImage, #stampMenuImg{
-    height: 100%;
-    width:auto;
+    height: 5rem;
+    width:5rem;
     flex-shrink: 0;
     background: transparent;
     margin-right: auto;
     overflow: visible;
-    border-radius: 0.3rem !important;
+    border-radius: 1rem;
 
 }
 
@@ -3146,6 +3172,7 @@ background: transparent;
     height: 100%;
     width: 70%;
     display: flex;
+    font-size: 1rem;
 }
 
 #tooltipPrice { 
@@ -3153,7 +3180,7 @@ background: transparent;
     text-align: right;
     background:transparent;
     color: #7EFF69;
-    font-size: min(1.5vw, 1.5vh);;
+    font-size: 1rem;
     position: absolute;
     right: 2%;
     top:2.4%
@@ -3171,8 +3198,7 @@ background: transparent;
 #tooltipTitle{
     width: 60%;
     height: auto;
-    padding-top: 1%;
-    font-size: min(1.9vw, 1.9vh);
+    font-size: 1rem;
     position: absolute;
     background: transparent;
     color:#1EFF0C;
@@ -3181,6 +3207,8 @@ background: transparent;
 
 #tooltipName, #stampMenuName{
     background: transparent;
+    font-size: 1.3rem;
+
 }
 
 #tooltipRarity, #stampMenuRarity { 
@@ -3189,13 +3217,13 @@ background: transparent;
     font-weight: 700;
     color:#1EFF0C;
     display: inline-block;
-    font-size:  min(1.7vw, 1.7vh);
+    font-size:  1.1rem;
     margin-top: 0.2rem;
 }
 
 .alignTooltipIcon{
-    height: min(3.2vw, 3.2vh);
-    width:  min(3.2vw, 3.2vh);
+    height: 2rem;
+    width:  2rem;
     margin-top: 0.3rem;
     border: black solid 0.15vh;
     border-radius: 0.4vh;
@@ -3211,6 +3239,8 @@ background: transparent;
     height: auto;
     width: 100%;
     font-weight: 500;
+    font-size: 1rem;
+
 }
 
 #tooltipDescription, #stampMenuDescription{ 
@@ -3218,6 +3248,7 @@ background: transparent;
      background: transparent;
      padding: 0 0.6rem;
      overflow: visible;
+     font-size: 1rem;
 
      
 }
@@ -3244,8 +3275,8 @@ background: transparent;
 }
 
 #tooltipDescription img, #stampMenuDescription img, #tooltipDescription span img{
-    height: min(2vw, 2vh);
-    width:  min(2vw, 2vh);
+    height: 1.3rem;
+    width:  1.3rem;
     background: transparent;
     transform: translateY(5px);
     border: black solid 0.15vh;
@@ -3271,7 +3302,7 @@ background: transparent;
     margin-right: 1%;
     padding: 0 2%;
     margin-bottom: 1.5%;
-    font-size: min(1.5vw, 1.5vh);
+    font-size: 1rem;
     font-weight: 500;
 }
 
@@ -4389,7 +4420,7 @@ background: transparent;
     font-size: 5rem;
 }
 
-#introPanel{
+.introPanel{
     height: 100%;
     width: 100%;
     background: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='white' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E"),
@@ -4411,13 +4442,13 @@ background: transparent;
     transition: 0.6s;
 }
 
-#introPanel img{
+.introPanel img{
     height: 10rem;
     width: 10rem;
     background: transparent;
 }
 
-#introPanel span{
+.introPanel span{
     background: transparent;
     font-family: fredoka;
     color: darkslategray;
@@ -4764,6 +4795,10 @@ background: transparent;
     margin-bottom: 2%;
     flex-shrink: 0;
     font-weight: 500;
+}
+
+.popUp span{
+    font-size: 1.45rem;
 }
 
 .popUp img{
@@ -10687,6 +10722,50 @@ width: auto;
     translate: 0 -0.1rem;
     transition: 0.1s;
 }
+
+.resolutionCheckImage{
+    min-height: 300px;
+    min-width: 300px;
+    position: absolute;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.resolutionCheckBox{
+    width: 15%;
+    height: auto;
+    padding-top: 15%; 
+    background: transparent;
+    border: dashed coral 0.5rem;
+    flex-shrink: 0;
+    position: absolute;
+    opacity: 0.8;
+    pointer-events: none;
+
+}
+
+.resolutionCheckButtons{
+    margin-bottom: auto;
+    margin-top: -15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    background: #CAD96C;
+}
+
+.resolutionCheckButtons button{
+    height: 4rem;
+    width: 4rem;
+    background: white;
+    border-radius: 0.3rem;
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+
 
 #editName:hover{
     scale: 1.1;

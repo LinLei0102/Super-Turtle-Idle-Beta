@@ -403,6 +403,7 @@
             <h3>Disable auto-scrap notifications<button id="disableScrapPopup" onclick="toggleSettings('disableScrapPopup')">OFF</button></h3>
 
             <h2>Visual Settings</h2>
+            <h3><span id="zoomLevelText">Zoom Level</span><button style="width: 4rem;" onclick="resolutionIncrease('more')">+</button><button style="margin-left: 1rem; width: 4rem;" onclick="resolutionIncrease('less')">-</button></h3>
             <h3>Disable custom cursor<button id="disableCustomCursor" onclick="toggleSettings('disableCustomCursor'); setCursor()">OFF</button></h3>
             <h3>Game quality<button id="qualityToggle" onclick="switchQuality();" style="width: 8rem;">High</button></h3>
             <h3>Disable floating damage numbers<button id="disableDamageNumbers" onclick="toggleSettings('disableDamageNumbers')">OFF</button></h3>
@@ -665,20 +666,28 @@
             </span>
         </div>
 
-        <div id="introPanel" style="display:none;">
+        <div class="introPanel" id="introPanel" style="display:none;">
             <img src="img/sys/nerd.png">
             <span>Select your preferred playstyle<br>(This can be changed at any moment from the Settings menu)</span>
             <div class="introPanel2">
                 <div class="introCard" onclick="startGameCard()"><span>Normal Mode</span><img src="img/sys/nerd2.png">The intended game experience. Sit back, relax and have fun.</div>
                 <div class="introCard" onclick="startGameCard('nofarm')"><span>Fast Mode</span><img src="img/sys/nerd3.png">Increased game pacing. Ideal for quicker playthroughs.</div>
-
             </div>
-
-
-
-
-
         </div>
+
+        <div class="introPanel" id="introPanel2" style="display:none;">
+            <img src="img/sys/nerd.png">
+            <span>Use the buttons until the image overlaps with the borders of the box</span>
+            <div class="introPanel2">
+                <div class="resolutionCheckButtons"><button onclick="resolutionIncrease('more')">+</button><button onclick="resolutionIncrease('less')">-</button><button style="width: auto;" onclick="did('introPanel2').style.height='0%' ">DONE!</button></div>
+                <img class ="resolutionCheckImage" src="img/src/icons/resolutionCheck.png">
+                <div class="resolutionCheckBox"></div>
+            </div>
+        </div>
+
+
+
+
 
         <div id="fertiliserMenu" class="panelOpciones" style="display:none">
             <h1>SELECT FERTILISER</h1>
@@ -1952,6 +1961,8 @@
                     <img id="playerWeapon" src="img/src/weaponModels/W0.png">
                     <img id="playerWeaponEnchantT3" class="playerWeaponEnchant" src="img/src/weaponModels/W0.png">
                     <img id="playerWeaponEnchantT2" class="playerWeaponEnchant" src="img/src/weaponModels/W0.png">
+                    <img id="playerWeaponEnchantGlitch" class="playerWeaponEnchant" src="img/src/icons/glitchOverlay.gif">
+
                     </span>
                     </span>
                     </span>

@@ -1017,8 +1017,8 @@ var referenceRect = referenceDiv.getBoundingClientRect();
 
 
 function miau(){
-const newLeft = referenceRect.left + (referenceRect.width - movingDiv.offsetWidth) / 2;
-const newTop = referenceRect.top - movingDiv.offsetHeight;
+const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
 
 movingDiv.style.left = `${newLeft}px`;
 movingDiv.style.top = `${newTop - 30}px`;
@@ -1051,8 +1051,8 @@ function repositionQuestMenu(){
   var movingDiv = did("questTooltip");
   var referenceDiv = did("interactableQuestButton");
   var referenceRect = referenceDiv.getBoundingClientRect();
-  const newLeft = referenceRect.left + (referenceRect.width - movingDiv.offsetWidth) / 2;
-  const newTop = referenceRect.top - movingDiv.offsetHeight;
+  const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+  const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
   
   movingDiv.style.left = `${newLeft}px`;
   movingDiv.style.top = `${newTop - 30}px`;
@@ -1203,9 +1203,8 @@ function tooltipQuests(id) {
   const referenceDiv = did(id + "quest");
   const referenceRect = referenceDiv.getBoundingClientRect();
   
-  // Posicionar la esquina superior izquierda de "tooltip" (movingDiv) con la esquina superior derecha de "referenceDiv"
-  const newLeft = referenceRect.right;  // Esquina derecha de "referenceDiv"
-  const newTop = referenceRect.top;     // Esquina superior de "referenceDiv"
+  const newLeft = referenceRect.right/(stats.zoomLevel/100);  // Esquina derecha de "referenceDiv"
+  const newTop = referenceRect.top/(stats.zoomLevel/100);     // Esquina superior de "referenceDiv"
   
   movingDiv.style.left = newLeft + 20 + "px";
   movingDiv.style.top = newTop + -15 + "px";

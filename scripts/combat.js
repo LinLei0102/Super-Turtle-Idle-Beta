@@ -460,8 +460,8 @@ did("heatIcon").addEventListener('mouseout', () => {
     const referenceDiv = did("heatIcon");
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipWidth = movingDiv.offsetWidth;
-    const newLeft = referenceRect.left + referenceRect.width / 2 - tooltipWidth / 2;
-    const newTop = referenceRect.bottom; 
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + referenceRect.width / 2 - tooltipWidth / 2;
+    const newTop = referenceRect.bottom/(stats.zoomLevel/100); 
     
     movingDiv.style.left = newLeft + 'px';
     movingDiv.style.top = newTop + 20 + 'px';

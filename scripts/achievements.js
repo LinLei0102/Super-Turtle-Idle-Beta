@@ -1541,8 +1541,8 @@ function tooltipLog(i) {
 
 
  
-    var newLeft = referenceRect.left;
-    var newTop = referenceRect.top - movingDiv.offsetHeight;
+    var newLeft = referenceRect.left/(stats.zoomLevel/100);
+    var newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
     movingDiv.style.left = newLeft - 8+ "px";
     movingDiv.style.top = newTop - 20+ "px";
 
@@ -1551,8 +1551,8 @@ function tooltipLog(i) {
 
       const referenceLeft = referenceRect.left + 8;
       const referenceTop = referenceRect.top - 13;
-      const newLeft = referenceLeft + referenceRect.width - movingDiv.offsetWidth;
-      const newTop = referenceTop  - movingDiv.offsetHeight;
+      const newLeft = referenceLeft/(stats.zoomLevel/100) + referenceRect.width - movingDiv.offsetWidth;
+      const newTop = referenceTop/(stats.zoomLevel/100)  - movingDiv.offsetHeight;
       movingDiv.style.left = newLeft + "px";
       movingDiv.style.top = newTop + "px";
 

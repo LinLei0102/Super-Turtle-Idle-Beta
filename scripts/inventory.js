@@ -402,7 +402,7 @@ function areItemsEqual(item1, item2) {
          item1.prefix1 === item2.prefix1 &&
          item1.prefix2 === item2.prefix2 &&
          item1.prefix3 === item2.prefix3 &&
-         item1.prefix4 === item2.prefix4 &&
+         item1.prefix5 === item2.prefix5 &&
          item1.align === item2.align;
 }
 
@@ -717,6 +717,7 @@ document.addEventListener('click', function(event) { //context menus
 
 
 
+
   const itemDiv = event.target.parentElement; 
   const itemDivNoParent = event.target 
 
@@ -749,8 +750,8 @@ document.addEventListener('click', function(event) { //context menus
     const referenceDiv = itemDiv;
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipRect = movingDiv.getBoundingClientRect();
-    const newLeft = referenceRect.left + (referenceRect.width / 2) - (tooltipRect.width / 2);
-    const newTop = referenceRect.top - tooltipRect.height;
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width / 2) - (tooltipRect.width / 2);
+    const newTop = (referenceRect.top - tooltipRect.height)/ (stats.zoomLevel/100);
     movingDiv.style.left = newLeft + 'px';
     movingDiv.style.top = newTop + -10 + 'px';
 
@@ -805,10 +806,10 @@ document.addEventListener('click', function(event) { //context menus
     const referenceDiv = itemDiv;
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipRect = movingDiv.getBoundingClientRect();
-    const newLeft = referenceRect.left + (referenceRect.width / 2) - (tooltipRect.width / 2);
-    const newTop = referenceRect.top - tooltipRect.height;
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width / 2) - (tooltipRect.width / 2);
+    const newTop = (referenceRect.top - tooltipRect.height)/ (stats.zoomLevel/100);
     movingDiv.style.left = newLeft + 'px';
-    movingDiv.style.top = newTop + -10 + 'px';
+    movingDiv.style.top = newTop + -20 + 'px';
 
     
 
@@ -838,6 +839,7 @@ document.addEventListener('click', function(event) { //context menus
 
   if (itemDiv && itemDiv.tag==="inventory" && itemDiv.item && quickSelectMode === false) { //regular click behaviour
 
+    resetTooltip()
 
 
     const item = itemDiv.item; 
@@ -893,10 +895,10 @@ document.addEventListener('click', function(event) { //context menus
     const referenceDiv = itemDiv;
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipRect = movingDiv.getBoundingClientRect();
-    const newLeft = referenceRect.left + (referenceRect.width / 2) - (tooltipRect.width / 2);
-    const newTop = referenceRect.top - tooltipRect.height;
+    const newLeft = referenceRect.left/ (stats.zoomLevel/100) + (referenceRect.width / 2) - (tooltipRect.width / 2) ;
+    const newTop = referenceRect.top/ (stats.zoomLevel/100) - tooltipRect.height/ (stats.zoomLevel/100);
     movingDiv.style.left = newLeft + 'px';
-    movingDiv.style.top = newTop + -10 + 'px';
+    movingDiv.style.top = newTop + -20 + 'px';
 
     
 
@@ -1022,8 +1024,8 @@ const referenceDiv = did("itemContextMenuButtonUpgrade");
 const movingDiv = did('tooltip');
 const referenceRect = referenceDiv.getBoundingClientRect();
 const tooltipRect = movingDiv.getBoundingClientRect();
-const newLeft = referenceRect.right;
-const newTop = referenceRect.top + (referenceRect.height / 2) - (tooltipRect.height / 2);
+const newLeft = referenceRect.right/(stats.zoomLevel/100);
+const newTop = (referenceRect.top + (referenceRect.height / 2) - (tooltipRect.height / 2))/(stats.zoomLevel/100);
 movingDiv.style.left = newLeft + 20 +'px';
 movingDiv.style.top = newTop + 'px';
 
@@ -1812,28 +1814,29 @@ document.addEventListener('mouseover', function(event) {
 
     if (equippedItems.some(equippedItem => equippedItem === item))
     {
-      let newLeft = referenceRect.right; 
-      let newTop = referenceRect.top; 
+      let newLeft = referenceRect.right/ (stats.zoomLevel/100); 
+      let newTop = referenceRect.top/ (stats.zoomLevel/100); 
       movingDiv.style.left = newLeft + 12 + 'px'; 
       movingDiv.style.top = newTop + -5 + 'px';
     } else {
-      let newLeft = referenceRect.right; 
-      let newTop = referenceRect.bottom - tooltipRect.height; 
+      let newLeft = referenceRect.right/ (stats.zoomLevel/100); 
+      let newTop = (referenceRect.bottom - tooltipRect.height)/ (stats.zoomLevel/100); 
       movingDiv.style.left = newLeft + 12 + 'px'; 
       movingDiv.style.top = newTop + -5 + 'px'; 
     }
 
 
     if (itemDiv.tag2 === "shopArea") {
-      const newLeft = referenceRect.left - tooltipRect.width; 
-      const newTop = referenceRect.top - tooltipRect.height;
-      movingDiv.style.left = newLeft + 'px';
-      movingDiv.style.top = newTop + 20 + 'px';
+      const newLeft = (referenceRect.right - tooltipRect.width)/ (stats.zoomLevel/100);
+const newTop = referenceRect.bottom/ (stats.zoomLevel/100);
+
+movingDiv.style.left = newLeft + 'px';
+movingDiv.style.top = newTop + 'px';
     }
     
     if (itemDiv.tag2 === "shopAchievement") {
-      const newLeft = referenceRect.right;
-      const newTop = referenceRect.top;
+      const newLeft = referenceRect.right/ (stats.zoomLevel/100);
+      const newTop = referenceRect.top/ (stats.zoomLevel/100);
       movingDiv.style.left = newLeft + 15 + 'px';
       movingDiv.style.top = newTop + -10 + 'px';
     }
@@ -1976,7 +1979,7 @@ function returnPrefixSkills(item){
   let prefix5 = ""
 
   //t1
-  if (item.prefix1 === `Light`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Attack Speed, x0.5 Weapon Damage</span>`;}
+  if (item.prefix1 === `Light`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Attack Speed, x0.8 Weapon Damage</span>`;}
   if (item.prefix1 === `Powerful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x0.5 Attack Speed, x3 Weapon Damage</span>`;}
   if (item.prefix1 === `Echoing`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, x0.5 Weapon Damage</span>`;}
   if (item.prefix1 === `Masterful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Chance, x0.5 Weapon Skill Damage</span>`;}
@@ -1987,7 +1990,7 @@ function returnPrefixSkills(item){
   if (item.prefix2 === `Runic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Weapon Skill Attack</span>`;}
   if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Damage</span>`;}
   if (item.prefix2 === `Double`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack</span>`;}
-  if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Attack Speed</span>`;}
+  if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Attack Speed</span>`;}
   if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Chance</span>`;}
   if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
 
@@ -2003,12 +2006,18 @@ function returnPrefixSkills(item){
   //if (item.prefix2 === `Shackled`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">1/2 chance to auric smth</span>`;}
 
   //t5
-  if (item.prefix5 === `01100100`) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;">while(<DATA>){/^[!#=\/]/&&next;@ghijkl=split/[%\s\d\r\n\</span>`;}
-  if (item.prefix5 === `74 75 74 6C 65`) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span>`;}
-  if (item.prefix5 === `⩖⺜⨥⊂⑆⨓▟⭰⋹`) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;"> ** IDLE Internal Exception:    File "2.7/lib/python2.7/idlelib/run.py", line 325, in runcode</span>`;}
-  if (item.prefix5 === `ERROR`) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;">0x80040702, failed to lo<span style="color:coral">ad DLL</span></span>`;}
-  if (item.prefix5 === `TurTLE`) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;"></span>`;}
+  if (weaponPrefix5.includes(item.prefix5)) {
+    prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;"></span>`;
+    if (chance(1/7)) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;">while(<DATA>){/^[!#=\/]/&&next;@ghijkl=split/[%\s\d\r\n\</span>`;}
+    if (chance(1/7)) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span>`;}
+    if (chance(1/7)) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;"> ** IDLE Internal Exception:    File "2.7/lib/python2.7/idlelib/run.py", line 325, in runcode</span>`;}
+    if (chance(1/7)) {prefix5 = `<span style="display:flex;align-items:center;white-space: nowrap; color:magenta">👾 ${item.prefix5}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:cyan;">0x80040702, failed to lo<span style="color:coral">ad DLL</span></span>`;}
+  }
 
+
+
+
+ 
 
   //armor
 
@@ -2171,6 +2180,7 @@ function equipGear(){
   did("playerWeapon").src = `img/src/projectiles/none.png`;
   did("playerWeaponEnchantT3").style.display = "none"
   did("playerWeaponEnchantT2").style.display = "none"
+  did("playerWeaponEnchantGlitch").style.display = "none"
 
   itemInventory.forEach((item) => {
     eval('equipped' + item.slot + ' = undefined');
@@ -2190,8 +2200,13 @@ if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout
       did("playerWeapon").style.animation = `rainbowFilter infinite 10s linear`
       did("playerWeaponEnchantT3").style.display = "flex" 
       did("playerWeaponEnchantT3").style.maskImage = `url(img/src/weaponModels/I${item.img}.png)`
-
     } 
+
+    if (item.prefixTier===5) {
+      did("playerWeaponEnchantGlitch").style.display = "flex" 
+      did("playerWeaponEnchantGlitch").style.maskImage = `url(img/src/weaponModels/I${item.img}.png)`
+    } 
+
     if (item.prefixTier===2) {
       did("playerWeaponEnchantT2").style.display = "flex"
       did("playerWeaponEnchantT2").style.maskImage = `url(img/src/weaponModels/I${item.img}.png)`
@@ -2281,7 +2296,7 @@ function flyingLoot(rarity){
 
     //if (rarity===`uncommon`)
   
-    if (rarity===undefined) particleTrackers.push(new TrackerItemGot(undefined, undefined, { particle2Density: 0 }))
+    if (rarity===undefined) particleTrackers.push(new ParticleItemGot())
     if (rarity===`Uncommon`) particleTrackers.push(new TrackerItemGot(undefined, undefined, { trailParticle: ParticleItemGot2}))
   
     setTimeout(() => {
@@ -2320,8 +2335,8 @@ var referenceDiv = did("quickItemAccess");
 var referenceRect = referenceDiv.getBoundingClientRect();
 
 function miau(){
-  const newLeft = referenceRect.left + (referenceRect.width - movingDiv.offsetWidth) / 2;
-  const newTop = referenceRect.top - movingDiv.offsetHeight;
+  const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+  const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
   movingDiv.style.left = `${newLeft - 0}px`;
   movingDiv.style.top = `${newTop - 30}px`;
 }

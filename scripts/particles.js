@@ -51,12 +51,12 @@ function setParticleQuality(){
         qualityMaxParticleDensity = 0.8
     }
     if (settings.quality === "Low"){
-        qualityMaxParticles = 40
-        qualityMaxParticleDensity = 0.6
+        qualityMaxParticles = 0
+        qualityMaxParticleDensity = 0
     }
     if (settings.quality === "Very Low"){
-        qualityMaxParticles = 30
-        qualityMaxParticleDensity = 0.3
+        qualityMaxParticles = 0
+        qualityMaxParticleDensity = 0
     }
 }
 
@@ -1632,6 +1632,34 @@ class ParticleSellCoins extends NewParticle {
 
     }
 }
+
+/*
+class ParticleItemGot extends ParticleSellCoins {
+    constructor(x, y, options = {}) {
+        super(x, y);
+
+        this.tSpeed = 0.025; // Track Speed
+        this.freeflow = false
+        this.simpleColor = "transparent"
+        this.playerCenterX = enemyRect.left - containerRect.left + enemyRect.width / rngD(1.5,2);
+        this.playerCenterY = enemyRect.top - containerRect.top + enemyRect.height / rngD(1.3,2);
+        this.enemyCenterX = inventoryBagRect.left - containerRect.left + inventoryBagRect.width / 2;
+        this.enemyCenterY = inventoryBagRect.top - containerRect.top + inventoryBagRect.height / 2;
+        this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2 + 1300; //2 default
+        this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(200, -1000);
+        this.trailParticle = ParticleSimpleTrail;
+        this.image = new Image();
+        this.image.src = "img/src/icons/drop_loot.png"; 
+        this.particleDensity = 1;
+        this.size = 6;
+        this.targetCanvas = 'globalParticles'
+
+
+        Object.assign(this, options);
+
+    }
+}*/
+
 
 
 

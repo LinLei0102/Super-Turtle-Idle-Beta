@@ -447,8 +447,8 @@ function openShop(){
   movingDiv.style.animation = "interactableTooltip 0.3s 1 ease,interactableTooltipIdle 7s infinite ease";
 
   function miau(){
-    const newLeft = referenceRect.left + (referenceRect.width - movingDiv.offsetWidth) / 2;
-    const newTop = referenceRect.top - movingDiv.offsetHeight;
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+    const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
     movingDiv.style.left = `${newLeft - 0}px`;
     movingDiv.style.top = `${newTop - 30}px`;
   }
@@ -484,8 +484,8 @@ function repositionShopWindow(){ //this function gets called when a new item get
     const referenceRect = referenceDiv.getBoundingClientRect();
   
   
-    const newLeft = referenceRect.left + (referenceRect.width - movingDiv.offsetWidth) / 2;
-    const newTop = referenceRect.top - movingDiv.offsetHeight;
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+    const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
     movingDiv.style.left = `${newLeft - 0}px`;
     movingDiv.style.top = `${newTop - 30}px`;
   }, 1);
@@ -515,8 +515,8 @@ did("tipJar").addEventListener('click', function() { //context menus
     const movingDiv = did('itemContextMenu');
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipRect = movingDiv.getBoundingClientRect();
-    const newLeft = referenceRect.left + (referenceRect.width / 2) - (tooltipRect.width / 2);
-    const newTop = referenceRect.top - tooltipRect.height;
+    const newLeft = referenceRect.left/ (stats.zoomLevel/100) + (referenceRect.width / 2) - (tooltipRect.width / 2);
+    const newTop = (referenceRect.top - tooltipRect.height) / (stats.zoomLevel/100);
     movingDiv.style.left = newLeft + 'px';
     movingDiv.style.top = newTop + -10 + 'px';
 

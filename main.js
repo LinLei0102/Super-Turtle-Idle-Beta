@@ -925,8 +925,8 @@ function tooltipTopWidget(id,text) {
     const referenceDiv = did(id);
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipWidth = movingDiv.offsetWidth;
-    const newLeft = referenceRect.left + referenceRect.width / 2 - tooltipWidth / 2;
-    const newTop = referenceRect.bottom; 
+    const newLeft = referenceRect.left/ (stats.zoomLevel/100) + referenceRect.width / 2 - tooltipWidth / 2;
+    const newTop = referenceRect.bottom/ (stats.zoomLevel/100); 
     
     movingDiv.style.left = newLeft + 'px';
     movingDiv.style.top = newTop + 20 + 'px';
@@ -982,8 +982,8 @@ cd.BossCharge = 300
     const referenceDiv = did("bossButton");
     const referenceRect = referenceDiv.getBoundingClientRect();
     const tooltipWidth = movingDiv.offsetWidth;
-    const newLeft = referenceRect.left + referenceRect.width / 2 - tooltipWidth / 2;
-    const newTop = referenceRect.bottom; 
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + referenceRect.width / 2 - tooltipWidth / 2;
+    const newTop = referenceRect.bottom/(stats.zoomLevel/100); 
     
     movingDiv.style.left = newLeft + 'px';
     movingDiv.style.top = newTop + 20 + 'px';
@@ -1013,7 +1013,8 @@ cd.BossCharge = 300
 function resetTooltip(){
     
    did('tooltip').style.display = "none"; 
-   did('tooltip').style.width = "30vw"; 
+   did('tooltip').style.width = "30rem"; 
+   did('tooltip').style.minWidth = "0"; 
    did("tooltipArrowUp").style.display = 'none';
    did("tooltipArrow").style.display = 'flex';      
    did("upperTooltip").style.display = 'flex'; 
@@ -2970,10 +2971,16 @@ function retroactiveUpdate(){
 
     if (stats.currentVersion === undefined) {
         did("introPanel").style.display = "flex"
-        //items.I9.count++;
-        //addItem()
+        did("introPanel2").style.display = "flex"
         did("interactableQuestButton").style.animation = "widgetAlert2 1s infinite"
     
+        if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+           
+            stats.zoomLevel=50
+            document.documentElement.style.zoom = stats.zoomLevel+"%";
+
+        }
+
     }
 
     if (items.I113.statUp!==0) items.I113.statUp = 25 
@@ -3001,7 +3008,7 @@ function retroactiveUpdate(){
     if (stats.currentVersion<0.44){for (var i in research) if (research[i].status === "completed") {research[i].status = "waiting"; research[i].unlocked = false; research[i].timer = research[i].timerMax; } }
 
     //sanityCheck()
-    stats.currentVersion = 1.02;
+    stats.currentVersion = 1.03;
     did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(2)}`
 }
 
@@ -3148,6 +3155,68 @@ function randomTabName(icon){ //displays a random browser tab name
 
 
 
+stats.zoomLevel = 100
+
+let documentRect = document.body.getBoundingClientRect();
+
+function resolutionIncrease(mod){
+
+
+if (mod === "more"){
+    stats.zoomLevel += 5
+}
+
+if (mod === "less"){
+    stats.zoomLevel -= 5
+}
+
+if (mod!==undefined){
+
+    playSound("audio/button3.mp3")
+
+
+
+
+}
+
+
+
+document.documentElement.style.zoom = stats.zoomLevel+"%";
+
+did("zoomLevelText").innerHTML = `Zoom Level (${stats.zoomLevel}%)`
+
+
+
+
+}
+
+
+
+
+document.addEventListener('click', function(event) {
+
+    if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        openFullscreen();
+    }
+
+})
+
+
+
+
+function openFullscreen() {
+    const elem = document.documentElement; // O usa document.body
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+    }
+}
+
+
+
 document.addEventListener('DOMContentLoaded', initialization);
 
 function initialization() {
@@ -3176,7 +3245,9 @@ function initialization() {
 
 
     weatherCheck();
-    weatherStartup()
+    weatherStartup();
+
+    resolutionIncrease()
 
     
 }

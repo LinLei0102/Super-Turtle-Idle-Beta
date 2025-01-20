@@ -749,10 +749,6 @@ function statsUpdate(){
     stat.ElementalResist += diff
     stat.OccultResist += diff
 
-
-
-
-
   }
 
 
@@ -1108,7 +1104,7 @@ function updateStatsUI() {
       if (id==="statDisplayFishingLevel") statDesc = `Increases quality of fished loot. Decreases trash fished and might allow for new loot`;
       if (id==="statDisplayExtraLives") statDesc = `Automatically revive a set amount of times during bosses with 30% of your Max Health. Refreshes afterwards`;
       if (id==="statDisplayDodgeChance") statDesc = `Increases the chance to completely negate incoming damage`;
-      if (id==="statDisplayAttackSpeed") statDesc = `Determines the speed of your attacks`;
+      if (id==="statDisplayAttackSpeed") statDesc = `Determines the speed of your attacks (Currently attacking every ${(( playerTurnSpeed* (1 / (1 + stat.AttackSpeed / 100)) )/1000).toFixed(1)} seconds)`;
       if (id==="statDisplayDebuffBonus") statDesc = `Increases the damage dealt of all debuff sources`;
       if (id==="statDisplayIncome") statDesc = `Determines how many Shells will drop from a defeated foe`; //Red-colored-level enemies drop 1.5x the amount while green ones drop 1.5x less. Gray-colored-level ones do not drop shells
       if (id==="statDisplayCritChance") statDesc = `Increases the chance to deal double damage. Critical hits are marked with a (!)`;
@@ -1134,8 +1130,8 @@ function updateStatsUI() {
       const movingDiv = did('tooltip');
       const referenceRect = referenceDiv.getBoundingClientRect();
       const tooltipRect = movingDiv.getBoundingClientRect();
-      const newLeft = referenceRect.right;
-      const newTop = referenceRect.top + (referenceRect.height / 2) - (tooltipRect.height / 2);
+      const newLeft = referenceRect.right/(stats.zoomLevel/100);
+      const newTop = referenceRect.top/(stats.zoomLevel/100) + (referenceRect.height / 2) - (tooltipRect.height / 2);
       movingDiv.style.left = newLeft + 10 +'px';
       movingDiv.style.top = newTop + 'px';
 

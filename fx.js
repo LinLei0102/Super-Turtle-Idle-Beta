@@ -3,7 +3,7 @@ let canvas2 = document.getElementById('globalParticles');
 let canvas3 = document.getElementById('rpgParticlesBehind');
 let ctx = document.getElementById('rpgParticles').getContext('2d');
 
-const player = document.getElementById('playerAnimation');
+let player = document.getElementById('playerAnimation');
 let enemy = document.getElementById('enemyAnimation');
 enemy = document.getElementById('npcPanel');
 
@@ -46,6 +46,7 @@ const playerRectY = playerRect.top - containerRect.top + playerRect.height / 1.4
 let inventoryBagRect = document.getElementById('inventoryMainPageSquare').getBoundingClientRect();
 
 window.addEventListener('resize', function() {
+    player = document.getElementById('playerAnimation');
     inventoryBagRect = document.getElementById('inventoryMainPageSquare').getBoundingClientRect();
     containerRect = document.getElementById('mainScreen').getBoundingClientRect();
     canvas1.width = containerRect.width;
@@ -499,6 +500,8 @@ class NewParticle {
 
     update() {
 
+        if (settings.quality === "Very Low" || settings.quality === "Low") return
+
   
 
         if (this.t >= 1) return; 
@@ -571,7 +574,7 @@ class NewParticle {
             if (this.alphaDecay!==undefined) this.alpha -= this.alphaDecay;
             const pulseSize = 1 + Math.sin(Date.now() * this.pulseSpeed) * this.pulseAmplitude;
             this.size *= pulseSize;
-            this.size -= this.sizeDecay;
+            this.size -= this.sizeDecay*(stats.zoomLevel/100);
 
             let renderBehind = false;
             if (this.behind) renderBehind = true
@@ -714,8 +717,8 @@ class NewParticle {
 
             
        if (this.image != undefined) {  
-           let imageSize = this.size * 5;
-            if (this.sizeImg) imageSize = this.sizeImg
+           let imageSize = this.size*(stats.zoomLevel/100) * 5;
+            if (this.sizeImg) imageSize = this.sizeImg*(stats.zoomLevel/100)
                 ctx.translate(this.ballPosition.x, this.ballPosition.y); 
                 ctx.rotate(this.rotation); 
                 ctx.filter = `hue-rotate(${this.imageHue}deg)`;
@@ -745,8 +748,8 @@ class NewParticle {
             ctx.ellipse(
                 this.ballPosition.x,   
                 this.ballPosition.y,   
-                Math.max(this.width, 0),  
-                Math.max(this.size, 0),   
+                Math.max(this.width*(stats.zoomLevel/100), 0),  
+                Math.max(this.size*(stats.zoomLevel/100), 0),   
                 this.rotation,                        
                 0,                        
                 Math.PI * 2               
@@ -758,8 +761,8 @@ class NewParticle {
             ctx.ellipse(
                 this.ballPosition.x,   
                 this.ballPosition.y,   
-                Math.max(this.size, 0),  
-                Math.max(this.size, 0),   
+                Math.max(this.size*(stats.zoomLevel/100), 0),  
+                Math.max(this.size*(stats.zoomLevel/100), 0),   
                 0,                        
                 0,                        
                 Math.PI * 2               
@@ -933,7 +936,7 @@ class ParticleDamageText extends Particle {
     constructor(x, y, options = {}) {
         super(x, y);
 
-        this.size = 50;
+        this.size = 50*(stats.zoomLevel/100);
         this.age = 0; // Initial Age
         this.life = 1000;
         this.sizeDecay = 0;
@@ -950,7 +953,7 @@ class ParticleDamageText extends Particle {
         this.wobbleX = 1; 
         this.wobbleY = 1; 
         this.wobbleFrequency = 0;
-        this.offsetX = 0.96; //m
+        this.offsetX = 1; //m
         this.offsetY = 1;
         this.pulseAmplitude = 0.03; //m
         this.pulseSpeed = 0.02; 

@@ -705,7 +705,7 @@ class AreaChest1 extends Consumable {
         if (AreaChest1Key.count<=0) return
 
         AreaChest1Key.count--
-        lootTable(this.lootTable,"container")
+        lootTable(this.lootTable(),"container")
         this.constructor.count--
     }
 }
@@ -829,25 +829,40 @@ class Weapon extends Equipable {
             tier4Chance = 200
         }
 
-
-
-
-        
             if (chance(1/tier1Chance)) {this.prefix1 = returnArrayPick(weaponPrefix1); }
             if (chance(1/tier2Chance)) {this.prefix1 = returnArrayPick(weaponPrefix1); this.prefix2 = returnArrayPick(weaponPrefix2);}
             if (chance(1/tier3Chance)) {this.prefix1 = returnArrayPick(weaponPrefix1); this.prefix2 = returnArrayPick(weaponPrefix2); this.prefix3 = returnArrayPick(weaponPrefix3);}
             if (chance(1/tier4Chance)) {this.prefix1 = undefined; this.prefix2 = undefined; this.prefix3 = undefined; this.prefix5 = returnArrayPick(weaponPrefix5); logs.AR1.unlocked=true}
         
-
-        
-
-
         let align = rng(1,3)
         if (align===1) this.align = `Elemental`;
         if (align===2) this.align = `Nature`;
         if (align===3) this.align = `Occult`;
 
         this.paint = rng(-365,365)
+
+
+
+        if (this.prefix5 !=undefined) {
+
+        this.savedInfo = {}
+
+        this.savedInfo.damageSaved = rngD(-0.5,3)
+        this.savedInfo.attackSpeedSaved = rngD(0.3,3)
+        this.savedInfo.multishotSaved = rng(-1,7)
+        this.savedInfo.skillMultishotSaved = rngD(-1,5)
+        this.savedInfo.skillChanceSaved = rngD(-1,5)
+        this.savedInfo.skillDamageSaved = rngD(-1,7)
+
+        }
+        
+        /*
+        {this.skillChance = 0; }
+        if (this.prefix5 === "74 75 74 6C 65") {this.multishot = 15; this.skillChance = 28193; this.damage *= 0.2;}
+        if (this.prefix5 === "⩖⺜⨥⊂⑆⨓▟⭰⋹") {this.skillMultishot += 15; this.multishot = -100; }
+        if (this.prefix5 === "ERROR") {this.skillChance = 0; this.attackSpeed *= 5; this.skillDamage *= 10;}
+        if (this.prefix5 === "TurTLE") {this.skillMultishot += 15; this.attackSpeed *= 5; this.skillChance = 0; this.skillDamage *= 0.5;}
+        */
 
     }
 
@@ -860,7 +875,18 @@ class Weapon extends Equipable {
         this.skillChance = 1;
         this.skillDamage = 1;
 
-        if (this.prefix1 === "Light") {this.attackSpeed *= 0.5; this.damage *= 0.5;}
+
+        if (this.prefix5 !=undefined && this.savedInfo!==undefined){
+
+            this.damage *= this.savedInfo.damageSaved;
+            this.attackSpeed *= this.savedInfo.attackSpeedSaved;
+            this.multishot += this.savedInfo.multishotSaved;
+            this.skillMultishot +=  this.savedInfo.skillMultishotSaved;
+            this.skillChance *= this.savedInfo.skillChanceSaved;
+            this.skillDamage *= this.savedInfo.skillDamageSaved;
+        }
+
+        if (this.prefix1 === "Light") {this.attackSpeed *= 0.8; this.damage *= 0.8;}
         if (this.prefix1 === "Powerful") {this.attackSpeed *= 2; this.damage *= 3; }
         if (this.prefix1 === "Echoing") {this.multishot += 1; this.damage *= 0.5;}
         if (this.prefix1 === "Masterful") {this.skillChance *= 0.5; this.skillDamage *= 0.5;}
@@ -870,7 +896,7 @@ class Weapon extends Equipable {
         if (this.prefix2 === "Runic") {this.skillMultishot += 1; }
         if (this.prefix2 === "Kingslaying") {this.damage *= 1.5; }
         if (this.prefix2 === "Double") {this.multishot +=1; }
-        if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.8; }
+        if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.9; }
         if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.8; }
         if (this.prefix2 === "Titanic") {this.skillDamage *= 1.5; }
 
@@ -879,15 +905,6 @@ class Weapon extends Equipable {
         if (this.prefix3 === "Final") {this.skillDamage *= 2; }
         if (this.prefix3 === "Polychrome") {this.multishot +=1; this.skillMultishot += 1; }
         if (this.prefix3 === "Godslaying") {this.damage *= 2; }
-
-
-        if (this.prefix5 === "01100100") {this.skillChance = 0; }
-        if (this.prefix5 === "74 75 74 6C 65") {this.multishot = 15; this.skillChance = 28193; this.damage *= 0.2;}
-        if (this.prefix5 === "⩖⺜⨥⊂⑆⨓▟⭰⋹") {this.skillMultishot += 15; this.multishot = -100; }
-        if (this.prefix5 === "ERROR") {this.skillChance = 0; this.attackSpeed *= 5; this.skillDamage *= 10;}
-        if (this.prefix5 === "TurTLE") {this.skillMultishot += 15; this.attackSpeed *= 5; this.skillChance = 0; this.skillDamage *= 0.5;}
-
-
 
         //sorting purposes
         if (this.prefix1 !== undefined) this.prefixTier = 1
@@ -2473,13 +2490,16 @@ function attackAnimation(type){
 
 function enemyDamageAnimation(type, target){
 
+    if (!document.hasFocus()) return
+
+
+
     if (settings.disableCombatAnimations) return
     if (settings.quality === "Low" || settings.quality === "Very Low") return
 
     let miau = enemy
     if (target === "player") miau = did("playerAnimation")
 
-    if (!document.hasFocus()) return
 
     if (type==="low"){
         miau.style.animation = "";

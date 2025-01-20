@@ -412,6 +412,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
     if (bossTime) {stats.totalBossKills++;};
 
 
+    /*
     if (settings.nofarmToggle) {
 
       enemies[stats.currentEnemy].killCount++;
@@ -422,7 +423,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
 
 
-    }
+    }*/
 
 
     //if (enemies[stats.currentEnemy].killCount===1 && stats.currentEnemy===areas[stats.currentArea].boss) {
@@ -1654,8 +1655,10 @@ function damageText(number, type, color, icon, target) {
   let posY = enemyRect.top - containerRect.top + enemyRect.height / 2;
 
   if (target==='playerPanel') {
-    posX = playerCenterX
-    posY = playerCenterY
+
+    posX = playerRect.left - containerRect.left + playerRect.width / 2
+    posY = playerRect.top - containerRect.top + playerRect.height / 2
+
   } 
 
   const bigint = parseInt(color.slice(1), 16);
@@ -4122,6 +4125,8 @@ did("bossButton").onclick = function() {
 
 var sellMode = false;
 
+/*
+
 document.addEventListener("keyup", (event) => {
   if (!settings.disableHoldSell){
   if (did("bodyCover").style.display === "none"){
@@ -4157,6 +4162,8 @@ if (settings.disableHoldSell && sellMode){
 
 });
 
+
+
 document.addEventListener("keydown", (event) => {
   if (settings.disableHoldSell && !sellMode){
   if (did("bodyCover").style.display === "none"){
@@ -4179,7 +4186,7 @@ window.addEventListener("blur", function() {
 });
 
 
-
+*/
 
 function changeRPGTab(button, tab) { //change menu tabs
   did(button).addEventListener("click", function () {
@@ -6635,7 +6642,7 @@ function tooltipEnemies() {
     //on mouseenter
     did("tooltip").style.display = "flex";
 
-    did('tooltip').style.width = "35vw"; 
+    did('tooltip').style.minWidth = "50rem"; 
 
     did("tooltipName").innerHTML = enemies[stats.currentEnemy].name;
 
@@ -6696,8 +6703,8 @@ function tooltipEnemies() {
     const referenceRect = referenceDiv.getBoundingClientRect();
     
     // Calcula las nuevas coordenadas
-    var referenceRight = referenceRect.right; // Esquina superior derecha de enemyInfo
-    var referenceTop = referenceRect.top;     // Esquina superior
+    var referenceRight = referenceRect.right / (stats.zoomLevel/100); 
+    var referenceTop = referenceRect.top / (stats.zoomLevel/100);   
     
     // Ajusta para que la esquina inferior derecha del tooltip coincida
     var newLeft = referenceRight - movingDiv.offsetWidth;
@@ -6748,8 +6755,8 @@ function tooltipBuffs() {
         const referenceDiv = did(b + "buff");
         const referenceRect = referenceDiv.getBoundingClientRect();
 
-        var newLeft = referenceRect.left;
-        var newTop = referenceRect.top - movingDiv.offsetHeight;
+        var newLeft = referenceRect.left/(stats.zoomLevel/100);
+        var newTop = (referenceRect.top - movingDiv.offsetHeight)/(stats.zoomLevel/100);
 
         movingDiv.style.left = newLeft - 3+ "px";
         movingDiv.style.top = newTop - 10+ "px";
@@ -7029,8 +7036,8 @@ function tooltipCoins() {
     var movingDiv = did("tooltip");
 var referenceDiv = did("currencyShells");
 var referenceRect = referenceDiv.getBoundingClientRect();
-var newLeft = referenceRect.left;
-var newTop = referenceRect.bottom;
+var newLeft = referenceRect.left/(stats.zoomLevel/100);
+var newTop = referenceRect.bottom/(stats.zoomLevel/100);
 
 movingDiv.style.left = newLeft + "px";
 movingDiv.style.top = newTop + 13+ "px";
@@ -7067,8 +7074,8 @@ function tooltipPrism() {
     var movingDiv = did("tooltip");
 var referenceDiv = did("currencyScutes");
 var referenceRect = referenceDiv.getBoundingClientRect();
-var newLeft = referenceRect.left;
-var newTop = referenceRect.bottom;
+var newLeft = referenceRect.left/(stats.zoomLevel/100);
+var newTop = referenceRect.bottom/(stats.zoomLevel/100);
 
 movingDiv.style.left = newLeft + "px";
 movingDiv.style.top = newTop + 13+ "px";
