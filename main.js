@@ -2864,7 +2864,7 @@ function unlocksReveal(){
     if (unlocks.journal) did('achievementsTab').style.display = "flex";
     if (unlocks.bestiary) {did('bestiaryMastery').style.display = "flex"; did('bestiaryProgress2').style.display = "flex"; did('bestiaryBadge').style.display = "flex";}
     if (unlocks.armory) did('armoryButton').style.display = "flex";
-    if (unlocks.wobblyCursor) did('wubblySettings').style.display = "flex";
+    //if (unlocks.wobblyCursor) did('wubblySettings').style.display = "flex";
     if (unlocks.penguins) {
         
 

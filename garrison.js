@@ -354,5 +354,5 @@ function garrisonInitialization(){
     createBuilding();
     createResearch();
     researchTimer();
-    garrisonProgressVisual();
+    //garrisonProgressVisual();
 }
