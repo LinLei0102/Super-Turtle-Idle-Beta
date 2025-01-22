@@ -823,6 +823,8 @@ class Weapon extends Equipable {
         let tier3Chance = chances.reforges.tier3
         let tier4Chance = chances.reforges.tier4
 
+        console.log(mod)
+
         if (mod==="container") {
             tier1Chance = 5
             tier2Chance = 15
@@ -1517,7 +1519,7 @@ class UpgradeMaterial1 extends Material {
         this.quality = `Common`;
         this.flavor = `"A dense, knotted root with a vibrant, glowing core, known for its potent spiritual energy."`;
         this.source = `Commonly dropped by bosses on Cradle Hills and Lost Dojo. Common upgrading material`;
-        this.value = function() { return 50 }
+        this.value = function() { return 2 }
         Object.assign(this, properties);
     }
 }

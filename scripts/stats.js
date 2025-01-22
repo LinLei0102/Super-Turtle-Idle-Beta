@@ -1222,7 +1222,7 @@ function updateStatsUI() {
 
     chances.reforges.tier1 = Math.floor(5 / Math.pow(2, heatMultiplier-1))
     chances.reforges.tier2 = Math.floor(50 / Math.pow(4, heatMultiplier-1) )
-    chances.reforges.tier3 = Math.floor(1000 / Math.pow(10, heatMultiplier-1))
+    chances.reforges.tier3 = Math.floor(800 / Math.pow(10, heatMultiplier-1))
     chances.reforges.tier4 = Math.floor(10000 / Math.pow(20, heatMultiplier-1))
 
   
