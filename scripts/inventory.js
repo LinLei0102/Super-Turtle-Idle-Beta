@@ -285,6 +285,12 @@ function spawnItem(id,amount,source){
   if (amount != undefined) toAdd = amount
   const item = new id()
 
+
+  if (!itemInventoryMemory.some(existingItem => existingItem.img === item.img)) {
+    itemInventoryMemory.push(item);
+  }
+
+
   if (chance(1/777777)) spawnItem(GoldenClover)
 
   if (item.isStackable) {
@@ -480,7 +486,15 @@ function updateInventory(mode) {
     if (item.invInit && item.isInvInit === undefined) {item.invInit(); item.isInvInit = true; }
     
  
-   
+    let itemCDScreen = ""
+    if (item.constructor.cd){
+
+      const percentage = (((item.constructor.cd-1) / 10) * 100);
+
+
+      const resultado = item.constructor.cd < 60 ? item.constructor.cd : Math.floor(item.constructor.cd / 60) + "m";
+      itemCDScreen = `<div class="itemCooldownTimerText">${resultado}</div> <div class="itemCooldownTimer" style="height:${percentage}"></div>`
+    } 
 
     let itemCount = "";
     if (item.isStackable && item.constructor.count > 0) itemCount = `<div id="${item.img}Count" class="inventoryItemCount">${ beautify(item.constructor.count) }</div>`
@@ -495,7 +509,7 @@ function updateInventory(mode) {
     let itemLock = ""
     if (item.locked) itemLock = `<div class="itemLock">🔒</div>`
     
-    itemDiv.innerHTML = `${itemLock} <div class="itemSelect"></div>  ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
+    itemDiv.innerHTML = `${itemLock} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
     itemDiv.className = "inventoryItem";
     itemDiv.item = item; 
     itemDiv.item.index = index; 
@@ -946,11 +960,12 @@ function returnStamper(tier){
 }
 
 function returnUpgradeMaterialAmount(currentLevel){
-  if (currentLevel===0) return 5;
+  if (currentLevel===0) return 10;
   if (currentLevel===1) return 50;
-  if (currentLevel===2) return 200;
-  if (currentLevel===3) return 500;
-  if (currentLevel===4) return 1000;
+  if (currentLevel===2) return 250;
+  if (currentLevel===3) return 100000;
+  if (currentLevel===4) return 100000;
+  if (currentLevel===5) return 100000;
   }
 
 
@@ -998,10 +1013,10 @@ function upgradeMenuTooltip(){
 
   <div class="separator"></div>
   <div class="upgradeTooltipWidget3" style="outline:none;color:gray"><strong>✨</strong>Upgrade the base stats of all items of the same type by using same-quality materials</span></div>
-  <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg">Will use${materialToUseName}x${returnUpgradeMaterialAmount(item.constructor.upgrade)}  &nbsp;<span style="color:gray">(${materialToUseCount} in bag)</span></div>
+  <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg">Will use${materialToUseName}x${beautify(returnUpgradeMaterialAmount(item.constructor.upgrade))}  &nbsp;<span style="color:gray">(${beautify(materialToUseCount)} in bag)</span></div>
   `;
 
-  if (item.constructor.upgrade===5) did("tooltipDescription").innerHTML = `
+  if (item.constructor.upgrade===6) did("tooltipDescription").innerHTML = `
   <div class="upgradeTooltipWidget">${returnUpgradeLevelStars(item.constructor.upgrade)}</div>
   <div class="upgradeTooltipWidget2">Max upgrade level reached</div>
   `;
@@ -1043,7 +1058,7 @@ function upgradeSelectedItem(){
 
   const item = contextSelectedItem.item; 
 
-  if (item.constructor.upgrade>4) return 
+  if (item.constructor.upgrade>5) return 
 
   if ( returnUpgradeMaterial(item.quality).constructor.count >= returnUpgradeMaterialAmount(item.constructor.upgrade) ){
 
@@ -1340,7 +1355,8 @@ function sellSelectedItem(mode){
 
 function scrapSelectedItem(){
 
-
+  playSound("audio/pop2.mp3")
+  playSound("audio/scrap.mp3")
 
 
 
@@ -1362,8 +1378,7 @@ function scrapSelectedItem(){
         selectedItemRect = divRect.getBoundingClientRect();
 
 
-        playSound("audio/pop2.mp3")
-        playSound("audio/scrap.mp3")
+        
 
 
       
@@ -1445,6 +1460,7 @@ function selectAllItems(){
 
 function lockSelectedItem(){
 
+  playSound("audio/thud.mp3")
 
 
   for (let i = itemInventory.length - 1; i >= 0; i--) {
@@ -1749,7 +1765,7 @@ document.addEventListener('mouseover', function(event) {
     if (itemDiv.item || itemDivNoParent.item) {
     let item = itemDiv.item; 
 
-    if (itemDivNoParent.item!==undefined) {
+    if (itemDivNoParent && itemDivNoParent.item!==undefined) {
 
       item = itemDivNoParent.item
       itemDiv = event.target
@@ -1764,7 +1780,7 @@ document.addEventListener('mouseover', function(event) {
 
     did("tooltip").style.display = "flex";
     did("tooltipName").innerHTML = `${returnPrefixName(item)} ${item.name}`; 
-    did("tooltipDescription").innerHTML = `${returnUpgradeLevel()} ${returnTierSet()} ${returnWeaponDescription(item)} ${returnPrefixSkills(item)} ${returnSourceDescription()} ${returnItemDescription()} <div class="separador"></div> ${returnItemPrice(item)}`;
+    did("tooltipDescription").innerHTML = `${returnUpgradeLevel(item)} ${returnTierSet(item)} ${returnWeaponDescription(item)} ${returnPrefixSkills(item)} ${returnSourceDescription()} ${returnItemDescription()} <div class="separador"></div> ${returnItemPrice(item)}`;
     did("tooltipFlavor").innerHTML = item.flavor;
     did("tooltipImage").src = `img/src/items/I${item.img}.jpg`;
     if (item.align !== undefined) did("tooltipAlign").src = `img/src/icons/${item.align}.jpg`;
@@ -1845,6 +1861,61 @@ movingDiv.style.top = newTop + 'px';
 
 
 
+
+
+
+    //if its gear, compare
+
+
+    if (itemDiv.tag==="inventory" && item.slot!==undefined){ 
+
+
+
+
+      const slotItem = eval('equipped' + item.slot);
+
+      if (slotItem===undefined || slotItem === item) return
+
+      did("stampMenu").style.display = "flex";
+
+      did("stampMenuName").innerHTML = `${returnPrefixName(slotItem)} ${slotItem.name}`; 
+
+      did("stampMenuDescription").innerHTML = `${returnUpgradeLevel(slotItem)} ${returnTierSet(slotItem)} ${returnWeaponDescription(slotItem)} ${returnPrefixSkills(slotItem)}<br><br>`;
+
+      did("stampMenuRarity").innerHTML = returnRarity(slotItem);
+      did("stampMenuRarity").style.color = returnQualityColor(slotItem.quality);
+      did("stampMenuImg").src = `img/src/items/I${slotItem.img}.jpg`;
+
+
+        let movingDiv2 = did("stampMenu");
+        let referenceDiv2 = did("tooltip");
+        let referenceRect2 = referenceDiv2.getBoundingClientRect();
+        var newLeft = referenceRect2.right/ (stats.zoomLevel/100) + 10;
+        var newTop = referenceRect2.top/ (stats.zoomLevel/100) - 0;
+
+        movingDiv2.style.left = newLeft + "px";
+        movingDiv2.style.top = newTop + "px";
+        did("stampMenu").style.display="flex" 
+
+    }
+
+        
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
     function returnSourceDescription() {      
 
       if (item.source!=undefined) {
@@ -1914,49 +1985,55 @@ movingDiv.style.top = newTop + 'px';
 
   
 
-    function returnUpgradeLevel(){ 
-
-      if (item.constructor.upgrade===undefined) return ""
     
-      return `<div class="tooltipUpgradeLevel">${returnUpgradeLevelStars(item.constructor.upgrade)}</div>`
-
-      //return ""
-    }
 
 
 
 
 
-    function returnTierSet(){ 
-
-      if (item.set !== undefined) {
-
-
-      let tierMark = `<svg class="tooltipSkillStar" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><rect width="9" height="9" x="1.5" y="1.5" fill="currentColor" rx="1"/><rect width="9" height="9" x="13.5" y="1.5" fill="currentColor" rx="1"/><rect width="9" height="9" x="13.5" y="13.5" fill="currentColor" rx="1"/><rect width="9" height="9" x="1.5" y="13.5" fill="currentColor" rx="1"/></svg>`
-      let tierMarkActive = `<svg class="tooltipSkillStar" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><rect width="9" height="9" x="1.5" y="1.5" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksScale0" attributeName="x" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="y" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="width" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect><rect width="9" height="9" x="13.5" y="1.5" fill="currentColor" rx="1"><animate attributeName="x" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="y" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="width" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect><rect width="9" height="9" x="13.5" y="13.5" fill="currentColor" rx="1"><animate attributeName="x" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="y" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="width" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect><rect width="9" height="9" x="1.5" y="13.5" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksScale1" attributeName="x" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="y" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="width" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect></svg>`
-
-
-      let setDescription = eval('tier' + item.set + 'Description'); 
-      let setItems = eval('tier' + item.set + 'Items'); 
-
-      if (tierMatch(equippedItems,setItems,item.setMin))
-      {
-        return `<span style="color:#AFE972; display:flex; align-items:center">${tierMarkActive}  ${item.set} Set (${tierCount(equippedItems,setItems,item.setMin)}) :  ${setDescription}</span>`
-      } else
-
-      return `<span style="color:gray; display:flex; align-items:center">${tierMark}  ${item.set} Set (${tierCount(equippedItems,setItems,item.setMin)}) :  ${setDescription}</span>`
-
-
-      } else return ""
-
-      
-      
-
-    }
+    
   
 
   }
 });
+
+
+function returnTierSet(item){ 
+
+  if (item.set !== undefined) {
+
+
+  let tierMark = `<svg class="tooltipSkillStar" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><rect width="9" height="9" x="1.5" y="1.5" fill="currentColor" rx="1"/><rect width="9" height="9" x="13.5" y="1.5" fill="currentColor" rx="1"/><rect width="9" height="9" x="13.5" y="13.5" fill="currentColor" rx="1"/><rect width="9" height="9" x="1.5" y="13.5" fill="currentColor" rx="1"/></svg>`
+  let tierMarkActive = `<svg class="tooltipSkillStar" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><rect width="9" height="9" x="1.5" y="1.5" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksScale0" attributeName="x" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="y" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="width" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="0;svgSpinnersBlocksScale1.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect><rect width="9" height="9" x="13.5" y="1.5" fill="currentColor" rx="1"><animate attributeName="x" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="y" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="width" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="svgSpinnersBlocksScale0.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect><rect width="9" height="9" x="13.5" y="13.5" fill="currentColor" rx="1"><animate attributeName="x" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="y" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="width" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="svgSpinnersBlocksScale0.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect><rect width="9" height="9" x="1.5" y="13.5" fill="currentColor" rx="1"><animate id="svgSpinnersBlocksScale1" attributeName="x" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5"/><animate attributeName="y" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5"/><animate attributeName="width" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/><animate attributeName="height" begin="svgSpinnersBlocksScale0.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9"/></rect></svg>`
+
+
+  let setDescription = eval('tier' + item.set + 'Description'); 
+  let setItems = eval('tier' + item.set + 'Items'); 
+
+  if (tierMatch(equippedItems,setItems,item.setMin))
+  {
+    return `<span style="color:#AFE972; display:flex; align-items:center">${tierMarkActive}  ${item.set} Set (${tierCount(equippedItems,setItems,item.setMin)}) :  ${setDescription}</span>`
+  } else
+
+  return `<span style="color:gray; display:flex; align-items:center">${tierMark}  ${item.set} Set (${tierCount(equippedItems,setItems,item.setMin)}) :  ${setDescription}</span>`
+
+
+  } else return ""
+
+  
+  
+
+}
+
+
+function returnUpgradeLevel(item){ 
+
+  if (item.constructor.upgrade===undefined) return ""
+
+  return `<div class="tooltipUpgradeLevel">${returnUpgradeLevelStars(item.constructor.upgrade)}</div>`
+
+  //return ""
+}
 
 function returnWeaponDescription(item){
 
@@ -2085,12 +2162,13 @@ function returnPrefixSkills(item){
 function returnUpgradeLevelStars(level){
 
 
-  if (level===0) return `<span style="color:gray">✦✦✦✦✦</span>`
-  if (level===1) return `<span style="color:#8c7fff">✦</span><span style="color:gray">✦✦✦✦</span>`
-  if (level===2) return `<span style="color:#D97FFF">✦✦</span><span style="color:gray">✦✦✦</span>`
-  if (level===3) return `<span style="color:#FF927F">✦✦✦</span><span style="color:gray">✦✦</span>`
-  if (level===4) return `<span style="color:#C1FF7F">✦✦✦✦</span><span style="color:gray">✦</span>`
-  if (level===5) return `<span style="color:#3EFFD9">✦✦✦✦✦</span>`
+  if (level===0) return `<span style="color:gray">✦✦✦✦✦✦</span>`
+  if (level===1) return `<span style="color:#8c7fff">✦</span><span style="color:gray">✦✦✦✦✦</span>`
+  if (level===2) return `<span style="color:#D97FFF">✦✦</span><span style="color:gray">✦✦✦✦</span>`
+  if (level===3) return `<span style="color:#FF927F">✦✦✦</span><span style="color:gray">✦✦✦</span>`
+  if (level===4) return `<span style="color:#C1FF7F">✦✦✦✦</span><span style="color:gray">✦✦</span>`
+  if (level===5) return `<span style="color:#3EFFD9">✦✦✦✦✦</span><span style="color:gray">✦</span>`
+  if (level===6) return `<span style="animation:colorRainbow 8s infinite">✦✦✦✦✦✦</span>`
 
 
 }
@@ -2155,7 +2233,10 @@ document.addEventListener('mouseout', function(event) {
 const itemDiv = event.target.parentElement;
 const itemDivNoParent = event.target;
 
-  if (itemDiv.item || itemDivNoParent.item) {  resetTooltip() }
+  if (itemDiv.item || itemDivNoParent.item) { 
+    resetTooltip() 
+    if (itemDiv.item && itemDiv.item.slot!==undefined)   did("stampMenu").style.display="none";
+  }
 });
 
 

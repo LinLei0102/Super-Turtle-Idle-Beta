@@ -1,5 +1,6 @@
 
 let itemInventory = []
+let itemInventoryMemory = []
 
 /*
 item.I1 = {
@@ -1682,7 +1683,7 @@ class CabbageBoots extends ArmorFeet {
         this.skillDescription = function() { return `+ 10% Nature Bonus` };
         this.img = 560;
         this.quality = `Common`;
-        this.baseHp = 85;
+        this.baseHp = 65;
         Object.assign(this, properties);
     }
     stats(){
@@ -1851,14 +1852,14 @@ class RanaHat extends ArmorHead {
         super(properties);
         this.name = `Rana Hat`;
         this.flavor = `"Ribbit."`;
-        this.skillDescription = function() { return `+ 10% Nature Resist` };
+        this.skillDescription = function() { return `+ 15% Nature Resist` };
         this.img = 59;
         this.quality = `Common`;
-        this.baseHp = 90;
+        this.baseHp = 75;
         Object.assign(this, properties);
     }
     stats(){
-        stat.NatureResist += 10
+        stat.NatureResist += 15
     }
 }
 
@@ -1870,7 +1871,7 @@ class FlowerGarland extends ArmorHead {
         this.skillDescription = function() { return `+ 15% Nature Bonus` };
         this.img = 397;
         this.quality = `Common`;
-        this.baseHp = 85;
+        this.baseHp = 61;
         Object.assign(this, properties);
     }
     stats(){
@@ -2087,7 +2088,7 @@ class FoodLizard extends Consumable {
         this.img = 12;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 1000 Health over 20 seconds. Uses 1 Combat Action</span>`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 1000 Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
         this.contextTooltip = function() { return [ `<img src="img/src/buffs/B4.jpg">Up to <span style="color:coral">5 Combat Actions</span> can be used on boss encounters. Combat Actions immediately recharge once the battle ends<br><br><span style="display:flex;justify-content:center">${colorTag("✦ "+combatActions + " remaining", "#789E45")}</span>` ] };
         Object.assign(this, properties);
     }
@@ -2099,7 +2100,7 @@ class FoodLizard extends Consumable {
         buffs.FoodRegen.time=0
         playerBuffs();
         buffs.FoodRegen.time=20;
-        buffs.FoodRegen.stacks=1000/20;
+        buffs.FoodRegen.stacks=Math.min(stat.MaxHealth/20,1000/20);
         playerBuffs();
         this.constructor.count--;
     }
@@ -2113,7 +2114,7 @@ class FoodCheese extends Consumable {
         this.img = 34;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 2000 Health over 20 seconds. Uses 1 Combat Action</span>`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 2000 Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
         this.contextTooltip = function() { return [ `<img src="img/src/buffs/B4.jpg">Up to <span style="color:coral">5 Combat Actions</span> can be used on boss encounters. Combat Actions immediately recharge once the battle ends<br><br><span style="display:flex;justify-content:center">${colorTag("✦ "+combatActions + " remaining", "#789E45")}</span>` ] };
         Object.assign(this, properties);
     }
@@ -2125,7 +2126,8 @@ class FoodCheese extends Consumable {
         buffs.FoodRegen.time=0
         playerBuffs();
         buffs.FoodRegen.time=20;
-        buffs.FoodRegen.stacks=2000/20;
+        buffs.FoodRegen.stacks=Math.min(stat.MaxHealth/20,2000/20);
+        //stat.MaxHealth/20 > 1500/20 ? buffs.FoodRegen.stacks = 1500/20 : buffs.FoodRegen.stacks = stat.MaxHealth/20
         playerBuffs();
         this.constructor.count--;
     }
@@ -2209,7 +2211,7 @@ class AncientChestplate extends ArmorChest {
         this.skillDescription = function() { return `- 10% Attack Speed<br>+ 20% All Resist Up` };
         this.img = 396;
         this.quality = `Common`;
-        this.baseHp = 120;
+        this.baseHp = 89;
         Object.assign(this, properties);
     }
     stats(){

@@ -176,6 +176,7 @@ function updateBestiary() {
       //reverse: true,
       easing: "cubic-bezier(.03,.98,.52,.99)",
       scale: 3,
+      gyroscope:false,
     });
 
 
@@ -201,9 +202,15 @@ function updateBestiary() {
 
 
   document.addEventListener('click', function(event) {
+
+    let div = undefined
+    let i = undefined
     
-    const div = event.target.parentElement.id; 
-    const i = div.replace("bestiary", "");
+    if (event.target.parentElement) {
+      div = event.target.parentElement.id; 
+      i = div.replace("bestiary", "");
+    }  
+   
 
 
     if (div && event.target.parentElement && event.target.parentElement.id && div.endsWith("bestiary")){

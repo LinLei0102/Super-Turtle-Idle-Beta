@@ -1099,14 +1099,14 @@ function updateStatsUI() {
       if (id==="statDisplayOccultResist") statDesc = `Decreases damage received from all Occult Damage sources`;
       if (id==="statDisplayExpBonus") statDesc = `Increases the amount of EXP received from defeated foes`;
       if (id==="statDisplayHealingBonus") statDesc = `Increases the amount of HP received from all healing sources`;
-      if (id==="statDisplayLuck") statDesc = `Increases the chance of item drops from defeated foes. Does not affect containers, collectibles or other drop sources, and can not reduce the rate past 1/100`;
+      if (id==="statDisplayLuck") statDesc = `Increases the chance of item drops from defeated foes. Does not affect containers, collectibles or other drop sources, and can not reduce the rate past 1/100 (1/50 in Fast Mode)`;
       if (id==="statDisplayGatheringPower") statDesc = `Increases damage dealt to gathering nodes such as herbs and ores`;
       if (id==="statDisplayFishingLevel") statDesc = `Increases quality of fished loot. Decreases trash fished and might allow for new loot`;
       if (id==="statDisplayExtraLives") statDesc = `Automatically revive a set amount of times during bosses with 30% of your Max Health. Refreshes afterwards`;
       if (id==="statDisplayDodgeChance") statDesc = `Increases the chance to completely negate incoming damage`;
-      if (id==="statDisplayAttackSpeed") statDesc = `Determines the speed of your attacks (Currently attacking every ${(( playerTurnSpeed* (1 / (1 + stat.AttackSpeed / 100)) )/1000).toFixed(1)} seconds)`;
+      if (id==="statDisplayAttackSpeed") statDesc = `Determines the speed of your attacks (Currently attacking every ${(( playerTurnSpeed)/1000).toFixed(1)} seconds)`;
       if (id==="statDisplayDebuffBonus") statDesc = `Increases the damage dealt of all debuff sources`;
-      if (id==="statDisplayIncome") statDesc = `Determines how many Shells will drop from a defeated foe`; //Red-colored-level enemies drop 1.5x the amount while green ones drop 1.5x less. Gray-colored-level ones do not drop shells
+      if (id==="statDisplayIncome") statDesc = `Determines how many Shells will drop from a defeated foe. Gray-colored-level enemies will drop 90% less shells`; //Red-colored-level enemies drop 1.5x the amount while green ones drop 1.5x less. Gray-colored-level ones do not drop shells
       if (id==="statDisplayCritChance") statDesc = `Increases the chance to deal double damage. Critical hits are marked with a (!)`;
       if (id==="statDisplayThorns") statDesc = `Determines how much of all damage received gets returned to the foe, capped at 200% of your Power`;
       if (id==="statDisplayStealLevel") statDesc = `Determines how easy the Thief minigame is`;
@@ -1157,23 +1157,32 @@ function updateStatsUI() {
 
   function updateDroprates(){
 
-    let heatMultiplier = 1
-    if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(1.5, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
-  
-  
+
     nofarmToggleBonus = 1
     if (settings.nofarmToggle) nofarmToggleBonus = 2
-  
+
+    let heatMultiplier = 1
+    if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(3, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
+
     heatMultiplier *= nofarmToggleBonus
     if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
   
-    chances.enemies.poor = 100 / nofarmToggleBonus
-    chances.enemies.common = Math.floor(500 / heatMultiplier)
-    chances.enemies.uncommon = Math.floor(1000 / heatMultiplier)
-    chances.enemies.rare = Math.floor(5000 / heatMultiplier)
-    chances.enemies.epic = Math.floor(10000 / heatMultiplier)
+    chances.enemies.poor = 100 / nofarmToggleBonus //quest items,enemy materials, very common h1 gear
+    chances.enemies.common = Math.floor(1000 / heatMultiplier)
+    chances.enemies.uncommon = Math.floor(5000 / heatMultiplier) //Expected at h3
+    chances.enemies.rare = Math.floor(15000 / heatMultiplier) //Expected at h4
+    chances.enemies.epic = Math.floor(15000*3 / heatMultiplier) //A bit of time investment in h4
     chances.enemies.mythic = Math.floor(40000 / heatMultiplier)
     chances.enemies.legendary = Math.floor(80000 / heatMultiplier)
+
+
+
+
+
+
+
+
+
 
 
     chances.chest.poor = 2 / nofarmToggleBonus
@@ -1183,6 +1192,15 @@ function updateStatsUI() {
     chances.chest.epic = 60 / nofarmToggleBonus
     chances.chest.mythic = 100 / nofarmToggleBonus
     chances.chest.legendary = 200 / nofarmToggleBonus
+
+
+
+
+    if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(1.5, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
+
+    heatMultiplier *= nofarmToggleBonus
+    if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
+
 
 
     chances.boss.upgradeMaterial = Math.floor(5 * areas[stats.currentArea].heat)

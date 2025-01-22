@@ -2248,10 +2248,12 @@ did("masteryCompletion").innerHTML = `<img src="img/src/icons/insight.png" style
 //#region Saving
 //------autosave-------
 
+settings.disableAutosavePopup = false
+
 function autosave() {
 
 
-    if (!did('savePopUp')) createPopup('<img src="img/sys/saved.png"> Game Saved', 'savePopUp')
+    if (!did('savePopUp') && !settings.disableAutosavePopup) createPopup('<img src="img/sys/saved.png"> Game Saved', 'savePopUp')
 
     save();
     
@@ -2261,7 +2263,11 @@ setInterval(function() { if (!settings.disableAutosave) { autosave(); } }, 60000
 
 
 document.addEventListener("keydown", function (event) {
-    if (event.code === "KeyS" && turtleRename.style.display === "none") autosave()
+    if (event.code === "KeyS" && turtleRename.style.display === "none") {
+
+        save()
+        if (!did('savePopUp')) createPopup('<img src="img/sys/saved.png"> Game Saved', 'savePopUp')
+    } 
 });
 
 
@@ -2303,11 +2309,26 @@ localStorage.setItem('lastVisitTime', new Date().getTime());
       savedQuality: item.savedQuality,
       savedInfo: item.savedInfo,
       uses: item.uses,
-
-
     };
     saveData.savedItems.push(savedItem);
   }
+
+
+  saveData.savedItemsMemory = [];
+
+  for (const item of itemInventoryMemory) {
+    const savedItem = {
+      className: item.constructor.name,
+      upgrade: item.constructor.upgrade,
+      timesGot: item.constructor.timesGot,
+      count: item.constructor.count,
+    };
+    saveData.savedItemsMemory.push(savedItem);
+  }
+
+
+
+
 
 
   //saveData.savedItemsPrefix = {}; for (const i in item) {  saveData.savedItemsPrefix[i] = item[i].prefix;}
@@ -2544,6 +2565,34 @@ function load() {
 
     }
     }
+
+
+
+    if (parsedData.savedItemsMemory){
+        for (const savedItem of parsedData.savedItemsMemory) {
+    
+            let newClass = undefined;
+            try {
+              if (typeof savedItem.className === 'string' && typeof eval(savedItem.className) !== 'undefined') {
+                newClass = eval(savedItem.className);
+              }
+            } catch (error) {
+              console.warn('savedItem.className no longer exists. oopsy!', error);
+            }
+    
+            if (newClass === undefined) continue;
+    
+    
+            if (savedItem.upgrade!=undefined) newClass.upgrade = savedItem.upgrade
+            if (savedItem.timesGot!=undefined) newClass.timesGot = savedItem.timesGot
+            if (savedItem.count!=undefined) newClass.count = savedItem.count
+
+            const newItem = new (eval(savedItem.className))();
+
+            itemInventoryMemory.push(newItem);
+
+        }
+        }
 
 
 
@@ -2896,6 +2945,7 @@ VanillaTilt.init(document.querySelectorAll(".introCard"), {
     scale: 1.1,
     reverse: true,
     perspective: 1500,
+    gyroscope: false,
   });
 
 
@@ -3008,7 +3058,7 @@ function retroactiveUpdate(){
     if (stats.currentVersion<0.44){for (var i in research) if (research[i].status === "completed") {research[i].status = "waiting"; research[i].unlocked = false; research[i].timer = research[i].timerMax; } }
 
     //sanityCheck()
-    stats.currentVersion = 1.03;
+    stats.currentVersion = 1.04;
     did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(2)}`
 }
 
@@ -3172,7 +3222,7 @@ if (mod === "less"){
 
 if (mod!==undefined){
 
-    playSound("audio/button3.mp3")
+    playSound("audio/button3.mp3","all")
 
 
 

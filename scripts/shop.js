@@ -300,7 +300,7 @@ function createShopItem() {
 
       playSound("audio/coins.mp3","all")
       playSound("audio/throw.mp3","all")
-      stats.boughtItems++
+      stats.boughtItems+=toBuy
   
       updateCounters()
 

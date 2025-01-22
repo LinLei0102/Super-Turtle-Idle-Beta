@@ -153,8 +153,8 @@
         </div>    
         </div>
         </div>
-        
-        <div class="separador"></div>
+        <br>
+        <div class="separatorHeader"><div class="separator"></div>Currently Equipped<div class="separator"></div></div>
         
         <div class="lowerTooltip">
         <div id="stampMenuDescription">{texto texto texto texto texto texto texto texto texto texto texto}</div>
@@ -165,7 +165,13 @@
     
     <div class="dedicatedShop" id="achievementShop">
         <div class="dedicatedShopBanner">
-                <svg onclick='closeDedicatedShop("achievementShop")' class="dedicatedShopTab" style="background: rgba(0, 0, 0, 0.2); margin-right: 3rem;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M6.545.998a1 1 0 0 0 0 2h2.728a2.638 2.638 0 0 1 0 5.275H4.817V6.545a1 1 0 0 0-1.707-.707L.384 8.564a1 1 0 0 0-.22 1.09q.073.18.218.327l2.728 2.728a1 1 0 0 0 1.707-.707v-1.729h4.456a4.638 4.638 0 1 0 0-9.275z" clip-rule="evenodd"/></svg>
+
+                
+                <div class="currencyElement">
+                    <img src="img/src/icons/scutes.jpg">
+                    <span id="prismCounter3">1391</span>
+                </div>
+
                 <svg id="achievementShopButton1" onclick="achievementShopSwitch('achievementShopButton1')" class="dedicatedShopTabActive" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M21.083 4.585a2.62 2.62 0 0 0-1.904-.69h-1.426a2.7 2.7 0 0 0-.768-1.162a2.68 2.68 0 0 0-1.924-.69H8.979a2.7 2.7 0 0 0-1.994.69a2.6 2.6 0 0 0-.748 1.161H4.831a2.64 2.64 0 0 0-1.934.69A2.73 2.73 0 0 0 2 6.497a7.6 7.6 0 0 0 .997 3.682a8.4 8.4 0 0 0 2.642 2.862l.848.57l.638.391a6.2 6.2 0 0 0 2.083 2.002v1.76H8.82c-.714 0-1.4.285-1.904.792a2.7 2.7 0 0 0-.788 1.91v.33a1.23 1.23 0 0 0 .359.881c.233.232.549.361.877.36h9.272a1.22 1.22 0 0 0 1.145-.764c.062-.15.093-.313.091-.476v-.33a2.7 2.7 0 0 0-.788-1.91a2.7 2.7 0 0 0-1.903-.792h-.39v-1.771a6.2 6.2 0 0 0 2.094-2.002l.658-.4l.808-.55a8.5 8.5 0 0 0 2.652-2.873A7.7 7.7 0 0 0 22 6.447a2.76 2.76 0 0 0-.917-1.861M4.303 9.458a6.1 6.1 0 0 1-.768-2.902a1.22 1.22 0 0 1 .825-1.08c.151-.05.312-.072.471-.06h1.306v5.343q.013.427.07.85a6.8 6.8 0 0 1-1.904-2.151m15.414 0a7.15 7.15 0 0 1-1.904 2.152q.057-.435.07-.871V5.415h1.335a1.15 1.15 0 0 1 .868.31c.227.2.37.48.399.781a6.2 6.2 0 0 1-.768 2.952"/></svg>
                 <svg id="achievementShopButton2" onclick="achievementShopSwitch('achievementShopButton2')" class="dedicatedShopTab" style="background: #AE5656" xmlns="http://www.w3.org/2000/svg" width="1.13em" height="1em" viewBox="0 0 576 512"><path fill="currentColor" d="m528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681"/></svg>
                 <div class="dedicatedShopLevelBox" id="achievementShopLevelBox">
@@ -175,10 +181,12 @@
                         <div><div id="achievementShopExpBar"></div></div>
                     </div>
                 </div>
-                <div class="currencyElement">
-                    <img src="img/src/icons/scutes.jpg">
-                    <span id="prismCounter3">1391</span>
-                </div>
+
+                <svg onclick='closeDedicatedShop("achievementShop")' class="dedicatedShopTab" style="background: rgba(0, 0, 0, 0.2); margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M6.545.998a1 1 0 0 0 0 2h2.728a2.638 2.638 0 0 1 0 5.275H4.817V6.545a1 1 0 0 0-1.707-.707L.384 8.564a1 1 0 0 0-.22 1.09q.073.18.218.327l2.728 2.728a1 1 0 0 0 1.707-.707v-1.729h4.456a4.638 4.638 0 1 0 0-9.275z" clip-rule="evenodd"/></svg>
+
+                
+
+
             </div>
 
         <div class="dedicatedShopContent" id="achievementListing" style="display: flex;">
@@ -401,6 +409,7 @@
 
             <h2>Notifications</h2>
             <h3>Disable auto-scrap notifications<button id="disableScrapPopup" onclick="toggleSettings('disableScrapPopup')">OFF</button></h3>
+            <h3>Disable autosave notifications<button id="disableAutosavePopup" onclick="toggleSettings('disableAutosavePopup')">OFF</button></h3>
 
             <h2>Visual Settings</h2>
             <h3><span id="zoomLevelText">Zoom Level</span><button style="width: 4rem;" onclick="resolutionIncrease('more')">+</button><button style="margin-left: 1rem; width: 4rem;" onclick="resolutionIncrease('less')">-</button></h3>
@@ -679,7 +688,7 @@
             <img src="img/sys/nerd.png">
             <span>Use the buttons until the image overlaps with the borders of the box</span>
             <div class="introPanel2">
-                <div class="resolutionCheckButtons"><button onclick="resolutionIncrease('more')">+</button><button onclick="resolutionIncrease('less')">-</button><button style="width: auto;" onclick="did('introPanel2').style.height='0%' ">DONE!</button></div>
+                <div class="resolutionCheckButtons"><button onclick="resolutionIncrease('more')">+</button><button onclick="resolutionIncrease('less')">-</button><button style="width: auto;" onclick="playSound('audio/button5.mp3','all');did('introPanel2').style.height='0%' ">DONE!</button></div>
                 <img class ="resolutionCheckImage" src="img/src/icons/resolutionCheck.png">
                 <div class="resolutionCheckBox"></div>
             </div>

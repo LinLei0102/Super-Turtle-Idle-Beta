@@ -679,7 +679,7 @@ justify-content: center;
 }
 
 .dedicatedShopBanner .currencyElement{
-    margin-left: auto;
+    margin-right: 4rem;
 }
 
 
@@ -3113,7 +3113,7 @@ background: transparent;
 }
 
 @keyframes jesterTurtle{
-    0%{}
+    0%{translate: 0vw;}
     100%{translate: 110vw;}
 }
 
@@ -3165,6 +3165,9 @@ background: transparent;
 #stampMenu{
     background-image: url(img/src/icons/stampMenu.jpg);
     transition: all 0;
+    opacity: 0.8;
+    z-index: 998;
+
 }
 
 .upperTooltipRight{
@@ -3244,7 +3247,6 @@ background: transparent;
 }
 
 #tooltipDescription, #stampMenuDescription{ 
-    margin-top: 0.7rem;
      background: transparent;
      padding: 0 0.6rem;
      overflow: visible;
@@ -8677,6 +8679,8 @@ margin-left: 0.5rem;
     opacity: 0.8;
     transform-origin: bottom;
     pointer-events: none;
+    z-index: 4;
+    transition: 1s linear;
     
 }
 
@@ -8691,7 +8695,7 @@ margin-left: 0.5rem;
     font-size: 1.9rem;
     pointer-events: none;
     color: white;
-    z-index: 2;
+    z-index: 5;
     -webkit-text-stroke: black 5px;
     paint-order: stroke fill;
 

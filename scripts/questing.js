@@ -126,12 +126,12 @@ quests.A1QN8 = {
   difficulty: 1,
   icon: `img/src/items/I554.jpg`,
   description: `I never saw an upgraded piece of equipment, and neither did you apparently. You would think that I have nothing to gain with this request and that it blatantly feels like some sort of introduction to a mechanic, and you would be partially right `,
-  objective: function() { return `Upgrade 4 pieces of equipment <span class="questProgress">${beautify(stats.upgradedItems)}/4</span><br><span style="color:gray">(Tip: The upgrading option on the inventory will only appear once you met the material requirements. Only equipment can be upgraded)</span>`},
-  logic : function() {return stats.upgradedItems>3},
+  objective: function() { return `Upgrade 2 pieces of equipment <span class="questProgress">${beautify(stats.upgradedItems)}/4</span><br><span style="color:gray">(Tip: The upgrading option on the inventory will only appear once you met the material requirements. Only equipment can be upgraded)</span>`},
+  logic : function() {return stats.upgradedItems>1},
   effect: function() {
-      spawnItem(UpgradeMaterial1,10);
+      spawnItem(UpgradeMaterial1,5);
   },
-  reward: `${itemData(UpgradeMaterial1)} x10`
+  reward: `${itemData(UpgradeMaterial1)} x5`
 }
 
 quests.A1QN9 = {
@@ -183,10 +183,10 @@ quests.A1QN12 = {
   difficulty: 3,
   icon: `img/src/items/I382.jpg`,
   description: `My beverage doesn\'t give me enough energy! I need to remedy this!`,
-  objective: function() { return `Hand over 150 Spirit Ginseng <span class="questProgress">${UpgradeMaterial1.count}/150</span> <span style="color:gray"><br>(Tip: Bosses will often drop more Upgrading Materials on higher shellshock levels)</span>`},
-  logic : function() {return UpgradeMaterial1.count>149},
+  objective: function() { return `Hand over 300 Spirit Ginseng <span class="questProgress">${UpgradeMaterial1.count}/150</span> <span style="color:gray"><br>(Tip: Bosses will often drop more Upgrading Materials on higher shellshock levels)</span>`},
+  logic : function() {return UpgradeMaterial1.count>299},
   effect: function() {
-      UpgradeMaterial1.count-=150
+      UpgradeMaterial1.count-=299
       spawnItem(ChanceDie1,2);
   },
   reward: `${itemData(ChanceDie1)} x2`

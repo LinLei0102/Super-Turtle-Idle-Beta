@@ -9,7 +9,7 @@ function calculateInactiveTime() { //calculates idle time
         const currentTime = new Date().getTime();
         const inactiveTime = currentTime - parseInt(lastVisitTime);
         const secondsInactive = Math.floor(inactiveTime / 1000);
-        //const secondsInactive = 28800;
+        //const secondsInactive = 700;
 
         lastofflinetime = secondsInactive
 
@@ -17,13 +17,13 @@ function calculateInactiveTime() { //calculates idle time
             stats.totalSeconds += secondsInactive; 
             for (let i in cd) if (cd[i]>0) {cd[i]-=secondsInactive};
 
-            if (offlineFarmCheck()===true){
+            
 
                 offlineRewards(secondsInactive);
                 //if (!settings.disablePenguinRecap) { did("penguinRecap").style.display = "flex"; }
                 //offlineDrops(secondsInactive/60)
 
-            } 
+            
 
 
 
@@ -150,6 +150,9 @@ if (offlineFarmCheck() !== true) {
 
 function offlineRewards(seconds){
 
+
+    if (offlineFarmCheck()===true){
+
     const times = ( 5/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power) * (1+stat.OfflineBonus/100) ) * (seconds/60)
 
 
@@ -164,6 +167,29 @@ function offlineRewards(seconds){
     function loop() {
         lootTable(enemies[stats.currentEnemy].lootTable(),"hidden")
     }
+
+    }
+
+
+    
+
+    if (seconds>=600){
+
+    const offlineCharges = Math.floor(seconds / 600)
+
+    rpgPlayer.BossCharges += offlineCharges
+    cd.BossCharge = 300
+
+    if (rpgPlayer.BossCharges>10) rpgPlayer.BossCharges = 10
+    did("bossTimer").innerHTML = `<img src="img/sys/triangulo.png">`+rpgPlayer.BossCharges
+
+
+
+
+    }
+
+
+
 
 
 

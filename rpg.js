@@ -112,7 +112,7 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
   did("enemyAnimation").appendChild(div);
   div.innerHTML = '<img src="img/src/enemies/' + currentEnemy + '.png">';
 
-  enemies[currentEnemy].level = enemies[currentEnemy].initialLevel + ((areas[stats.currentArea].heat-1)*4)
+  enemies[currentEnemy].level = enemies[currentEnemy].initialLevel + (1*areas[stats.currentArea].heat-1) + ((areas[stats.currentArea].heat-1)*4)
 
 
 
@@ -888,7 +888,7 @@ let givenExp = stat.Income
 //if (returnEnemyLevelGap()==="red") givenExp = stat.Income * 1.5
 //if (returnEnemyLevelGap()==="orange") givenExp = stat.Income
 //if (returnEnemyLevelGap()==="green") givenExp = stat.Income * 0.5
-//if (returnEnemyLevelGap()==="gray") givenExp = stat.Income * 0.1
+if (returnEnemyLevelGap()==="gray") givenExp = stat.Income * 0.1
 
 return givenExp
 }
@@ -2064,7 +2064,7 @@ if (mod==="drop" && !items[dt].gotOnce){
 
 
 setInterval(itemCooldownTick, 1000);
-function itemCooldownTick(ID, time) { //removes one second from the cd of every single item
+/*function itemCooldownTick(ID, time) { //removes one second from the cd of every single item
   for (let i in items) {
     if ("cd" in items[i]){
     if (items[i].cd > 0) { //if its on CD
@@ -2095,6 +2095,59 @@ function itemCooldownTick(ID, time) { //removes one second from the cd of every 
   }
   }
   }
+}*/
+
+
+function itemCooldownTick(){
+
+
+
+
+
+  itemInventory.forEach((item, index) => {
+
+
+
+
+
+    if (item.constructor.cd>0) item.constructor.cd--
+
+    if (item.constructor.cd>0 && item.sort===currentSort){
+
+      const itemDiv = item.div
+      const itemCDText = itemDiv.querySelector('.itemCooldownTimerText');
+      const itemCDBar = itemDiv.querySelector('.itemCooldownTimer');
+
+      if (itemCDText) {
+      const resultado = item.constructor.cd < 60 ? item.constructor.cd : Math.floor(item.constructor.cd / 60) + "m";
+      itemCDText.innerHTML = resultado; 
+      }
+
+      if (itemCDBar) {
+      const percentage = (((item.constructor.cd-1) / 10) * 100);
+      itemCDBar.style.height = percentage+"%";
+
+      }
+
+      if (item.constructor.cd===1 && item.sort===currentSort) setTimeout(() => {
+        updateInventory()
+      }, 1100); 
+
+    }
+
+
+
+
+
+
+
+  })
+
+
+
+
+
+
 }
 
 
@@ -6648,8 +6701,18 @@ function tooltipEnemies() {
 
     if (gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty))
       did("tooltipPrice").innerHTML = "Gathered:" + beautify(enemies[stats.currentEnemy].killCount);
-    else
-      did("tooltipPrice").innerHTML = "Defeated: " + beautify(enemies[stats.currentEnemy].killCount);
+    else {
+
+      const atkIcon = `<svg style="background:transparent;translate:0 0.2rem" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>`
+      const hpIcon = `<svg style="background:transparent;translate:0 0.2rem" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M2 9.137C2 14 6.02 16.591 8.962 18.911C10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138S16.5.825 12 5.501C7.5.825 2 4.274 2 9.137"/></svg>`
+
+
+      did("tooltipPrice").innerHTML = `Defeated: ${beautify(enemies[stats.currentEnemy].killCount)}<br>
+      <span style="color:gray;font-size:1.6rem;background:transparent">${beautify(enemies[stats.currentEnemy].hp())+hpIcon}<br>${beautify(enemies[stats.currentEnemy].attack())+atkIcon}</span>`;
+
+
+
+    }
 
     if (gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) did("tooltipRarity").textContent = "Resource";
     else if ("align" in enemies[stats.currentEnemy]) did("tooltipRarity").innerHTML = "Enemy"+ '<br><img class="alignTooltipIcon" src="img/src/icons/'+enemies[stats.currentEnemy].align+'.png"></img>'; 
@@ -7820,6 +7883,8 @@ let scratcherMoves = 0
 function startScratchMinigame() {
 
   did("scratcherMenu").style.display = "flex";
+
+  voidAnimation("scratcherMenu","scratcherFly 1s 1")
   did("blackScreen").style.display = "flex";
   setTimeout(() => { did("blackScreen").style.opacity = "0.7" }, 1);
   playSound("audio/book.mp3")
@@ -7829,6 +7894,8 @@ function startScratchMinigame() {
   scratcherMoves = 10
   did("scratcherGains").innerHTML = scratcherGains+'<img src="img/src/icons/scutes.jpg">'
   did("scratcherMoves").innerHTML = 'Scratches Left : '+scratcherMoves
+  did("scratcherList").innerHTML = ""
+
 
   for (let i = 0; i < 30; i++) { createScratch(i) }
 

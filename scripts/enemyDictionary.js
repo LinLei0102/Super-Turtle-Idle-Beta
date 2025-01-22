@@ -3,7 +3,10 @@
 
 function returnEnemyHp(level){
     //return Math.floor(1000 * Math.pow(1.5, (level-1)))
-    return Math.floor(100 * (level*1.7))
+    let baseHp = 100
+    if (level>=18) baseHp = 200
+
+    return Math.floor(baseHp * (level*1.5))
 }
 
 function returnEnemyAttack(level){
@@ -12,7 +15,8 @@ function returnEnemyAttack(level){
 
   let baseAtk = 4
   if (level>=8) baseAtk = 5
-  if (level>=14) baseAtk = 8
+  if (level>=14) baseAtk = 6
+  if (level>=18) baseAtk = 10
 
   return Math.floor(baseAtk * (level*1))
 }
@@ -80,7 +84,7 @@ enemies.E1 = {
     description: 'A slug so passionate about vegetables that he raised one on its shell. Scientists are in absolute awe.',
     area: 'A1',
     difficulty: 'easy',
-    lootTable: function() { return { CaesarSalad : { c : 100, a : 1, l : function(){return (areas[stats.currentArea].heat>3 && quests.A1QN13.state!=="completed")}}, SlimyResidue : { c : chances.enemies.poor, a : 1}, WoodenSword : { c : chances.enemies.poor, a : 1}, ClothHead : { c : chances.enemies.poor, a : 1},  CabbageBoots : { c : chances.enemies.uncommon, a : 1} } },
+    lootTable: function() { return { CaesarSalad : { c : chances.enemies.poor, a : 1, l : function(){return (areas[stats.currentArea].heat>3 && quests.A1QN13.state!=="completed")}}, SlimyResidue : { c : chances.enemies.poor, a : 1}, WoodenSword : { c : chances.enemies.poor, a : 1}, ClothHead : { c : chances.enemies.poor, a : 1},  CabbageBoots : { c : chances.enemies.uncommon, a : 1} } },
     align: 'nature',
     passive: true,
     ai: function () {
@@ -108,7 +112,7 @@ enemies.E3 = {
   description: 'Recognized for their loud croaking sound, numerous noise complaints have been filled wherever they reside. But they never listen...',
   area: 'A1',
   difficulty: 'medium',
-  lootTable: function() { return { FrogLeg : { c : 100, a : 1, l : function(){return (areas[stats.currentArea].heat>1 && quests.A1QN9.state!=="completed")}}, ClothLegs : { c : chances.enemies.poor, a : 1},  ClothChest : { c : chances.enemies.poor, a : 1},  SilverRing : { c : chances.enemies.poor, a : 1},  RanaHat : { c : chances.enemies.uncommon, a : 1}, } },
+  lootTable: function() { return { FrogLeg : { c : chances.enemies.poor, a : 1, l : function(){return (areas[stats.currentArea].heat>1 && quests.A1QN9.state!=="completed")}}, ClothLegs : { c : chances.enemies.poor, a : 1},  ClothChest : { c : chances.enemies.poor, a : 1},  SilverRing : { c : chances.enemies.poor, a : 1},  RanaHat : { c : chances.enemies.epic, a : 1}, } },
   align: 'nature',
   card1 : { description:"x1.05 Nature Resist", effect: function() {stat.NatureResist+=0.05} },
   card2 : { description:"x1.1 Nature Resist", effect: function() {stat.NatureResist+=0.1} },
@@ -121,7 +125,7 @@ enemies.E2 = {
   description: 'It is said that the poison of these scorpids is more lethal the whiter their tails are. It is also said that they kinda look like a baguette.',
   area: 'A1',
   difficulty: 'hard',
-  lootTable: function() { return  { WhiteStinger : { c : chances.enemies.poor, a : 1}, ClothFeet : { c : chances.enemies.poor, a : 1}, AncientChestplate : { c : chances.enemies.uncommon, a : 1}, ScorpionRing : { c : chances.enemies.rare, a : 1}, } },
+  lootTable: function() { return  { WhiteStinger : { c : chances.enemies.poor, a : 1}, ClothFeet : { c : chances.enemies.poor, a : 1}, AncientChestplate : { c : chances.enemies.uncommon, a : 1}, ScorpionRing : { c : chances.enemies.epic, a : 1}, } },
   align: 'occult',
   card1 : { description:"x1.05 Occult Resist", effect: function() {stat.OccultResist+=0.05} },
   card2 : { description:"x1.1 Occult Resist", effect: function() {stat.OccultResist+=0.1},  },
@@ -147,7 +151,7 @@ enemies.E4 = {
   hp: function() {return returnEnemyHp(this.level)*3.5},
   attack : function() {return returnEnemyAttack(this.level) / 2},
   ai: function () { castHoopperoona() },
-  lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : chances.boss.upgradeMaterial},  HopperoonaPhylactery : { c : chances.boss.uncommon, a : 1},  WebthreadedPromise : { c : chances.boss.uncommon, a : 1}, PoisonScroll : { c : chances.boss.rare, a : 1}, ChrysalisRecurver : { c : chances.boss.rare, a : 1}, PoisonScroll2 : { c : chances.boss.epic, a : 1}, } },
+  lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : Math.pow(5,areas[stats.currentArea].heat) },  HopperoonaPhylactery : { c : chances.boss.uncommon, a : 1},  WebthreadedPromise : { c : chances.boss.uncommon, a : 1}, PoisonScroll : { c : chances.boss.rare, a : 1}, ChrysalisRecurver : { c : chances.boss.rare, a : 1}, PoisonScroll2 : { c : chances.boss.epic, a : 1}, } },
   align: 'occult',
   bestiarySkills : function() { return `❖${buffIcon("B57")}Ravenous Bite: Inflicts 2 ${heatDesc(`(4 in${colorTag("🔥3","orange")})`,3)} stacks of${buffIcon("B1")}Poison<br>
   ${heatDesc(`❖${buffIcon("B58")}Web Shot${colorTag("🔥2","orange")}: Inflicts 2 ${heatDesc(`(4 in${colorTag("🔥4","orange")})`,4)}  stacks of${buffIcon("B36")}Slow`,2)}` },
