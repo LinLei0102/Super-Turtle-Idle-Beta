@@ -228,7 +228,7 @@ quests.A1QN15 = {
   icon: `img/src/items/I488.jpg`,
   description: `All these cool rocks laying arround, and we have no way to peek what\'s inside them`,
   objective: function() { return `Hand over 3 Cracked Rough Geodes <span class="questProgress">${Geode1Open.count}/3</span><span style="color:gray"><br>(Tip: Some quests will have requirements not found in their current area)</span>`},
-  logic : function() {return Geode1Open.count>3},
+  logic : function() {return Geode1Open.count>2},
   effect: function() {
     Geode1Open.count-=3
     spawnItem(GemTopaz,1);
