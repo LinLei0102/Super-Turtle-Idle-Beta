@@ -121,9 +121,18 @@ function playerUpdate(){ //updates player HP and checks if its dead
       stats.currentDifficulty="easy"
       encounterButtonPress() 
       deleteEnemy();
+      resetEncounter()
       did("rpgCanvas").style.animation = "";
       void did("rpgCanvas").offsetWidth;
       did("rpgCanvas").style.animation = "rpgFade 1s 1";
+    }
+
+    if ((enemies[stats.currentEnemy].tag === "arena")) { //if an arena boss kills the turtle
+      bossTime = false;
+      deleteEnemy();
+      resetEncounter();
+      did("enemyPanel").style.display = "none";
+
     }
     
     if (dungeonTime && buffs.B64.time<=0){ //dies on a dungeon
