@@ -675,8 +675,8 @@ logs.PCARD.logic = 'stats.monsterCardsObtainedLog>4';
 logs.PCARD.tag = '🎴';
 logs.PCARD.category = "A2";
 logs.PCARD.repeatable = true;
-logs.PCARD.repeatableClick = function() {return stats.mysteryPresentsOpenedLog -= 10};
-logs.PCARD.progressDescription = function() { return `${beautify(stats.mysteryPresentsOpenedLog )}/10` };
+logs.PCARD.repeatableClick = function() {return stats.monsterCardsObtainedLog -= 10};
+logs.PCARD.progressDescription = function() { return `${beautify(stats.monsterCardsObtainedLog )}/10` };
 
 logs.PCARD2 = {} 
 logs.PCARD2.name = "Monster Blackjack";
