@@ -145,6 +145,10 @@ function buffIcon(id){
   return '<img src="img/src/buffs/'+id+'.jpg">'
 }
 
+function miniIcon(id){
+  return `<img src="img/src/${id}">`
+}
+
 function rUpgLvl(id){
   let weaponTier = 1
   if (items[id].tier!==undefined) weaponTier = items[id].tier
@@ -281,6 +285,45 @@ function beautify(number) {
       return Math.floor(number).toString();
     }
   };
+
+
+
+  function beautify(number,mode) { //incredible work by local legend otpoke, thanks a lot!
+    if (number < 1_000) return Math.floor(number).toString();
+  
+    const suffix = ["", "K", "M", "B", "T", "Q"];
+    const cleanedNumber = Math.floor(Math.floor(number)/100)*100; // This is essential to avoid Math.log rounding errors
+    const kilologarithm = Math.floor(Math.log10(cleanedNumber) / Math.log10(1_000));
+
+    if (mode==="mini" && number > 99_999){ //will only ever display max 4 digits
+      if (kilologarithm >= suffix.length) {
+        return (cleanedNumber / (1_000**suffix.length)*10).toExponential(1).replace('e+', '♾️');
+      } else {
+        const truncatedNumber = (Math.floor(cleanedNumber/(1_000**kilologarithm) *10)/10).toFixed(0);
+        return `${truncatedNumber}${suffix[kilologarithm]}`;
+      }
+    }
+  
+    if (kilologarithm >= suffix.length) {
+      return (cleanedNumber / (1_000**suffix.length)*10).toExponential(1).replace('e+', '♾️');
+    } else {
+      const truncatedNumber = Math.floor(cleanedNumber/(1_000**kilologarithm) *10)/10;
+      return `${truncatedNumber}${suffix[kilologarithm]}`;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function rng(min, max) { //gives a random number between the two
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -644,8 +687,10 @@ stat.AttackSpeed = 0
 stat.DebuffBonus = 0
 stat.Income = 0
 stat.CritChance = 0
+stat.CritDamage = 0
 stat.Thorns = 0
 stat.StealLevel = 0
+stat.ExtraActions = 0
 stat.Lifesteal = 0
 stat.OfflineBonus = 0
 stat.LumaPower = 0
@@ -662,10 +707,17 @@ statHidden.playerElementalDot = 0;
 statHidden.playerOccultDot = 0;
 statHidden.playerHealingDot = 0;
 
+
+let combatActions = 3+stat.ExtraActions
+
+
 //#endregion
 
 function statsUpdate(){
 
+
+
+  document.body.style.animation = "none"
 
   for (i in stat) stat[i] = 0
   for (i in statHidden) statHidden[i] = 0
@@ -694,6 +746,12 @@ function statsUpdate(){
         if (typeof item.stats === 'function') {
             item.stats();
         }
+
+        if (item.gemSlot && item.gemSlot.red!==null) {
+          const gemclass = eval(item.gemSlot.red)
+          const gem = new gemclass()
+          gem.stats();
+      }    
 
     }
 
@@ -743,7 +801,7 @@ function statsUpdate(){
 
   if (returnEnemyLevelGap()==="red") {
 
-    const diff = returnEnemyLevelGap("difference") * 15
+    const diff = (returnEnemyLevelGap("difference") * 10) + 20
 
     stat.NatureResist += diff
     stat.ElementalResist += diff
@@ -1107,11 +1165,13 @@ function updateStatsUI() {
       if (id==="statDisplayAttackSpeed") statDesc = `Determines the speed of your attacks (Currently attacking every ${(( playerTurnSpeed)/1000).toFixed(1)} seconds)`;
       if (id==="statDisplayDebuffBonus") statDesc = `Increases the damage dealt of all debuff sources`;
       if (id==="statDisplayIncome") statDesc = `Determines how many Shells will drop from a defeated foe. Gray-colored-level enemies will drop 90% less shells`; //Red-colored-level enemies drop 1.5x the amount while green ones drop 1.5x less. Gray-colored-level ones do not drop shells
-      if (id==="statDisplayCritChance") statDesc = `Increases the chance to deal double damage. Critical hits are marked with a (!)`;
+      if (id==="statDisplayCritChance") statDesc = `Increases the chance to deal x${(1.5*1+stat.CritDamage/100).toFixed(2)} damage. Critical hits are marked with a (!)`;
+      if (id==="statDisplayCritDamage") statDesc = `Increases damage dealt with Critical Hits (x${(1.5*1+stat.CritDamage/100).toFixed(2)} damage)`;
       if (id==="statDisplayThorns") statDesc = `Determines how much of all damage received gets returned to the foe, capped at 200% of your Power`;
       if (id==="statDisplayStealLevel") statDesc = `Determines how easy the Thief minigame is`;
       if (id==="statDisplayLifesteal") statDesc = `Determines how much of all damage dealt gets converted into HP`;
       if (id==="statDisplayLumaPower") statDesc = `Increases damage dealt by clicking on the enemy`;
+      if (id==="statDisplayExtraActions") statDesc = `Increases the amount of Combat Actions you can do`;
       if (id==="statDisplayOfflineBonus") statDesc = `Increases offline production`;
 
         
@@ -1151,7 +1211,7 @@ function updateStatsUI() {
   chances.boss = {}
   chances.reforges = {}
   chances.chest = {}
-
+  chances.oregem = {}
 
   let nofarmToggleBonus = 1
 
@@ -1168,7 +1228,7 @@ function updateStatsUI() {
     if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
   
     chances.enemies.poor = 100 / nofarmToggleBonus //quest items,enemy materials, very common h1 gear
-    chances.enemies.common = Math.floor(1000 / heatMultiplier)
+    chances.enemies.common = 500 / nofarmToggleBonus //rare enemy material
     chances.enemies.uncommon = Math.floor(5000 / heatMultiplier) //Expected at h3
     chances.enemies.rare = Math.floor(15000 / heatMultiplier) //Expected at h4
     chances.enemies.epic = Math.floor(15000*3 / heatMultiplier) //A bit of time investment in h4
@@ -1185,12 +1245,12 @@ function updateStatsUI() {
 
 
 
-    chances.chest.poor = 2 / nofarmToggleBonus
+    chances.chest.poor = 1
     chances.chest.common = 5 / nofarmToggleBonus
-    chances.chest.uncommon = 15 / nofarmToggleBonus
+    chances.chest.uncommon = 10 / nofarmToggleBonus
     chances.chest.rare = 30 / nofarmToggleBonus
     chances.chest.epic = 60 / nofarmToggleBonus
-    chances.chest.mythic = 100 / nofarmToggleBonus
+    chances.chest.mythic = 200 / nofarmToggleBonus
     chances.chest.legendary = 200 / nofarmToggleBonus
 
 
@@ -1227,8 +1287,15 @@ function updateStatsUI() {
 
   
   
-  
     chances.enemies.materialCount = 1 + (areas[stats.currentArea].heat-1) * nofarmToggleBonus
+
+    heatMultiplier = 1
+    heatMultiplier *= nofarmToggleBonus
+    if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
+
+    chances.oregem.common = Math.floor(100 / heatMultiplier)
+    chances.oregem.uncommon = Math.floor(200 / heatMultiplier)
+    chances.oregem.rare = Math.floor(300 / heatMultiplier)
   
   }
 

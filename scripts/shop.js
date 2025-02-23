@@ -5,12 +5,12 @@ let areaShop = {}
 areaShop.A1I1 = {
     item: new FoodLizard(),
     price: 200,
-    //effect : function() {},
   };
 
 areaShop.A1I2 = {
   item: new FlowerGarland(),
   price: 2000,
+    //effect : function() {},
    //condition : function() { if (areas[stats.currentArea].shopLevel>=3) return true },
 };
 
@@ -42,6 +42,11 @@ areaShop.A1I11 = {
   price: 2000,
 };
 
+areaShop.A1I12 = {
+  item: new StoneMattock(),
+  price: 2000,
+};
+
 areaShop.A1I6 = {
   item: new MedicatedBandaid(),
   price: 2500,
@@ -69,6 +74,77 @@ areaShop.A1I9 = {
 //12 is pickaxe
 
 
+
+
+areaShop.A2I1 = {
+  item: new AlcoholSake(),
+  price: 500,
+};
+
+areaShop.A2I2 = {
+  item: new GlassFlask(),
+  price: 500,
+};
+
+areaShop.A2I3 = {
+  item: new BlankParchment(),
+  price: 2000,
+};
+
+areaShop.A2I4 = {
+  item: new RecipeTopazRing(),
+  price: 60000,
+  stock: 1,
+};
+
+areaShop.A2I5 = {
+    item: new ChickenCage1(),
+    price: 1000,
+    stock: 10,
+};
+
+areaShop.A2I6 = {
+  item: new UpgradeMaterial2(),
+  price: 800,
+  stock: 10,
+};
+
+areaShop.A2I7 = {
+  item: new ChampionBelt(),
+  price: 15000,
+  condition : function() { if (areas[stats.currentArea].heatMax>2) return true },
+};
+
+areaShop.A2I8 = {
+  item: new BroccoliRing(),
+  price: 13500,
+};
+
+areaShop.A2I9 = {
+  item: new AquaRing(),
+  price: 20000,
+  condition : function() { if (areas[stats.currentArea].shopLevel>=2) return true },
+};
+
+areaShop.A2I10 = {
+  item: new FoodDango(),
+  price: 3000,
+  condition : function() { if (areas[stats.currentArea].shopLevel>=4) return true },
+};
+
+areaShop.A2I11 = {
+  item: new RecipeLuckyTincture(),
+  price: 50000,
+  condition : function() { if (areas[stats.currentArea].shopLevel>=6) return true },
+  stock: 1,
+};
+
+areaShop.A2I12 = {
+  item: new BrightBug(),
+  stock: 5,
+  price: 1000,
+  condition : function() { if (specialWeather) return true },
+};
 
 
 
@@ -140,7 +216,9 @@ function createShopItem() {
         div.innerHTML = '<div class=restockIcon id="' + i + 'restock" style="display:none">🔄</div> <div class=soldOut id="' + i + 'itemTag">SOLD OUT</div><img id="' + i + 'displayItem" src="img/src/items/I' + areaShop[i].item.img + '.jpg">';
         did("shopTooltip").appendChild(div);
         div.className = "shopBox";
-        div.item = areaShop[i].item
+        const itemInstance = new areaShop[i].item.constructor()
+        if (itemInstance.recipe) itemInstance.init()
+        div.item = itemInstance
         div.tag = "shop"
         div.tag2 = "shopArea"
         div.shopID = i
@@ -267,6 +345,12 @@ function createShopItem() {
            voidAnimation(`inventoryMainPageSquare`, `gelatine 0.3s 1`)
            voidAnimation("pokomuni", "breathingHigh 5s infinite ease-out")
          }, 1200);
+
+
+         if (itemContextBuyInput.value>1){
+          itemContextBuyInput.value = ""
+          itemContextMenuBegone()
+         }
   
   
       } else {playSound("audio/thud.mp3");}
@@ -279,6 +363,7 @@ function createShopItem() {
 
         rpgPlayer.scutes-=achievementShop[contextSelectedItem.shopID].price*toBuy
         rpgPlayer.sheddings+=achievementShop[contextSelectedItem.shopID].price*toBuy
+        stats.totalSheddings+=achievementShop[contextSelectedItem.shopID].price*toBuy
 
         successSell("achievementShop")
   
@@ -500,12 +585,13 @@ did("tipJar").addEventListener('click', function() { //context menus
 
   playSound("audio/button8.mp3")
 
+  //did("itemContextMenuButtonTipMenu").innerHTML = ""
+
 
   if (areas[stats.currentArea].shopLevel<6) did("itemContextMenuButtonTipMenu").style.display = "flex"
 
     did("tipJarInfo").style.display = "flex"
       
-    did("itemContextMenu").style.display = "flex";
     did("itemContextMenu").style.display = "flex";
     did("itemContextMenuScreensaver").style.display = "flex";
 
@@ -522,6 +608,8 @@ did("tipJar").addEventListener('click', function() { //context menus
 
     
 
+    
+
   voidAnimation("tipJar", "gelatine 0.3s 1")
   voidAnimation("itemContextMenu", "interactableTooltipIdleHigh 3s infinite, interactableTooltip 0.3s 1")
   
@@ -532,23 +620,22 @@ let itemContextTipInputHidden = 0
 
 function tipJar(){
 
-let toAdd = 0
-if (itemContextTipInputHidden!=0) toAdd = Math.floor(itemContextTipInputHidden)
-
 
 //to prevent negative numbers add  && toAdd<=nextShopLevel
-if (toAdd != 0 && rpgPlayer.coins>=toAdd){
-  areas[stats.currentArea].shopProgress += toAdd;
-  rpgPlayer.coins-=toAdd;
+if (rpgPlayer.coins>=nextShopLevel){
+  areas[stats.currentArea].shopProgress += nextShopLevel;
+  rpgPlayer.coins-=nextShopLevel;
   updateCounters()
   playSound("audio/coins.mp3")
+  itemContextMenuBegone();
+
 
 
 
   voidAnimation("tipJar", "gelatine 0.3s 1")
 
   tipJarUpdate();
-}
+} else playSound("audio/thud.mp3")
 
 }
 
@@ -596,7 +683,7 @@ function tipJarUpdate(){
   if (areas[stats.currentArea].shopLevel===4) levelboon = "Better Prices"
   if (areas[stats.currentArea].shopLevel===5) levelboon = "Extra Shop Item"
 
-  did("tipJarInfo").innerHTML = `<span>${beautify(nextShopLevel-areas[stats.currentArea].shopProgress)} Left</span><div class="separator" style="margin: 0.2rem 0; width: 80%;"></div>${levelboon}`
+  did("tipJarInfo").innerHTML = `<span>${beautify(nextShopLevel-areas[stats.currentArea].shopProgress)} Shells</span><div class="separator" style="margin: 0.2rem 0; width: 80%;"></div>${levelboon}`
 
   if (areas[stats.currentArea].shopLevel>5) did("tipJarInfo").innerHTML = `<span>Max Level<br>Reached</span>`
 

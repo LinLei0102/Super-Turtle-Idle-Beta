@@ -34,9 +34,11 @@
 
 @font-face { font-family: belwe; src: url(font/belwe.ttf); }
 @font-face { font-family: lilita; src: url(font/lilita.ttf); }
+@font-face { font-family: pirata; src: url(font/pirata.ttf); }
 @font-face { font-family: fredoka; src: url(font/fredoka.ttf); }
 @font-face { font-family: germanica; src: url(font/germanica.ttf); }
 @font-face { font-family: yikes; src: url(font/yikes.TTF); }
+@font-face { font-family: damageText; src: url(font/damageText.TTF); }
 
 
 
@@ -61,6 +63,7 @@
     top: 0;
     right: 0;
     z-index: 1;
+    transition: 0.3s all;
 }
 
 #dayNightCycleTint{
@@ -122,13 +125,13 @@
     position: absolute;
     background: transparent;
     background-size: contain;
+    transition: 0.3s all;
 
 
 }
 
 #areaFloor1{
     background-image: url(img/src/areas/A1FloorFX1.png);
-    animation: subtleWind1 3s ease-in-out infinite;
     pointer-events: none;
 
 
@@ -142,7 +145,6 @@
 
 #areaFloor3{
     background-image: url(img/src/areas/A1FloorFX3.png);
-    animation: subtleWind1 3s ease-in-out infinite;
     z-index: 5;
     pointer-events: none;
 }
@@ -495,7 +497,7 @@
     z-index: 6;
 }
 
-#globalParticles {z-index: 99;}
+#globalParticles {z-index: 100;}
 
 .offhandUses{
     height: auto !important;
@@ -590,8 +592,8 @@ justify-content: center;
     height: 60%;
     top: 20%;
     right: 0;
-    width: 30rem;
-    z-index: 20;
+    width: 25rem;
+    z-index: 200;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
@@ -799,6 +801,8 @@ justify-content: center;
     position: relative;
     overflow: visible;
     text-align: center;
+    z-index: 2;
+
 }
 
 #bestiaryInfo{
@@ -813,6 +817,7 @@ justify-content: center;
     right: -4rem;
     transition: 0.15s;
     z-index: 20;
+
 }
 
 #bestiaryInfo svg{
@@ -856,6 +861,7 @@ justify-content: center;
     width: auto;
     position: absolute;
     margin-bottom: 2rem;
+    z-index: 0;
 }
 
 #bestiaryMonster{
@@ -1061,6 +1067,14 @@ justify-content: center;
     font-size: 1rem;
     flex-shrink: 0;
     pointer-events: auto;
+    flex-wrap: wrap;
+
+}
+
+#popupListing div span{
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-width: 0; /* Evita que los elementos rompan el diseño */
 
 }
 
@@ -1495,7 +1509,7 @@ color: white;
     display: none;
 }
 
-.itemContextMenuArrow{
+#itemContextMenuArrow{
     position: absolute;
     height: 1rem;
     width: auto;
@@ -1625,20 +1639,20 @@ color: white;
     background: #713434;
     border-radius: 0.5rem 0.5rem 0 0 ;
     box-shadow: rgba(0, 0, 0, 0.2) 0 5px 3px -1px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.1rem;
 }
 
 .inventoryTopButtons{
     height: 10rem;
-    width: 80%;
+    width: 100%;
     background: transparent;
     display: flex;
     align-content: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.8rem;
     margin-right: auto;
-    padding-left: 0.8rem;
+    padding: 1rem;
 }
 
 .inventorySelectButtons{
@@ -1647,10 +1661,12 @@ color: white;
     align-items: flex-end;
     flex-direction: column;
     height: 100%;
-    width: 20%;
+    width: auto;
     gap: 1rem;
     background: transparent;
-    padding-right: 0.8rem;
+    margin-left: auto;
+    margin-right: -30rem;
+    position: absolute;
 }
 
 .inventoryTopButton{
@@ -1667,6 +1683,18 @@ color: white;
     font-weight: 400;
     transition: 0.2s;
 }
+
+
+#inventoryTopButtonQuickSelect{
+    opacity: 1 !important;
+    background: #388888;
+    outline: white 2px solid;
+}
+#inventoryTopButtonQuickSelect svg{
+
+    height: 90%;
+}
+
 
 #quickItemAccess{
     left: -3rem;
@@ -1685,6 +1713,8 @@ color: white;
     align-items: center;
     padding: 1rem;
     gap: 1rem;
+    max-width: 15rem !important;
+
 }
 
 
@@ -1693,6 +1723,7 @@ color: white;
     right: -12.5rem;
     width: 13rem;
     font-size: 1.2rem;
+    font-weight: 400;
     text-align: center;
     color: white;
 
@@ -1711,6 +1742,73 @@ color: white;
     50% {background: rgb(65, 101, 167);}
 }
 
+#dailyPresentEmpty{
+    background: transparent !important;
+    position: relative;
+    font-size: 1.2rem !important;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: visible;
+    -webkit-text-stroke: 0 !important;
+    color: black !important;
+    opacity: 0.6;
+
+}
+
+#dailyPresentEmpty svg{
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    color: rgb(168, 115, 64);
+    opacity: 0.4;
+}
+
+#itemContextMenuDailyPresents{
+    height: auto;
+    width: 15rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    flex-wrap: wrap;
+    gap: 0rem;
+    overflow: visible;
+    padding-bottom: 0.5rem;
+    display: none;
+}
+
+#itemContextMenuDailyPresents div{
+    height: 4.5rem;
+    width: 4.5rem;
+    flex-shrink: 0;
+    background: transparent;
+    color: white;
+    font-size: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: 140%;
+    background-position: center;
+    -webkit-text-stroke: black 6px;
+    paint-order: stroke fill;
+    animation: gelatineHigh 0.3s 1;
+
+    background-image: url(img/src/icons/present1.png);
+    transition: 0.1s;
+}
+
+#dailyPresent4,#dailyPresent5{
+    background-image: url(img/src/icons/present2.png) !important;
+}
+
+#dailyPresent6{
+    background-image: url(img/src/icons/present5.png) !important;
+}
+
+#itemContextMenuDailyPresents div:hover{
+    scale: 1.2 !important;
+}
 
 .inventoryTopButton svg{
     height: 80%;
@@ -1767,6 +1865,8 @@ color: white;
     opacity: 0.7;
 }
 
+
+
 .enemyAdd{
     height: 15rem;
     width: 15rem;
@@ -1778,6 +1878,16 @@ color: white;
     justify-content: center;
     overflow: visible;
     display: none;
+
+}
+
+.enemyAdd span{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    animation-fill-mode: forwards;
+    overflow: visible;
 }
 
 .addHealthBar{
@@ -1798,8 +1908,9 @@ color: white;
     width: 100%;
     background: transparent;
     background-image: url(img/src/enemies/A1.png);
-    background-position: center;
-    background-size: 100%;
+    background-size: 350%;
+    transform: translateY(10%) !important;
+    background-position: bottom;
     animation: breathingHigh 8s infinite ease-out;
     pointer-events: initial;
     transition: 0.3s;
@@ -1857,6 +1968,7 @@ color: white;
 }
 
 .inventoryTab{
+    opacity: 0.3;
     height: 2.5rem;
     width: 2.5rem;
     background: #713434;
@@ -1976,6 +2088,12 @@ color: white;
     display: flex;
     justify-content: start;
     align-items: flex-end;
+    text-shadow: 
+    1px 1px 0px #23232D, 
+    -1px 1px 0px #23232D, 
+    1px -1px 0px #23232D, 
+    -1px -1px 0px #23232D;
+
 }
 
 .prefixT1 {
@@ -2281,8 +2399,7 @@ color: #008cff;
     left: 50%;
     transform: translateX(-50%);
     z-index: 9;
-    background:
-    #9B6145;
+    background:#9B6145;
     background-size: 30%;
     border-radius: 0.5rem;
     display: flex;
@@ -2303,7 +2420,7 @@ color: #008cff;
     position: absolute;
     top: 0%;
     margin-top: -1rem;
-    padding: 1rem 3rem;
+    padding: 1rem 0rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2317,23 +2434,34 @@ color: #008cff;
 
 .areaName span{
     background: transparent;
-}
-
-#areaSwitch{
-    height: 2rem;
-    width: 2rem;
-    border-radius: 0.3rem;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    right: 0rem;
-    background: #5A201F;
+    flex-shrink: 0;
+    padding: 0 3rem;
 }
 
-#areaSwitch svg{
-    background: transparent;
+
+#areaTransition{
+    background: black;
+    position: absolute;
+    height: 100%;
+    width: 0%;
+    top: 0;
+    z-index: 4;
+    box-shadow: black 0 0 5rem 5rem;
+    opacity: 0;
 }
+
+@keyframes areaTransition{
+    0%{width: 0%; opacity: 1;}
+    50%{width: 100%;}
+    51%{ right: none;}
+    99%{width: 0%; right: -5rem; opacity: 1;}
+    100%{opacity: 0;}
+}
+
 
 
 
@@ -2353,7 +2481,10 @@ color: #008cff;
     background: #713434;
     border-radius: 0.2rem;
     box-shadow: rgba(0, 0, 0, 0.2) 0 5px 3px -1px;
+}
 
+.areaArrow:hover{
+    scale:1.1
 }
 
 #turtleBot{
@@ -2391,7 +2522,7 @@ color: #008cff;
 
 }
 
-.areaEncounters{
+#areaEncounters{
     width: 100%;
     height: 3rem;
     background: transparent;
@@ -2405,7 +2536,7 @@ color: #008cff;
     overflow: visible;
 }
 
-.areaEncounters div{
+#areaEncounters div{
     height: 2.8rem;
     width: 2.8rem;
     outline: solid 2px #9B6145;
@@ -2420,7 +2551,7 @@ color: #008cff;
 
 }
 
-.areaEncounters div:active{
+#areaEncounters div:active{
     animation: faintStrike 0.5s 1;
 }
 
@@ -2437,9 +2568,9 @@ color: #008cff;
     font-size: 1.3rem;
     color: rgb(52, 54, 99);
     bottom: -75%;
-    height: 1.5rem;
-    width: 1.5rem;
-    outline-color: white;
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+    outline-color: white !important;
     animation: interactableTooltipIdleVeryHigh 3s infinite;
 
 }
@@ -2490,44 +2621,139 @@ color: #008cff;
 
 
  .areaListing{
-    height: 80%;
+    height: 85%;
     width: 95%;
     background: transparent;
     margin-bottom: auto;
     margin-top: 10rem;
-
+    padding: 1rem;
+    padding-top: 0;
  }
 
  .areaSelect{
-    height: 3rem;
+    height: 2.5rem;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 3rem;
     background: transparent;
+    opacity: 0;
+    transition: 0.2s;
+    pointer-events: none;
+    overflow: visible;
+}
+
+
+
+
+@keyframes tipsyBlur{
+    0%{filter: blur(0);}
+        
+    20%{filter: blur(0);}
+    40%{filter: blur(2px);}
+    60%{filter: blur(0);}
+
+    70%{filter: blur(0);}
+    80%{filter: blur(3px)}
+    100%{filter: blur(0)}
 }
 
 .areaSelect div{
     height: 2rem;
     width: 10rem;
     padding: 0rem 2rem;
-    background: #7C482F;
+    background: #6A3B27;
     font-size: 1.2rem;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 0.3rem;
+    box-shadow: 3px 4px 3px 0px rgba(0, 0, 0, 0.4);
+    pointer-events: initial;
+    transition: 0.2s;
+
 }
+
+.areaSelect div:hover{
+    scale: 1.05;
+    box-shadow: 6px 6px 5px 0px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1);
+
+}
+
+
+
 
 #areaList{
     margin-top: 1rem;
     display: flex;
     background: transparent;
     flex-wrap: wrap;
-    overflow: scroll !important;
-    gap: 2%;
+    gap: 0.8rem;
+    height: 78%;
+    width: 100%;
+    flex-shrink: 0;
+    background-color: #c9aa82;
+
+    outline: #91643D 0.2rem solid;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: #E7D38D 0.2rem 0.2rem 0rem 0.4rem,
+    #EDEDA5 -0.1rem -0.1rem 0rem 0.4rem
+    , rgba(0, 0, 0,1) 0.3rem 0.3rem 1rem;
+    overflow: scroll;
+    background-image: url(img/src/backgrounds/areaPanel2.png);
+    background-size: 100%;
+    justify-content: start;
+    align-content: start;
+}
+
+#dungeonList{
+    margin-top: 1rem;
+    display: flex;
+    background: transparent;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    height: 78%;
+    width: 100%;
+    flex-shrink: 0;
+    background: rgb(150, 150, 150);
+    outline: rgb(187, 187, 187) 0.2rem solid;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: rgb(110, 110, 110) 0.2rem 0.2rem 0rem 0.4rem,
+    rgb(145, 145, 145) -0.1rem -0.1rem 0rem 0.4rem
+    , rgba(0, 0, 0,1) 0.3rem 0.3rem 1rem;
+    overflow: scroll;
+    background-image: url(img/src/backgrounds/areaPanel.png);
+    background-size: 100%;
+    justify-content: start;
+    align-content: start;
+}
+
+#landmarkList{
+    margin-top: 1rem;
+    display: flex;
+    background: transparent;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    height: 78%;
+    width: 100%;
+    flex-shrink: 0;
+    background-color: rgb(150, 150, 150);
+    background-image: url("data:image/svg+xml,%3Csvg width='84' height='48' viewBox='0 0 84 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h12v6H0V0zm28 8h12v6H28V8zm14-8h12v6H42V0zm14 0h12v6H56V0zm0 8h12v6H56V8zM42 8h12v6H42V8zm0 16h12v6H42v-6zm14-8h12v6H56v-6zm14 0h12v6H70v-6zm0-16h12v6H70V0zM28 32h12v6H28v-6zM14 16h12v6H14v-6zM0 24h12v6H0v-6zm0 8h12v6H0v-6zm14 0h12v6H14v-6zm14 8h12v6H28v-6zm-14 0h12v6H14v-6zm28 0h12v6H42v-6zm14-8h12v6H56v-6zm0-8h12v6H56v-6zm14 8h12v6H70v-6zm0 8h12v6H70v-6zM14 24h12v6H14v-6zm14-8h12v6H28v-6zM14 8h12v6H14V8zM0 8h12v6H0V8z' fill='%23817E88' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        outline: rgb(187, 187, 187) 0.2rem solid;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: rgb(110, 110, 110) 0.2rem 0.2rem 0rem 0.4rem,
+    rgb(145, 145, 145) -0.1rem -0.1rem 0rem 0.4rem
+    , rgba(0, 0, 0,1) 0.3rem 0.3rem 1rem;
+    overflow: scroll;
+    background-size: 40%;
+    justify-content: start;
+    align-content: start;
 }
 
 
@@ -2896,8 +3122,8 @@ background: transparent;
     height: auto;
     width: 23%;
     z-index: 99;
-    top: 1%;
-    left: 50%;
+    top: 0%;
+    right: 0%;
     background-image: url(img/sys/fondonegro.png);
     border: solid lime 1px;
     display: flex;
@@ -3004,6 +3230,7 @@ background: transparent;
     #392826;
     box-shadow:  0px 0px 10px 10px rgba(0, 0, 0, 0.5);
     display: inline-block;
+    font-weight: 500;
 
 }
 
@@ -3025,6 +3252,7 @@ background: transparent;
 #tooltip, .tooltip { 
     position: absolute;
     z-index: 999;
+    width: auto;
     min-width: 30rem;
     height: auto;
     border-radius: 0.4rem;
@@ -3078,8 +3306,8 @@ background: transparent;
 #tooltip .separador{width: 100%; margin: 1% 0;}
 
 #upperTooltip{
-    background: rgba(0, 0, 0, 0.6);
-    box-shadow: rgba(0, 0, 0, 0.6) 0 20px 20px 0px,rgba(0, 0, 0, 0.6) 0 -20px 20px 0px;
+    background: rgba(0, 0, 0, 1);
+    box-shadow: rgba(0, 0, 0, 1) 0 20px 20px 0px,rgba(0, 0, 0, 0.6) 0 -20px 20px 0px;
     height: 5.5rem;
     width: 100%;
     display: flex;
@@ -3167,6 +3395,8 @@ background: transparent;
     transition: all 0;
     opacity: 0.8;
     z-index: 998;
+    max-width:35rem;
+
 
 }
 
@@ -3251,6 +3481,7 @@ background: transparent;
      padding: 0 0.6rem;
      overflow: visible;
      font-size: 1rem;
+     margin-bottom: 0.5rem;
 
      
 }
@@ -3295,17 +3526,65 @@ background: transparent;
     border: none !important;
 }
 
+.tooltipGem{
+    height: auto !important;
+    width: 100%;
+    background: transparent;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.tooltipGemContainer{
+    height: auto !important;
+    width: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+
+
+.tooltipGemImage{
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    rotate: 45deg;
+    background: black;
+    border-radius: 0.2rem;
+    box-shadow: inset rgb(255, 202, 132) 0 0 2px 2px;
+    margin: 0.5rem;
+    margin-right: 0.6rem;
+    margin-left: 0.3rem;
+    flex-shrink: 0;
+    
+}
+
+.tooltipGemImage img{
+    all: initial !important;
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+    rotate: -45deg !important;
+
+}
+
 #tooltipFlavor { 
+    display: flex;
     text-align: right;
     background: transparent;
     color: darkgray;
-    margin-top: 1%;
     margin-left: auto;
     margin-right: 1%;
+    margin-top: -0.3rem;
     padding: 0 2%;
-    margin-bottom: 1.5%;
+    margin-bottom: 0.5rem;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
+    align-items: end;
+    justify-content: end;
 }
 
 .tooltipSkillStar{
@@ -3330,7 +3609,7 @@ background: transparent;
     visibility: hidden;
 }
 
-#tooltipAlign {
+#tooltipAlign, #stampMenuAlign {
     position: absolute;
     top: 0.4rem;
     right: 0.5rem;
@@ -4056,6 +4335,8 @@ background: transparent;
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    z-index: 2;
+
 
 }
 
@@ -4517,11 +4798,39 @@ background: transparent;
     color: rgb(39, 44, 44);
     font-weight: 500;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     text-align: center;
+    padding: 1rem;
 
 }
+
+.tipPanelImage{
+    height: 30%;
+    width: 70%;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    outline: solid white 0.4rem;
+
+    background: 
+    rgb(86, 86, 145);
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='white' fill-opacity='0.2'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+
+background-size: 80%;
+animation: bgPatternVertical3 40s infinite linear;
+
+
+}
+
+.tipPanelImage img{
+   height: 90%;
+   width: auto;
+   background: transparent;
+}
+
 
 #deleteData span img, #outdatedData span img , #tipPanel span img{
     margin-top: 0rem;
@@ -4770,7 +5079,7 @@ background: transparent;
     left: 0;
     bottom: 1%;
     background: transparent;
-    z-index: 40;
+    z-index: 100;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -5054,8 +5363,9 @@ right: 0;
 background: transparent;
 height: 80%;
 width: 100%;
-padding: 1rem;
-gap: 2rem;
+padding: 2rem;
+padding-left: 3rem;
+gap: 1.5rem;
 flex-wrap: wrap;
 justify-content: center;
 align-items: center;
@@ -5065,15 +5375,19 @@ overflow: scroll;
 
 .mysteryPresent, .mysteryPresentOpened {
     display: flex;
-    height: 7rem;
-    width: 7rem;
+    height: 4rem;
+    width: 4rem;
     flex-shrink: 0;
     background-color: transparent;
     background-image:  url(img/src/icons/present1.png);
-    background-size: contain;
+    background-size: cover;
+    background-size: 115%;
+    background-position: center;
     background-repeat: no-repeat;
     transition: all 500ms;
     scale: 2;
+    margin: 2rem;
+    overflow: visible;
 }
 
 .mysteryPresentOpened{
@@ -6154,6 +6468,19 @@ flex-shrink: 0;
     10% { transform: scale(0.9);}
     20% {transform: scale(1);}
     50% {filter: brightness(1); }
+    100% { opacity: 0; scale: 2.2;}
+}
+
+@keyframes gelatineTaunt {
+    0% {
+        scale: 2.2;
+        transform: scale(1.3);
+        filter: brightness(3);
+        opacity: 1;
+    }
+    10% { transform: scale(0.9);}
+    20% {transform: scale(1); opacity: 1;}
+    50% {filter: brightness(1);  }
     100% { opacity: 0; scale: 2.2;}
 }
 
@@ -8121,18 +8448,7 @@ margin-left: 0.5rem;
 }
 
 
-.areaSlider, .areaSliderActive{
-    height: 2.3rem;
-    width: 49%;
-    background:#7C482F;
-    display: flex;
-    border-radius: 0.2rem;
-    background-size: 100% !important;
-    margin-bottom: 0.4rem;
-    transition: 0.4s ;
-    filter: brightness(0.75);
 
-}
 
 .areaSliderActive{
     filter: brightness(1.1);
@@ -8141,6 +8457,20 @@ margin-left: 0.5rem;
 .areaSlider:hover{
     transition: 0.3s ;
     filter: brightness(1.1);
+    
+}
+
+.areaSlider, .areaSliderActive{
+    height: 2.5rem;
+    width: 49%;
+    background: rgb(110, 110, 110) !important;
+    display: flex;
+    border-radius: 0.2rem;
+    background-size: 100% !important;
+    margin-bottom: 0.4rem;
+    transition: 0.4s ;
+    padding: 0 0.5rem;
+    position: relative;
 }
 
 .areaSlider img , .areaSliderActive img{
@@ -8149,8 +8479,10 @@ margin-left: 0.5rem;
     align-self: center;
     height: 80%;
     width: auto;
-    border-radius: 0.1rem;
-    margin-left: 0.2rem;
+    border-radius: 0.2rem;
+    z-index: 2;
+    pointer-events: none;
+
 }
 
 .areaSlider strong, .areaSliderActive strong{
@@ -8160,7 +8492,7 @@ margin-left: 0.5rem;
     align-self: center;
     height: auto;
     width: auto;
-    background: #2A2A2C;
+    background: rgb(83, 83, 83);
     border-radius: 0.2rem;
     margin-left: 0.5rem;
     display: flex;
@@ -8170,7 +8502,39 @@ margin-left: 0.5rem;
     padding: 0.1rem 0.6rem;
     font-size: 1.1rem;
     font-family: fredoka;
-    font-weight: 400;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 2;
+    pointer-events: none;
+
+}
+
+.areaPreview{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    scale: 5;
+    z-index: 0 !important;
+    opacity: 0.7;
+}
+
+.areaPreviewSlider{
+    position: absolute;
+    height: 120%;
+    width: 120%;
+    background: rgb(110, 110, 110);
+    z-index: 2;
+    right: 0;
+    transition: all 0.5s;
+    pointer-events: none;
+}
+
+.areaSlider:hover .areaPreviewSlider, .areaSliderActive .areaPreviewSlider{
+    width: 20%;
+}
+
+.areaSliderActive:hover .areaPreviewSlider{
+    width: 20%;
 }
 
 .areaSliderActive strong{
@@ -8181,7 +8545,6 @@ margin-left: 0.5rem;
     height: 1.1rem;
     width: 1.1rem;
     margin-right: 0.3rem;
-    border-radius: 0.2rem;
 }
 
 
@@ -8991,9 +9354,9 @@ margin-left: 0.5rem;
 
 @keyframes spinningThrow {
     0% {
-        scale: 3.5;
         rotate: 0deg;
-      left:30%;
+      left:0;
+      bottom: -5rem;
       opacity: 0;
     }
     20%{
@@ -9001,16 +9364,17 @@ margin-left: 0.5rem;
     }
 
     50%{
-        left:200%;
+        left:30rem;
     }
     70%{
         opacity: 1;
     }
 
     100% {
-        rotate: 5000deg;
-        scale: 3.5;
-      left:30%;
+        rotate: 3000deg;
+      left:0;
+      bottom: -5rem;
+
       opacity: 0;
     }
 
@@ -10292,14 +10656,22 @@ width: auto;
     z-index: 2;
 }
 
-#achievementListing span:hover, .dedicatedShopContent span:hover{
+#achievementListing span:hover{
     scale: 1.1;
     z-index: 2;
     transition: 0.1s;
 }
 
-#achievementListing span img:hover, .dedicatedShopContent span img:hover{
+#achievementListing span img:hover{
     outline: cyan 3px solid !important;
+    scale: 1.1;
+    transition: 0.1s;
+}
+
+#achievementInsideShopListing span:hover{
+    scale: 1.1;
+    z-index: 2;
+    transition: 0.1s;
 }
 
 @keyframes logUnlock{
@@ -11414,13 +11786,39 @@ flex-shrink: 0;
     height: 100%;
     width: 100%;
     left: 0;
-    bottom: -110%;
+    bottom: -150%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: flex-start;
     overflow: visible;
     gap: 0.3rem;
+}
+
+
+#playerActionsWrapper{
+    background: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0.2rem;
+    right: 0;
+    bottom: -2.2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    overflow: visible;
+}
+
+#playerActionsWrapper div{
+    height: 1.9rem;
+    width: 1.9rem;
+    border-radius: 20rem;
+    border: #363636 solid 0.4rem;
+    background: radial-gradient(circle, rgba(255,221,144,1) 20%, orange 90%);
+    margin: 0 -0.1rem;
+
 }
 
 #globalBuffWrapper{

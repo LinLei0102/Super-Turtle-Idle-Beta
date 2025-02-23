@@ -13,7 +13,7 @@ logs.L1P1.hint = '"What do I like more than materialistic things? Knowledge."';
 logs.L1P1.logic = 'stats.logsGotLog>9';
 logs.L1P1.tag = '📕';
 logs.L1P1.progressTotal = 10;
-logs.L1P1.category = 1;
+logs.L1P1.category = "A1";
 logs.L1P1.repeatable = true;
 logs.L1P1.repeatableClick = function() {return stats.logsGotLog  = 0};
 logs.L1P1.progressDescription = function() { return `${beautify(stats.logsGotLog )}/10` };
@@ -25,7 +25,7 @@ logs.L1P2.hint = '"Oh yeah it is time."';
 logs.L1P2.logic = 'stats.logsGot>24';
 logs.L1P2.tag = '📕';
 logs.L1P2.progressTotal = 25;
-logs.L1P2.category = 1;
+logs.L1P2.category = "A1";
 
 logs.L1P3 = {}
 logs.L1P3.name = "Knowledge Garden";
@@ -33,16 +33,10 @@ logs.L1P3.description = "Complete 50 Achievements";
 logs.L1P3.hint = '"Have you been studying a lot?"';
 logs.L1P3.logic = 'stats.logsGot>49';
 logs.L1P3.tag = '📕';
-logs.L1P3.category = 1;
+logs.L1P3.category = "A1";
 
 /*
-logs.L1P3A = {}
-logs.L1P3A.name = "Final Eden";
-logs.L1P3A.description = "Collect 80 Books";
-logs.L1P3A.hint = '"And this will be my last one."';
-logs.L1P3A.logic = 'stats.logsGot>79';
-logs.L1P3A.tag = '📕';
-logs.L1P3A.category = 1;
+
 
 logs.L1P3B = {}
 logs.L1P3B.name = "Library of Babel";
@@ -50,7 +44,7 @@ logs.L1P3B.description = "Collect 100 Books";
 logs.L1P3B.hint = '"Well alright I lied."';
 logs.L1P3B.logic = 'stats.logsGot>99';
 logs.L1P3B.tag = '📕';
-logs.L1P3B.category = 1;
+logs.L1P3B.category = "A1";
 
 logs.L1P3C = {}
 logs.L1P3C.name = "Library of Ruina";
@@ -58,14 +52,14 @@ logs.L1P3C.description = "Collect 120 Books";
 logs.L1P3C.hint = '"The real ruina is going to be fitting all of these on the shelf."';
 logs.L1P3C.logic = 'stats.logsGot>119';
 logs.L1P3C.tag = '📕';
-logs.L1P3C.category = 1;
+logs.L1P3C.category = "A1";
 */
 logs.L1P4 = {}
 logs.L1P4.name = "Nice.";
 logs.L1P4.description = "Deal exactly 69 damage";
 logs.L1P4.hint = '"Nice."';
 logs.L1P4.tag = '♋';
-logs.L1P4.category = 1;
+logs.L1P4.category = "A1";
 
 /*
 logs.L1P4A1 = {}
@@ -73,7 +67,7 @@ logs.L1P4A1.name = "Not Nice";
 logs.L1P4A1.description = "Deal exactly 0 damage";
 logs.L1P4A1.hint = '"So did I missed or?"';
 logs.L1P4A1.tag = '♋';
-logs.L1P4A1.category = 1;
+logs.L1P4A1.category = "A1";
 */
 logs.L1P4A = {}
 logs.L1P4A.name = "Small Fortune";
@@ -81,7 +75,7 @@ logs.L1P4A.description = "Obtain 10K Total Shells<FONT COLOR='gray'> (Only the T
 logs.L1P4A.hint = '"Not decided yet on what to spend it on."';
 logs.L1P4A.logic = 'stats.totalCoins>10000';
 logs.L1P4A.tag = '💰';
-logs.L1P4A.category = 1;
+logs.L1P4A.category = "A1";
 
 logs.L1P4B = {}
 logs.L1P4B.name = "Here Comes The Money";
@@ -89,7 +83,7 @@ logs.L1P4B.description = "Obtain 100K Total Shells";
 logs.L1P4B.hint = '"Money talk."';
 logs.L1P4B.logic = 'stats.totalCoins>100000';
 logs.L1P4B.tag = '💰';
-logs.L1P4B.category = 1;
+logs.L1P4B.category = "A1";
 
 /* 
 
@@ -99,7 +93,7 @@ logs.L1P4C.description = "Obtain 1M Total Shells";
 logs.L1P4C.hint = '"...........my mone."';
 logs.L1P4C.logic = 'stats.totalCoins>1000000';
 logs.L1P4C.tag = '💰';
-logs.L1P4C.category = 1;
+logs.L1P4C.category = "A1";
 
 logs.L1P4D = {}
 logs.L1P4D.name = "Tax Fraud";
@@ -107,7 +101,7 @@ logs.L1P4D.description = "Obtain 10M Total Shells";
 logs.L1P4D.hint = '"Turtles can\'t possibly go to jail."';
 logs.L1P4D.logic = 'stats.totalCoins>10000000';
 logs.L1P4D.tag = '💰';
-logs.L1P4D.category = 1;
+logs.L1P4D.category = "A1";
 
 logs.L1P4E = {}
 logs.L1P4E.name = "Tortullionaire";
@@ -115,7 +109,7 @@ logs.L1P4E.description = "Obtain 100M Total Shells";
 logs.L1P4E.hint = '"Look it up, its a real word."';
 logs.L1P4E.logic = 'stats.totalCoins>100000000';
 logs.L1P4E.tag = '💰';
-logs.L1P4E.category = 1;
+logs.L1P4E.category = "A1";
 
 */
 
@@ -127,7 +121,7 @@ logs.L1P5.description = "Complete 5 Quests";
 logs.L1P5.hint = '"I\'m Ready! I\'m Ready! I\'m Ready! I\'m Ready!"';
 logs.L1P5.logic = 'stats.questsCompletedLog>4';
 logs.L1P5.tag = '📜';
-logs.L1P5.category = 1;
+logs.L1P5.category = "A1";
 logs.L1P5.repeatable = true;
 logs.L1P5.repeatableClick = function() {return stats.questsCompletedLog  -= 5};
 logs.L1P5.progressDescription = function() { return `${beautify(stats.questsCompletedLog )}/5` };
@@ -139,26 +133,11 @@ logs.L1P6.description = "Complete 10 Quests";
 logs.L1P6.hint = '"I really was ready."';
 logs.L1P6.logic = 'stats.questsCompleted>9';
 logs.L1P6.tag = '📜';
-logs.L1P6.category = 1;
+logs.L1P6.category = "A1";
 
 
 /*
 
-logs.L1P7 = {}
-logs.L1P7.name = "Master Adventurer";
-logs.L1P7.description = "Complete 25 Quests";
-logs.L1P7.hint = '"Peraphs too ready."';
-logs.L1P7.logic = 'stats.questsCompleted>24';
-logs.L1P7.tag = '📜';
-logs.L1P7.category = 1;
-
-logs.L1P7A = {}
-logs.L1P7A.name = "Helping Hand";
-logs.L1P7A.description = "Complete 35 Quests";
-logs.L1P7A.hint = '"And the tortuga has four of them."';
-logs.L1P7A.logic = 'stats.questsCompleted>34';
-logs.L1P7A.tag = '📜';
-logs.L1P7A.category = 1;
 
 
 
@@ -168,7 +147,7 @@ logs.L1P7A.description = "Complete 50 Quests";
 logs.L1P7A.hint = '"A turtle will do."';
 logs.L1P7A.logic = 'stats.questsCompleted>49';
 logs.L1P7A.tag = '📜';
-logs.L1P7A.category = 1;
+logs.L1P7A.category = "A1";
 
 */
 
@@ -181,26 +160,26 @@ logs.B1.description = "Defeat an Area Boss 10 Times";
 logs.B1.hint = '"I need your materials, old man."';
 logs.B1.logic = 'stats.areaBossKillsLog>9';
 logs.B1.tag = '💀';
-logs.B1.category = 1;
+logs.B1.category = "A1";
 logs.B1.repeatable = true;
 logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  -= 10};
 logs.B1.progressDescription = function() { return `${beautify(stats.areaBossKillsLog )}/10` };
 
 logs.B2 = {}
 logs.B2.name = "Monster Hunter";
-logs.B2.description = "Defeat an Area Boss 50 Times";
+logs.B2.description = "Defeat an Area Boss 55 Times";
 logs.B2.hint = '"Your fate was sealed the moment you dropped a cool weapon."';
-logs.B2.logic = 'stats.areaBossKills>49';
+logs.B2.logic = 'stats.areaBossKills>54';
 logs.B2.tag = '💀';
-logs.B2.category = 1;
+logs.B2.category = "A1";
 
 logs.B3 = {}
 logs.B3.name = "Local Fauna Relocation";
-logs.B3.description = "Defeat an Area Boss 100 Times";
+logs.B3.description = "Defeat an Area Boss 150 Times";
 logs.B3.hint = '"Relocated to the void, that is."';
-logs.B3.logic = 'stats.areaBossKills>99';
+logs.B3.logic = 'stats.areaBossKills>149';
 logs.B3.tag = '💀';
-logs.B3.category = 1;
+logs.B3.category = "A1";
 
 logs.L1P8 = {}
 logs.L1P8.name = "Arachnophobia";
@@ -208,7 +187,7 @@ logs.L1P8.description = "Defeat Hoopperoona";
 logs.L1P8.hint = '"Turtles and spiders were never meant to be friends."';
 logs.L1P8.logic = 'enemies.E4.killCount>0';
 logs.L1P8.tag = '🕷️';
-logs.L1P8.category = 1;
+logs.L1P8.category = "A1";
 
 logs.L1P9 = {}
 logs.L1P9.name = "Fight Poison With Poison";
@@ -216,7 +195,7 @@ logs.L1P9.description = "Poison Hoopperoona";
 logs.L1P9.hint = '"Feels good man."';
 logs.L1P9.logic = "stats.currentEnemy==='E4' && (buffs.EnemyPoison.time>0)";
 logs.L1P9.tag = '🕷️';
-logs.L1P9.category = 1;
+logs.L1P9.category = "A1";
 
 logs.L1P10 = {}
 logs.L1P10.name = "Whatever Did We Do?";
@@ -224,7 +203,7 @@ logs.L1P10.description = "Check out the Discord";
 logs.L1P10.hint = '"Everyone is invited c:"';
 logs.L1P10.logic = 'logTrackClickDiscord';
 logs.L1P10.tag = '💬';
-logs.L1P10.category = 1;
+logs.L1P10.category = "A1";
 
 logs.L1P11 = {}
 logs.L1P11.name = "Power Surge";
@@ -232,7 +211,7 @@ logs.L1P11.description = "Reach level 10";
 logs.L1P11.hint = '"First of many."';
 logs.L1P11.logic = 'rpgClass[stats.currentClass].level>9';
 logs.L1P11.tag = '⚜️';
-logs.L1P11.category = 1;
+logs.L1P11.category = "A1";
 
 logs.L1P12 = {}
 logs.L1P12.name = "Path of the Hero";
@@ -240,7 +219,7 @@ logs.L1P12.description = "Reach level 20";
 logs.L1P12.hint = '"And they don\'t stop coming..."';
 logs.L1P12.logic = 'rpgClass[stats.currentClass].level>19';
 logs.L1P12.tag = '⚜️';
-logs.L1P12.category = 1;
+logs.L1P12.category = "A1";
 
 logs.HAT1 = {}
 logs.HAT1.name = "Unusual Addiction";
@@ -248,7 +227,7 @@ logs.HAT1.description = "Buy 1 Shell Co. Delivery Box";
 logs.HAT1.hint = '"Oh dear now I need to get them all."';
 logs.HAT1.logic = 'stats.hatsGot>0';
 logs.HAT1.tag = '🧢';
-logs.HAT1.category = 1;
+logs.HAT1.category = "A1";
 
 stats.hatsGotLog = 0
 
@@ -258,11 +237,11 @@ logs.HAT2.description = "Buy 25 Shell Co. Delivery Boxes";
 logs.HAT2.hint = '"I\'m considering getting the prime subscription."';
 logs.HAT2.logic = 'stats.hatsGotLog>24';
 logs.HAT2.tag = '🧢';
-logs.HAT2.category = 1;
+logs.HAT2.category = "A1";
 logs.HAT2.repeatable = true;
 logs.HAT2.repeatableClick = function() {return stats.hatsGotLog -= 25};
 logs.HAT2.progressDescription = function() { return `${beautify(stats.hatsGotLog)}/25` };
-logs.HAT2.category = 1;
+logs.HAT2.category = "A1";
 
 logs.HAT3 = {}
 logs.HAT3.name = "Grand Gambling";
@@ -270,7 +249,7 @@ logs.HAT3.description = "Buy 100 Shell Co. Delivery Boxes";
 logs.HAT3.hint = '"At least it didn\'t drained my wallet."';
 logs.HAT3.logic = 'stats.hatsGot>99';
 logs.HAT3.tag = '🧢';
-logs.HAT3.category = 1;
+logs.HAT3.category = "A1";
 
 logs.L1P14 = {}
 logs.L1P14.name = "You Shall be Known as...";
@@ -278,7 +257,7 @@ logs.L1P14.description = "Change the name of your turtle";
 logs.L1P14.hint = '"Let your voice be heard."';
 logs.L1P14.logic = "logTrackName!=='base'";
 logs.L1P14.tag = '✒️';
-logs.L1P14.category = 1;
+logs.L1P14.category = "A1";
 
 logs.L1P15 = {}
 logs.L1P15.name = "Back in Black";
@@ -286,7 +265,7 @@ logs.L1P15.description = "Change the name of your turtle back to Jeffrey";
 logs.L1P15.hint = '"It\'s like he never left..."';
 logs.L1P15.logic = "logTrackName==='jeffrey' || logTrackName==='Jeffrey'";
 logs.L1P15.tag = '✒️';
-logs.L1P15.category = 1;
+logs.L1P15.category = "A1";
 
 logs.L1P15A = {}
 logs.L1P15A.name = "Impostor Syndrome";
@@ -294,7 +273,7 @@ logs.L1P15A.description = "Change the name of your turtle to Duck";
 logs.L1P15A.hint = '"Besides the fact that you got the wrong animal."';
 logs.L1P15A.logic = "logTrackName==='duck' || logTrackName==='Duck'";
 logs.L1P15A.tag = '✒️';
-logs.L1P15A.category = 1;
+logs.L1P15A.category = "A1";
 
 logs.L1P16 = {}
 logs.L1P16.name = "So I Just Need To Let It Run?";
@@ -302,7 +281,7 @@ logs.L1P16.description = "Play for 5 hours";
 logs.L1P16.hint = '"Gameplay."';
 logs.L1P16.logic = 'stats.activeSeconds>18000';
 logs.L1P16.tag = '⌛';
-logs.L1P16.category = 1;
+logs.L1P16.category = "A1";
 
 stats.activeSecondsLog = 0
 
@@ -315,7 +294,7 @@ logs.L1P17.tag = '⌛';
 logs.L1P17.repeatable = true;
 logs.L1P17.repeatableClick = function() {return stats.activeSecondsLog -= 54000};
 logs.L1P17.progressDescription = function() { return `${beautify(stats.activeSecondsLog/60/60)}/15` };
-logs.L1P17.category = 1;
+logs.L1P17.category = "A1";
 
 logs.L1P18 = {}
 logs.L1P18.name = "I Can Stop Whenever I want";
@@ -323,7 +302,7 @@ logs.L1P18.description = "Play for 50 hours";
 logs.L1P18.hint = '"I just don\'t want to."';
 logs.L1P18.logic = 'stats.activeSeconds>180000';
 logs.L1P18.tag = '⌛';
-logs.L1P18.category = 1;
+logs.L1P18.category = "A1";
 
 logs.L1P18A = {}
 logs.L1P18A.name = "Or Maybe Not?";
@@ -331,7 +310,7 @@ logs.L1P18A.description = "Play for 100 hours";
 logs.L1P18A.hint = '"But the new update..."';
 logs.L1P18A.logic = 'stats.activeSeconds>360000';
 logs.L1P18A.tag = '⌛';
-logs.L1P18A.category = 1;
+logs.L1P18A.category = "A1";
 
 logs.L1P19 = {}
 logs.L1P19.name = "Pat Pat Pat Pat Pat";
@@ -339,28 +318,28 @@ logs.L1P19.description = "Click the turtle 100 times";
 logs.L1P19.hint = "'pat pat pat pat pat pat pat pat pat'";
 logs.L1P19.logic = 'stats.clickCount>99';
 logs.L1P19.tag = '✋';
-logs.L1P19.category = 1;
+logs.L1P19.category = "A1";
 
 stats.upgradedItemsLog = 0
 
 logs.UPG1 = {}
 logs.UPG1.name = "Enhancer";
-logs.UPG1.description = "Upgrade 10 Items";
+logs.UPG1.description = "Upgrade gear 10 times";
 logs.UPG1.hint = "'I don\'t claim to be the best blacksmith in Cradle Hills.'";
 logs.UPG1.logic = 'stats.upgradedItemsLog>9';
 logs.UPG1.tag = '⬆️';
-logs.UPG1.category = 1;
+logs.UPG1.category = "A1";
 logs.UPG1.repeatable = true;
 logs.UPG1.repeatableClick = function() {return stats.upgradedItemsLog  -= 10};
 logs.UPG1.progressDescription = function() { return `${beautify(stats.upgradedItemsLog )}/10` };
 
 logs.UPG2 = {}
 logs.UPG2.name = "Limit Breaker";
-logs.UPG2.description = "Upgrade 30 Items";
+logs.UPG2.description = "Upgrade gear 35 times";
 logs.UPG2.hint = "'Beyond any known lines.'";
-logs.UPG2.logic = 'stats.upgradedItems>29';
+logs.UPG2.logic = 'stats.upgradedItems>34';
 logs.UPG2.tag = '⬆️';
-logs.UPG2.category = 1;
+logs.UPG2.category = "A1";
 
 logs.L1P20 = {}
 logs.L1P20.name = "Quack.";
@@ -368,21 +347,21 @@ logs.L1P20.description = "Click the hidden duck";
 logs.L1P20.hint = '"That\'s not the animal you want to click."';
 logs.L1P20.logic = 'logTrackClickDuck';
 logs.L1P20.tag = '🦆';
-logs.L1P20.category = 1;
+logs.L1P20.category = "A1";
 
 logs.AR1 = {}
 logs.AR1.name = "???????";
 logs.AR1.description = "Obtain a Glitched Item";
 logs.AR1.hint = '"Turtle-made horrors beyond comprehension."';
 logs.AR1.tag = '👾';
-logs.AR1.category = 1;
+logs.AR1.category = "A1";
 
 logs.P30 = {}
 logs.P30.name = "This One Officer";
 logs.P30.description = "Click this book";
 logs.P30.hint = '"Caught red handed."';
 logs.P30.tag = '🧶';
-logs.P30.category = 1;
+logs.P30.category = "A1";
 
 logs.P34 = {}
 logs.P34.name = "Ill Take Your Entire Stock";
@@ -390,7 +369,7 @@ logs.P34.description = "Buy 100 items";
 logs.P34.hint = '"Do you have the client card?"';
 logs.P34.logic = 'stats.boughtItems>99';
 logs.P34.tag = '🛒';
-logs.P34.category = 1;
+logs.P34.category = "A1";
 
 logs.P34A = {}
 logs.P34A.name = "Oniomaniac Therapy";
@@ -398,7 +377,7 @@ logs.P34A.description = "Buy 1000 items";
 logs.P34A.hint = '"I got enough points for the pot set."';
 logs.P34A.logic = 'stats.boughtItems>999';
 logs.P34A.tag = '🛒';
-logs.P34A.category = 1;
+logs.P34A.category = "A1";
 
 logs.P35 = {}
 logs.P35.name = "One Punch Turtle";
@@ -406,7 +385,7 @@ logs.P35.description = "Deal 1K Damage in one hit";
 logs.P35.hint = '"That\'s a lotta damage."';
 logs.P35.logic = '';
 logs.P35.tag = '⚔️';
-logs.P35.category = 1;
+logs.P35.category = "A1";
 
 logs.P35A = {}
 logs.P35A.name = "Ultrakill";
@@ -414,7 +393,7 @@ logs.P35A.description = "Deal 10K Damage in one hit";
 logs.P35A.hint = '"You make even the DEVIL CRY!"';
 logs.P35A.logic = '';
 logs.P35A.tag = '⚔️';
-logs.P35A.category = 1;
+logs.P35A.category = "A1";
 
 /*
 logs.P35B = {}
@@ -423,7 +402,7 @@ logs.P35B.description = "Deal 1M Damage in one hit";
 logs.P35B.hint = '"To the shadow realm."';
 logs.P35B.logic = '';
 logs.P35B.tag = '⚔️';
-logs.P35B.category = 1;
+logs.P35B.category = "A1";
 
 logs.P35BA = {}
 logs.P35BA.name = "Assisted Atomisation";
@@ -431,7 +410,7 @@ logs.P35BA.description = "Deal 10M Damage in one hit";
 logs.P35BA.hint = '"Smokin\' Sexy Style!"';
 logs.P35BA.logic = '';
 logs.P35BA.tag = '⚔️';
-logs.P35BA.category = 1;
+logs.P35BA.category = "A1";
 
 logs.P35BB = {}
 logs.P35BB.name = "Starshatter";
@@ -439,7 +418,7 @@ logs.P35BB.description = "Deal 100M Damage in one hit";
 logs.P35BB.hint = '"Gone, reduced to atoms."';
 logs.P35BB.logic = '';
 logs.P35BB.tag = '⚔️';
-logs.P35BB.category = 1;
+logs.P35BB.category = "A1";
 
 logs.P35BC = {}
 logs.P35BC.name = "Subterranean Supernova";
@@ -447,7 +426,7 @@ logs.P35BC.description = "Deal 100B Damage in one hit";
 logs.P35BC.hint = '<FONT COLOR="yellow">"CAUTION!! ☢ CAUTION!! ☢ CAUTION!! ☢"';
 logs.P35BC.logic = '';
 logs.P35BC.tag = '⚔️';
-logs.P35BC.category = 1;
+logs.P35BC.category = "A1";
 
 logs.P35BD = {}
 logs.P35BD.name = "Atom Splitter";
@@ -455,7 +434,7 @@ logs.P35BD.description = "Deal 100T Damage in one hit";
 logs.P35BD.hint = '"I am become death."';
 logs.P35BD.logic = '';
 logs.P35BD.tag = '⚔️';
-logs.P35BD.category = 1;
+logs.P35BD.category = "A1";
 */
 
 logs.J1 = {}
@@ -464,7 +443,7 @@ logs.J1.description = "Click on a Balloon Turtle";
 logs.J1.hint = '"No slingshot required."';
 logs.J1.logic = 'stats.jesterTurtleClicks>0';
 logs.J1.tag = '🎈';
-logs.J1.category = 1;
+logs.J1.category = "A1";
 
 stats.jesterTurtleClicksLog = 0
 
@@ -474,7 +453,7 @@ logs.J2.description = "Click on 10 Balloon Turtles";
 logs.J2.hint = '"You got all us laughing."';
 logs.J2.logic = 'stats.jesterTurtleClicksLog>9';
 logs.J2.tag = '🎈';
-logs.J2.category = 1;
+logs.J2.category = "A1";
 logs.J2.repeatable = true;
 logs.J2.repeatableClick = function() {return stats.jesterTurtleClicksLog  -= 10};
 logs.J2.progressDescription = function() { return `${beautify(stats.jesterTurtleClicksLog )}/10` };
@@ -485,7 +464,7 @@ logs.J3.description = "Click on 99 Jester Turtles";
 logs.J3.hint = '"ZOMG INCOMING!"';
 logs.J3.logic = 'stats.jesterTurtleClicks>98';
 logs.J3.tag = '🎈';
-logs.J3.category = 1;
+logs.J3.category = "A1";
 
 logs.P42 = {}
 logs.P42.name = "Critical Thinking";
@@ -493,7 +472,7 @@ logs.P42.description = "Deal a Critical Hit";
 logs.P42.hint = '"Glad we sorted this out one with words alone."';
 logs.P42.logic = 'stats.criticalHitsDealt>0';
 logs.P42.tag = '⚔️';
-logs.P42.category = 1;
+logs.P42.category = "A1";
 
 logs.P42A = {}
 logs.P42A.name = "Critical Mistake";
@@ -501,7 +480,7 @@ logs.P42A.description = "Deal 1000 Critical Hits";
 logs.P42A.hint = '"You being alive, that is."';
 logs.P42A.logic = 'stats.criticalHitsDealt>999';
 logs.P42A.tag = '⚔️';
-logs.P42A.category = 1;
+logs.P42A.category = "A1";
 
 logs.P43 = {}
 logs.P43.name = "Luck Issue";
@@ -509,7 +488,7 @@ logs.P43.description = "Obtain a Golden Clover";
 logs.P43.hint = '"It\'s shrimple."';
 logs.P43.logic = 'GoldenClover.count>0';
 logs.P43.tag = '🍀';
-logs.P43.category = 1;
+logs.P43.category = "A1";
 
 stats.stampsUsedLog = 0
 
@@ -519,43 +498,39 @@ logs.P45.description = "Use 50 Stampers";
 logs.P45.hint = '"This is not the adventure I signed for."';
 logs.P45.logic = 'stats.stampsUsedLog>49';
 logs.P45.tag = '🗳️';
-logs.P45.category = 1;
+logs.P45.category = "A1";
 logs.P45.repeatable = true;
 logs.P45.repeatableClick = function() {return stats.stampsUsedLog  -= 50};
 logs.P45.progressDescription = function() { return `${beautify(stats.stampsUsedLog )}/49` };
 
 
 
+//--------------------------------a2--------------------------------
 
 
+logs.L1P3A = {}
+logs.L1P3A.name = "Final Eden";
+logs.L1P3A.description = "Collect 80 Books";
+logs.L1P3A.hint = '"And this will be my last one."';
+logs.L1P3A.logic = 'stats.logsGot>79';
+logs.L1P3A.tag = '📕';
+logs.L1P3A.category = "A2";
 
+logs.L1P7 = {}
+logs.L1P7.name = "Master Adventurer";
+logs.L1P7.description = "Complete 15 Quests";
+logs.L1P7.hint = '"Peraphs too ready."';
+logs.L1P7.logic = 'stats.questsCompleted>14';
+logs.L1P7.tag = '📜';
+logs.L1P7.category = "A2";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-logs.P47B = {} 
-logs.P47B.name = "Monster Foster";
-logs.P47B.description = "Complete Some Entries of the Bestiary";
-logs.P47B.hint = '"I feel so... Informed."';
-logs.P47B.logic = '(unlocks.bestiary && bestiaryPointEntry + bestiaryPointBronze + medalsGot)>20';
-logs.P47B.tag = '📒';
-logs.P47B.category = 1;
-
-
-
+logs.L1P7A = {}
+logs.L1P7A.name = "Helping Hand";
+logs.L1P7A.description = "Complete 25 Quests";
+logs.L1P7A.hint = '"And the tortuga has four of them."';
+logs.L1P7A.logic = 'stats.questsCompleted>24';
+logs.L1P7A.tag = '📜';
+logs.L1P7A.category = "A2";
 
 logs.L1P13 = {}
 logs.L1P13.name = "Potential Overflow";
@@ -563,6 +538,7 @@ logs.L1P13.description = "Reach level 30";
 logs.L1P13.hint = '"And this... Is to go further beyond."';
 logs.L1P13.logic = 'rpgClass[stats.currentClass].level>29';
 logs.L1P13.tag = '⚜️';
+logs.L1P13.category = "A2";
 
 logs.L1P13A = {}
 logs.L1P13A.name = "New Heights";
@@ -570,6 +546,192 @@ logs.L1P13A.description = "Reach level 40";
 logs.L1P13A.hint = '"Much wiser through the years."';
 logs.L1P13A.logic = 'rpgClass[stats.currentClass].level>39';
 logs.L1P13A.tag = '⚜️';
+logs.L1P13A.category = "A2";
+
+logs.UPG3 = {}
+logs.UPG3.name = "Limit Surpasser";
+logs.UPG3.description = "Upgrade gear 105 times";
+logs.UPG3.hint = "'Now we are the ones drawing the lines.'";
+logs.UPG3.logic = 'stats.upgradedItems>104';
+logs.UPG3.tag = '⬆️';
+logs.UPG3.category = "A2";
+
+logs.P27 = {}
+logs.P27.name = "Apprentice Blacksmith";
+logs.P27.description = "Reach Level 10 In Blacksmithing";
+logs.P27.hint = '"Break a leg."';
+logs.P27.logic = 'jobs.blacksmith.level>9';
+logs.P27.tag = '⚒️';
+logs.P27.category = "A2";
+
+logs.P27B = {}
+logs.P27B.name = "Apprentice Alchemist";
+logs.P27B.description = "Reach Level 10 In Alchemy";
+logs.P27B.hint = '"Brew a leg."';
+logs.P27B.logic = 'jobs.alchemy.level>9';
+logs.P27B.tag = '⚒️';
+logs.P27B.category = "A2";
+
+logs.P27C = {}
+logs.P27C.name = "Apprentice Engineer";
+logs.P27C.description = "Reach Level 10 In Engineering";
+logs.P27C.hint = '"Create a leg."';
+logs.P27C.logic = 'jobs.engineering.level>9';
+logs.P27C.tag = '⚒️';
+logs.P27C.category = "A2";
+
+logs.P29 = {}
+logs.P29.name = "Vive la Révolution";
+logs.P29.description = "Craft 100 Items";
+logs.P29.hint = '"Really putting the \'Craft\' in TurtleCraft."';
+logs.P29.logic = 'stats.craftedItems>99';
+logs.P29.category = "A2";
+logs.P29.tag = '⚒️';
+
+logs.P29A = {}
+logs.P29A.name = "Satisfying Factory";
+logs.P29A.description = "Craft 1000 Items";
+logs.P29A.hint = '"The factory must grow."';
+logs.P29A.logic = 'stats.craftedItems>999';
+logs.P29A.category = "A2";
+logs.P29A.tag = '⚒️';
+
+
+stats.mysteryPresentsOpenedLog = 0
+
+logs.P31 = {}
+logs.P31.name = "Who Left All These Here?";
+logs.P31.description = "Open 10 Mysterious Presents";
+logs.P31.hint = '"Thank you, kind stranger."';
+logs.P31.logic = 'stats.mysteryPresentsOpenedLog>9';
+logs.P31.tag = '🎁';
+logs.P31.category = "A2";
+logs.P31.repeatable = true;
+logs.P31.repeatableClick = function() {return stats.mysteryPresentsOpenedLog -= 10};
+logs.P31.progressDescription = function() { return `${beautify(stats.mysteryPresentsOpenedLog )}/10` };
+
+logs.P31B = {}
+logs.P31B.name = "Happy Hanukkah";
+logs.P31B.description = "Open 55 Mysterious Presents";
+logs.P31B.hint = '"Hanukkah Matata as they say."';
+logs.P31B.logic = 'stats.mysteryPresentsOpened>49';
+logs.P31B.tag = '🎁';
+logs.P31B.category = "A2";
+
+logs.P33 = {}
+logs.P33.name = "Mysterious Benefactor";
+logs.P33.description = "Open 105 Mysterious Presents";
+logs.P33.hint = '"I don\'t care who it was, they are now mine."';
+logs.P33.logic = 'stats.mysteryPresentsOpened>99';
+logs.P33.tag = '🎁';
+logs.P33.category = "A2";
+
+logs.P32 = {}
+logs.P32.name = "Lucky Streak";
+logs.P32.description = "Open All Presents In The Mysterious Present Minigame";
+logs.P32.hint = '"Gacha? Gacha? Gacha!"';
+logs.P32.tag = '🎁';
+logs.P32.category = "A2";
+
+logs.P38 = {}
+logs.P38.name = "Take a Break";
+logs.P38.description = "Defeat King-Kat";
+logs.P38.hint = '"You must defeat tortuga to stand a chance."';
+logs.P38.logic = 'enemies.E8.killCount>0';
+logs.P38.tag = '🐯';
+logs.P38.category = "A2";
+
+logs.P47B = {} 
+logs.P47B.name = "Monster Foster";
+logs.P47B.description = "Reach Bestiary Score 10";
+logs.P47B.hint = '"I feel so... Informed."';
+logs.P47B.logic = 'bestiaryScore>9';
+logs.P47B.tag = '📒'; 
+logs.P47B.category = "A2";
+
+logs.P47C = {} 
+logs.P47C.name = "Monster Obsession";
+logs.P47C.description = "Reach Bestiary Score 20";
+logs.P47C.hint = '"Gotta study them all."';
+logs.P47C.logic = 'bestiaryScore>19';
+logs.P47C.tag = '📒';
+logs.P47C.category = "A2";
+
+logs.P47D = {} 
+logs.P47D.name = "Monster Degree";
+logs.P47D.description = "Reach Bestiary Score 30";
+logs.P47D.hint = '"I could tell you a thing or two..."';
+logs.P47D.logic = 'bestiaryScore>29';
+logs.P47D.tag = '📒';
+logs.P47D.category = "A2";
+
+
+
+logs.PCARD = {} 
+logs.PCARD.name = "Card Collector Tortuga";
+logs.PCARD.description = "Collect 5 Monster Cards In The Bestiary";
+logs.PCARD.hint = '"These monsters ain\'t quite pocket."';
+logs.PCARD.logic = 'stats.monsterCardsObtainedLog>4';
+logs.PCARD.tag = '🎴';
+logs.PCARD.category = "A2";
+logs.PCARD.repeatable = true;
+logs.PCARD.repeatableClick = function() {return stats.mysteryPresentsOpenedLog -= 10};
+logs.PCARD.progressDescription = function() { return `${beautify(stats.mysteryPresentsOpenedLog )}/10` };
+
+logs.PCARD2 = {} 
+logs.PCARD2.name = "Monster Blackjack";
+logs.PCARD2.description = "Collect 21 Monster Cards In The Bestiary";
+logs.PCARD2.hint = '"No folding now."';
+logs.PCARD2.logic = 'stats.monsterCardsObtained>20';
+logs.PCARD2.tag = '🎴';
+logs.PCARD2.category = "A2";
+
+logs.PLOTTO = {} 
+logs.PLOTTO.name = "Lucky Numbers";
+logs.PLOTTO.description = "Win The Third Price At The Lottery";
+logs.PLOTTO.hint = '"My lucky numbers are... Not these apparently."';
+logs.PLOTTO.tag = '🎰';
+logs.PLOTTO.category = "A2";
+
+logs.PLOTTO2 = {} 
+logs.PLOTTO2.name = "Luckier Numbers";
+logs.PLOTTO2.description = "Win The Second Price At The Lottery";
+logs.PLOTTO2.hint = '"Be glad there is not a third achievement."';
+logs.PLOTTO2.tag = '🎰';
+logs.PLOTTO2.category = "A2";
+
+logs.PDRUNK = {} 
+logs.PDRUNK.name = "Celebratory Toast";
+logs.PDRUNK.description = "Get A Bit Tipsy";
+logs.PDRUNK.hint = '"Where are my glasses?"';
+logs.PDRUNK.tag = '🍶';
+logs.PDRUNK.category = "A2";
+logs.PDRUNK.logic = 'buffs.Tipsy.stacks>2';
+
+stats.socketedGems = 0
+
+logs.PGEM = {} 
+logs.PGEM.name = "Bejeweled";
+logs.PGEM.description = "Socket 1 Gemstone In A Weapon";
+logs.PGEM.hint = '"The shinier the mightier."';
+logs.PGEM.tag = '💎';
+logs.PGEM.category = "A2";
+logs.PGEM.logic = 'stats.socketedGems>0';
+
+logs.PGEM2 = {} 
+logs.PGEM2.name = "My Precious Power Gem";
+logs.PGEM2.description = "Socket 50 Gemstones In A Weapon";
+logs.PGEM2.hint = '"Gone forever, 👹."';
+logs.PGEM2.tag = '💎';
+logs.PGEM2.category = "A2";
+logs.PGEM2.logic = 'stats.socketedGems>49';
+
+
+
+/*
+
+
+
 
 logs.L1P13B = {}
 logs.L1P13B.name = "The Last Frontier";
@@ -639,59 +801,6 @@ logs.P26.logic = '';
 logs.P26.tag = 'upper';
 logs.P26.tag = '🎁';
 
-logs.P27 = {}
-logs.P27.name = "Apprentice Workman";
-logs.P27.description = "Reach Level 10 In Any Job";
-logs.P27.hint = '"Break a leg."';
-logs.P27.logic = 'jobs.blacksmith.level>9 || jobs.cooking.level>9 || jobs.alchemy.level>9 || jobs.engineering.level>9';
-logs.P27.tag = 'upper';
-logs.P27.tag = '⚜️';
-
-logs.P28 = {}
-logs.P28.name = "Master Of My Craftship";
-logs.P28.description = "Reach Level 20 In Any Job";
-logs.P28.hint = '"That\'s a very disciplined tortuga."';
-logs.P28.logic = 'jobs.blacksmith.level>19 || jobs.cooking.level>19 || jobs.alchemy.level>19 || jobs.engineering.level>19';
-logs.P28.tag = 'upper';
-logs.P28.tag = '⚜️';
-
-logs.P29 = {}
-logs.P29.name = "Vive la Révolution";
-logs.P29.description = "Craft 1000 Items";
-logs.P29.hint = '"Really putting the \'Craft\' in TurtleCraft."';
-logs.P29.logic = 'stats.craftedItems>999';
-logs.P29.tag = 'upper';
-logs.P29.tag = '⚒️';
-
-logs.P29A = {}
-logs.P29A.name = "Turtle Labor";
-logs.P29A.description = "Craft 10000 Items";
-logs.P29A.hint = '"Way faster than any children."';
-logs.P29A.logic = 'stats.craftedItems>9999';
-logs.P29A.tag = '⚒️';
-
-
-
-logs.P31 = {}
-logs.P31.name = "Who Left All These Here?";
-logs.P31.description = "Open 10 Mysterious Presents";
-logs.P31.hint = '"Thank you, kind stranger."';
-logs.P31.logic = 'stats.mysteryPresentsOpened>9';
-logs.P31.tag = '🎁';
-
-logs.P31B = {}
-logs.P31B.name = "Happy Hanukkah";
-logs.P31B.description = "Open 50 Mysterious Presents";
-logs.P31B.hint = '"Hanukkah Matata as they say."';
-logs.P31B.logic = 'stats.mysteryPresentsOpened>49';
-logs.P31B.tag = '🎁';
-
-logs.P33 = {}
-logs.P33.name = "Mysterious Benefactor";
-logs.P33.description = "Open 100 Mysterious Presents";
-logs.P33.hint = '"I don\'t care who it was, they are now mine."';
-logs.P33.logic = 'stats.mysteryPresentsOpened>99';
-logs.P33.tag = '🎁';
 
 logs.P31A = {}
 logs.P31A.name = "Christmas Is Cancelled";
@@ -701,30 +810,8 @@ logs.P31A.insight = 5;
 logs.P31A.logic = 'enemies.E15.killCount>9';
 logs.P31A.tag = '🎁';
 
-logs.P32 = {}
-logs.P32.name = "Lucky Streak";
-logs.P32.description = "Win a Rare Prize on a Mysterious Present";
-logs.P32.hint = '"Gacha? Gacha? Gacha!"';
-logs.P32.tag = '🎁';
 
-logs.P32A = {}
-logs.P32A.name = "Trick or Trick";
-logs.P32A.description = "Find a nasty surprise on a Mysterious Present";
-logs.P32A.hint = '"I wasn\'t expecting violence as a reward"';
-logs.P32A.tag = '🎁';
 
-logs.P32B = {}
-logs.P32B.name = "Jackpot";
-logs.P32B.description = "Find a lot of Shells on a Mysterious Present";
-logs.P32B.hint = '"Instant Jeff Bezos"';
-logs.P32B.tag = '🎁';
-
-logs.P38 = {}
-logs.P38.name = "Take a Break";
-logs.P38.description = "Defeat King-Kat";
-logs.P38.hint = '"You must defeat tortuga to stand a chance."';
-logs.P38.logic = 'enemies.E8.killCount>0';
-logs.P38.tag = '🐯';
 
 logs.P39 = {}
 logs.P39.name = "Big Dreams";
@@ -825,19 +912,7 @@ logs.P47AA.logic = 'collectiblesGot>99';
 logs.P47AA.tag = '💎';
 
 
-logs.P47C = {} 
-logs.P47C.name = "Monster Obsession";
-logs.P47C.description = "Complete a Bunch of Entries of the Bestiary";
-logs.P47C.hint = '"Gotta study them all."';
-logs.P47C.logic = '(unlocks.bestiary && bestiaryPointEntry + bestiaryPointBronze + medalsGot)>40';
-logs.P47C.tag = '📒';
 
-logs.P47D = {} 
-logs.P47D.name = "Monster Degree";
-logs.P47D.description = "Complete a Lot of Entries of the Bestiary";
-logs.P47D.hint = '"I could tell you a thing or two..."';
-logs.P47D.logic = '(unlocks.bestiary && bestiaryPointEntry + bestiaryPointBronze + medalsGot)>70';
-logs.P47D.tag = '📒';
 
 logs.P47E = {} 
 logs.P47E.name = "Monster University";
@@ -1169,16 +1244,23 @@ achievementShop.I3 = {
 };
 
 achievementShop.I4 = {
-  item: new UpgradeMaterial1(),
-  price: 50,
-  level: 0,
-  effect : function() {},
-};
-
-achievementShop.I4 = {
   item: new LuckyCloverRing(),
   price: 2500,
   level: 1,
+  effect : function() {},
+};
+
+achievementShop.I5 = {
+  item: new LottoTicket(),
+  price: 300,
+  level: 1,
+  effect : function() {},
+};
+
+achievementShop.I6 = {
+  item: new StarPiece(),
+  price: 300,
+  level: 2,
   effect : function() {},
 };
 
@@ -1412,6 +1494,11 @@ function createLog() {
         playSound("audio/retro2.mp3","all")
         playSound("audio/button5.mp3","all")
 
+        
+
+        createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x300 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
+
+
         itemDiv.style.animation = "";
         void itemDiv.offsetWidth;
         itemDiv.style.animation = "gelatineHigh 0.3s 1, flashNoScale 0.5s 1";
@@ -1424,6 +1511,7 @@ function createLog() {
         if (logs[i].onceEver!==true){
           voidAnimation("prismCounter","areaClick 0.5s 1 ease")
           rpgPlayer.scutes+=300;
+          stats.totalScutes += 300
           updateCounters()
           resetTooltip()
           rpgPlayer.shop.achievement.exp+=50
@@ -1437,6 +1525,7 @@ function createLog() {
           logs[i].repeatableClick()
           logCheck()
           rpgPlayer.scutes+=100;
+          stats.totalScutes += 100
           updateCounters()
           resetTooltip()
           logs[i].once = false

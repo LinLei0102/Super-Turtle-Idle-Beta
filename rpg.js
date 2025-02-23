@@ -81,12 +81,33 @@ function simulateTime(hits, minutes){ //hits = how many hits it takes to kill an
 
 function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area, to spawn custom enemy, use deleteEnemy
 
+
+  if (enemyAdd1OnDeath!==undefined) enemyAdd1OnDeath=undefined
+  if (enemyAdd2OnDeath!==undefined) enemyAdd2OnDeath=undefined
+
+
+  enemyIsDefeated = false
+  enemyCanSpawn = false
+
+
   enemyDamageMultiplier = 1;
   enemyDefenseMultiplier = 1;
   enemyPhase = 1;
   enemyTurn = 0;
+  
+  let currentEnemy = undefined
 
-  for (let i in enemies) if (enemies[i].difficulty===stats.currentDifficulty&&enemies[i].area===stats.currentArea) var currentEnemy=i 
+  for (let i in enemies){
+
+    if (enemies[i].difficulty===stats.currentDifficulty&&enemies[i].area===stats.currentArea) {
+      currentEnemy=i;
+    }
+  }  
+
+  if (enemy!==undefined) currentEnemy=enemy
+
+  if (currentEnemy===undefined || currentEnemy===NaN) currentEnemy="E1"; //failsafe to prevent error enemies
+
 
   if (bossTime) currentEnemy=areas[stats.currentArea].boss
 
@@ -98,11 +119,9 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
 
   // present if (!bossTime && document.hasFocus() && !settings.randomEventToggle && rng(1,50) === 1 && !gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty) && !skirmishTime && !showdownTime && !dungeonTime && cd.presentCanSpawn<=0) {currentEnemy="E15"; }
 
-  if (enemy!==undefined) currentEnemy=enemy
 
   if (skirmishTime!==false) currentEnemy = skirmish[skirmishTime]["wave" + skirmishWave]
 
-  if (currentEnemy===undefined || currentEnemy===NaN) currentEnemy="E1"; //failsafe to prevent error enemies
 
   enemies[currentEnemy].sawOnce = true;
 
@@ -112,9 +131,9 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
   did("enemyAnimation").appendChild(div);
   div.innerHTML = '<img src="img/src/enemies/' + currentEnemy + '.png">';
 
-  enemies[currentEnemy].level = enemies[currentEnemy].initialLevel + (1*areas[stats.currentArea].heat-1) + ((areas[stats.currentArea].heat-1)*4)
+   enemies[currentEnemy].level = enemies[currentEnemy].initialLevel() + (1*areas[stats.currentArea].heat-1) + ((areas[stats.currentArea].heat-1)*4)
 
-
+   if (enemies[currentEnemy].resource)  enemies[currentEnemy].level = 1
 
   if (document.hasFocus() && !settings.disableAnimations && stats.currentCategory === "rpgContainer"){if (!gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) div.style.animation= "enemySpawn 0.5s 1";}
 
@@ -177,12 +196,13 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
   if (buffs.B67.time>0 && currentEnemy!=="E15"){ //caltrops
     //currentHP -= Math.min((currentHP-1), (playerWeaponDamage*0.2)*playerSpellpower);
     enemyBasicDamage(Math.min(playerWeaponDamage*0.2*playerSpellpower /* *Math.pow(1.005, playerMastery) */ , currentHP-1),"zeroScale")
-    enemyUpdate();
+    
   }
 
+  if (enemies[stats.currentEnemy].start) enemies[stats.currentEnemy].start()
 
 
-
+  enemyUpdate();
 
 
     
@@ -215,7 +235,36 @@ var dungeonCollectibles = {
   I447:{P:700, A:1}, 
 }
 
-let combatActions = 5
+
+
+let enemyCanSpawn = true
+let enemyIsDefeated = false
+
+setInterval(() => {
+
+
+
+  enemyCanSpawn = true
+
+
+
+  if (enemyIsDefeated && enemyCanSpawn){
+    spawnEnemy();
+
+
+  }
+
+
+}, 1000);
+
+let enemyAdd1MaxHp = 10000/2
+let enemyAdd2MaxHp = 10000/2
+let enemyAdd1CurrentHp = 10000/2
+let enemyAdd2CurrentHp = 10000/2
+let enemyAdd1Alive = false
+let enemyAdd2Alive = false
+let enemyAdd1OnDeath = undefined
+let enemyAdd2OnDeath = undefined
 
 function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
@@ -251,21 +300,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
         
 
-        if (gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) { //if its ore
-          var totalEXP = Math.round(enemies[stats.currentEnemy].exp * playerEXPGain);
-          if (talent.TI3C2.active && (enemies[stats.currentEnemy].medal==="gold" || enemies[stats.currentEnemy].medal==="platinum")) totalEXP *= 1.5
-           rpgClass[stats.currentClass].currentExp += totalEXP;
-           stats.totalExp += totalEXP;
-           if (!settings.disableExpLog) logPrint("<FONT COLOR='#ae77f7'>You gain " + beautify(totalEXP) + " EXP!" );
-
-           if (battleData) dataExpGained += totalEXP
-
-
-           for (let i in enemies){ if (did(i+"enemy")){ did(i + "enemy").remove(); }}
-
-
-        }
-        else { //if its an enemy
+       
 
 
           /*
@@ -284,11 +319,13 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
           if (chance(1/1000)) {spawnItem(VendorTrash,1,"noPopup"); flyingLoot()}
           
-          
+          if (unlocks.bestiary && chance(1/1000)) {dropMonsterCard()}
+
           lootTable(areas[stats.currentArea].lootTable(),"enemy")
 
-          combatActions = 5
+          combatActions = 3+stat.ExtraActions
           extraLivesUsed = stat.ExtraLives
+          updateCombatActions()
           /*
           let extraExp = 1
           if (settings.nofarmToggle) extraExp = 2
@@ -303,23 +340,23 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
           */
 
-          
-          for (let i in enemies){ if (did(i+"enemy")){
-            if (document.hasFocus()  && !settings.disableAnimations && stats.currentCategory === "rpgContainer"){
-            did(i+"enemy").style.animation = "enemyDefeat 0.2s 1 ease";
-            }
-            setTimeout(function () { if (did(i+"enemy")){ did(i + "enemy").remove(); } }, 180);
-            }}
 
-        }
+            for (let i in enemies){ if (did(i+"enemy")){
+              if (document.hasFocus()  && !settings.disableAnimations && stats.currentCategory === "rpgContainer"){
+                if (!gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) { setTimeout(() => {
+                  voidAnimation(i+"enemy","enemyDefeat 0.2s 1 ease");
+                }, 10);    }
+              }
+              setTimeout(function () { if (did(i+"enemy")){ did(i + "enemy").remove(); } }, 110);
+              }}
+          
+
+
+        
 
         trinketEnemyKill(); //trinket effect
         expBar();
         dropLoot(stats.currentEnemy)
-
-
-    clearInterval(enemyAttackInterval); //reset attack interval
-    enemyAttackInterval = setInterval(enemyAttack, enemyAttackMS);
 
     if (enemies[stats.currentEnemy].tag==="areaBoss"){
       if (areas[stats.currentArea].heat===areas[stats.currentArea].heatMax && areas[stats.currentArea].heatMax<4) {
@@ -329,11 +366,13 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
       }
       rpgPlayer.BossCharges--
       stats.areaBossKills++
+      if (unlocks.bestiary && chance(1/20)) {dropMonsterCard()}
       stats.areaBossKillsLog++
       stats.currentDifficulty="easy"
       encounterButtonPress(); 
       deleteEnemy();
       voidAnimation("bossTimer", "gelatine 0.2s 1")
+      resetEncounter()
 
     }
     
@@ -369,6 +408,15 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
       updateBGColor();
       specialButtonUi();
       createAreaPanel();
+    }
+
+    if (enemies[stats.currentEnemy].tag==="arena"){
+      voidAnimation("areaTransition","areaTransition 0.4s 1 linear")
+
+      did("enemyPanel").style.display = "none";
+      playSound("audio/startup.mp3");
+      repositionQuickAccessMenu()
+
     }
 
     if (enemies[stats.currentEnemy].tag==="stageBoss1"){
@@ -407,7 +455,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
     if (stats.currentEnemy === "E18" && enemyPhase===2) stats.purifiedMorgatosDefeated++
   
     enemies[stats.currentEnemy].killCount++;
-    enemies[stats.currentEnemy].medalProgress++
+    if (unlocks.bestiary) enemies[stats.currentEnemy].medalProgress++
     stats.totalKills++;
     if (bossTime) {stats.totalBossKills++;};
 
@@ -438,11 +486,51 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
     playerBuffs();
 
     
-    spawnEnemy();
+
+
+    if (rpgPlayer.debug)console.log("defeated")
+
+
+    enemyIsDefeated = true
+
+    if (enemyCanSpawn || rpgPlayer.debug){
+      spawnEnemy();
+
+      return
+    }
+
+    enemyCanSpawn = false
+
+
+
+
+
+
+  //else {
+  //  enemyIsDefeated = true
+  //  enemyCanSpawn = false
+  //}
+
+  
+
+
+    
+
+    
+
+    //else if (enemyCanSpawn){
+    //  spawnEnemy();
+    //  enemyIsDefeated = false
+    //  enemyCanSpawn = false
+    //} 
+
+
 
     
 
   }
+
+ 
 
 
   if ((currentHP <= 0 && currentBreakBar>0)) {
@@ -470,13 +558,52 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
     setBreakBarColor()
   }
 
-  var percentageHP = (currentHP / enemies[stats.currentEnemy].hp()) * 100;
 
+
+
+  
+
+  if (enemyAdd1CurrentHp>0){
+    var percentageHP = (enemyAdd1CurrentHp / enemyAdd1MaxHp) * 100;
+    did("addHealthBar1").style.background = "linear-gradient(90deg, #90EE6F " + percentageHP + "%, #FF7777 " + percentageHP + "%)";
+  }
+
+  if (enemyAdd2CurrentHp>0){
+    var percentageHP = (enemyAdd2CurrentHp / enemyAdd2MaxHp) * 100;
+    did("addHealthBar2").style.background = "linear-gradient(90deg, #90EE6F " + percentageHP + "%, #FF7777 " + percentageHP + "%)";
+  }
+
+  if ((enemyAdd1CurrentHp<=0 || currentHP<=0 ) && enemyAdd1Alive){
+    enemyAdd1Alive = false
+    did("enemyAdd1Anim").style.animation = "enemyDefeat 0.2s 1 ease";
+    setTimeout(() => {
+      did("addPanel1").style.display = "none";
+      clickTarget("Enemy")
+      if (enemyAdd1OnDeath!==undefined) enemyAdd1OnDeath();
+
+    }, 150);
+  }
+
+  if ((enemyAdd2CurrentHp<=0 || currentHP<=0 ) && enemyAdd2Alive){
+    enemyAdd2Alive = false
+    did("enemyAdd2Anim").style.animation = "enemyDefeat 0.2s 1 ease";
+    setTimeout(() => {
+      did("addPanel2").style.display = "none";
+      clickTarget("Enemy")
+      if (enemyAdd2OnDeath!==undefined) enemyAdd2OnDeath();
+    }, 150);
+  }
+
+
+
+  var percentageHP = (currentHP / enemies[stats.currentEnemy].hp()) * 100;
   if (did(stats.currentEnemy+"enemy") && did(stats.currentEnemy+"enemy").classList.contains('gilded')) percentageHP = (currentHP / 15000) * 100;
-  
-  
   did("enemyHpBar").style.width = percentageHP+"%";
   did("enemyHpBarLoss").style.width = percentageHP+"%";
+
+
+
+
 
 }
 
@@ -500,6 +627,8 @@ function dropLoot(enemy){
 
 
   if (enemies[enemy].lootTable != undefined){
+
+    if (enemies[enemy].resource) {lootTable(enemies[enemy].lootTable(), "hidden"); return}
 
     lootTable(enemies[enemy].lootTable(), "enemy")
 
@@ -608,18 +737,34 @@ function playerAttackHit(){ //a regular player attack
 function playerAttackCheck(){
 
 
-if ('defenseChance' in enemies[stats.currentEnemy]) eval(enemies[stats.currentEnemy].defenseChance)
+//if ('defenseChance' in enemies[stats.currentEnemy]) eval(enemies[stats.currentEnemy].defenseChance)
 
-if (rpgPlayer.trinketSlot!=='none' && items[rpgPlayer.trinketSlot].attackChance) eval(items[rpgPlayer.trinketSlot].attackChance)
-if (rpgPlayer.weaponSlot!=='none' && items[rpgPlayer.weaponSlot].attackChance) eval(items[rpgPlayer.weaponSlot].attackChance)
+//if (rpgPlayer.trinketSlot!=='none' && items[rpgPlayer.trinketSlot].attackChance) eval(items[rpgPlayer.trinketSlot].attackChance)
+//if (rpgPlayer.weaponSlot!=='none' && items[rpgPlayer.weaponSlot].attackChance) eval(items[rpgPlayer.weaponSlot].attackChance)
 
-for (i in buffs) if (buffs[i].time>0) eval(buffs[i].attackChance)
+//for (i in buffs) if (buffs[i].time>0) eval(buffs[i].attackChance)
 
-if (currentSet==="tiger") if (rng(1,3)===1) castJungleKingSet()
-if (currentSet==="pringu") castPringuSet()
-if (currentSet==="captain") if (rng(1,20)===1) castGhastlyPirateSet()
+  if (currentSet==="explorer" && chance(1/2)){
+    particleTrackers.push(new ParticleExplorerSet1(playerCenterX*rngD(0.9,1.1),playerCenterY*rngD(0.9,1.1)))
+    setTimeout(() => {
+        enemyDamageAnimation("low")
+        enemyNatureDamage(stat.Power)
+    }, 2000);
+  }
 
-if (buffs.B100.time>0) castShadowBolt();
+
+  if (currentSet==="tiger" && chance(1/20)){
+
+    for (let i = 0; i < 5; i++) { setTimeout(loop, 100 * i);}
+    function loop() { particleTrackers.push(new ParticleTigerRoar()); voidAnimation("playerAnimation","gelatineHigh 0.3s 1"); playSound("audio/pet3.mp3") }
+    buffs.TigerSet.time=10;
+    playerBuffs()
+    
+  }
+
+
+
+//if (buffs.B100.time>0) castShadowBolt();
 
 }
 
@@ -668,8 +813,12 @@ function hpRegen() { //additionally manages death
     //if player dead
 
 
+    if (stats.timesDied===0 && did("playerAnimation").style.transform != "rotateX(180deg) translateY(-35%)") tipPopUp("💀 Defeated! 💀","<img src=img/sys/nerd.png><br>If your turtle is defeated, click on it to revive.<br><br>Do not worry, there are zero demerits to being defeated!")
+
+
     extraLivesUsed = stat.ExtraLives
-    combatActions = 5
+    combatActions = 3+stat.ExtraActions
+    updateCombatActions()
 
 
 
@@ -689,9 +838,8 @@ function hpRegen() { //additionally manages death
 
       did("playerAnimation").style.animation = "playerRevive 1s 1";
       setTimeout(function () { did("playerAnimation").style.transform = ""; }, 800);
-      did("rpgPlayerImg").src = "img/src/armor/A0.png";
+      tierCheck()
 
-      setBonus();
     }
   }
 
@@ -795,15 +943,24 @@ function enemyAttackCheck(damage){
 
 
 function deleteEnemy(enemy) {  //deletes without loot, used in dungeons, bosses and switching area
+  
   for (let i in enemies) {
     if (did(i + "enemy")) {
       
   did(i + "enemy").remove();
   currentHP = 0;
   
-  spawnEnemy(enemy);
-  did(stats.currentEnemy + "enemy").style.animation= "enemySpawn 0.5s 1";
     }}
+
+
+    if (areas[stats.currentArea].empty===true ) return
+    spawnEnemy(enemy);
+    voidAnimation(stats.currentEnemy + "enemy","enemySpawn 0.5s 1")
+
+
+
+
+
 }
 
 function logPrint(print) {
@@ -843,13 +1000,16 @@ document.getElementById("combatLog").addEventListener('scroll', function() {
 
 
 
-function returnEnemyLevelGap(mode){
+function returnEnemyLevelGap(mode,value){
 
-  const playerLevel = rpgClass[stats.currentClass].level;
-  const enemyLevel = enemies[stats.currentEnemy].level;
+  let playerLevel = rpgClass[stats.currentClass].level;
+  let enemyLevel = enemies[stats.currentEnemy].level;
 
 
   if (mode==="difference") return rpgClass[stats.currentClass].level - enemies[stats.currentEnemy].level;
+  if (mode==="compare"){
+    enemyLevel = value
+  }
 
   if (enemyLevel >= playerLevel + 3) {
     return "red";
@@ -1070,12 +1230,20 @@ const typeResist = 0.2;
 function enemyDamage(damage, align, icon, type){
 
 
+  if (buffs.EnemyInvulnerable.time>0 && currentTarget === "Enemy"){
+    damageText("Immune", 'damageText', "#808080", undefined, "enemyPanel");
+    return
+  }
+  if (enemyIsDefeated) return
+  if (enemies[stats.currentEnemy].resource!==undefined && (align=="Nature" || align=="Elemental" || align=="Occult")) return
+
+
   let critMark = "";
   let crit = 1;
 
   if (stat.CritChance>0 && rng(1,100)<=stat.CritChance) {
     critMark = " !"
-    crit = 2
+    crit = 1.5*1+stat.CritDamage/100
     stats.criticalHitsDealt++;
     if (talent.TA1C.active && rpgPlayer.mana<playerMaxMana) rpgPlayer.mana += playerMaxMana*0.02
     playSound("audio/hit2.mp3")
@@ -1089,7 +1257,7 @@ function enemyDamage(damage, align, icon, type){
 
   if (returnEnemyLevelGap("difference")>0) damageDealt *= 1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2)
 
-  if (returnEnemyLevelGap()==="red") damageDealt *= Math.max(0.1, 1 + (returnEnemyLevelGap("difference")+2) *0.2 )
+  //if (returnEnemyLevelGap()==="red") damageDealt *= Math.max(0.1, 1 + (returnEnemyLevelGap("difference")+2) *0.2 )
 
 
   //if (gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) damageDealt = 0
@@ -1133,8 +1301,11 @@ function enemyDamage(damage, align, icon, type){
 
   //if (stats.heatLevel>0) finalDamage /= Math.pow(4, stats.heatLevel)
 
+  if (currentTarget==="Add1") enemyAdd1CurrentHp -= finalDamage;
+  else if (currentTarget==="Add2") enemyAdd2CurrentHp -= finalDamage;
+  else currentHP -= finalDamage;
+  
 
-  currentHP -= finalDamage;
   enemyUpdate();
 
   let damageColor;
@@ -1145,18 +1316,18 @@ function enemyDamage(damage, align, icon, type){
   if (align==="Occult") damageColor = "#a936d6"
 
   damageText(beautify(finalDamage)+critMark, 'damageText', damageColor, icon, "enemyPanel");
-  if (!settings.disableDamageLog) logPrint( enemies[stats.currentEnemy].name + " receives <FONT COLOR='#e8643c'>" + beautify(finalDamage) +" "+ align+" Damage");
+  //if (!settings.disableDamageLog) logPrint( enemies[stats.currentEnemy].name + " receives <FONT COLOR='#e8643c'>" + beautify(finalDamage) +" "+ align+" Damage");
 
 
-  if (finalDamage.toFixed(0) == 69) logs.L1P4.unlocked = true;
-  if (finalDamage.toFixed(0) == 0) logs.L1P4A1.unlocked = true;
-  if (finalDamage > 999) logs.P35.unlocked = true;
-  if (finalDamage > 99999) logs.P35A.unlocked = true;
-  if (finalDamage > 999999) logs.P35B.unlocked = true;
-  if (finalDamage > 9999999) logs.P35BA.unlocked = true;
-  if (finalDamage > 99999999) logs.P35BB.unlocked = true;
-  if (finalDamage > 99999999999) logs.P35BC.unlocked = true;
-  if (finalDamage > 99999999999999) logs.P35BD.unlocked = true;
+  //if (finalDamage.toFixed(0) == 69) logs.L1P4.unlocked = true;
+  //if (finalDamage.toFixed(0) == 0) logs.L1P4A1.unlocked = true;
+  //if (finalDamage > 999) logs.P35.unlocked = true;
+  //if (finalDamage > 99999) logs.P35A.unlocked = true;
+  //if (finalDamage > 999999) logs.P35B.unlocked = true;
+  //if (finalDamage > 9999999) logs.P35BA.unlocked = true;
+  //if (finalDamage > 99999999) logs.P35BB.unlocked = true;
+  //if (finalDamage > 99999999999) logs.P35BC.unlocked = true;
+ // if (finalDamage > 99999999999999) logs.P35BD.unlocked = true;
 
 
   if (battleData) dataDamageDealt += finalDamage
@@ -1298,7 +1469,7 @@ function enemyHealingDamage(healing){
   playSound("audio/heal.mp3")
   let healingDealt = healing
   currentHP += healingDealt;
-  if (currentHP > enemies[stats.currentEnemy].hp) currentHP = enemies[stats.currentEnemy].hp //prevents overhealing
+  if (currentHP > enemies[stats.currentEnemy].hp()) currentHP = enemies[stats.currentEnemy].hp() //prevents overhealing
   enemyUpdate();
   damageText(beautify(healingDealt), 'damageText', '#61b600', 'heal', "enemyPanel");
   if (!settings.disableDamageLog) logPrint( enemies[stats.currentEnemy].name + " heals for <FONT COLOR='#e8643c'>" + beautify(healingDealt) + " HP");
@@ -1351,7 +1522,6 @@ function playerNatureDamage(damage,type){
   damageText(beautify(damageDealt), 'damageText', '#21b42d', icon, "playerPanel");
   if (!settings.disableDamageLog) logPrint( stats.turtleName + " receives <FONT COLOR='#e8643c'>" +beautify(damageDealt) + " Nature Damage");
 
-  if (currentSet==="explorer") enemyNatureDamage(Math.min(damageDealt, expectedPlayerDamage), "zeroScale")
 
 
 }
@@ -2112,7 +2282,7 @@ function itemCooldownTick(){
 
     if (item.constructor.cd>0) item.constructor.cd--
 
-    if (item.constructor.cd>0 && item.sort===currentSort){
+    if (item.constructor.cd>0 && (item.sort===currentSort || item.quickAccess)){
 
       const itemDiv = item.div
       const itemCDText = itemDiv.querySelector('.itemCooldownTimerText');
@@ -2129,7 +2299,7 @@ function itemCooldownTick(){
 
       }
 
-      if (item.constructor.cd===1 && item.sort===currentSort) setTimeout(() => {
+      if (item.constructor.cd===1 && (item.sort===currentSort || item.quickAccess)) setTimeout(() => {
         updateInventory()
       }, 1100); 
 
@@ -2253,6 +2423,7 @@ function addItem() { //updates inventory items
 function voidAnimation(id, animation) {
 
   if (settings.quality === "Very Low") return
+  if (!document.hasFocus()) return
 
   
   const element = did(id);
@@ -3729,23 +3900,74 @@ function stampStatUp(){
 
 
 
+did("areaArrow1").onclick = cycleAreas(+1); 
+did("areaArrow2").onclick = cycleAreas(-1); 
 
 
+const areaOrder = ["A1","A2"]
 
+function cycleAreas(direction) {
+  return function () {
+      let currentArea = stats.currentArea;
+      let index = areaOrder.indexOf(currentArea);
+      if (index !== -1) {
+          currentIndex = (index + direction + areaOrder.length) % areaOrder.length;
+
+      }
+
+      let newArea = areaOrder[currentIndex]
+
+        playSound("audio/button3.mp3");
+        playSound("audio/pop3.mp3");
+        playSound("audio/woosh2.mp3");
+        stats.currentArea = newArea;
+        resetAreaButtonClass();
+        stats.currentDifficulty = "easy";
+        switchArea();
+        encounterButtonPress();
+        bossTime = false;
+        specialButtonUi();
+        deleteEnemy();
+        updateHeat();
+        tipJarUpdate()
+      
+  };
+}
 
 
 
 
 did("areaName").onclick = openAreas
 
-
+let isAreaPanelOpen = false
 
 function openAreas(){
 
+  playSound("audio/button5.mp3");
 
-  did("areaWidget").style.height = "24rem"
-  did("areaWidget").style.width = "50rem"
-  did("areaListing").style.marginTop = "2rem"
+
+  if (isAreaPanelOpen) isAreaPanelOpen = false
+  else isAreaPanelOpen = true
+
+
+  if (isAreaPanelOpen){
+    did("areaWidget").style.height = "24rem"
+    did("areaWidget").style.width = "50rem"
+    did("areaListing").style.marginTop = "2rem"
+
+    did("areaSelect").style.opacity = "1"
+
+  }
+
+  else {
+    did("areaSelect").style.opacity = "0"
+    
+    did("areaWidget").style.height = "2.7rem"
+    did("areaWidget").style.width = "25rem"
+    did("areaListing").style.marginTop = "0rem"
+
+  }
+
 
 
 
@@ -3778,39 +4000,60 @@ function openAreas(){
 
 
 function createAreaPanel() {
+
+
+  did("areaList").innerHTML = ""
+  did("dungeonList").innerHTML = ""
+  did("landmarkList").innerHTML = ""
+
   for (let a in areas) {
     if (!did(a + "area")) {
       const areadiv = document.createElement("div");
       areadiv.id = a + "area";
       //areadiv.innerHTML = '<div class="areaPanel2"> <p class="areaPanelName" id="' + a + 'areaName">' + areas[a].name + '</p> <p class="areaPanelLevel" id="' + a + 'areal">lvl ' + areas[a].level + '</p></div>';
-      areadiv.innerHTML = '<img src="img/src/areas/'+a+'M.png"><strong>' + areas[a].name + '</strong><strong id="' + a + 'areal">LVL ' + areas[a].level + '</strong>';
-      if ("mastery" in areas[a]) areadiv.innerHTML = '<img src="img/src/areas/'+a+'M.png"><strong>' + areas[a].name + '</strong><strong id="' + a + 'areal">LVL ' + areas[a].level + '</strong><strong id="' + a + 'aream">' + repIcon + areas[a].mastery + '</strong>';
+      let areaLevelColor = ""
+      let areaLevelRange = ""
 
-      if (a === "A7") areadiv.innerHTML = '<img src="img/src/areas/'+a+'M.png"><strong style="background:#957A4B">' + areas[a].name + '</strong><strong id="' + a + 'areal">LVL ' + areas[a].level + '</strong><strong id="' + a + 'aream">' + repIcon + areas[a].mastery + '</strong>';
+      if (areas[a].levelRange!==undefined) {
+
+        if (returnEnemyLevelGap("compare",areas[a].levelRange[0])==="red") areaLevelColor = "#E15261"
+        if (returnEnemyLevelGap("compare",areas[a].levelRange[0])==="orange") areaLevelColor = "#DD7A42"
+        if (returnEnemyLevelGap("compare",areas[a].levelRange[0])==="green") areaLevelColor = "#62BD6D"  
+        areaLevelRange = `<strong style="margin-left:auto; background:${areaLevelColor}"> LVL ${areas[a].levelRange[0]} - ${areas[a].levelRange[1]} </strong>`
+      } 
+
+
+      if (areas[a].locked!==false) areaLevelRange = `<strong style="margin-left:auto;"> 🔒 </strong>`
+
+
+
+      areadiv.innerHTML = `<div class="areaPreviewSlider" style="background:#8F684C;"></div><img src="img/src/areas/${a}.png" class="areaPreview"><img src="img/src/areas/${a}M.png"><strong style="background:#6F4B3C">${areas[a].name}</strong>${areaLevelRange}`;
+      if (areas[a].category==="landmark") areadiv.innerHTML = `<div class="areaPreviewSlider" style="background:#625B60;"></div><img src="img/src/areas/${a}.png" class="areaPreview"><img src="img/src/areas/${a}M.png"><strong style="background:#5A5048">${areas[a].name}</strong>${areaLevelRange}`;
+      //if (a === "A7") areadiv.innerHTML = '<img src="img/src/areas/'+a+'M.png"><strong style="background:#957A4B">' + areas[a].name + '</strong><strong id="' + a + 'areal">LVL ' + areas[a].level + '</strong><strong id="' + a + 'aream">' + repIcon + areas[a].mastery + '</strong>';
       areadiv.className = "areaSlider";
-      areadiv.style.background = ' linear-gradient(130deg, #1A1A1B 60%, rgba(255,255,255,0) 100%), url(img/src/areas/'+a+'.png), #1A1A1B '
+      if (areas[a].locked!==false) areadiv.style.filter = "brightness(0.6)"
+
+      //areadiv.style.background = ' linear-gradient(130deg, #1A1A1B 60%, rgba(255,255,255,0) 100%), url(img/src/areas/'+a+'.png), #1A1A1B '
 
 
-      if (!areas[a].dungeon) {
-      did("areaList").appendChild(areadiv);
-      if (rpgClass[stats.currentClass].level >= areas[a].level){ did(a + "areal").style.background = "#579457"; }else { did(a + "areal").style.background = "#945758"}
-      }
+      did(areas[a].category+"List").appendChild(areadiv);
+      //if (rpgClass[stats.currentClass].level >= areas[a].level){ did(a + "areal").style.background = "#579457"; }else { did(a + "areal").style.background = "#945758"}
+     
 
-      if (areas[a].dungeon) {
-        areadiv.innerHTML = '<img src="img/src/areas/'+a+'M.png"><strong>' + areas[a].name + '</strong><strong id="' + a + 'areaCharges" style="background:#125D5D">3 Left</strong><strong id="' + a + 'areaTimer" style="background:#65476F">⏱️</strong>';
-        did("dungeonTab").appendChild(areadiv);
-      }
+      //if (areas[a].dungeon) {
+      //  areadiv.innerHTML = '<img src="img/src/areas/'+a+'M.png"><strong>' + areas[a].name + '</strong><strong id="' + a + 'areaCharges" style="background:#125D5D">3 Left</strong><strong id="' + a + 'areaTimer" style="background:#65476F">⏱️</strong>';
+      //  did("dungeonTab").appendChild(areadiv);
+      //}
 
       
       areaButton(a);
       tooltipAreas(a);
     }
 
-    if (!areas[a].dungeon) {
-      if (rpgClass[stats.currentClass].level >= areas[a].level){ did(a + "areal").style.background = "#579457"; }else { did(a + "areal").style.background = "#945758"}
-    }
+    //if (!areas[a].dungeon) {
+    //  if (rpgClass[stats.currentClass].level >= areas[a].level){ did(a + "areal").style.background = "#579457"; }else { did(a + "areal").style.background = "#945758"}
+    //}
 
-    if ("mastery" in areas[a]) if (playerMastery >= areas[a].mastery){ did(a + "aream").style.background = "#579457" }else { did(a + "aream").style.background = "#945758"}
 
 
 
@@ -3823,21 +4066,61 @@ function createAreaPanel() {
 };
 
 
+
+did("travelSelectAreas").addEventListener("click", function () { changeAreaCategory("area") })
+did("travelSelectLandmarks").addEventListener("click", function () { changeAreaCategory("landmark") })
+did("travelSelectDungeons").addEventListener("click", function () { changeAreaCategory("dungeon") })
+
+function changeAreaCategory(category){
+
+  playSound("audio/button3.mp3");
+
+
+  did("areaList").style.display = "none"
+  did("landmarkList").style.display = "none"
+  did("dungeonList").style.display = "none"
+
+did(category+"List").style.display = "flex"
+voidAnimation(category+"List","growFadeIn 0.2s 1")
+
+
+
+}
+
+
+
 let previousArea = "A1";
 let previousDifficulty = "easy";
 
+
+
+
+
+
+
 function areaButton(id) {
   if (did(id + "area")) {
+
+    did(id + "area").addEventListener("mouseover", function () {
+      playSound("audio/rockSlide.mp3")
+    })
+
     did(id + "area").addEventListener("click", function () {
+
+
+
+      if (areas[id].locked!==false) {playSound("audio/close.mp3"); return}
+
       if (stats.currentArea !== id) { // if its not already on the area
 
-        if (!areas[id].dungeon && rpgClass[stats.currentClass].level>=areas[id].level && !("mastery" in areas[id]) 
-          ||
-        !areas[id].dungeon && rpgClass[stats.currentClass].level>=areas[id].level && ("mastery" in areas[id] && playerMastery>=areas[id].mastery)
-      || rpgPlayer.debug ){
+       resetEncounter()
+
+     
 
 
         playSound("audio/button3.mp3");
+        playSound("audio/pop3.mp3");
+        playSound("audio/woosh2.mp3");
         stats.currentArea = id;
         if (!areas[id].dungeon) previousArea = id; 
         resetAreaButtonClass();
@@ -3855,9 +4138,8 @@ function areaButton(id) {
         bossTime = false;
         specialButtonUi();
         deleteEnemy();
-        updateBGColor()
-
-      }
+        updateHeat();
+        tipJarUpdate()
 
       if (id==="A8") gametipUnlock("gt19")
 
@@ -3977,11 +4259,32 @@ function switchArea() {
 
       did("areaName").innerHTML = areas[stats.currentArea].name;
       //did("areaLevel").innerHTML = "MASTERY: " + areas[stats.currentArea].masteryCap;
-      did("areaLevel").style.background = "#6FB1EE";
       did("areaLevel").style.display = "flex"
       //if (restrainedMastery===0 || settings.overpoweredToggle) did("areaLevel").style.display = "none"
       did("areaLevel").style.display = "none"
 
+
+      specialWeather = false
+      removeParticle("ambience")
+
+
+
+      voidAnimation("areaTransition","areaTransition 0.4s 1 linear")
+
+      setTimeout(() => {
+        
+      did("areaBg").style.backgroundImage = `url(img/src/areas/${stats.currentArea}Bg.png)`
+      did("areaFloor2").style.backgroundImage = `url(img/src/areas/${stats.currentArea}Floor.png)`
+
+      did("areaFloor1").style.backgroundImage = `url(img/src/projectiles/none.png)`
+      did("areaFloor3").style.backgroundImage = `url(img/src/projectiles/none.png)`
+
+      did("areaFloor1").style.backgroundImage = `url(img/src/areas/${stats.currentArea}FloorFX1.png)`
+      did("areaFloor3").style.backgroundImage = `url(img/src/areas/${stats.currentArea}FloorFX2.png)`
+      }, 100);
+
+
+      areaAnimations(stats.currentArea);
 
       areaEffect();
       did('questTab').innerHTML = "";
@@ -3990,17 +4293,46 @@ function switchArea() {
       createItemOfTheDay();
       refreshItemOfTheDay();
       createQuest()
+
+
+        setTimeout(() => {  repositionQuickAccessMenu() }, 1);
+        repositionQuestMenu()
+
+       
+}
+
+
+
+
+function areaAnimations(area){
+
+  did("areaFloor3").style.animation = "none"
+  did("areaFloor1").style.animation = "none"
+
+if (area==="A1"){
+  did("areaFloor1").style.animation = "subtleWind1 3s ease-in-out infinite"
+  did("areaFloor3").style.animation = "subtleWind1 3s ease-in-out infinite"
+}
+
+
+
+
+
+
+
+
+
 }
   
 function specialButtonUi() { //shows or hides special buttons depending on zone
 
-      if (areas[stats.currentArea].unlockedOre === 1) { did("miningNode").style.display = "flex";
+      if (areas[stats.currentArea].unlockedOre!==undefined) { did("miningNode").style.display = "flex";
       } else did("miningNode").style.display = "none";
       
-      if (areas[stats.currentArea].unlockedHerb === 1) { did("herbNode").style.display = "flex";
+      if (areas[stats.currentArea].unlockedHerb!==undefined) { did("herbNode").style.display = "flex";
       } else did("herbNode").style.display = "none";
 
-      if (areas[stats.currentArea].unlockedPond === 1) { did("pondNode").style.display = "flex";
+      if (areas[stats.currentArea].unlockedPond!==undefined) { did("pondNode").style.display = "flex";
       } else did("pondNode").style.display = "none";
 
       if (!areas[stats.currentArea].dungeon) {
@@ -4015,6 +4347,24 @@ function specialButtonUi() { //shows or hides special buttons depending on zone
         dungeonTime = true;
         document.querySelectorAll('.botonLateral').forEach(elemento => elemento.style.filter = "brightness(0.5)");
       }
+
+
+      did("enemyPanel").style.display = "flex";
+      did("areaEncounters").style.display = "flex";
+      did("turtleBot").style.display = "flex";
+      did("heatIcon").style.display = "flex";
+      if (unlocks.shop) did("shopInteractable").style.display = "flex";
+
+      if (stats.currentArea === "L1"){
+        did("enemyPanel").style.display = "none";
+        did("areaEncounters").style.display = "none";
+        did("turtleBot").style.display = "none";
+        did("heatIcon").style.display = "none";
+        did("shopInteractable").style.display = "none";
+
+      }
+
+      /*
 
       if (stats.currentArea === "A7") {
         did("encounterWrapper").style.visibility = "hidden";
@@ -4039,6 +4389,8 @@ function specialButtonUi() { //shows or hides special buttons depending on zone
         did("showdownUI").style.display = "none";
         did("skirmishUI").style.display = "none";
       }
+
+      */
 }
 
 
@@ -4071,7 +4423,7 @@ function difficultyButton(div, difficulty){
     playSound("audio/button4.mp3")
 
     did("enemyAttackBox").style.display = "none";
-    enemyTurn = 0;
+    resetEncounter()
 
 
     if (difficulty === "boss" && rpgPlayer.BossCharges<1) {playSound("audio/thud.mp3"); return}
@@ -4079,7 +4431,8 @@ function difficultyButton(div, difficulty){
     stats.currentDifficulty = difficulty;
 
     
-
+    combatActions = 3+stat.ExtraActions
+    updateCombatActions()
 
     bossTime = false;
     deleteEnemy();
@@ -4811,7 +5164,6 @@ function mailButton(id) {
 
           const item = new mail[id].item()
 
-          console.log(item.img)
 
           did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body+'</div><div class="separator" style="margin:2rem 0; background:gray;flex-shrink: 0;"></div><div id="'+item.img+'Mail" class="inventoryItem" style="flex-shrink: 0;border-radius:0.5rem; height:4rem; width:4rem"><img src="img/src/items/I'+item.img+'.jpg"></div>'
 
@@ -4935,6 +5287,284 @@ function mailButton(id) {
   function unlockAllMail(){
     for (i in mail) sendMail(i)
   }
+
+
+  stats.cddailyPresent1 = 5*60
+  stats.cddailyPresent2 = 10*60
+  stats.cddailyPresent3 = 15*60
+  stats.cddailyPresent4 = 20*60
+  stats.cddailyPresent5 = 25*60
+  stats.cddailyPresent6 = 30*60
+
+
+
+  stats.dailyPresent1Claimed = false
+  stats.dailyPresent2Claimed = false
+  stats.dailyPresent3Claimed = false
+  stats.dailyPresent4Claimed = false
+  stats.dailyPresent5Claimed = false
+
+setInterval(() => {
+
+dailyPresentTimers()
+  
+}, 10000);
+
+
+function dailyPresentTimers(){
+  if (did("itemContextMenuDailyPresents").style.display === "flex"){
+    stats.cddailyPresent1>0 ? did("dailyPresent1").innerHTML = convertSecondsToHMS( stats.cddailyPresent1, "micro") :  did("dailyPresent1").innerHTML = ""
+    stats.cddailyPresent2>0 ? did("dailyPresent2").innerHTML = convertSecondsToHMS( stats.cddailyPresent2, "micro") :  did("dailyPresent2").innerHTML = ""
+    stats.cddailyPresent3>0 ? did("dailyPresent3").innerHTML = convertSecondsToHMS( stats.cddailyPresent3, "micro") :  did("dailyPresent3").innerHTML = ""
+    stats.cddailyPresent4>0 ? did("dailyPresent4").innerHTML = convertSecondsToHMS( stats.cddailyPresent4, "micro") :  did("dailyPresent4").innerHTML = ""
+    stats.cddailyPresent5>0 ? did("dailyPresent5").innerHTML = convertSecondsToHMS( stats.cddailyPresent5, "micro") :  did("dailyPresent5").innerHTML = ""
+    stats.cddailyPresent6>0 ? did("dailyPresent6").innerHTML = convertSecondsToHMS( stats.cddailyPresent6, "micro") :  did("dailyPresent6").innerHTML = ""
+
+
+    stats.cddailyPresent1>0 ? did("dailyPresent1").style.filter = "brightness(0.6)" : did("dailyPresent1").style.filter = "brightness(1)"
+    stats.cddailyPresent2>0 ? did("dailyPresent2").style.filter = "brightness(0.6)" : did("dailyPresent2").style.filter = "brightness(1)"
+    stats.cddailyPresent3>0 ? did("dailyPresent3").style.filter = "brightness(0.6)" : did("dailyPresent3").style.filter = "brightness(1)"
+    stats.cddailyPresent4>0 ? did("dailyPresent4").style.filter = "brightness(0.6)" : did("dailyPresent4").style.filter = "brightness(1)"
+    stats.cddailyPresent5>0 ? did("dailyPresent5").style.filter = "brightness(0.6)" : did("dailyPresent5").style.filter = "brightness(1)"
+    stats.cddailyPresent6>0 ? did("dailyPresent6").style.filter = "brightness(0.6)" : did("dailyPresent6").style.filter = "brightness(1)"
+
+    
+    
+
+
+    if (did("dailyPresentEmpty").style.display === "flex") {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></g></svg>`
+
+      did("dailyPresentEmpty").innerHTML =`${svg} Come again in ${convertSecondsToHMS( dailyLocalReset())}!`
+    }
+
+  }
+
+  if ( (!stats.dailyPresent1Claimed && stats.cddailyPresent1===0 ) || (!stats.dailyPresent2Claimed && stats.cddailyPresent2===0 ) || (!stats.dailyPresent3Claimed && stats.cddailyPresent3===0 ) || (!stats.dailyPresent4Claimed && stats.cddailyPresent4===0 ) || (!stats.dailyPresent5Claimed && stats.cddailyPresent5===0 ) || (!stats.dailyPresent6Claimed && stats.cddailyPresent6===0 )) did("dailyPresentImg").style.animation = "widgetAlert 2s infinite"
+  else did("dailyPresentImg").style.animation = "none"
+}
+
+
+  function dailyPresentMenu(){
+    
+    updateDailyPresents()
+
+    playSound("audio/pop1.mp3")
+
+    did("itemContextMenu").style.display = "flex";
+    did("itemContextMenuScreensaver").style.display = "flex";
+
+    did("itemContextMenuDailyPresents").style.display = "flex";
+
+    did("itemContextMenu").style.display = "flex";
+    did("itemcontextMenuArrow").style.display = "none";
+
+
+    const movingDiv = did('itemContextMenu');
+    const referenceDiv = did("dailyPresent");
+    const referenceRect = referenceDiv.getBoundingClientRect();
+    const tooltipWidth = movingDiv.offsetWidth;
+    const newLeft = referenceRect.left/ (stats.zoomLevel/100) + referenceRect.width / 2 - tooltipWidth / 2;
+    const newTop = referenceRect.bottom/ (stats.zoomLevel/100); 
+    
+    movingDiv.style.left = newLeft + 'px';
+    movingDiv.style.top = newTop + 20 + 'px';
+
+    
+
+  voidAnimation("itemContextMenu", "interactableTooltipIdleHigh 3s infinite, interactableTooltip 0.3s 1")
+  voidAnimation("dailyPresent","gelatine 0.4s 1")
+
+  resetTooltip()
+  dailyPresentTimers()
+
+}
+
+function updateDailyPresents(){
+  if (  stats.dailyPresent1Claimed && did("dailyPresent1").style.display === "flex") did("dailyPresent1").style.display = "none";
+  if (  stats.dailyPresent2Claimed && did("dailyPresent2").style.display === "flex") did("dailyPresent2").style.display = "none";
+  if (  stats.dailyPresent3Claimed && did("dailyPresent3").style.display === "flex") did("dailyPresent3").style.display = "none";
+  if (  stats.dailyPresent4Claimed && did("dailyPresent4").style.display === "flex") did("dailyPresent4").style.display = "none";
+  if (  stats.dailyPresent5Claimed && did("dailyPresent5").style.display === "flex") did("dailyPresent5").style.display = "none";
+  if (  stats.dailyPresent6Claimed && did("dailyPresent6").style.display === "flex") did("dailyPresent6").style.display = "none";
+
+    stats.dailyPresent1Claimed && stats.dailyPresent2Claimed && stats.dailyPresent3Claimed && stats.dailyPresent4Claimed && stats.dailyPresent5Claimed && stats.dailyPresent6Claimed ? did("dailyPresentEmpty").style.display = "flex" : did("dailyPresentEmpty").style.display = "none" 
+
+  }
+
+document.querySelectorAll('.dailyPresent').forEach(element => {
+  element.onclick = function() {
+
+    console.log(eval("stats.cd"+element.id))
+    if (eval("stats.cd"+element.id)>0) return
+    particleTrackers.push(new ParticleSellPulse(mousePositionX, mousePositionY,{x:mousePositionX,y:mousePositionY}));
+    eval("stats."+element.id+"Claimed = true")
+    updateDailyPresents()
+    playSound("audio/scrap.mp3");
+    playSound("audio/retro2.mp3");
+
+    //spawnItem(returnArrayPick(rareLootTable1))
+
+
+    if (element.id === "dailyPresent4" || element.id === "dailyPresent5"){
+      if (chance(1/2)) spawnItem(returnArrayPick(rareLootTable2))
+      else spawnItem(returnArrayPick(rareLootTable1))
+    }
+
+    else if (element.id === "dailyPresent6" ) {
+      if (chance(1/2)) spawnItem(returnArrayPick(rareLootTable3))
+      else spawnItem(returnArrayPick(rareLootTable2))
+    }
+
+    else spawnItem(returnArrayPick(rareLootTable1))
+
+    dailyPresentTimers()
+    
+  };
+});
+
+
+let rareLootTable1 = [Stamp1,CoinPile1,ScutePile1,ChanceDie1]
+let rareLootTable2 = [Stamp2,DungeonKey1,UpgradeMaterial0,MonsterSoul,Geode1]
+let rareLootTable3 = [ScutePile2,CoinPile2,DungeonKey3,ChanceDie2,Stamp3,DungeonKey2]
+
+
+
+
+setInterval(() => {
+  dailyLocalReset()
+  biWeeklyReset()
+}, 60000);
+
+stats.lastDailyReset = undefined;
+
+function dailyLocalReset() {
+  const lastReset = stats.lastDailyReset
+  const now = new Date();
+  const today = now.toLocaleDateString();
+
+  if (lastReset !== today) {
+    stats.lastDailyReset = today
+    dailyLocalCooldowns(); 
+  }
+
+  const midnight = new Date();
+  midnight.setHours(24, 0, 0, 0); 
+  const secondsRemaining = (midnight.getTime() - now.getTime()) / 1000;
+
+  return Math.floor(secondsRemaining);
+}
+
+function dailyLocalCooldowns(){
+  stats.cddailyPresent1 = 5*60
+  stats.cddailyPresent2 = 10*60
+  stats.cddailyPresent3 = 15*60
+  stats.cddailyPresent4 = 20*60
+  stats.cddailyPresent5 = 25*60
+  stats.cddailyPresent6 = 30*60
+  stats.dailyPresent1Claimed = false
+  stats.dailyPresent2Claimed = false
+  stats.dailyPresent3Claimed = false
+  stats.dailyPresent4Claimed = false
+  stats.dailyPresent5Claimed = false
+  stats.dailyPresent6Claimed = false
+  did("dailyPresent1").style.display = "flex"
+  did("dailyPresent2").style.display = "flex"
+  did("dailyPresent3").style.display = "flex"
+  did("dailyPresent4").style.display = "flex"
+  did("dailyPresent5").style.display = "flex"
+  did("dailyPresent6").style.display = "flex"
+}
+
+stats.lastBiWeeklyReset = undefined
+
+
+function biWeeklyReset() {
+  const lastReset = stats.lastBiWeeklyReset
+  const now = new Date();
+  const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString().split('T')[0];
+
+  if (!lastReset || Math.floor((new Date(todayUTC) - new Date(lastReset)) / (1000 * 60 * 60 * 24)) >= 3) {
+      stats.lastBiWeeklyReset = todayUTC
+      biWeeklyCooldowns(); 
+  }
+
+  const nextReset = new Date(stats.lastBiWeeklyReset);
+  nextReset.setUTCDate(nextReset.getUTCDate() + 3);
+
+  return Math.floor((nextReset - now) / 1000);
+}
+
+biWeeklyReset()
+dailyLocalReset()
+
+
+function biWeeklyCooldowns(){
+  lotteryCheck()
+}
+
+
+
+
+
+
+
+function lotteryCheck(){
+
+
+  itemInventory.forEach((item, index) => {
+
+     if (item.img === 579 && !item.savedInfo.expired) {
+
+      const prize = lottoMatch(item.savedInfo.number, generateTodaySeed(3))
+
+      item.savedInfo.expired = true
+      item.savedInfo.prize = prize
+      item.savedInfo.winNumber = generateTodaySeed(3)
+
+
+      item.invInit()
+
+     }
+
+
+  })
+
+
+
+
+
+
+
+}
+
+
+
+function lottoMatch(num1, num2){
+    let str1 = String(num1);
+    let str2 = String(num2);
+    let count = 0;
+
+    for (let i = 1; i <= Math.min(str1.length, str2.length); i++) {
+        if (str1.at(-i) === str2.at(-i)) {
+            count++;
+        } else {
+            break;
+        }
+    }
+
+    return count;
+}
+
+
+function generateTodaySeed(digits) {
+  const seed = new Date().setHours(0, 0, 0, 0);
+  let number = "";
+  for (let i = 1; i <= digits; i++) {
+      number += Math.abs(Math.floor(Math.sin(seed * i) * 10)) % 10;
+  }
+  return parseInt(number, 10);
+}
     
 
 
@@ -6737,15 +7367,19 @@ function tooltipEnemies() {
     }
 
 
+
     if (enemies[stats.currentEnemy].contextTooltip!==undefined) {
-      did("contextList").innerHTML = ""
-      enemies[stats.currentEnemy].contextTooltip.forEach(i => {
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "tooltipContext"
-        itemDiv.innerHTML = i
-        did("contextList").appendChild(itemDiv);
-      });
-    }
+    did("contextList").innerHTML = ""
+    const lista = enemies[stats.currentEnemy].contextTooltip()
+    lista.forEach(i => {
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "tooltipContext"
+      itemDiv.innerHTML = i
+      did("contextList").appendChild(itemDiv);
+    });
+  }
+
+    
 
 
     let skilldesc = ""
@@ -6806,7 +7440,7 @@ function tooltipBuffs() {
 
         let buffremove = ""
 
-        if (!buffs[b].debuff) buffremove = `<div class="separador"></div><span style="display:flex;justify-content:center;align-items:center;color:gray">Click to remove this buff</span>`
+        if (!buffs[b].debuff && buffs[b].position==="player") buffremove = `<div class="separador"></div><span style="display:flex;justify-content:center;align-items:center;color:gray">Click to remove this buff</span>`
 
 
         did("tooltipDescription").innerHTML = buffs[b].description+buffremove;
@@ -6858,9 +7492,7 @@ function tooltipAreas(id) {
 
 
       let description1 = "<FONT COLOR='white'>Select this area to travel to " + areas[id].name + "<br>"
-
-      if (rpgClass[stats.currentClass].level<areas[id].level && !areas[id].dungeon) description1 = "<FONT COLOR='#fc2626'>You dont meet the level requirement for this area<br>Level "+areas[id].level+"<br>"
-      if ("mastery" in areas[id]) if (rpgClass[stats.currentClass].level<areas[id].level|| playerMastery<areas[id].mastery  && !areas[id].dungeon ) description1 = "<FONT COLOR='#fc2626'>You dont meet the level requirement for this area<br>Level "+areas[id].level+" and "+areas[id].mastery+" Mastery<br>"
+      if (areas[id].locked!==false) description1 = `<FONT COLOR='coral'>${areas[id].locked}<br>`
 
       let description2 = ""
 
@@ -6876,14 +7508,16 @@ function tooltipAreas(id) {
       did("tooltipImage").src = "img/src/areas/" + id + "M.png";
       //position related code
       const movingDiv = did("tooltip");
-      const referenceDiv = did(id + "area");
-      const referenceRect = referenceDiv.getBoundingClientRect();
-      var newLeft = referenceRect.left;
-var newTop = referenceRect.top - movingDiv.offsetHeight;
+const referenceDiv = did(id + "area");
+const referenceRect = referenceDiv.getBoundingClientRect();
 
-// Establecer las coordenadas del tooltip
-movingDiv.style.left = newLeft + "px";
-movingDiv.style.top = newTop - 20+ "px";
+// Calcula la nueva posición del tooltip
+const newLeft = referenceRect.left/(stats.zoomLevel/100); // Izquierda igual que la referencia
+const newTop = referenceRect.bottom/(stats.zoomLevel/100); // Fondo de la referencia
+
+// Aplica las nuevas posiciones al tooltip
+movingDiv.style.left = `${newLeft}px`;
+movingDiv.style.top = `${newTop+15}px`;
     });
     did(id + "area").addEventListener("mouseleave", function () {
       resetTooltip();
@@ -7005,55 +7639,6 @@ function tooltipSkill(id, full) {
 }
 
 
-
-function tooltipMiningNode() {
-  did("miningNode").addEventListener("mouseenter", function () {
-    did("tooltip").style.display = "flex";
-    did("upperTooltip").style.display = "none";
-    did("tooltipDescription").innerHTML =
-      '<FONT COLOR="#edd585">Press to mine the vein of this area.';
-    did("tooltipFlavor").textContent = "";
-    did("tooltipDescription").style.textAlign = "center";
-    did("tooltipImage").style.display = "none";
-    const movingDiv = did("tooltip");
-    const referenceDiv = did("miningNode");
-    const referenceRect = referenceDiv.getBoundingClientRect();
-    const referenceLeft = referenceRect.left + 5;
-    const referenceTop = referenceRect.top - 5;
-    const newLeft = referenceLeft + referenceRect.width - movingDiv.offsetWidth;
-    const newTop = referenceTop - movingDiv.offsetHeight;
-    movingDiv.style.left = newLeft + "px";
-    movingDiv.style.top = newTop + "px";
-  });
-  did("miningNode").addEventListener("mouseleave", function () {
-    resetTooltip();
-  });
-} tooltipMiningNode();
-
-
-function tooltipHerbNode() {
-  did("herbNode").addEventListener("mouseenter", function () {
-    did("tooltip").style.display = "flex";
-    did("upperTooltip").style.display = "none";
-    did("tooltipDescription").innerHTML =
-      '<FONT COLOR="#edd585">Press to gather the herbs of this area.';
-    did("tooltipFlavor").textContent = "";
-    did("tooltipDescription").style.textAlign = "center";
-    did("tooltipImage").style.display = "none";
-    const movingDiv = did("tooltip");
-    const referenceDiv = did("herbNode");
-    const referenceRect = referenceDiv.getBoundingClientRect();
-    const referenceLeft = referenceRect.left + 5;
-    const referenceTop = referenceRect.top - 5;
-    const newLeft = referenceLeft + referenceRect.width - movingDiv.offsetWidth;
-    const newTop = referenceTop - movingDiv.offsetHeight;
-    movingDiv.style.left = newLeft + "px";
-    movingDiv.style.top = newTop + "px";
-  });
-  did("herbNode").addEventListener("mouseleave", function () {
-    resetTooltip();
-  });
-} tooltipHerbNode();
 
 function tooltipAlign() {
   did("turtleAlign").addEventListener("mouseenter", function () {
@@ -7196,7 +7781,7 @@ did("sheddingsCounter").addEventListener("mouseleave", function () {
 //----------------------==========================-----------------------
 //#region Buffs
 
-
+/*
 function playerBuffsDecay() { 
   for (let b in buffs) {
     if (buffs[b].time > 0){buffs[b].time--; playerBuffs()}
@@ -7252,7 +7837,9 @@ function playerBuffsDecay() {
 
     if (buffs.B75.time>0) {did("playerNpcPanel").style.filter = "brightness(0)"} else if (did("playerNpcPanel").style.filter === "brightness(0)" && buffs.B75.time<=0) did("playerNpcPanel").style.filter = "none";
   
-    if (buffs.B85.time>0) {did("rpgPlayerImg").style.filter = "grayscale(1)"} else if (did("rpgPlayerImg").style.filter === "grayscale(1)" && buffs.B85.time<=0) did("rpgPlayerImg").style.filter = "none";
+    console.log("e")
+    if (buffs.PlayerPetrify.time>0) {did("playerAnimation").style.filter = "grayscale(1)"}
+    else if (did("playerAnimation").style.filter === "grayscale(1)" && buffs.PlayerPetrify.time<=0) did("playerAnimation").style.filter = "none";
 
     if (stats.currentArea==="A10") buffs.B91.time = 3;
     if (stats.currentArea==="A11") buffs.B96.time = 3;
@@ -7262,7 +7849,7 @@ function playerBuffsDecay() {
 }
 
 
-
+*/
 
 /*
 
@@ -7416,6 +8003,7 @@ rareItems3 = ["I211",/*egg3*/  "I205" /*kidsmeal*/, "I527" /*scratch card*/ ] //
 
 let firewallPresent = false
 let presentsOpenedNow = 0
+
 function startMysteryMinigame(){
 
 
@@ -7424,10 +8012,12 @@ function startMysteryMinigame(){
 firewallPresent = false
 presentsOpenedNow = 0
 stats.mysteryPresentsOpened++;
+stats.mysteryPresentsOpenedLog++;
 
 did("blackScreen").style.display = "flex";
-setTimeout(() => { did("blackScreen").style.opacity = "0.7" }, 100);
+setTimeout(() => { did("blackScreen").style.opacity = "0.9" }, 0);
 did("presentMinigame").style.display = "flex";
+voidAnimation("presentMinigame", "growFadeIn 0.5s 1")
 did("mysteryCloth").style.display = "flex";
 did("mysteryRewardPanel").style.display = "flex";
 
@@ -7455,22 +8045,22 @@ if (rng(1,17)===1 && stats.mysteryPresentsOpened>25) {
   div.style.backgroundImage = "url('img/src/icons/present6.png')";
 }
 
-if (rng(1,17)===1 && stats.mysteryPresentsOpened>35) {
+if (rng(1,17)===1 && stats.mysteryPresentsOpened>40) {
   div.id = "MpresentChain" + (present);
   div.style.backgroundImage = "url('img/src/icons/present3.png')";
 }
 
-if (rng(1,22)===1 && stats.mysteryPresentsOpened>50) {
+if (rng(1,22)===1 && stats.mysteryPresentsOpened>65) {
   div.id = "MpresentFirewall" + (present);
   div.style.backgroundImage = "url('img/src/icons/present7.png')";
 }
 
-if (rng(1,25)===1 && stats.mysteryPresentsOpened>65) {
+if (rng(1,25)===1 && stats.mysteryPresentsOpened>85) {
   div.id = "MpresentViral" + (present);
   div.style.backgroundImage = "url('img/src/icons/present9.png')";
 }
 
-if (rng(1,30)===1 && stats.mysteryPresentsOpened>80) {
+if (rng(1,30)===1 && stats.mysteryPresentsOpened>100) {
   div.id = "MpresentDice" + (present);
   div.style.backgroundImage = "url('img/src/icons/present8.png')";
 }
@@ -7502,67 +8092,48 @@ document.addEventListener('click', function(event) {
 
 
       if (present.startsWith("MpresentNormal")) {
-        if (rng(1,5)===1) {endGame(present); return}
-          
-        let rewardType = "item1"
-        if (rng(1,3)===1) rewardType = "exp"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,5)===1) rewardType = "scutes"
-        if (rng(1,10)===1) rewardType = "item2"
-        //if (rng(1,14)===1) rewardType = "item3"
+        if (chance(0.20)) {endGame(present); return}
 
-        rewardTable(present,rewardType)
+        if (chance(0.10)) spawnItem(returnArrayPick(rareLootTable2))
+        else spawnItem(returnArrayPick(rareLootTable1))
+        rewardTable(present)
       }
 
       if (present.startsWith("MpresentGold")) {
-        if (rng(1,5)===1) {endGame(present); return} 
+        if (chance(0.20)) {endGame(present); return} 
           
-        let rewardType = "item2"
-        if (rng(1,3)===1) rewardType = "exp"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,5)===1) rewardType = "scutes"
-        if (rng(1,20)===1) rewardType = "item3"
-
-        rewardTable(present,rewardType,"gold")
+        if (chance(0.30)) spawnItem(returnArrayPick(rareLootTable2))
+        else spawnItem(returnArrayPick(rareLootTable1))
+        rewardTable(present)
       }      
       
       if (present.startsWith("MpresentCursed")) {
-        if (rng(1,2)===1) {endGame(present); return}
+        if (chance(0.50)) {endGame(present); return} 
           
-        let rewardType = "item2"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,5)===1) rewardType = "scutes"
-        if (rng(1,15)===1) rewardType = "item3"
-
-        rewardTable(present,rewardType,"cursed")
+        if (chance(0.20)) spawnItem(returnArrayPick(rareLootTable3))
+        else spawnItem(returnArrayPick(rareLootTable2))
+        rewardTable(present)
       } 
 
       if (present.startsWith("MpresentStone")) {          
-
-        let rewardType = "item1"
-        if (rng(1,3)===1) rewardType = "exp"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,9)===1) rewardType = "scutes"
-        if (rng(1,15)===1) rewardType = "item2"
-        //if (rng(1,14)===1) rewardType = "item3"
-
-        rewardTable(present,rewardType, "stone")
+        spawnItem(returnArrayPick(rareLootTable1))
+        rewardTable(present)
       }
 
       if (present.startsWith("MpresentChain") && presentsOpenedNow>4) {
 
-        let rewardType = "item2"
-        if (rng(1,3)===1) rewardType = "exp"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,5)===1) rewardType = "scutes"
-        if (rng(1,20)===1) rewardType = "item3"
-
-        rewardTable(present,rewardType,"gold")
+        if (chance(0.30)) spawnItem(returnArrayPick(rareLootTable2))
+        else spawnItem(returnArrayPick(rareLootTable1))
+        rewardTable(present)
       }
 
       if (present.startsWith("MpresentViral")) {
 
-        if (rng(1,3)===1) {endGame(present); return}
+        if (chance(0.35)) {endGame(present); return} 
+          
+        if (chance(0.30)) spawnItem(returnArrayPick(rareLootTable2))
+        else spawnItem(returnArrayPick(rareLootTable1))
+        rewardTable(present)
           
         let elementos = document.querySelectorAll('.mysteryPresent');
         if (elementos.length && presentsOpenedNow<13) {
@@ -7575,29 +8146,17 @@ document.addEventListener('click', function(event) {
           elbicho.style.backgroundImage = "url('img/src/icons/present9.png')";
       }
 
-      let rewardType = "item2"
-      if (rng(1,3)===1) rewardType = "exp"
-      if (rng(1,5)===1) rewardType = "coins"
-      if (rng(1,5)===1) rewardType = "scutes"
-      //if (rng(1,20)===1) rewardType = "item3"
-
-      rewardTable(present,rewardType,"viral")
+ 
       }
 
 
       if (present.startsWith("MpresentFirewall")) {
 
+        if (chance(0.20)) {endGame(present); return}
 
-        if (rng(1,5)===1) {endGame(present); return} 
-        
-        let rewardType = "item1"
-        if (rng(1,3)===1) rewardType = "exp"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,5)===1) rewardType = "scutes"
-        if (rng(1,10)===1) rewardType = "item2"
-        //if (rng(1,14)===1) rewardType = "item3"
-
-        rewardTable(present,rewardType)
+        if (chance(0.10)) spawnItem(returnArrayPick(rareLootTable2))
+        else spawnItem(returnArrayPick(rareLootTable1))
+        rewardTable(present)
         firewallPresent = true
 
       }
@@ -7606,18 +8165,13 @@ document.addEventListener('click', function(event) {
       if (present.startsWith("MpresentDice")) {
 
 
-        if (rng(1,5)===1) {endGame(present); return} 
+        if (chance(0.20)) {endGame(present); return}
 
 
                 
-        let rewardType = "item1"
-        if (rng(1,3)===1) rewardType = "exp"
-        if (rng(1,5)===1) rewardType = "coins"
-        if (rng(1,5)===1) rewardType = "scutes"
-        if (rng(1,10)===1) rewardType = "item2"
-        //if (rng(1,14)===1) rewardType = "item3"
-
-        rewardTable(present,rewardType)
+        if (chance(0.10)) spawnItem(returnArrayPick(rareLootTable2))
+          else spawnItem(returnArrayPick(rareLootTable1))
+          rewardTable(present)
 
 
 
@@ -7669,12 +8223,6 @@ document.addEventListener('click', function(event) {
 
 
   function rewardTable(present, rewardType, type){
-    let multiplier = 1
-    if (type==="gold") multiplier = 5
-    if (type==="cursed") multiplier = 10
-    if (type==="stone") multiplier = 0.5
-    if (type==="viral") multiplier = 3
-    let amount = 0
     firewallPresent = false
 
 
@@ -7684,58 +8232,7 @@ document.addEventListener('click', function(event) {
     did(present).style.backgroundImage = "url('img/src/icons/presentOpen.png')";
     presentsOpenedNow++
 
-    if (rewardType==="coins") {
 
-      let moneyGain = ((10 + additiveCoinsPerClick)*1000)*(multiplier)
-      amount = moneyGain
-      if (rng(1,5)===1) amount = moneyGain*2
-      if (rng(1,10)===1) moneyGain*3
-
-      div.innerHTML = '<img src="img/src/icons/coin.png">'+beautify(amount)+' Shells'
-      rpgPlayer.coins += amount
-      stats.totalCoins += amount
-    }
-
-
-    if (rewardType==="scutes") {
-      amount = 50*multiplier
-      if (rng(1,5)===1) amount = 70*multiplier
-      if (rng(1,10)===1) amount = 100*multiplier
-
-      div.innerHTML = '<img src="img/src/icons/scutes.jpg">'+beautify(amount)+' Prism Scutes'
-      rpgPlayer.scutes += amount
-      stats.totalScutes += amount
-    }
-
-    if (rewardType==="exp") {
-      amount =  returnExp(rpgClass[stats.currentClass].level) * (rng(1,3)/10)
-
-      div.innerHTML = '<img src="img/src/icons/xp.png">'+beautify(amount)+' EXP'
-      rpgClass[stats.currentClass].currentExp += amount
-      stats.totalExp += amount
-    }
-
-
-    if (rewardType==="item1") {
-      let itemGot = rareItems[rng(0,(rareItems.length-1))]
-      div.innerHTML = '<img src="img/src/items/'+itemGot+'.jpg">x1 '+ items[itemGot].name; rareItemDrop(itemGot,1)
-    }
-
-    if (rewardType==="item2") {
-      let itemGot = rareItems2[rng(0,(rareItems2.length-1))]
-      div.innerHTML = '<img src="img/src/items/'+itemGot+'.jpg">x1 '+ items[itemGot].name; rareItemDrop(itemGot,1)
-    }
-
-    if (rewardType==="item3") {
-      let itemGot = rareItems3[rng(0,(rareItems3.length-1))]
-      div.innerHTML = '<img src="img/src/items/'+itemGot+'.jpg">x1 '+ items[itemGot].name; rareItemDrop(itemGot,1)
-    }
-
-
-    div.id = present+"reward";
-    div.className = "mysteryRewardItem";
-    var container = did("mysteryRewardPanel");
-    container.insertBefore(div, container.firstChild);
     animParticleBurst(5 , "particleSpark", present, 0);
     playSound("audio/button3.mp3")
 
@@ -7760,18 +8257,19 @@ document.addEventListener('click', function(event) {
       return
     } 
 
-    const div = document.createElement("div");
-    div.id = present+"reward";
-    div.className = "mysteryRewardItem";
-
     if (type===undefined){
-      div.innerHTML = '&#10060; Game End'
+
+      createPopup(`&#10060; Game End`)
+
       animParticleBurst(15 , "particleSmoke", present, 0);
+
       playSound("audio/explosion.mp3")
     }
 
     if (type==="good"){
-      div.innerHTML = '🎉 Winner!'
+      createPopup('🎉 Winner! Obtained an extra reward!')
+      logs.P32.unlocked=true;
+      spawnItem(returnArrayPick(rareLootTable3))
       animParticleBurst(10 , "particleConfetti", present, 100);
       animParticleBurst(10 , "particleConfetti", present, 200);
       animParticleBurst(10 , "particleConfetti", present, 400);
@@ -7782,9 +8280,6 @@ document.addEventListener('click', function(event) {
     playSound("audio/close.mp3")
 
     
-    div.style.backgroundColor = "#503863"
-    var container = did("mysteryRewardPanel");
-    container.insertBefore(div, container.firstChild);
 
     did("presentBlocker").style.display = "flex"
 
@@ -7820,13 +8315,13 @@ document.addEventListener('click', function(event) {
 
 function checkMysteryProgress(){
 
-if (stats.mysteryPresentsOpened===5) unlockAnimation("Golden Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
-if (stats.mysteryPresentsOpened===10) unlockAnimation("Stone Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
-if (stats.mysteryPresentsOpened===25) unlockAnimation("Cursed Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
-if (stats.mysteryPresentsOpened===35) unlockAnimation("Chained Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
-if (stats.mysteryPresentsOpened===50) unlockAnimation("Firewall Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
-if (stats.mysteryPresentsOpened===65) unlockAnimation("Viral Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
-if (stats.mysteryPresentsOpened===80) unlockAnimation("Dice Presents Unlocked!", "New types of presents can appear from now on.", "img/src/icons/newPresents.jpg")
+if (stats.mysteryPresentsOpened===5) {unlockAnimation("Golden Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
+if (stats.mysteryPresentsOpened===10) {unlockAnimation("Stone Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
+if (stats.mysteryPresentsOpened===25) {unlockAnimation("Cursed Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
+if (stats.mysteryPresentsOpened===40) {unlockAnimation("Chained Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
+if (stats.mysteryPresentsOpened===65) {unlockAnimation("Firewall Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
+if (stats.mysteryPresentsOpened===85) {unlockAnimation("Viral Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
+if (stats.mysteryPresentsOpened===100) {unlockAnimation("Dice Presents Unlocked!", "New types of presents can appear from now on", "img/src/icons/newPresents.jpg")}
 
 
 
@@ -7850,7 +8345,7 @@ document.addEventListener('mousemove', function(event) {
     if (event.target.id.includes("MpresentStone")){ did("tooltipDescription").innerHTML = bestiaryTag("Stone Present")+'<FONT COLOR="#edd585">Contains lesser rewards, but cannot fail<div class="separador"></div>'+bestiaryTag("Failure Chance: 0%", "purple"); }
     if (event.target.id.includes("MpresentDice")){ did("tooltipDescription").innerHTML = bestiaryTag("Dice Present")+'<FONT COLOR="#edd585">Contains rewards. Rerolls all unopened presents<div class="separador"></div>'+bestiaryTag("Failure Chance: 20%", "purple"); }
     if (event.target.id.includes("MpresentFirewall")){ did("tooltipDescription").innerHTML = bestiaryTag("Firewall Present")+'<FONT COLOR="#edd585">Contains rewards. Prevents the next present to fail<div class="separador"></div>'+bestiaryTag("Failure Chance: 20%", "purple"); }
-    if (event.target.id.includes("MpresentViral")){ did("tooltipDescription").innerHTML = bestiaryTag("Viral Present")+'<FONT COLOR="#edd585">Contains greater rewards. Converts a random unopened present into a Viral Present<div class="separador"></div>'+bestiaryTag("Failure Chance: 30%", "purple"); }
+    if (event.target.id.includes("MpresentViral")){ did("tooltipDescription").innerHTML = bestiaryTag("Viral Present")+'<FONT COLOR="#edd585">Contains greater rewards. Converts a random unopened present into a Viral Present<div class="separador"></div>'+bestiaryTag("Failure Chance: 35%", "purple"); }
 
     
     did("tooltipFlavor").textContent = "";
@@ -7981,6 +8476,7 @@ function revealScratch(i,SNumber){
     if (scratcherMoves===0){ //game end
 
       rpgPlayer.scutes+=scratcherGains
+      stats.totalScutes += scratcherGains
       updateCounters()
 
 
@@ -8081,7 +8577,10 @@ if (areas[stats.currentArea].dungeon) stats.currentArea = "A1"; //prevents loadi
   //createPlantCatalogue()
   retroactiveUpdate();
   switchArea();
-  specialButtonUi();
+  setTimeout(() => {
+    unlocksReveal();
+    specialButtonUi();
+  }, 50);
   contractLog();
   contractMenu();
   //armorycheck();
@@ -8100,7 +8599,6 @@ if (areas[stats.currentArea].dungeon) stats.currentArea = "A1"; //prevents loadi
   //updateSkills();
   //createSkirmish();
   //createShowdown();
-  calculateInactiveTime();
   //createTalent();
   //updateTalentUI();
   //createShopHonor();
@@ -8110,7 +8608,7 @@ if (areas[stats.currentArea].dungeon) stats.currentArea = "A1"; //prevents loadi
   inventoryCulling();
 
   createAreaPanel();
-
+  clickTarget("Enemy")
 
   //updateLoadout(stats.lastLoadout);
 
@@ -8133,6 +8631,13 @@ if (areas[stats.currentArea].dungeon) stats.currentArea = "A1"; //prevents loadi
   updateHeat()
 
   extraLivesUsed = stat.ExtraLives
+
+  calculateInactiveTime();
+
+
+  dailyLocalReset()
+  biWeeklyReset()
+  dailyPresentTimers()
 
 }
 //#endregion

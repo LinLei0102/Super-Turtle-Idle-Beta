@@ -4,12 +4,12 @@ let lastofflinetime = 0
 
 
 function calculateInactiveTime() { //calculates idle time
-    const lastVisitTime = localStorage.getItem('lastVisitTime');
+    const lastVisitTime = stats.lastVisitTime
     if (lastVisitTime) {
         const currentTime = new Date().getTime();
         const inactiveTime = currentTime - parseInt(lastVisitTime);
         const secondsInactive = Math.floor(inactiveTime / 1000);
-        //const secondsInactive = 700;
+        //const secondsInactive = 28800;
 
         lastofflinetime = secondsInactive
 
@@ -86,12 +86,17 @@ function tooltipTurtleBot() {
 
 
     let requirementMsg = ""
+    if (offlineFarmCheck()==="mattock") requirementMsg = `${colorTag("Equip a tool first!","#F44049")}<br><span style="color:gray">Herbs and ores need a mattock to be offline farmed</span> `
     if (offlineFarmCheck()==="boss") requirementMsg = `${colorTag("Not valid!","#F44049")}<br><span style="color:gray">Bosses and dungeons can not be offline farmed</span> `
     if (offlineFarmCheck()==="level") requirementMsg = `${colorTag("Level is too low!","#F44049")}<br><span style="color:gray">Increase your level to allow offline farming</span> `
     if (offlineFarmCheck()==="power") requirementMsg = `${colorTag("Not enough Power!","#F44049")}<br><span style="color:gray">Increase this stat to allow offline farming</span> `
     if (offlineFarmCheck()==="health") requirementMsg = `${colorTag("Not enough Max Health!","#F44049")}<br><span style="color:gray">Increase this stat to allow offline farming</span> `
 
-    if (offlineFarmCheck()===true) requirementMsg = `<span style="color:gray">You will farm the current enemy while offline at a rate of</span><br><br><span style="font-size:1.1rem">${colorTag(  (5/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power)*(1+stat.OfflineBonus/100)).toFixed(1)+" Kills per minute", "#E68B29" )      }</span>  `
+
+    let offlineFormula = 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power)*(1+stat.OfflineBonus/100)
+    if (enemies[stats.currentEnemy].resource) offlineFormula = 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.GatheringPower)*(1+stat.OfflineBonus/100)
+
+    if (offlineFarmCheck()===true) requirementMsg = `<span style="color:gray">You will farm the current enemy while offline at a rate of</span><br><br><span style="font-size:1.1rem">${colorTag(  (offlineFormula).toFixed(1)+" Kills per minute", "#E68B29" )      }</span>  `
 
 
 
@@ -122,6 +127,7 @@ function tooltipTurtleBot() {
 
 function offlineFarmCheck(){
 
+if (enemies[stats.currentEnemy].resource && equippedWeapon?.tool!=="mattock") return "mattock"
 if (bossTime) return "boss"
 if ( returnEnemyLevelGap()==="red") return "level"
 if ( (enemies[stats.currentEnemy].hp()/25) >= stat.Power) return "power"
@@ -153,11 +159,11 @@ function offlineRewards(seconds){
 
     if (offlineFarmCheck()===true){
 
-    const times = ( 5/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power) * (1+stat.OfflineBonus/100) ) * (seconds/60)
+    const times = ( 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power) * (1+stat.OfflineBonus/100) ) * (seconds/60)
 
 
 
-    createPopup(`<img src="img/src/icons/turtlebot.png">You have been away for ${convertSecondsToHMS(seconds)} and defeated ${beautify(times)} ${enemies[stats.currentEnemy].name}s while you were out. Go check your loot!`,undefined,"long")
+    createPopup(`<img src="img/src/icons/turtlebot.png">You have been away for ${convertSecondsToHMS(seconds)}<br> and defeated ${beautify(times)} ${enemies[stats.currentEnemy].name}s while <br> you were out. Go check your loot!`,undefined,"long")
 
 
 
@@ -166,7 +172,12 @@ function offlineRewards(seconds){
 
     function loop() {
         lootTable(enemies[stats.currentEnemy].lootTable(),"hidden")
+        if (unlocks.bestiary && chance(1/1000)) {dropMonsterCard()}
     }
+
+    enemies[stats.currentEnemy].killCount+=Math.floor(times)
+    enemies[stats.currentEnemy].medalProgress+=Math.floor(times)
+
 
     }
 

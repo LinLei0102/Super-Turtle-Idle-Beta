@@ -189,41 +189,6 @@ function castBoxingGloves(){
 
 }
 
-function castKingKat(){
-
-    enemyTurn++;
-
-    if (currentHP < enemies.E8.hp*0.3 && enemyPhase===1) {enrage()};
-
-    if(enemyTurn>3){
-        punch()
-        enemyTurn=0;
-    }
-
-    function punch(){
-        animImageSplash("punch", "playerPanel", "impact", 0);
-        animState("rpgPlayerImg", "shake 0.4s 1");
-        playerMightDamage(enemies[stats.currentEnemy].attack)
-    }
-    
-
-    function enrage(){
-    enemyPhase = 2;
-    buffs.B76.time = 100;
-    buffs.B76.stacks = 1;
-    enemyDamageMultiplier = 1.4;
-    playerBuffs();
-    for (let i = 0; i < 3; i++) { setTimeout(loop, 150 * i);}
-    function loop() {
-    animState(stats.currentEnemy+"enemy", "gelatineHigh 0.4s 1");
-    animImageSplash("soundWave", "enemyPanel", "wave", 100, undefined ,'boss');
-    did(stats.currentEnemy+"enemy").style.filter = 'hue-rotate(330deg)'
-    }
-
-    }
-
-
-}
 
 
 function castKingMysterio(){
@@ -788,43 +753,111 @@ function castEnemyCastingDecay(){
 function castDaiGoran(){
 
 
-    enemyTurn++
+    
+    if (enemyTurn===2){
+        createEnemyAttack(`img/src/buffs/B57.jpg`,3)
+    }
+
 
     if(enemyTurn===5){
-        venom();
+        fangattack()
+    }
+
+    if (enemyTurn===6){
+        createEnemyAttack(`img/src/buffs/B57.jpg`,3)
+    }
+
+
+    if(enemyTurn===9){
+        fangattack()
     }
 
     if(enemyTurn===10){
-        castEnemyAlerted(5)
+        createEnemyAttack(`img/src/buffs/B42.jpg`,3)
     }
 
-    if(enemyTurn===14){
-        petrify();
-        enemyTurn=0;
+    if(enemyTurn===13){
+        petrify()
+        enemyTurn=0
     }
-    
-    function venom(){
-        animParticleProjectile("spike", "reverseThrow", 3, "particlePoison", 0);
-        setTimeout(() => {
-            animState("rpgPlayerImg", "shake 0.4s 1");
-            animParticleBurst(3 , "particleFire", "particlePoison", 0);
-            buffs.B3.time=15; buffs.B3.stacks=6;
-            playerBuffs();
-        }, 600);
-    }
+
+
 
     function petrify(){
 
-        animState(stats.currentEnemy+"enemy", "gelatineHigh 0.4s 1");
-        animImageSplash("soundWave", "enemyPanel", "wave", 200, undefined ,'boss');
-        animParticleBurst(10 , "particleFire", "playerPanel", 100);
-        buffs.B85.time=15;
-        playerBuffs();
+        for (let i = 0; i < 7; i++) { setTimeout(loop, 100 * i);}
+        function loop() {
+            particleTrackers.push(new ParticleTigerRoar(undefined,undefined,{x:enemyCenterX,y:enemyCenterY,imageHue:rng(0,360)}));
+            voidAnimation("enemyAnimation","gelatineHigh 0.3s 1");
+            playSound("audio/spell3.mp3")
+        }
+    
+        
+        enemyDamageAnimation("high","player")
+        if (buffs.PlayerPoison.time>0) buffs.PlayerPetrify.time += 60
+        playerBuffs()
+    }
+
+    function fangattack(){
+        animatedSplash("player", "bite","impact",0)
+        particleTrackers.push(new ParticleShockwave(this.x,this.y,{x:playerRect.left - containerRect.left + playerRect.width / 2, y:playerRect.top - containerRect.top + playerRect.height / 1.4}));
+        particleTrackers.push(new ParticleBubble(this.x,this.y,{x:playerRect.left - containerRect.left + playerRect.width / 2, y:playerRect.top - containerRect.top + playerRect.height / 1.4,imageHue:50}));
+        particleTrackers.push(new ParticleBubble(this.x,this.y,{x:playerRect.left - containerRect.left + playerRect.width / 2, y:playerRect.top - containerRect.top + playerRect.height / 1.4,imageHue:50}));
+        particleTrackers.push(new ParticleBubble(this.x,this.y,{x:playerRect.left - containerRect.left + playerRect.width / 2, y:playerRect.top - containerRect.top + playerRect.height / 1.4,imageHue:50}));
+        enemyDamageAnimation("medium","player")
+        buffs.PlayerPoison.time += 40
+        buffs.PlayerPoison.stacks += 3
+        playSound("audio/spell3.mp3")
+        playerBuffs()
+        statsUpdate() 
+        updateStatsUI()
+    }
+    
+
+}
+
+
+function castLitavela(){
+
+
+    
+    if (enemyTurn===2){
+        createEnemyAttack(`img/src/buffs/B57.jpg`,2)
+    }
+
+    if (enemyTurn===4){
+        spawnAdd(1,"E51S",enemies[stats.currentEnemy].hp()/4)
+        spawnAdd(2,"E51S2",enemies[stats.currentEnemy].hp()/4)
+
+        enemyAdd1OnDeath = function() {
+            buffs.PlayerBurning.time=60;
+            buffs.PlayerBurning.stacks=20;
+            playerBuffs();
+            enemyDamageAnimation("high","player")
+
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY}))
+            particleTrackers.push(new ParticleExplosionShockwave3(undefined,undefined,{x:add1RectX,y:add1RectY}))
+        }
+
+        enemyAdd2OnDeath = function() {
+            buffs.PlayerBurning.time=0;
+            playerBuffs();
+            enemyDamageAnimation("high","player")
+
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY,imageHue:200}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY,imageHue:200}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY,imageHue:200}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY,imageHue:200}))
+            particleTrackers.push(new ParticleExplosionFlare5(undefined,undefined,{x:add1RectX,y:add1RectY,imageHue:200}))
+            particleTrackers.push(new ParticleExplosionShockwave3(undefined,undefined,{x:add1RectX,y:add1RectY,imageHue:200}))
+        }
 
 
     }
-
-    castEnemyAlertedDecay()
 
     
 
@@ -1018,28 +1051,98 @@ function castPrimarder(){
 
 function castRoyalPudding(){
 
-
-    enemyTurn++
-
-    if (enemyTurn>2){
-        gelshot();
-        enemyTurn=0;
+    if (enemyTurn === 1){
+        createEnemyAttack(`img/src/buffs/B9.jpg`,2)
     }
 
-    function gelshot(){
-        animParticleProjectile("none", "reverseThrow", 12, "particlePoison", 180);
+    if (enemyTurn === 3){
+        attack()
+    }
+
+    if (enemyTurn === 4){
+        createEnemyAttack(`img/src/enemies/E29M.png`,2)
+    }
+
+
+    if (enemyTurn === 6){
+        playSound("audio/spell8.mp3")
+        spawnAdd(2,"E29S",enemies[stats.currentEnemy].hp()/4)
+            particleTrackers.push(new ParticleSlimeShot(undefined,undefined,{
+                playerCenterY : enemyRectY,
+                enemyCenterX:add2RectX,
+                enemyCenterY:add2RectY,
+                controlPointX:undefined,
+                controlPointY:undefined,
+                tSpeed:0.1,
+                particleConfig : {
+                    size:30,
+                    simpleColor : "#FD8BE0",
+                    strokeColor : "#CE73EC",
+                    strokeSize : 7,
+                }
+            }));
+    }
+
+
+    if (enemyTurn === 7){
+        createEnemyAttack(`img/src/buffs/B9.jpg`,2)
+    }
+
+    if (enemyTurn === 9){
+        attack()
+    }
+
+    if (enemyTurn === 10){
+        createEnemyAttack(`img/src/enemies/E29M.png`,2)
+    }
+    
+    if (enemyTurn === 12){
+        if (enemyAdd2Alive) {
+            playSound("audio/spell8.mp3")
+            enemyHealingDamage(enemies[stats.currentEnemy].hp())
+            enemyAdd2CurrentHp = 0;
+            enemyUpdate();
+            particleTrackers.push(new ParticleExplosionLinger5)
+            particleTrackers.push(new ParticleExplosionLinger5)
+            particleTrackers.push(new ParticleExplosionLinger5)
+            particleTrackers.push(new ParticleExplosionLinger5)
+            particleTrackers.push(new ParticleSlimeShot(undefined,undefined,{
+                playerCenterX : add2RectX,
+                playerCenterY : add2RectY,
+                enemyCenterX:enemyRectX,
+                enemyCenterY:enemyRectY,
+                controlPointX:undefined,
+                controlPointY:undefined,
+                tSpeed:0.1,
+                particleConfig : {
+                    size:30,
+                    simpleColor : "#FD8BE0",
+                    strokeColor : "#CE73EC",
+                    strokeSize : 7,
+                }
+            }));
+        }
+        enemyTurn = 0
+    }
+
+    function attack(){
+
+        playSound("audio/spell8.mp3")
+
+
+        particleTrackers.push(new ParticleSlimeShot);
         setTimeout(() => {
-            animState("rpgPlayerImg", "shake 0.4s 1");
-            animParticleBurst(7 , "particlePoison", "playerPanel", 140);
-            buffs.B86.stacks++;
-            buffs.B86.time+=15;
-            playerNatureDamage(enemies[stats.currentEnemy].attack)
-            playerBuffs();
+            playSound("audio/spell6.mp3")
+            enemyDamageAnimation("medium","player")
+            playerOccultDamage(enemies[stats.currentEnemy].attack()*6)
+
+            buffs.PlayerSlow.time = 60
+            buffs.PlayerSlow.stacks++
+            playerBuffs()
+            statsUpdate()
+            updateStatsUI()
         }, 600);
     }
-
-    
-
 
 }
 
@@ -2247,6 +2350,99 @@ function createEnemyAttack(image, turns){
 
 
 }
+
+
+function castKingKat(){
+
+
+    if (enemyAdd2Alive){
+        setTimeout(() => {
+            addAttack(2)
+            playerNatureDamage(enemies[stats.currentEnemy].attack())
+        }, 200);
+    }
+
+    if (enemyAdd1Alive){
+        setTimeout(() => {
+            addAttack(1)
+            playerNatureDamage(enemies[stats.currentEnemy].attack())
+        }, 400);
+    }
+
+  
+    if (enemyTurn===2){
+        createEnemyAttack(`img/src/items/I69.jpg`,2)
+    }
+
+    if(enemyTurn===4){
+        punch()
+        
+    }
+
+    if(enemyTurn===6){
+        if (areas[stats.currentArea].heat===1) {enemyTurn=0; return}
+        createEnemyAttack(`img/src/items/I15.jpg`,2)
+    }
+
+    if(enemyTurn===8){
+        spawnAdd(2,"E5",enemies[stats.currentEnemy].hp()/13)
+        if (areas[stats.currentArea].heat===4) {spawnAdd(1,"E7",enemies[stats.currentEnemy].hp()/13)}
+    }
+
+    if (enemyTurn===10){
+        if (areas[stats.currentArea].heat<3) {enemyTurn=0; return}
+        createEnemyAttack(`img/src/items/I69.jpg`,2)
+    }
+
+    if(enemyTurn===12){
+        punch()
+    }
+
+    if (enemyTurn===14){
+        createEnemyAttack(`img/src/buffs/B2.jpg`,3)
+    }
+
+    if (enemyTurn===17){
+        if (enemyAdd2Alive || enemyAdd1Alive) enrage()
+        enemyTurn=0;
+    }
+
+
+
+    function punch(){
+        animatedSplash("player","punch","impact",180)
+        playSound("audio/spell2.mp3")
+        particleTrackers.push(new ParticleShockwave3(undefined,undefined,{x:playerCenterX,y:playerCenterY,imageHue:180, alpha:0.7}));
+        particleTrackers.push(new ParticleSparks(playerCenterX,playerCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+        particleTrackers.push(new ParticleSparks(playerCenterX,playerCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+        particleTrackers.push(new ParticleSparks(playerCenterX,playerCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+        particleTrackers.push(new ParticleSparks(playerCenterX,playerCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+        particleTrackers.push(new ParticleSparks(playerCenterX,playerCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+        particleTrackers.push(new ParticleSparks(playerCenterX,playerCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+        playerOccultDamage(enemies[stats.currentEnemy].attack()*3)
+        enemyDamageAnimation("high","player")
+    }
+
+    function enrage(){
+        enemyHealingDamage(enemies[stats.currentEnemy].hp()*0.3)
+        particleTrackers.push(new ParticleExplosionFlare7(undefined,undefined,{imageHue:-40}))
+        particleTrackers.push(new ParticleExplosionLinger4(undefined,undefined,{imageHue:-40}))
+        particleTrackers.push(new ParticleExplosionLinger4(undefined,undefined,{imageHue:-40}))
+        particleTrackers.push(new ParticleExplosionLinger4(undefined,undefined,{imageHue:-40}))
+        particleTrackers.push(new ParticleExplosionShockwave2(undefined,undefined,{imageHue:-20}))
+        enemyDamageAnimation("high")
+        playSound("audio/spell7.mp3")
+        buffs.EnemyEnrage.time=100
+        buffs.EnemyEnrage.stacks=20
+        playerBuffs()
+
+        
+    }
+
+
+
+
+}
     
 
 function castHoopperoona(){
@@ -2276,12 +2472,14 @@ function castHoopperoona(){
 
     function webshot(){
         particleTrackers.push(new ParticleWebShot);
+        playSound("audio/spell2.mp3")
         setTimeout(() => {
             animatedSplash("player", "web","impact",0)
             buffs.PlayerSlow.time += 50
             if (areas[stats.currentArea].heat<=3) buffs.PlayerSlow.stacks += 2
             if (areas[stats.currentArea].heat>3) buffs.PlayerSlow.stacks += 4;
             enemyDamageAnimation("medium","player")
+            playSound("audio/spell3.mp3")
             playerBuffs()
             statsUpdate() 
             updateStatsUI()
@@ -2296,6 +2494,7 @@ function castHoopperoona(){
         particleTrackers.push(new ParticleBubble(this.x,this.y,{x:playerRect.left - containerRect.left + playerRect.width / 2, y:playerRect.top - containerRect.top + playerRect.height / 1.4,imageHue:50}));
         particleTrackers.push(new ParticleBubble(this.x,this.y,{x:playerRect.left - containerRect.left + playerRect.width / 2, y:playerRect.top - containerRect.top + playerRect.height / 1.4,imageHue:50}));
         enemyDamageAnimation("medium","player")
+        playSound("audio/spell3.mp3")
         buffs.PlayerPoison.time += 40
         if (areas[stats.currentArea].heat<=2) buffs.PlayerPoison.stacks += 2
         if (areas[stats.currentArea].heat>2) buffs.PlayerPoison.stacks += 4
@@ -2303,6 +2502,103 @@ function castHoopperoona(){
         statsUpdate() 
         updateStatsUI()
     }
+
+}
+
+
+function addAttack(who){
+    playSound("audio/enemyAttack.mp3")
+    let add = "enemyAdd1Anim"
+    if (who===2) add = "enemyAdd2Anim"
+    voidAnimation(add,"enemyAttack 0.5s 1")
+}
+
+function spawnAdd(who,img,hp){
+
+
+    if (who===2){
+        enemyAdd2Alive = true
+        enemyAdd2CurrentHp = hp
+        enemyAdd2MaxHp = hp
+        did("addPanel2").style.display = "flex"
+        did("enemyAdd2").style.backgroundImage = `url(img/src/enemies/${img}.png)`
+        did("enemyAdd2Anim").style.animation = "enemySpawn 0.5s 1 ease";
+    }
+
+    else {
+        enemyAdd1Alive = true
+        enemyAdd1CurrentHp = hp
+        enemyAdd1MaxHp = hp
+        did("addPanel1").style.display = "flex"
+        did("enemyAdd1").style.backgroundImage = `url(img/src/enemies/${img}.png)`
+        did("enemyAdd1Anim").style.animation = "enemySpawn 0.5s 1 ease";
+    }
+
+   
+
+    add2Rect = add2div.getBoundingClientRect();
+    add2RectX = add2Rect.left - containerRect.left + add2Rect.width / 2
+    add2RectY = add2Rect.top - containerRect.top + add2Rect.height / 1.4
+
+    add1Rect = add1div.getBoundingClientRect();
+    add1RectX = add1Rect.left - containerRect.left + add1Rect.width / 2
+    add1RectY = add1Rect.top - containerRect.top + add1Rect.height / 1.4
+   
+    playSound("audio/enemyAlerted.mp3")
+    enemyUpdate()
+
+
+
+
+
+}
+
+
+
+
+
+function castTrainingDummy(){
+    
+
+    if (enemyTurn===2 && buffs.EnemyInvulnerable.time>0){
+        spawnAdd(2,"E1",enemies[stats.currentEnemy].hp()/3)
+        enemyAdd2OnDeath = function() {
+            buffs.EnemyInvulnerable.time=0;
+            playerBuffs();
+            particleTrackers.push(new ParticleExplosionFlare7())
+            particleTrackers.push(new ParticleExplosionShockwave1())
+            enemyDamageAnimation("high")
+            setTimeout(() => { enemyTurn=0; buffs.EnemyInvulnerable.time=60*10; playerBuffs();particleTrackers.push(new ParticleExplosionFlare6())  }, 7000);
+        }
+    }
+
+
+
+
+
+    /*
+
+    if (enemyTurn===1 && !enemyAdd1Alive){
+        spawnAdd(1,"E1",2000)
+    }
+
+    if (enemyTurn===1 && !enemyAdd2Alive){
+        spawnAdd(2,"E2",2000)
+    }
+
+    if (enemyAdd1Alive){
+        addAttack(1)
+        playerNatureDamage(20)
+    }
+
+    if (enemyTurn===4){
+       //addAttack(2)
+       //playerNatureDamage(20)
+       enemyTurn = 0
+    }
+
+    */
+
 
 }
 

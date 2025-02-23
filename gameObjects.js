@@ -138,10 +138,7 @@ if (width === "auto") widthvar = 'auto';
   return '<span class="bestiaryTaggy" style="display:flex; align-self:center; justify-content:center; width: '+widthvar+'; background:'+colorvar+'; padding: 0 2%; border-radius: 0.4vh; color:white; font-family: fredoka; font-weight: 450; margin:2% 0;">'+tag+'</span>'
  
 }
-function colorTag(text, color, mode){
-  if (mode==="nobr") return '<strong style="background:'+color+'; padding: 0 0.4rem; border-radius: 0.2rem; white-space: nowrap; color:white;font-family: fredoka; font-weight: 450;">'+text+'</strong>'
-  return '<strong style="background:'+color+'; padding: 0 0.4rem; border-radius: 0.2rem; white-space: nowrap; color:white;font-family: fredoka; font-weight: 450; margin:0 0.3rem">'+text+'</strong>'
-  }
+
 
 
 function returnExp(level){
@@ -168,7 +165,7 @@ enemies.E31.bestiarySkills = "❖ Melting Bite: Inflicts"+buffIcon("B1")+"Poison
 enemies.E31.align = 'occult';
 enemies.E31.tag = 'areaBoss';
 enemies.E31.ignoreBestiary = true;
-
+/*
 enemies.E5 = {};
 enemies.E5.name = 'Jabbit';
 enemies.E5.level = '[lvl 11]';
@@ -207,40 +204,12 @@ enemies.E7.difficulty = 'hard';
 enemies.E7.align = 'nature';
 enemies.E7.drop =  "dropItem('I25');";
 enemies.E7.bestiaryItem = 'bestiaryItem("I25","drop")';
+*/
 
-enemies.E14 = {};
-enemies.E14.name = 'Snapthorn Briar';
-enemies.E14.level = '';
-enemies.E14.difficulty = 'herb';
-enemies.E14.area = 'A2';
-enemies.E14.hp = 75;
-enemies.E14.description = 'A lush and bountiful briar containing many kinds of rare herbs with many applications.'
-enemies.E14.exp = returnExp(14)/300;
-enemies.E14.drop = "dropItem('I38'); rollTable(snapthornCollectibles, 1)";
-enemies.E14.gatheringLevel = 1;
-enemies.E14.bestiaryItem = 'bestiaryTag("Requires: ⛏️ Gathering Level 1")+bestiaryItem("I38","drop")';
 
 var enemyDamageMultiplier = 1;
 var enemyDefenseMultiplier = 1;
 var enemyPhase = 1;
-enemies.E8 = {};
-enemies.E8.name = 'King-Kat';
-enemies.E8.level = '[lvl 20]';
-enemies.E8.hp = 800000;
-enemies.E8.description = 'King of the jungle and king of all fighting styles. Try hitting its weakness.';
-enemies.E8.attack = 3500;
-enemies.E8.area = 'A2';
-enemies.E8.exp = returnExp(20)/300;
-enemies.E8.attackChance = 'castKingKat()';
-enemies.E8.defenseChance = ' if(rpgPlayer.weaponSlot==="I60") {logs.P39.unlocked=true;}';
-enemies.E8.align = 'nature';
-enemies.E8.drop =  'rareItemDrop("I137",rareDrop,1,"drop")+rareItemDrop("I15",rareDrop,1,"drop")+rareItemDrop("I132",uncommonDrop,1,"drop")+rareItemDrop("I133",uncommonDrop,1,"drop")+rareItemDrop("I134",uncommonDrop,1,"drop")+rareItemDrop("I135",uncommonDrop,1,"drop")+rareItemDrop("I136",uncommonDrop,1,"drop")+dropItem("I165")'; 
-enemies.E8.tag = 'areaBoss';
-enemies.E8.difficulty = 'boss';
-enemies.E8.bigEnemy = true;
-enemies.E8.bestiarySkills = '❖ King Punch: Medium'+mightIcon+'Might Damage.<br>❖'+buffIcon("B26")+'Enrage: Increases attack.';
-enemies.E8.bestiaryItem = 'bestiaryItem("I135","container","Jungle King Armor Set", uncommonDrop)+bestiaryItem("I137","drop", rareDrop)+bestiaryItem("I15","drop", rareDrop)+bestiaryItem("I165","drop")';
-enemies.E8.firstTimeReward = true;
 
 enemies.E32 = {};
 enemies.E32.name = 'King-Mysterio';
@@ -310,6 +279,7 @@ enemies.E10.align = 'elemental';
 enemies.E10.drop =  "dropItem('I29');";
 enemies.E10.bestiaryItem = 'bestiaryItem("I29","drop")'
 
+/*
 enemies.E29 = {};
 enemies.E29.name = 'Royal Pudding';
 enemies.E29.level = '[lvl 30]';
@@ -324,7 +294,7 @@ enemies.E29.attackChance = 'castRoyalPudding()'
 enemies.E29.showdown = "S1";
 enemies.E29.bestiaryItem = '"None"';
 enemies.E29.bestiarySkills = "❖ Gel Shot: Medium"+natureIcon+"Nature Damage and inflicts"+buffIcon("B36")+"Slow.";
-
+*/
 enemies.E11 = {};
 enemies.E11.name = 'Granite Elemental';
 enemies.E11.level = '[lvl 27]';
@@ -417,7 +387,7 @@ enemies.E55.bigEnemy = true;
 enemies.E55.bestiaryItem = 'bestiaryItem("I378","rare")+"<br>"+bestiaryItem("I101","rare")';
 enemies.E55.bestiarySkills = "❖"+buffIcon("B37")+"Prismatic Will: Increase attack after receiving any damage other than"+mightIcon+"Might Damage.<br>❖ Drake Claws: Inflicts"+buffIcon("B52")+"Wounded.<br>❖ Dragonsoul Breath: Inflicts"+buffIcon("B25")+"Hex.";
 enemies.E55.ignoreBestiary = true;
-
+/*
 enemies.E28 = {};
 enemies.E28.name = 'Dai-Goran';
 enemies.E28.level = '[lvl 37]';
@@ -431,7 +401,7 @@ enemies.E28.tag = "showdownBoss";
 enemies.E28.attackChance = 'castDaiGoran()'
 enemies.E28.showdown = "S2";
 enemies.E28.bestiarySkills = "❖ Talon Quill: Inflicts"+buffIcon("B1")+"Poison.<br>❖"+buffIcon("B34")+"Basilisk Stare: Inflicts"+buffIcon("B35")+"Petrified.";
-
+*/
 enemies.E46 = {};
 enemies.E46.name = 'DPS Tester';
 enemies.E46.level = '[lvl ??]';
@@ -7622,11 +7592,11 @@ var materialStage = 1;
 const generalRelicDrop = 60000
 
 
-var A1Loot = { I10:{P:200,A:1}, /*chest*/ I257:{P:generalRelicDrop,A:1}, I258:{P:generalRelicDrop,A:1} /*relics*/ ,M1:{P:100000,A:1} /*memo*/}
+//var A1Loot = { I10:{P:200,A:1}, /*chest*/ I257:{P:generalRelicDrop,A:1}, I258:{P:generalRelicDrop,A:1} /*relics*/ ,M1:{P:100000,A:1} /*memo*/}
 areas.A1 = {};
-areas.A1.name = 'Cradle Hills';
+areas.A1.name = '🌳 Cradle Hills';
 areas.A1.level = 1;
-areas.A1.description = '"The starting point of many turtle adventurers due to bugs and insects being the only residents around here, which makes for an easy prey. Or at least it should be."';
+areas.A1.description = '"The starting point of many turtles due to bugs and insects being the only residents around here, which makes for an easy prey. Or at least it should be."';
 //areas.A1.unlocked = true;
 //areas.A1.visible = 1;
 areas.A1.boss = 'E4';
@@ -7636,22 +7606,41 @@ areas.A1.unlockedOre = 0;
 //areas.A1.color2 = "#50473e";
 //areas.A1.masteryCap = 50;
 areas.A1.value = 500 //determines quest reward money and vendor trash sell value
+areas.A1.levelRange = [1,20];
 areas.A1.lootTable = function() { return { AreaChest1 : { c : 300, a : 1} } };
+areas.A1.category = "area"
 
-var A2Loot = { I10:{P:200,A:1}, /*chest*/ I259:{P:generalRelicDrop,A:1}, I260:{P:generalRelicDrop,A:1} /*relics*/ ,M2:{P:100000,A:1} /*memo*/}
+
+
+//var A2Loot = { I10:{P:200,A:1}, /*chest*/ I259:{P:generalRelicDrop,A:1}, I260:{P:generalRelicDrop,A:1} /*relics*/ ,M2:{P:100000,A:1} /*memo*/}
 areas.A2 = {};
-areas.A2.name = 'Lost Dojo';
+areas.A2.name = '🏯 Lost Dojo';
 areas.A2.level = 10;
-areas.A2.description = '"Legends say that a martial dojo was abandoned in the heart of the forest. Overtime, animals began honing their moves in there, and today hardly anyone can live to tell the tale."';
+areas.A2.description = '"Legends say a martial dojo was abandoned in the heart of the forest. Overtime, animals began honing their moves, and today hardly anyone can tell the tale."';
 areas.A2.boss = 'E8';
-areas.A2.bossKey = 'I127';
+//areas.A2.bossKey = 'I127';
 areas.A2.unlockedHerb = 0;
-areas.A2.color1 = "#485640";
-areas.A2.color2 = "#35443f";
-areas.A2.mastery = 100;
-areas.A2.masteryCap = 250;
+areas.A2.levelRange = [20,40];
+areas.A2.lootTable = function() { return { AreaChest1 : { c : 300, a : 1} } };
+areas.A2.value = 1000 //determines quest reward money and vendor trash sell value
+areas.A2.category = "area"
 
-var A3Loot = { I43:{P:200,A:1}, /*chest*/ I261:{P:generalRelicDrop,A:1}, I262:{P:generalRelicDrop,A:1} /*relics*/ ,M3:{P:100000,A:1} /*memo*/}
+
+areas.L1 = {};
+areas.L1.name = '🏆 Monster Arena';
+areas.L1.level = 10;
+areas.L1.description = '"Welcoming all brave turtles, this thunderdome is a place of glory and riches. Fight against powerful foes and claim prize for yourself!"';
+//areas.L1.boss = 'E8';
+//areaL1A2.bossKey = 'I127';
+areas.L1.empty = true;
+areas.L1.lootTable = function() { return { AreaChest1 : { c : 300, a : 1} } };
+areas.L1.value = 500 //determines quest reward money and vendor trash sell value
+areas.L1.category = "landmark"
+areas.L1.locked = "Complete Fine Furs in Lost Dojo to access this area"
+areas.L1.value = 2000 //determines quest reward money and vendor trash sell value
+
+/*
+
 areas.A3 = {};
 areas.A3.name = 'Granite Grotto';
 areas.A3.level = 20;
@@ -7672,7 +7661,6 @@ areas.A7.color1 = "#69584e";
 areas.A7.color2 = "#524238";
 areas.A7.mastery = 500;
 
-var A4Loot = { I43:{P:200,A:1}, /*chest*/ I263:{P:generalRelicDrop,A:1}, I264:{P:generalRelicDrop,A:1} /*relics*/ }
 areas.A4 = {};
 areas.A4.name = 'Hallow Forest';
 areas.A4.level = 30;
@@ -7716,7 +7704,6 @@ areas.A6.charges = 3;
 areas.A6.masteryCap = 1200;
 areas.A6.boss = 'E26';
 
-var A8Loot = { I399:{P:200,A:1}, /*chest*/I380:{P:1000,A:1}, /*shroom*/ I413:{P:generalRelicDrop,A:1}, I414:{P:generalRelicDrop,A:1} /*relics*/ ,M4:{P:100000,A:1} /*memo*/}
 areas.A8 = {};
 areas.A8.name = 'Spirited Valley';
 areas.A8.level = 40;
@@ -7730,7 +7717,6 @@ areas.A8.areaEffect = true;
 areas.A8.mastery = 1200; 
 areas.A8.masteryCap = 1800; 
 
-var A9Loot = { I399:{P:200,A:1}, /*chest*/ I415:{P:generalRelicDrop,A:1}, I416:{P:generalRelicDrop,A:1} /*relics*/,M5:{P:100000,A:1} /*memo*/}
 areas.A9 = {};
 areas.A9.name = 'Ruined Lab';
 areas.A9.level = 50;
@@ -7762,7 +7748,7 @@ areas.A10.masteryCap = 2300;
 areas.A10.boss = 'E49';
 
 
-/*
+
 areas.A11 = {};
 areas.A11.name = 'Temple of Dawn';
 areas.A11.level = 25;
@@ -7786,6 +7772,7 @@ Object.keys(areas).forEach(function(key) {
   areas[key].shopProgress = 0;      
   areas[key].heat = 1;      
   areas[key].heatMax = 1;      
+  if (areas[key].locked===undefined) areas[key].locked = false;      
 });
 
 //#endregion
@@ -8575,12 +8562,14 @@ jobs.engineering.maxExp = 30;
 
 var jobPanels = {}
 
+/*
 jobPanels.SN = {}
 jobPanels.SN.name = 'Smeltery';
 jobPanels.SN.hidden = false; //this checks for contrapted category
-jobPanels.SN.unlocked = true;
+jobPanels.SN.unlocked = false;
 jobPanels.SN.category = 'blacksmithRecipes';
 jobPanels.SN.icon = 'I53';
+*/
 
 jobPanels.SA = {}
 jobPanels.SA.name = 'Weapons';
@@ -8596,12 +8585,21 @@ jobPanels.SG.unlocked = true;
 jobPanels.SG.category = 'blacksmithRecipes';
 jobPanels.SG.icon = 'I86';
 
+jobPanels.SO = {}
+jobPanels.SO.name = 'Anvil';
+jobPanels.SO.hidden = false; 
+jobPanels.SO.unlocked = true;
+jobPanels.SO.category = 'blacksmithRecipes';
+jobPanels.SO.icon = 'I87';
+
+/*
 jobPanels.AN = {}
 jobPanels.AN.name = 'Apothecary';
 jobPanels.AN.hidden = false;
 jobPanels.AN.unlocked = true;
 jobPanels.AN.category = 'alchemyRecipes';
 jobPanels.AN.icon = 'I67';
+*/
 
 jobPanels.AA = {}
 jobPanels.AA.name = 'Potions';
@@ -8617,6 +8615,14 @@ jobPanels.AT.unlocked = true;
 jobPanels.AT.category = 'alchemyRecipes';
 jobPanels.AT.icon = 'I54';
 
+jobPanels.AO = {}
+jobPanels.AO.name = 'Inscription';
+jobPanels.AO.hidden = false;
+jobPanels.AO.unlocked = true;
+jobPanels.AO.category = 'alchemyRecipes';
+jobPanels.AO.icon = 'I562';
+
+/*
 jobPanels.AS = {}
 jobPanels.AS.name = 'Item Synthesis';
 jobPanels.AS.hidden = false;
@@ -8630,7 +8636,7 @@ jobPanels.EN.hidden = false;
 jobPanels.EN.unlocked = true;
 jobPanels.EN.category = 'engineeringRecipes';
 jobPanels.EN.icon = 'I283';
-
+*/
 jobPanels.EA = {}
 jobPanels.EA.name = 'Gadgets';
 jobPanels.EA.hidden = false; //this checks for contrapted category
@@ -9213,7 +9219,7 @@ rpgClass.noClass.currentExp = 0;
 rpgClass.noClass.nextExp = 1000;
 rpgClass.noClass.level = 1;
 rpgClass.noClass.color = "gray";
-rpgClass.noClass.maxLevel = 30;
+rpgClass.noClass.maxLevel = 80;
 
 rpgClass.TA0 = {};
 rpgClass.TA0.name = "Apprentice"
@@ -10091,16 +10097,16 @@ talent.TI2B1.description = `"Increases Flower Power by 30% <span style='color:gr
 talent.TI2B1.effect = 'talent.TI2B1.statUp = 30'
 
 talent.TI2B2 = {};
-talent.TI2B2.position = '-280px 100px'
-talent.TI2B2.parent = "TI2B1"
+talent.TI2B2.position = '-280px 100px';
+talent.TI2B2.parent = "TI2B1";
 talent.TI2B2.name = "Charm";
 talent.TI2B2.category = "Passive";
 talent.TI2B2.description = `"Increases Pat Multiplier by"+colorTag("x1.5","#E57D08")`
 talent.TI2B2.effect = 'talent.TI2B2.statUp = 0.5';
 
 talent.TI2B3 = {};
-talent.TI2B3.position = '-320px 140px'
-talent.TI2B3.parent = "TI2B1"
+talent.TI2B3.position = '-320px 140px';
+talent.TI2B3.parent = "TI2B1";
 talent.TI2B3.name = "Fleur Intuition";
 talent.TI2B3.category = "Passive";
 talent.TI2B3.description = `"Increase"+expIcon+"EXP Bonus by"+colorTag("x1.015","#E57D08")+"for every seed discovered<FONT COLOR='gray'> (x"+(1+(plantCompletionProgress * 0.015)).toFixed(2)+")"`;
@@ -10110,18 +10116,18 @@ talent.TI2B3.lockedCondition = "Reach Gardening Level 6+";
 talent.TI2B3.lockedLogic = 'rpgPlayer.gardenLevel>5';
 
 talent.TI2C = {};
-talent.TI2C.position = '-230px 90px'
-talent.TI2C.parent = "TI2B"
-talent.TI2C.parent2 = "TI1C"
+talent.TI2C.position = '-230px 90px';
+talent.TI2C.parent = "TI2B";
+talent.TI2C.parent2 = "TI1C";
 talent.TI2C.name = "The Fork";
 talent.TI2C.category = "Passive";
 talent.TI2C.description = `"Increases"+occultIcon+"Occult Bonus by"+colorTag("x1.5","#E57D08")`
 talent.TI2C.effect = 'talent.TI2C.statUp = 0.5'
 
 talent.TI3 = {};
-talent.TI3.position = '-140px 170px'
-talent.TI3.parent = "TI2"
-talent.TI3.parent2 = "TI0D"
+talent.TI3.position = '-140px 170px';
+talent.TI3.parent = "TI2";
+talent.TI3.parent2 = "TI0D";
 talent.TI3.name = "Drums of Liberation";
 talent.TI3.category = "Passive";
 talent.TI3.description = `"Increases"+spIcon+"Spellpower by"+colorTag('x1.5','#E57D08')+"if afflicted with a debuff"`;

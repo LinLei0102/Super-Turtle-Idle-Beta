@@ -13,6 +13,18 @@ window.addEventListener("contextmenu", function (e) { //disables web right click
     rightClickY = e.clientY;
 }); 
 
+
+
+
+document.addEventListener("keydown", (event) => {
+    if (event.code === "KeyC") {
+      
+        if (!rpgPlayer.alive) return
+        animatedSplash("player", "T"+rng(1,4),"taunt",0)
+        playSound("audio/taunt.mp3");
+    }
+  });
+
 /* upcoming secreto
 
 window.addEventListener('resize', checkResolution);
@@ -336,8 +348,23 @@ setInterval(oneSecond, 1000);
 function oneSecond() {
 
 
- if (cd.jesterCooldown <= 0 && rng(1,20)===1) {
+if (stats.cddailyPresent1>0) stats.cddailyPresent1--
+if (stats.cddailyPresent2>0) stats.cddailyPresent2--
+if (stats.cddailyPresent3>0) stats.cddailyPresent3--
+if (stats.cddailyPresent4>0) stats.cddailyPresent4--
+if (stats.cddailyPresent5>0) stats.cddailyPresent5--
+if (stats.cddailyPresent6>0) stats.cddailyPresent6--
+
+
+ if (cd.jesterCooldown <= 0 && document.hasFocus() && chance(1/15)) {
     spawnJesterTurtle();
+    cd.jesterCooldown = 60;
+ }
+
+
+ if (cd.presentCanSpawn <= 0 && document.hasFocus() && chance(1/15)) {
+    spawnBalloonPresent();
+    cd.presentCanSpawn = 60;
  }
 
  if (cd.itemOfTheDay <= 0) {
@@ -580,7 +607,6 @@ async function spawnJesterTurtle(){
 
     did("jesterTurtleWrapper").appendChild(div);
     setTimeout(() => {div.remove();}, 29000);
-    cd.jesterCooldown = 60;
 
 
 
@@ -626,6 +652,55 @@ async function spawnJesterTurtle(){
 const blooneffects1 = [buffs.Bloon1Luck,buffs.Bloon1Exp,buffs.Bloon1Luma,buffs.Bloon1Income,buffs.Bloon1Speed,]
 const blooneffects2 = [buffs.Bloon2Luck,buffs.Bloon2Exp,buffs.Bloon2Luma,buffs.Bloon2Income,buffs.Bloon2Speed,]
 const blooneffects3 = [buffs.Bloon3Luck,buffs.Bloon3Exp,buffs.Bloon3Luma,buffs.Bloon3Income,buffs.Bloon3Speed,]
+
+
+
+
+async function spawnBalloonPresent(){
+
+    const div = document.createElement("img");
+
+    div.id = 'balloonPresent';
+    div.src = "img/sys/bloonPresent.png"
+
+    did("jesterTurtleWrapper").appendChild(div);
+    setTimeout(() => {div.remove();}, 29000);
+    //cd.jesterCooldown = 60;
+
+
+
+    div.addEventListener('click', function(event) { 
+
+        
+        div.style.scale = "1.5"
+        div.style.opacity = "0"
+        div.style.pointerEvents = "none"
+        setTimeout(() => {div.remove();}, 500);
+
+
+        cd.presentCanSpawn = 900 
+
+        startMysteryMinigame()
+
+
+        playSound("audio/pop4.mp3")
+        playSound("audio/ding2.mp3")
+
+
+    })
+
+
+        while (document.body.contains(div)) {
+            await delay(100)
+            let bloonrect = div.getBoundingClientRect();
+            const bloonX = bloonrect.left - containerRect.left + bloonrect.width / 2;
+            const bloonY = bloonrect.top - containerRect.top + bloonrect.height / 2;
+            particleTrackers.push(new ParticleShinyStar(bloonX,bloonY,{offsetY:rngD(20,100),offsetX:rngD(-40,70), rotationSpeed : rngD(-0.1,0.1) }));
+        }
+    
+    
+
+}
 
 
 
@@ -791,7 +866,7 @@ var bluemoonDmgUp = 0;
 var sakuraDropUp = 0;
 var rainFishingUp = 0;
 
-const weatherTick = 10000
+const weatherTick = 10000 //10000
 
 setInterval(weatherCheck, weatherTick); 
 
@@ -831,10 +906,11 @@ function weatherCheck() {
 
         did("mainScreen").style.backgroundColor = "#9EE9EF"
         did("dayNightCycleTint").style.background = "transparent"
-        updateItemShop()
 
         specialWeather = false
-        if (chance(1/10)) specialWeather = true
+        if ( stats.currentArea!=="A2" && chance(1/10)) specialWeather = true
+
+        updateItemShop()
     }
  
     if (stats.rpgTime===25 || stats.rpgTime===57){
@@ -847,6 +923,9 @@ function weatherCheck() {
 
         did("mainScreen").style.backgroundColor = "#232D44"
         did("dayNightCycleTint").style.background = "#232D44"
+
+        if ( stats.currentArea==="A2" && chance(1/10)) specialWeather = true
+
         updateItemShop()
     }
 
@@ -939,6 +1018,7 @@ function tooltipTopWidget(id,text) {
 }
 
 tooltipTopWidget("settingsWidget","Game Settings")
+tooltipTopWidget("dailyPresent","Whiskers Gratitude")
 tooltipTopWidget("mailWidget","Mail")
 tooltipTopWidget("gachaWidget","Shellshine Co. Delivery")
 tooltipTopWidget("achievementShopWidget","Achievements")
@@ -948,6 +1028,10 @@ tooltipTopWidget("encounterEasy","Fight a meddlesome foe")
 tooltipTopWidget("encounterMedium","Fight a troublesome foe")
 tooltipTopWidget("encounterHard","Fight a frightsome foe")
 tooltipTopWidget("bossButton",`Fight the boss of the area<br><br>Can only be fought ${rpgPlayer.BossCharges} more times`)
+tooltipTopWidget("miningNode","Area Resource")
+tooltipTopWidget("herbNode","Area Resource")
+tooltipTopWidget("pondNode","Area Resource")
+
 
 tooltipTopWidget("randomHat","Random Favorited Cosmetic")
 
@@ -1013,12 +1097,13 @@ cd.BossCharge = 300
 function resetTooltip(){
     
    did('tooltip').style.display = "none"; 
-   did('tooltip').style.width = "30rem"; 
+   did('tooltip').style.width = "35rem"; 
    did('tooltip').style.minWidth = "0"; 
    did("tooltipArrowUp").style.display = 'none';
    did("tooltipArrow").style.display = 'flex';      
    did("upperTooltip").style.display = 'flex'; 
    did('tooltipImage').style.display = "flex"; 
+   did("tooltipFlavor").style.display = "flex"
    did('tooltipAlign').src = "img/src/projectiles/none.png"; 
    did('tooltipDescription').style.textAlign = '';    
    did("tooltipArrow").style.right = '10%';
@@ -1421,7 +1506,7 @@ window.addEventListener('load', function () { //gets date started
 
 
 cd.presentCooldown = 0;
-cd.presentCanSpawn = 5000;
+cd.presentCanSpawn = 2000;
 cd.gildedCooldown = 10000;
 
 function timeCounters() {
@@ -1502,6 +1587,9 @@ function unlockAnimation(title, description, image){
 
     resetTooltip();
 
+    playSound("audio/ding2.mp3");
+
+
     did("unlockPanel").style.opacity = "1"
     did("unlockPanel").style.display = "flex"
     did("unlockedItem").src = image
@@ -1513,6 +1601,9 @@ function unlockAnimation(title, description, image){
     setTimeout(() => {
         did("unlockedAura").style.display = "flex"
         did("unlockedItem").style.display = "flex"
+        playSound("audio/hit4.mp3");
+        playSound("audio/pop3.mp3");
+
     }, 1000);
 
     setTimeout(() => {
@@ -1636,7 +1727,14 @@ function convertSecondsToHMS(seconds, size) {
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
 
-    if (size==="mini") return `${minutes}m ${remainingSeconds.toFixed(0)}s`;
+
+
+
+    if (size==="mini") {
+        if (hours>0) return `${hours}h ${minutes}m`; 
+        return `${minutes}m ${remainingSeconds.toFixed(0)}s`;
+    } 
+    else if (size==="micro") return seconds < 60 ? seconds : Math.floor(seconds / 60) + "m"
     else return `${hours}h ${minutes}m ${remainingSeconds.toFixed(0)}s`;
 }
 
@@ -2164,10 +2262,14 @@ function createPopup(inner,id) {
 
 
 
-let popupQueue = Promise.resolve(); // Cola inicializada con una promesa resuelta.
+let popupQueue = Promise.resolve();
+
+settings.disableTabPopup = false
 
 async function createPopup(inner, id,type) {
-    // Añadimos a la cola para garantizar el retraso.
+
+    if (settings.disableTabPopup && !document.hasFocus()) return
+    
     await (popupQueue = popupQueue.then(async () => {
         const popupdiv = document.createElement('div');
         popupdiv.innerHTML = inner;
@@ -2201,7 +2303,6 @@ async function createPopup(inner, id,type) {
         
         
 
-        // Pausa de 100ms antes de permitir el próximo popup.
         await new Promise(resolve => setTimeout(resolve, 100));
     }));
 }
@@ -2278,7 +2379,7 @@ function save() {
 
     
 
-localStorage.setItem('lastVisitTime', new Date().getTime());
+    stats.lastVisitTime = new Date().getTime()
     
   const saveData = {}
 
@@ -2309,7 +2410,10 @@ localStorage.setItem('lastVisitTime', new Date().getTime());
       savedQuality: item.savedQuality,
       savedInfo: item.savedInfo,
       uses: item.uses,
+      gemSlot: item.gemSlot,
+      
     };
+
     saveData.savedItems.push(savedItem);
   }
 
@@ -2322,6 +2426,7 @@ localStorage.setItem('lastVisitTime', new Date().getTime());
       upgrade: item.constructor.upgrade,
       timesGot: item.constructor.timesGot,
       count: item.constructor.count,
+      cd: item.constructor.cd,
     };
     saveData.savedItemsMemory.push(savedItem);
   }
@@ -2355,7 +2460,9 @@ localStorage.setItem('lastVisitTime', new Date().getTime());
 
   
   saveData.savedEnemyKills = {}; for (const i in enemies) { saveData.savedEnemyKills[i] = enemies[i].killCount;}
+  saveData.savedEnemyMedalProgress = {}; for (const i in enemies) { saveData.savedEnemyMedalProgress[i] = enemies[i].medalProgress;}
   saveData.savedEnemyNerf = {}; for (const i in enemies) { saveData.savedEnemyNerf[i] = enemies[i].nerfed;}
+  saveData.savedEnemyMedal = {}; for (const i in enemies) { saveData.savedEnemyMedal[i] = enemies[i].medal;}
 
   saveData.savedEnemyCard1 = {}; for (const i in enemies) { if (enemies[i].card1) saveData.savedEnemyCard1[i] = enemies[i].card1.got;}
   saveData.savedEnemyCard2 = {}; for (const i in enemies) { if (enemies[i].card2) saveData.savedEnemyCard2[i] = enemies[i].card2.got;}
@@ -2369,7 +2476,7 @@ localStorage.setItem('lastVisitTime', new Date().getTime());
   
     
   saveData.savedAreaActive = {}; for (const i in areas) { saveData.savedAreaActive[i] = areas[i].active;} 
-  saveData.savedAreaUnlocked = {}; for (const i in areas) { saveData.savedAreaUnlocked[i] = areas[i].unlocked;}  
+  saveData.savedAreaUnlocked = {}; for (const i in areas) { saveData.savedAreaUnlocked[i] = areas[i].locked;}  
 
    
   saveData.savedAreaBoss = {}; for (const i in areas) { saveData.savedAreaBoss[i] = areas[i].boss;}  
@@ -2385,9 +2492,10 @@ localStorage.setItem('lastVisitTime', new Date().getTime());
 
 
   
-  saveData.savedRecipeTime = {}; for (const i in recipes) { saveData.savedRecipeTime[i] = recipes[i].time;}  
-  saveData.savedRecipeCrafting = {}; for (const i in recipes) { saveData.savedRecipeCrafting[i] = recipes[i].crafting;}
-  saveData.savedRecipeUnlocked = {}; for (const i in recipes) { saveData.savedRecipeUnlocked[i] = recipes[i].unlocked;}
+  saveData.savedRecipeTime = {}; for (const i in craftingRecipes) { saveData.savedRecipeTime[i] = craftingRecipes[i].timeCurrent;}  
+  saveData.savedRecipeQue = {}; for (const i in craftingRecipes) { saveData.savedRecipeQue[i] = craftingRecipes[i].que;}  
+  saveData.savedRecipeLocked = {}; for (const i in craftingRecipes) { saveData.savedRecipeLocked[i] = craftingRecipes[i].locked;}  
+
 
   saveData.savedLogsUnlocked = {}; for (const i in logs) { saveData.savedLogsUnlocked[i] = logs[i].unlocked;}
   saveData.savedLogsOnce = {}; for (const i in logs) { saveData.savedLogsOnce[i] = logs[i].once;}
@@ -2559,7 +2667,7 @@ function load() {
         if (savedItem.savedQuality!=undefined) newItem.savedQuality = savedItem.savedQuality
         if (savedItem.savedInfo!=undefined) newItem.savedInfo = savedItem.savedInfo
         if (savedItem.uses!=undefined) newItem.uses = savedItem.uses
-
+        if (savedItem.gemSlot!=undefined) newItem.gemSlot = savedItem.gemSlot
 
         itemInventory.push(newItem);
 
@@ -2586,6 +2694,7 @@ function load() {
             if (savedItem.upgrade!=undefined) newClass.upgrade = savedItem.upgrade
             if (savedItem.timesGot!=undefined) newClass.timesGot = savedItem.timesGot
             if (savedItem.count!=undefined) newClass.count = savedItem.count
+            if (savedItem.cd!=undefined) newClass.cd = savedItem.cd
 
             const newItem = new (eval(savedItem.className))();
 
@@ -2693,23 +2802,23 @@ function load() {
 
 
     for (const i in parsedData.savedAreaActive) { areas[i].active = parsedData.savedAreaActive[i];}  
-    for (const i in parsedData.savedAreaUnlocked) { areas[i].unlocked = parsedData.savedAreaUnlocked[i];}  
+    for (const i in parsedData.savedAreaUnlocked) { areas[i].locked = parsedData.savedAreaUnlocked[i];}  
 
     
-    for (const i in parsedData.savedAreaBoss) { areas[i].boss = parsedData.savedAreaBoss[i];}  
-    for (const i in parsedData.savedAreaOre) { areas[i].unlockedOre = parsedData.savedAreaOre[i];}  
-    for (const i in parsedData.savedAreaHerb) { areas[i].unlockedHerb = parsedData.savedAreaHerb[i];}
-    for (const i in parsedData.savedAreaPond) { areas[i].unlockedPond = parsedData.savedAreaPond[i];}
-    for (const i in parsedData.savedShopLevel) { areas[i].shopLevel = parsedData.savedShopLevel[i];}
-    for (const i in parsedData.savedShopProgress) { areas[i].shopProgress = parsedData.savedShopProgress[i];}
-    for (const i in parsedData.savedCurrentHeat) { areas[i].heat = parsedData.savedCurrentHeat[i];}
-    for (const i in parsedData.savedMaxHeat) { areas[i].heatMax = parsedData.savedMaxHeat[i];}
+    for (const i in parsedData.savedAreaBoss) if (areas[i]) { areas[i].boss = parsedData.savedAreaBoss[i];}  
+    for (const i in parsedData.savedAreaOre) if (areas[i]) { areas[i].unlockedOre = parsedData.savedAreaOre[i];}  
+    for (const i in parsedData.savedAreaHerb) if (areas[i]) { areas[i].unlockedHerb = parsedData.savedAreaHerb[i];}
+    for (const i in parsedData.savedAreaPond) if (areas[i]) { areas[i].unlockedPond = parsedData.savedAreaPond[i];}
+    for (const i in parsedData.savedShopLevel) if (areas[i]) { areas[i].shopLevel = parsedData.savedShopLevel[i];}
+    for (const i in parsedData.savedShopProgress) if (areas[i]) { areas[i].shopProgress = parsedData.savedShopProgress[i];}
+    for (const i in parsedData.savedCurrentHeat) if (areas[i]) { areas[i].heat = parsedData.savedCurrentHeat[i];}
+    for (const i in parsedData.savedMaxHeat) if (areas[i]) { areas[i].heatMax = parsedData.savedMaxHeat[i];}
 
 
-      
-    for (const i in parsedData.savedRecipeTime) if (recipes[i]) { recipes[i].time = parsedData.savedRecipeTime[i];}
-    for (const i in parsedData.savedRecipeCrafting) if (recipes[i]) { recipes[i].crafting = parsedData.savedRecipeCrafting[i];}  
-    for (const i in parsedData.savedRecipeUnlocked) if (recipes[i]){ recipes[i].unlocked = parsedData.savedRecipeUnlocked[i];}
+    for (const i in parsedData.savedRecipeTime) { if (craftingRecipes[i]) craftingRecipes[i].timeCurrent = parsedData.savedRecipeTime[i];}
+    for (const i in parsedData.savedRecipeQue) { if (craftingRecipes[i]) craftingRecipes[i].que = parsedData.savedRecipeQue[i];}
+    for (const i in parsedData.savedRecipeLocked) { if (craftingRecipes[i]) craftingRecipes[i].locked = parsedData.savedRecipeLocked[i];}
+
   
 
     for (const i in parsedData.savedItemCount) { if (items[i]) items[i].count = parsedData.savedItemCount[i];}
@@ -2738,7 +2847,9 @@ function load() {
     for (const i in parsedData.savedBuffStacks) { if (buffs[i]) buffs[i].stacks = parsedData.savedBuffStacks[i];}
     
     for (const i in parsedData.savedEnemyKills) { enemies[i].killCount = parsedData.savedEnemyKills[i];}
+    for (const i in parsedData.savedEnemyMedalProgress) { enemies[i].medalProgress = parsedData.savedEnemyMedalProgress[i];}
     for (const i in parsedData.savedEnemyNerf) { enemies[i].nerfed = parsedData.savedEnemyNerf[i];}
+    for (const i in parsedData.savedEnemyMedal) { enemies[i].medal = parsedData.savedEnemyMedal[i];}
 
     for (const i in parsedData.savedEnemyCard1) { enemies[i].card1.got = parsedData.savedEnemyCard1[i];}
     for (const i in parsedData.savedEnemyCard2) { enemies[i].card2.got = parsedData.savedEnemyCard2[i];}
@@ -2763,7 +2874,6 @@ function load() {
 function deleteSave() {
 
     localStorage.removeItem('saveData');
-    localStorage.removeItem('lastVisitTime');
 
     const saveData = {}
     saveData.savedItemCount = {}; for (const i in items) { if (items[i].quality==="Soulbound")  saveData.savedItemCount[i] = items[i].count;}
@@ -2774,7 +2884,7 @@ function deleteSave() {
     location.reload();
 };
 
-
+stats.lastVisitTime = new Date().getTime()
 
 function exportJSON() {
 
@@ -2853,7 +2963,12 @@ unlocks.garden = false;
 
 function unlocksReveal(){
 
-    if (unlocks.shop) did("shopInteractable").style.display = "flex"
+    if (unlocks.shop && stats.currentArea!=="L1") did("shopInteractable").style.display = "flex"
+    if (unlocks.crafting) did("inventoryCraftingPageSquare").style.display = "flex"
+    if (unlocks.dailyPresent) did("dailyPresent").style.display = "flex"
+    if (unlocks.loadouts) did('slotButtonHolderLoadout').style.visibility = "visible";
+    if (unlocks.bestiary) did('bestiaryWidget').style.display = "flex";
+
 
     if (unlocks.mail) did('mailButton').style.display = "flex";
     if (unlocks.gacha) did('gachaWidget').style.display = "flex";
@@ -2862,7 +2977,6 @@ function unlocksReveal(){
     if (unlocks.garrison) did('campTab').style.display = "flex";
     if (unlocks.itemOfTheDay) did('itemOfTheDay').style.display = "flex";
     if (unlocks.journal) did('achievementsTab').style.display = "flex";
-    if (unlocks.bestiary) {did('bestiaryMastery').style.display = "flex"; did('bestiaryProgress2').style.display = "flex"; did('bestiaryBadge').style.display = "flex";}
     if (unlocks.armory) did('armoryButton').style.display = "flex";
     //if (unlocks.wobblyCursor) did('wubblySettings').style.display = "flex";
     if (unlocks.penguins) {
@@ -2889,7 +3003,6 @@ function unlocksReveal(){
     if (unlocks.gardenUpgrade3) did('gardenRow5').style.display = "flex";
 
 
-    if (unlocks.loadouts) did('gearLoadouts').style.display = "flex";
 
 
     if (unlocks.seedCompendium) did('gardenShipButton').style.display = "flex";
@@ -2962,7 +3075,7 @@ setTimeout(() => {
     did("introPanel").style.display = "none"
 }, 1000);
 
-tipPopUp("🐢 Welcome! 🐢","<br>Welcome to Super Turtle Idle, an incremental idle RPG. Complete quests, gather materials by idling, and tackle mighty foes!<br><br>Why dont we start by checking the quest board?")
+tipPopUp("🐢 Welcome! 🐢","<img src=img/sys/nerd.png><br>Welcome to Super Turtle Idle, an incremental idle RPG. Complete quests, gather materials by idling, and tackle mighty foes!<br><br>Why dont we start by checking the quest board?")
 }
 
 settings.currentDifficulty = "Medium"
@@ -3058,7 +3171,10 @@ function retroactiveUpdate(){
     if (stats.currentVersion<0.44){for (var i in research) if (research[i].status === "completed") {research[i].status = "waiting"; research[i].unlocked = false; research[i].timer = research[i].timerMax; } }
 
     //sanityCheck()
-    stats.currentVersion = 1.04;
+
+    if (stats.currentVersion<1.04){ Luma.upgrade = undefined }
+
+    stats.currentVersion = 1.05;
     did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(2)}`
 }
 
@@ -3275,7 +3391,7 @@ function initialization() {
     displayTurtleName();
     oneSecond();
     rememberCategory(); //remembers tab on the left
-    unlocksReveal();
+    //unlocksReveal();
     randomTabName();
     addItem();
     setCursor();
