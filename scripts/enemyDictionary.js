@@ -371,7 +371,7 @@ enemies.E8 = {
     ${heatDesc(`❖${buffIcon("B2")}Hot Tag!${colorTag("🔥3","orange")}: If summon hasn\'t been defeated, gain 5 stacks of enrage and heal 30% of HP`,3)}
     ` },
   contextTooltip: function() { return [ contextTooltipEnemyEnrage()] },
-  breakBar: function () { if (areas[stats.currentArea].heat===4) return 1 },
+  breakBar: function () { if (areas[stats.currentArea].heat===4) {return 1} else return 0 },
   variance: {Hue2:-20, Hue3:-20, Hue4:-40, Alt:true},
   card1 : { description:"x1.05 Luck", effect: function() {stat.Luck*=1.05} },
   card2 : { description:"x1.08 Luck", effect: function() {stat.Luck*=1.08}},
