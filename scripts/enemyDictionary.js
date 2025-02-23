@@ -5,7 +5,7 @@ function returnEnemyHp(level){
     //return Math.floor(1000 * Math.pow(1.5, (level-1)))
     let baseHp = 100
     if (level>=18) baseHp = 150
-    if (level>=21) baseHp = 300 //a2 start
+    if (level>=23) baseHp = 250 //a2 start
     if (level>=28) baseHp = 500
     if (level>=33) baseHp = 700
     if (level>=38) baseHp = 900
@@ -251,7 +251,7 @@ enemies.E7 = {
   description: 'A hen proficient in full body combat. This one doesn\'t even want to cross the road.',
   area: 'A2',
   difficulty: 'hard',
-  lootTable: function() { return { SashHead : { c : chances.enemies.poor, a : 1}, MonkFeet : { c : chances.enemies.rare, a : 1}, BushidoMedallion : { c : chances.enemies.epic, a : 1} } },
+  lootTable: function() { return { SashHead : { c : chances.enemies.poor, a : 1}, MonkFeet : { c : chances.enemies.epic, a : 1}, BushidoMedallion : { c : chances.enemies.epic, a : 1} } },
   align: 'nature',
   card1 : { description:"x1.05 Luma Power", effect: function() {stat.LumaPower*=1.05} },
   card2 : { description:"x1.1 Luma Power", effect: function() {stat.LumaPower*=1.1}},
@@ -371,7 +371,7 @@ enemies.E8 = {
     ${heatDesc(`❖${buffIcon("B2")}Hot Tag!${colorTag("🔥3","orange")}: If summon hasn\'t been defeated, gain 5 stacks of enrage and heal 30% of HP`,3)}
     ` },
   contextTooltip: function() { return [ contextTooltipEnemyEnrage()] },
-
+  breakBar: function () { if (areas[stats.currentArea].heat===4) return 1 },
   variance: {Hue2:-20, Hue3:-20, Hue4:-40, Alt:true},
   card1 : { description:"x1.05 Luck", effect: function() {stat.Luck*=1.05} },
   card2 : { description:"x1.08 Luck", effect: function() {stat.Luck*=1.08}},
@@ -416,6 +416,7 @@ enemies.E28 = {
   attack : function() {return returnEnemyAttack(this.level) / 2},
   align: 'occult',
   tag: "arena",
+  noMedal:true,
   breakBar: function () { return 1 },
   ai: function () { castDaiGoran() },
   bestiarySkills : function() { return `

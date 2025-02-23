@@ -2446,7 +2446,7 @@ class MonkFeet extends ArmorFeet {
         this.img = 576;
         this.set = `Monk`;
         this.quality = `Uncommon`;
-        this.baseHp = 3650;
+        this.baseHp = 2100;
         this.setMin = 2;
 
         Object.assign(this, properties);
@@ -2465,7 +2465,7 @@ class MonkHead extends ArmorHead {
         this.img = 580;
         this.set = `Monk`;
         this.quality = `Uncommon`;
-        this.baseHp = 3500;
+        this.baseHp = 2200;
         this.setMin = 2;
         Object.assign(this, properties);
     }
@@ -2863,7 +2863,7 @@ class ShinigamiChest extends ArmorChest {
         this.flavor = `"Despite the grim appearance, it has a faint smell of strawberries."`;
         this.img = 581;
         this.quality = `Common`;
-        this.baseHp = 125;
+        this.baseHp = 113;
         this.skillDescription = function() { return `+ 15% Occult Bonus` };
         Object.assign(this, properties);
     }
@@ -2947,7 +2947,7 @@ class TigerHead extends ArmorHead {
         this.flavor = `"It\'s hard to look mighty with those fluffy ears looking at me."`;
         this.img = 133;
         this.quality = `Uncommon`;
-        this.baseHp = 3200;
+        this.baseHp = 2300;
         this.set = `Tiger`;
         this.setMin = 3;
         Object.assign(this, properties);
@@ -2961,7 +2961,7 @@ class TigerFeet extends ArmorFeet {
         this.flavor = `"Pawsitively adorable."`;
         this.img = 132;
         this.quality = `Uncommon`;
-        this.baseHp = 3150;
+        this.baseHp = 2200;
         this.set = `Tiger`;
         this.setMin = 3;
         Object.assign(this, properties);
@@ -2972,11 +2972,11 @@ class TigerFeet extends ArmorFeet {
 class TigerChest extends ArmorChest {
     constructor(properties = {}) {
         super(properties);
-        this.name = `Explorer Cuirass`;
+        this.name = `Jungle King Chestplate`;
         this.flavor = `"Adorned with the fierce pattern of a tiger."`;
         this.img = 135;
         this.quality = `Uncommon`;
-        this.baseHp = 3350;
+        this.baseHp = 2400;
         this.set = `Tiger`;
         this.setMin = 3;
         Object.assign(this, properties);
@@ -2986,11 +2986,11 @@ class TigerChest extends ArmorChest {
 class TigerLegs extends ArmorLegs {
     constructor(properties = {}) {
         super(properties);
-        this.name = `Explorer Pants`;
-        this.flavor = `"The copper bolts aimed at the knees emphasize the importance of avoiding falling."`;
+        this.name = `Jungle King Tail`;
+        this.flavor = `"Doesn\'t need to be plugged anywhere fortunately."`;
         this.img = 136;
         this.quality = `Uncommon`;
-        this.baseHp = 3250;
+        this.baseHp = 2300;
         this.set = `Tiger`;
         this.setMin = 3;
         Object.assign(this, properties);
@@ -3022,7 +3022,7 @@ class BlackBelt extends ArmorLegs {
         this.img = 127;
         this.skillDescription = function() { return `+ 15% Occult Resist` };
         this.quality = `Common`;
-        this.baseHp = 120;
+        this.baseHp = 118;
         Object.assign(this, properties);
     }
     stats(){
@@ -3038,7 +3038,7 @@ class ChampionBelt extends ArmorLegs {
         this.img = 15;
         this.skillDescription = function() { return `+ 10% Crit Damage<br>+ 5% Luck` };
         this.quality = `Common`;
-        this.baseHp = 115;
+        this.baseHp = 110;
         this.noScrap = true;
         Object.assign(this, properties);
     }

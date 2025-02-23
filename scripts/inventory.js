@@ -614,7 +614,7 @@ function fadeInventoryTabs(){
   
   itemInventory.forEach((item, index) => {
 
-    if (equippedItems.some(equippedItem => equippedItem === item)) return
+    if (equippedItems.some(equippedItem => equippedItem === item)) return //skip equipped items
 
     if ( did(`inventory${item.sort}Target`) && did(`inventory${item.sort}Target`).style.opacity != 1) did(`inventory${item.sort}Target`).style.opacity = 1
 

@@ -117,14 +117,14 @@ stats.questsCompletedLog = 0
 
 logs.L1P5 = {}
 logs.L1P5.name = "Beginner Adventurer";
-logs.L1P5.description = "Complete 5 Quests";
+logs.L1P5.description = "Complete 6 Quests";
 logs.L1P5.hint = '"I\'m Ready! I\'m Ready! I\'m Ready! I\'m Ready!"';
-logs.L1P5.logic = 'stats.questsCompletedLog>4';
+logs.L1P5.logic = 'stats.questsCompletedLog>5';
 logs.L1P5.tag = '📜';
 logs.L1P5.category = "A1";
 logs.L1P5.repeatable = true;
-logs.L1P5.repeatableClick = function() {return stats.questsCompletedLog  -= 5};
-logs.L1P5.progressDescription = function() { return `${beautify(stats.questsCompletedLog )}/5` };
+logs.L1P5.repeatableClick = function() {return stats.questsCompletedLog  -= 6};
+logs.L1P5.progressDescription = function() { return `${beautify(stats.questsCompletedLog )}/6` };
 
 
 logs.L1P6 = {}
