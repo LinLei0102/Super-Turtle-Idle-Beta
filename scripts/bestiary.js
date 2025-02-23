@@ -231,7 +231,6 @@ function updateBestiary() {
 
 
           if (enemies[i].medal<3) {
-            rpgPlayer.shop.bestiary.exp+=400;
             enemies[i].medal++;
           }
           enemies[i].medalProgress-=3000
