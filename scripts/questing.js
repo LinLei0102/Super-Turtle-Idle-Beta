@@ -344,7 +344,7 @@ quests.A2Q7 = {
     name: 'Gelatinous Gladiator',
     difficulty: 5,
     icon: `img/src/buffs/B2.jpg`,
-    description: `I am the number one fan of Royal Pudding, he is so handsome and pink. You would not stand a chance against his mighty wobble`,
+    description: `I am the number one fan of Royal Pudding, he is so handsome and pink. You would not stand a chance against his mighty wobble in the monster arena!`,
     objective: function() { return `Defeat Royal Pudding`},
     logic : function() {return enemies.E29.killCount>0},
     effect: function() {
@@ -362,8 +362,7 @@ quests.A2Q7 = {
     objective: function() { return `Adquire a silver medal on Roostrika\'s bestiary entry`},
     logic : function() {return enemies.E7.medal > 1},
     effect: function() {
-      unlockAnimation("Bestiary Unlocked!", "Look up monster information, get rewards by repeatedly defeating enemies, or collect cards for permanent stat increases!<br>Check the widget on the top right screen", "img/src/items/I290.jpg");
-      unlocks.bestiary = true
+      spawnItem(CoinPile2,1)
     },
     reward: `${itemData(CoinPile2)} x1`
   }

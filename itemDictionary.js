@@ -4000,7 +4000,7 @@ class KingKatDecapitator extends Weapon {
         this.flavor = `"It\'s not flawed, it\'s just a one-handed axe."`
         this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to increase Crit Damage by 3%. Stacks up to 10 times. Once it reaches 10 stacks, deal x${this.baseSkillDamage*this.skillDamage} weapon damage ${3+this.skillMultishot} times`}
         this.img = 137
-        this.baseDamage = 2900
+        this.baseDamage = 1900
         this.baseSkillChance = 5
         this.baseSkillDamage = 2
         this.quality = `Uncommon`

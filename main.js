@@ -356,13 +356,13 @@ if (stats.cddailyPresent5>0) stats.cddailyPresent5--
 if (stats.cddailyPresent6>0) stats.cddailyPresent6--
 
 
- if (cd.jesterCooldown <= 0 && document.hasFocus() && chance(1/15)) {
+ if (cd.jesterCooldown <= 0 && document.hasFocus() && chance(1/4)) {
     spawnJesterTurtle();
     cd.jesterCooldown = 60;
  }
 
 
- if (cd.presentCanSpawn <= 0 && document.hasFocus() && chance(1/15)) {
+ if (cd.presentCanSpawn <= 0 && document.hasFocus() && chance(1/20)) {
     spawnBalloonPresent();
     cd.presentCanSpawn = 60;
  }

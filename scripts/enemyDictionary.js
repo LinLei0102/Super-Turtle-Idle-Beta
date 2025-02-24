@@ -392,12 +392,13 @@ enemies.E29 = {
   name: 'Royal Pudding',
   initialLevel: function() { return Math.max(35,rpgClass[stats.currentClass].level)},
   description: 'A pink round jelly that is as dangerous as it is delicious.',
-  hp: function() {return returnEnemyHp(this.level)*10},
+  hp: function() {return returnEnemyHp(this.level)*9},
   attack : function() {return returnEnemyAttack(this.level) / 2},
   align: 'occult',
   tag: "arena",
   passive: true,
   noMedal:true,
+  breakBar: function () { return 1 },
   ai: function () { castRoyalPudding() },
   bestiarySkills : function() { return `
      ❖${buffIcon("B9")}Gunk Shot: Deal x4 enemy attack as Occult Damage and apply 1 stack of Slow

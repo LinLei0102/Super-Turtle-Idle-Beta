@@ -1496,7 +1496,6 @@ function createLog() {
 
         
 
-        createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x300 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
 
 
         itemDiv.style.animation = "";
@@ -1516,6 +1515,8 @@ function createLog() {
           resetTooltip()
           rpgPlayer.shop.achievement.exp+=50
           achievementShopExpUpdate()
+          createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x300 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
+
 
         } 
 
@@ -1529,6 +1530,7 @@ function createLog() {
           updateCounters()
           resetTooltip()
           logs[i].once = false
+          createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x100 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
 
         } 
 

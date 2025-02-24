@@ -50,9 +50,9 @@ function updateBestiary() {
 
       //if (!(enemies[i].difficulty != 'boss' || enemies[i].noMedal)) continue
 
-      if (enemies[i].medal==1) { did(i+"minimedal").style.color = "#A87665" }
-      if (enemies[i].medal==2) { did(i+"minimedal").style.color = "#E2E1F2"}
-      if (enemies[i].medal==3) { did(i+"minimedal").style.color = "#FBD269"}
+      if (enemies[i].medal==1 && did(i+"minimedal")) { did(i+"minimedal").style.color = "#A87665" }
+      if (enemies[i].medal==2 && did(i+"minimedal")) { did(i+"minimedal").style.color = "#E2E1F2"}
+      if (enemies[i].medal==3 && did(i+"minimedal")) { did(i+"minimedal").style.color = "#FBD269"}
         
       if (enemies[i].card1){
         let cardCount = 0
@@ -98,7 +98,7 @@ function updateBestiary() {
     let percentageEXP = (enemies[currentBestiaryEntry].medalProgress / 3000) * 100;
     did("bestiaryEnemyKillsExpBar").style.background = "linear-gradient(90deg, #6FB1EE " + percentageEXP + "%, white " + percentageEXP + "%)";
 
-    if (enemies[currentBestiaryEntry].difficulty === 'boss' || enemies[currentBestiaryEntry].noMedal || enemies[currentBestiaryEntry].resource) {did("bestiaryEnemyKills").style.opacity = "0"} else {did("bestiaryEnemyKills").style.opacity = "1"}
+    if (enemies[currentBestiaryEntry].difficulty === 'boss' || enemies[currentBestiaryEntry].noMedal || enemies[currentBestiaryEntry].resource) {did("bestiaryEnemyKills").style.display = "none"} else {did("bestiaryEnemyKills").style.display = "flex"}
 
 
     did("bestiaryEnemyDesc").innerHTML = enemies[currentBestiaryEntry].description
