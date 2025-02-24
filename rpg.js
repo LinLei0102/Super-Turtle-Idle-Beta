@@ -8017,7 +8017,7 @@ stats.mysteryPresentsOpenedLog++;
 did("blackScreen").style.display = "flex";
 setTimeout(() => { did("blackScreen").style.opacity = "0.9" }, 0);
 did("presentMinigame").style.display = "flex";
-voidAnimation("presentMinigame", "growFadeIn 0.5s 1")
+voidAnimation("presentMinigame", "growFadeIn 0.5s 1,bgPatternDiagonal 300s infinite linear")
 did("mysteryCloth").style.display = "flex";
 did("mysteryRewardPanel").style.display = "flex";
 

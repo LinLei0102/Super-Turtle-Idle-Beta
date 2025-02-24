@@ -5358,6 +5358,7 @@ animation: mysteryCloth 2s forwards;
 background-repeat: no-repeat;
 background-color: transparent;
 pointer-events: none;
+z-index: 0;
 }
 
 #mysteryList{
@@ -5431,7 +5432,7 @@ animation: shakeAndGrow 1s infinite;
 
 0% {translate: 0 0%}
 
-100% {translate: 0 -60%}
+100% {translate: 0 -30rem}
 
 
 }
