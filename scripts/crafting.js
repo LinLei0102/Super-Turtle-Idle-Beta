@@ -189,7 +189,7 @@ craftingRecipes.TopazRing = {
     category: `EI`,
     item: {TopazRing:1},
     reagents: {CopperOre:5,ScrapMaterial2:1,GemTopaz:1},
-    time: 1,
+    time: 2*60,
     level: 7,
     exp: 30,
     locked: true,
