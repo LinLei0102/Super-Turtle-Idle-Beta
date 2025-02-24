@@ -65,7 +65,7 @@ function playerTurn() {
     enemyTurn = 0;
     bossTime = false
     removeBuffs("clear");
-    playerBuffs();
+    ;
     enemyAdd1CurrentHp = 0
     enemyAdd2CurrentHp = 0
     enemyUpdate()
@@ -162,7 +162,7 @@ function playerUpdate(){ //updates player HP and checks if its dead
 
 
     clearNegativeBuffs()
-    playerBuffs();
+    ;
     rpgPlayer.alive = false;
     gametipUnlock("gt8")
     logPrint(stats.turtleName + " perishes :c");
@@ -722,6 +722,7 @@ function playerBuffs() { //only UI
 
     if (buffs[b].time < 0.99 && did(b + "buff")) {
       did(b + "buff").remove();
+      buffs[b].time = 0
       if ('stacks' in buffs[b]) buffs[b].stacks = 0;
       statsUpdate();
       updateStatsUI();
