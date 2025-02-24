@@ -232,17 +232,24 @@ function updateBestiary() {
 
           if (enemies[i].medal<3) {
             enemies[i].medal++;
+            rpgPlayer.scutes+=100
+            stats.totalScutes += 100
+            createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x100 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
+          } else {
+            rpgPlayer.scutes+=50
+            stats.totalScutes += 50
+            createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x50 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
           }
+
+
           enemies[i].medalProgress-=3000
 
-          rpgPlayer.scutes+=100
-          stats.totalScutes += 100
+
           updateCounters()
 
 
 
           selectedItemRect = document.getElementById(div).getBoundingClientRect();
-          createPopup(`<span style="color:cyan; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/icons/scutes.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">Prism Scute x100 <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
 
 
           particleTrackers.push(new ParticleSellPulse(mousePositionX, mousePositionY));

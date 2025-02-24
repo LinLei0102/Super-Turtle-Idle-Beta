@@ -2280,6 +2280,12 @@ async function createPopup(inner, id,type) {
 
         did("popupListing").appendChild(popupdiv);
 
+
+        popupdiv.addEventListener('click', function(event) {
+            popupdiv.style.animation =  "popupSlideOut 0.5s"
+                setTimeout(() => { popupdiv.remove(); }, 500);  
+        })
+
         if (type==="long"){
 
             setTimeout(() => { 
@@ -2298,6 +2304,9 @@ async function createPopup(inner, id,type) {
 
 
         }
+
+
+
 
         
         

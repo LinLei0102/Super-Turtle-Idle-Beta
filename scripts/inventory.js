@@ -2205,7 +2205,7 @@ function returnPrefixSkills(item){
   let prefix5 = ""
 
   //t1
-  if (item.prefix1 === `Light`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Attack Speed, x0.8 Weapon Damage</span>`;}
+  if (item.prefix1 === `Light`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.25 Attack Speed, x0.8 Weapon Damage</span>`;}
   if (item.prefix1 === `Powerful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x0.5 Attack Speed, x3 Weapon Damage</span>`;}
   if (item.prefix1 === `Echoing`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, x0.5 Weapon Damage</span>`;}
   if (item.prefix1 === `Masterful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Chance, x0.5 Weapon Skill Damage</span>`;}
@@ -2216,7 +2216,7 @@ function returnPrefixSkills(item){
   if (item.prefix2 === `Runic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Weapon Skill Attack</span>`;}
   if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Weapon Damage</span>`;}
   if (item.prefix2 === `Double`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack</span>`;}
-  if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Attack Speed</span>`;}
+  if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.15 Attack Speed</span>`;}
   if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Chance</span>`;}
   if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
 

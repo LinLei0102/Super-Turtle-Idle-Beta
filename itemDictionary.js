@@ -1365,7 +1365,7 @@ class Weapon extends Equipable {
         if (this.prefix1 === "Powerful") {this.attackSpeed *= 2; this.damage *= 3; }
         if (this.prefix1 === "Echoing") {this.multishot += 1; this.damage *= 0.5;}
         if (this.prefix1 === "Masterful") {this.skillChance *= 0.5; this.skillDamage *= 0.5;}
-        if (this.prefix1 === "Technical") {this.skillDamage *= 2; this.skillChance *= 1.5;}
+        if (this.prefix1 === "Technical") {this.skillDamage *= 2; this.skillChance *= 2;}
         if (this.prefix1 === "Recursive") {this.multishot += 4; this.attackSpeed *= 3.25}
 
         if (this.prefix2 === "Runic") {this.skillMultishot += 1; }
@@ -1923,7 +1923,7 @@ class GemshellBeetle extends Material {
         super(properties);
         this.name = `Gemshell Beetle`;
         this.flavor = `"A bug with a naturally hard, almost rocky, chitin shell."`;
-        this.source = `Rarely gathered in Cradle Hills. Crafting material`;
+        this.source = `Rarely gathered in Lost Dojo. Crafting material`;
         this.img = 591;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
@@ -1935,7 +1935,7 @@ class TinyLifeMote extends Material {
         super(properties);
         this.name = `Tiny Life Mote`;
         this.flavor = `"A fleeting thread of life. Blink and watch it go."`;
-        this.source = `Rarely dropped by Jabbits in Cradle Hills. Crafting material`;
+        this.source = `Rarely dropped by Jabbits in Lost Dojo. Crafting material`;
         this.img = 592;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
@@ -3570,7 +3570,7 @@ class FoodLizard extends Consumable {
         this.img = 12;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 1000 Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 1000 Health <span style="color:gray">(Up to 100% of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
         this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
         Object.assign(this, properties);
     }
@@ -3603,7 +3603,7 @@ class FoodCheese extends Consumable {
         this.img = 34;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 5000 Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 5000 Health <span style="color:gray">(Up to 100% of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
         this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
         Object.assign(this, properties);
     }
@@ -3630,7 +3630,7 @@ class FoodDango extends Consumable {
         this.img = 567;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 10K Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 10K Health <span style="color:gray">(Up to 100% of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
         this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
         Object.assign(this, properties);
     }

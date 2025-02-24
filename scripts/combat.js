@@ -129,7 +129,7 @@ function playerUpdate(){ //updates player HP and checks if its dead
 
     if ((enemies[stats.currentEnemy].tag === "arena")) { //if an arena boss kills the turtle
       bossTime = false;
-      deleteEnemy();
+      //deleteEnemy();
       resetEncounter();
       did("enemyPanel").style.display = "none";
 

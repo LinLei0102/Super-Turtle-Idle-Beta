@@ -8,7 +8,7 @@ function calculateInactiveTime() { //calculates idle time
     if (lastVisitTime) {
         const currentTime = new Date().getTime();
         const inactiveTime = currentTime - parseInt(lastVisitTime);
-        const secondsInactive = Math.floor(inactiveTime / 1000);
+        const secondsInactive =  Math.min(  Math.floor(inactiveTime / 1000) , 604800 ); //max 1 week of offline
         //const secondsInactive = 28800;
 
         lastofflinetime = secondsInactive
@@ -22,7 +22,7 @@ function calculateInactiveTime() { //calculates idle time
                 offlineRewards(secondsInactive);
                 //if (!settings.disablePenguinRecap) { did("penguinRecap").style.display = "flex"; }
                 //offlineDrops(secondsInactive/60)
-
+                simulateCraftingTime(secondsInactive)
             
 
 
@@ -34,12 +34,12 @@ function calculateInactiveTime() { //calculates idle time
 
             
             
-            for (let i in research) { if (research[i].status === "researching" && research[i].timer>1) research[i].timer -= secondsInactive}
+            //for (let i in research) { if (research[i].status === "researching" && research[i].timer>1) research[i].timer -= secondsInactive}
 
 
-            for (let i in buildings) { if (buildings[i].unlocked && buildings[i].progress<8640) {buildings[i].progress += secondsInactive/30; if (buildings[i].progress>8640) buildings[i].progress=8640}}
+            //for (let i in buildings) { if (buildings[i].unlocked && buildings[i].progress<8640) {buildings[i].progress += secondsInactive/30; if (buildings[i].progress>8640) buildings[i].progress=8640}}
 
-
+            /*
             for (let i in areas) {
 
                 if ("dungeonTimer" in areas[i] && areas[i].dungeonTimer>0) {
@@ -56,6 +56,8 @@ function calculateInactiveTime() { //calculates idle time
                 if (areas[i].dungeonTimer<0) areas[i].dungeonTimer=0;
             
             }
+
+            */
 
             setTimeout(() => {
                 save();

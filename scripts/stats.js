@@ -717,7 +717,7 @@ function statsUpdate(){
 
 
 
-  document.body.style.animation = "none"
+  did("mainScreen").style.animation = "none"
 
   for (i in stat) stat[i] = 0
   for (i in statHidden) statHidden[i] = 0

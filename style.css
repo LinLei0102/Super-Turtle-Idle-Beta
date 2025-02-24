@@ -1068,14 +1068,25 @@ justify-content: center;
     flex-shrink: 0;
     pointer-events: auto;
     flex-wrap: wrap;
-
+    transition: 0.2s;
+    position: relative;
 }
+
+#popupListing div:hover{
+    opacity: 0.3;
+}
+
+
+
+
+
+
 
 #popupListing div span{
     flex-shrink: 0;
     white-space: nowrap;
     min-width: 0; /* Evita que los elementos rompan el diseño */
-
+    pointer-events: none;
 }
 
 #popupListing span{

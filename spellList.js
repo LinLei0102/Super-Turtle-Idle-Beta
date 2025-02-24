@@ -2385,8 +2385,8 @@ function castKingKat(){
     }
 
     if(enemyTurn===8){
-        spawnAdd(2,"E5",enemies[stats.currentEnemy].hp()/13)
-        if (areas[stats.currentArea].heat===4) {spawnAdd(1,"E7",enemies[stats.currentEnemy].hp()/13)}
+        spawnAdd(2,"E5",enemies[stats.currentEnemy].hp()/10)
+        if (areas[stats.currentArea].heat===4) {spawnAdd(1,"E7",enemies[stats.currentEnemy].hp()/10)}
     }
 
     if (enemyTurn===10){

@@ -309,7 +309,7 @@ buffs.Tipsy = {
     description: '<FONT COLOR="#8fbaff">"Was the ground always this close?"',
     img : 'img/src/buffs/B59.jpg',
     position: `global`,
-    effect : function() { if (this.stacks>2) document.body.style.animation = "tipsyBlur 20s infinite"   },
+    effect : function() { if (this.stacks>2) did("mainScreen").style.animation = "tipsyBlur 20s infinite"   },
     stacks: 0,
     debuff: true,
 }
