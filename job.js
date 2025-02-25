@@ -4,7 +4,8 @@ function changeBookmark(button, job){
        playSound("audio/page.mp3")
        rpgPlayer.currentJob = job;
        jobBookUi();
-       createRecipe();
+       //createRecipe();
+       updateRecipes()
     }); 
 
 }

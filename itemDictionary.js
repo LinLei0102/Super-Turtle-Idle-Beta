@@ -14,6 +14,21 @@ item.I1 = {
 */
 
 
+function colorTag(text, color, mode){
+    if (mode==="nobr") return '<strong style="background:'+color+'; padding: 0 0.4rem; border-radius: 0.2rem; white-space: nowrap; color:white;font-family: fredoka; font-weight: 450;">'+text+'</strong>'
+    return '<strong style="background:'+color+'; padding: 0 0.4rem; border-radius: 0.2rem; white-space: nowrap; color:white;font-family: fredoka; font-weight: 450; margin:0 0.3rem">'+text+'</strong>'
+    }
+
+
+const contextTooltipCombatActions = function() { return `<img src="img/src/buffs/B4.jpg">Up to <span style="color:coral">${3+stat.ExtraActions} Combat Actions</span> can be used on boss encounters. Combat Actions immediately recharge once the battle ends<br><br><span style="display:flex;justify-content:center">${colorTag("✦ "+combatActions + " remaining", "#789E45")}</span>`}
+const contextTooltipPlayerPoison = function() { return `<img src="img/src/buffs/B1.jpg"> <span style="color:lawngreen">Poison</span> takes 1/100 of your Max Health as Nature Damage per second per stack`}
+const contextTooltipPlayerBurning = function() { return `<img src="img/src/buffs/B16.jpg"> <span style="color:orange">Burning</span> takes 1/100 of your Max Health as Elemental Damage per second per stack`}
+const contextTooltipEnemyBurning = function() { return `<img src="img/src/buffs/B16.jpg"> <span style="color:orange">Burning</span> enemies take 1/3 of your Power per second as Elemental Damage`}
+const contextTooltipEnemyEnrage = function() { return `<img src="img/src/buffs/B26.jpg"> <span style="color:coral">Enrage</span> increases the attack of the enemy by 10% per stack. Avoid at all costs!`}
+const contextTooltipPlayerSlow = function() { return `<img src="img/src/buffs/B36.jpg"> <span style="color:lawngreen">Slow</span> reduces your Attack Speed by 5% per stack`}
+const contextTooltipPlayerPetrify = function() { return `<img src="img/src/buffs/B35.jpg"> <span style="color:gray">Petrify</span> disables auto-attacking, but not the use of items or skills`}
+
+
 class Item {
     static timesGot = 0
     static count = 0
@@ -82,8 +97,11 @@ class Equipable extends Item {
         if (this.prefix2===`Hopeful`) stat.LumaPower += 20
 
         if (this.prefix3===`Lazaro`) stat.ExtraLives += 1
-        if (this.prefix3===`Vampiric`) stat.Lifesteal += 5
+        if (this.prefix3===`Critical`) stat.CritChance += 10
         if (this.prefix3===`Lucky`) stat.Luck += 15
+        if (this.prefix3===`Radioactive`) stat.Thorns += 30
+        if (this.prefix3===`Dreamy`) stat.OfflineBonus += 15
+        if (this.prefix3===`Clicky`) stat.LumaPower += 30
 
         
 
@@ -92,7 +110,7 @@ class Equipable extends Item {
 
 function returnItemValue(item){
     let multiplier = 1
-    if (item.prefixTier != undefined) multiplier = item.prefixTier+1
+    if (item.prefixTier != undefined) multiplier = (item.prefixTier+1)* (item.valueMultiplier ?? 1)
 
 
 
@@ -473,6 +491,332 @@ class Key extends Stackable {
     }
 }
 
+class Gem extends Stackable {
+    constructor(properties = {}) {
+        super(properties);
+        this.sort = `Gem`;
+        this.mergeStack = 10;
+        this.flavor = undefined;
+        this.contextTooltip = function() { return [ `<img src="img/src/items/I508.jpg"> Weapons can be <span style="color:#2DD8CF">engraved</span> with one red, blue and yellow gem of each color at the same time. Gems cannot be recovered once engraved, and using a gem with an already present colored gem in your current weapon will replace it` ] };
+        Object.assign(this, properties);
+    }
+    use(){
+        if (equippedWeapon===undefined) return
+        stats.socketedGems++
+        if (this.gemColor==="red") equippedWeapon.gemSlot.red = this.constructor.name; 
+        if (this.gemColor==="blue") equippedWeapon.gemSlot.blue = this.constructor.name; 
+        if (this.gemColor==="yellow") equippedWeapon.gemSlot.yellow = this.constructor.name; 
+        playSound("audio/gemSlot.mp3")
+        this.constructor.count--
+        setTimeout(() => { itemContextMenuBegone() }, 10);
+        statsUpdate();
+        updateStatsUI();
+    }
+}
+
+class GemScarab1 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Scarab Gemstone I`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `+ 5 Gathering Power` };
+        this.img = 505;
+        this.gemColor = 'red';
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemScarab2) }
+    stats(){ stat.GatheringPower+=5 }
+}
+
+class GemScarab2 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Scarab Gemstone II`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `+ 10 Gathering Power` };
+        this.img = 506;
+        this.gemColor = 'red';
+        this.quality = `Rare`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemScarab3) }
+    stats(){ stat.GatheringPower+=10 }
+}
+
+class GemScarab3 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Scarab Gemstone III`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
+        this.skillDescription = function() { return `+ 15 Gathering Power` };
+        this.img = 507;
+        this.gemColor = 'red';
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){ stat.GatheringPower+=15 }
+}
+
+
+class GemCritical1 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Critical Gemstone I`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `+ 10% Crit Chance` };
+        this.img = 511;
+        this.gemColor = 'red';
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemCritical2) }
+    stats(){ stat.CritChance+=10 }
+}
+
+class GemCritical2 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Critical Gemstone II`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `+ 15% Crit Chance` };
+        this.img = 512;
+        this.gemColor = 'red';
+        this.quality = `Rare`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemCritical3) }
+    stats(){ stat.CritDamage+=15 }
+}
+
+class GemCritical3 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Critical Gemstone III`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
+        this.skillDescription = function() { return `+ 20% Crit Chance` };
+        this.img = 513;
+        this.gemColor = 'red';
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){ stat.CritChance+=35 }
+}
+
+class GemLucky1 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Lucky Gemstone I`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `+ 10% Luck` };
+        this.img = 517;
+        this.gemColor = 'red';
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemLucky2) }
+    stats(){ stat.Luck+=10 }
+}
+
+class GemLucky2 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Lucky Gemstone II`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `+ 20% Luck` };
+        this.img = 518;
+        this.gemColor = 'red';
+        this.quality = `Rare`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemLucky3) }
+    stats(){ stat.Luck+=20 }
+}
+
+class GemLucky3 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Lucky Gemstone III`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
+        this.skillDescription = function() { return `+ 30% Luck` };
+        this.img = 519;
+        this.gemColor = 'red';
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){ stat.Luck+=30 }
+}
+
+class GemMoon1 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Moon Gemstone I`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `1/5 chance for your weapon to trigger a dark pulse dealing x1 of your Power as Occult Damage` };
+        this.img = 508;
+        this.gemColor = 'blue';
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemMoon2) }
+    gemSkill(){
+        if (chance(1/5)) {
+            particleTrackers.push(new ParticleExplosionFlare3(undefined,undefined,{imageHue:230, alpha:0.6}));
+            setTimeout(() => {  enemyOccultDamage(stat.Power) }, 200);
+        }
+    }
+}
+
+class GemMoon2 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Moon Gemstone II`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `1/4 chance for your weapon to trigger a dark pulse dealing x1 of your Power as Occult Damage` };
+        this.img = 509;
+        this.gemColor = 'blue';
+        this.quality = `Rare`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemMoon3) }
+    gemSkill(){
+        if (chance(1/4)) {
+            particleTrackers.push(new ParticleExplosionFlare3(undefined,undefined,{imageHue:230, alpha:0.6}));
+            setTimeout(() => {  enemyOccultDamage(stat.Power) }, 200);
+        }
+    }
+}
+
+class GemMoon3 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Moon Gemstone III`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
+        this.skillDescription = function() { return `1/3 chance for your weapon to trigger a dark pulse dealing x1 of your Power as Occult Damage` };
+        this.img = 510;
+        this.gemColor = 'blue';
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    gemSkill(){
+        if (chance(1/3)) {
+            particleTrackers.push(new ParticleExplosionFlare3(undefined,undefined,{imageHue:230, alpha:0.6}));
+            setTimeout(() => {  enemyOccultDamage(stat.Power) }, 200);
+        }
+    }
+}
+
+class GemRebound1 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Rebound Gemstone I`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `1/3 chance to attempt to trigger your blue gem effect again` };
+        this.img = 514;
+        this.gemColor = 'yellow';
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemRebound2) }
+    gemOnSkill(){
+        if (chance(1/3)) {
+            if (equippedWeapon.gemSlot.blue!==null){
+                const balls = eval(equippedWeapon.gemSlot.blue)
+                const item = new balls()
+                item.gemSkill()
+            }
+        }
+    }
+}
+
+class GemRebound2 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Rebound Gemstone II`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
+        this.skillDescription = function() { return `1/2 chance to attempt to trigger your blue gem effect again` };
+        this.img = 515;
+        this.gemColor = 'yellow';
+        this.quality = `Rare`;
+        Object.assign(this, properties);
+    }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemRebound3) }
+    gemOnSkill(){
+        if (chance(1/2)) {
+            if (equippedWeapon.gemSlot.blue!==null){
+                const balls = eval(equippedWeapon.gemSlot.blue)
+                const item = new balls()
+                item.gemSkill()
+            }
+        }
+    }
+}
+
+class GemRebound3 extends Gem {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Rebound Gemstone III`;
+        this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
+        this.skillDescription = function() { return `1/1 chance to attempt to trigger your blue gem effect again` };
+        this.img = 516;
+        this.gemColor = 'yellow';
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    gemOnSkill(){
+        if (chance(1/1)) {
+            if (equippedWeapon.gemSlot.blue!==null){
+                const balls = eval(equippedWeapon.gemSlot.blue)
+                const item = new balls()
+                item.gemSkill()
+            }
+        }
+    }
+}
+
+
+class Recipe extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.flavor = `"The true method of knowledge is experiment."`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Permanently unlock this crafting recipe</span>`}
+        this.img = 103;
+        this.quality = `Rare`;
+        this.isStackable = false;
+        this.recipe = true;
+        this.value = function() { return 0 }
+        Object.assign(this, properties);
+    }
+
+    use(){
+        itemInventory.splice(this.index, 1);
+        playSound("audio/talent.mp3");
+        this.toLearn.locked = false;
+        setTimeout(() => { itemContextMenuBegone(); }, 5);
+        updateRecipes()
+    }
+
+    init(){
+        const key = Object.keys(craftingRecipes).find(k => craftingRecipes[k] === this.toLearn);
+        const illegal = eval(key)
+        const item = new illegal()
+        this.savedInfo = item.name
+        this.name=`Recipe: ${this.savedInfo}`
+    }
+
+    invInit(){  this.name=`Recipe: ${this.savedInfo}` }
+
+}
+
+class RecipeOccultConverter extends Recipe { constructor(properties = {}) { super(properties); this.toLearn = craftingRecipes.OccultConverter; Object.assign(this, properties); } }
+class RecipeNatureConverter extends Recipe { constructor(properties = {}) { super(properties); this.toLearn = craftingRecipes.NatureConverter; Object.assign(this, properties); } }
+class RecipeElementalConverter extends Recipe { constructor(properties = {}) { super(properties); this.toLearn = craftingRecipes.ElementalConverter; Object.assign(this, properties); } }
+class RecipeShurikenFan extends Recipe { constructor(properties = {}) { super(properties); this.toLearn = craftingRecipes.ShurikenFan; Object.assign(this, properties); } }
+class RecipeTopazRing extends Recipe { constructor(properties = {}) { super(properties); this.toLearn = craftingRecipes.TopazRing; Object.assign(this, properties); } }
+class RecipeLuckyTincture extends Recipe { constructor(properties = {}) { super(properties); this.toLearn = craftingRecipes.LuckyTincture; Object.assign(this, properties); } }
+
+
+
 
 class CoinPile1 extends Consumable {
     constructor(properties = {}) {
@@ -504,9 +848,9 @@ class CoinPile2 extends Consumable {
 class ScutePile1 extends Consumable {
     constructor(properties = {}) {
         super(properties);
-        this.name = `Prism Bundle`;
+        this.name = `Spare Scutes`;
         this.flavor = `"Time is gold, and these are way shinier than gold."`;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Obtain 100 Prism Scutes</span>`}
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Obtain 50 Prism Scutes</span>`}
         this.img = 544;
         this.quality = `Rare`;
         this.canMultiuse = true
@@ -514,7 +858,8 @@ class ScutePile1 extends Consumable {
     }
 
     use(){
-        rpgPlayer.scutes+=100;
+        rpgPlayer.scutes+=50;
+        stats.totalScutes += 50
         this.constructor.count--
         playSound("audio/coins.mp3")
         playSound("audio/retro2.mp3")
@@ -536,6 +881,7 @@ class ScutePile2 extends Consumable {
     }
     use(){
         rpgPlayer.scutes+=2000;
+        stats.totalScutes += 2000
         this.constructor.count--
         playSound("audio/coins.mp3")
         playSound("audio/retro2.mp3")
@@ -574,27 +920,137 @@ class ExpGummy2 extends Consumable {
     }
 }
 
-class Geode1 extends Stackable {
+class Geode1 extends Material {
     constructor(properties = {}) {
         super(properties);
         this.name = `Rough Geode`;
         this.flavor = `"A seemingly-uninteresting looking rock formation. However, your gut tells you there is more than meets the eye."`;
-        this.source = `Obtained by opening chests. Can be opened by a blacksmith`;
+        this.source = `Dropped from presents, dungeons, chests, and other rare sources. Can be opened by a blacksmith`;
         this.img = 489;
         this.quality = `Common`;
-        this.mergeStack = 10;
         Object.assign(this, properties);
     }
 }
+
+class Geode1Open extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Cracked Rough Geode`;
+        this.flavor = `"Even nature likes gambling from time to time."`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Open the geode!</span><br>${bestiaryTag("🎲 Possible Contents 🎲", "#815C42")+generateContainerTable(this.lootTable())}`}
+        this.img = 488;
+        this.quality = `Common`;
+        this.lootTable = function() { return { GemRuby : { c : 1, a : 1}, GemSapphire : { c : 5, a : 1}, GemTopaz : { c : 10, a : 1}, } }; 
+        this.canMultiuse = true;
+        Object.assign(this, properties);
+    }
+
+    use(){
+        lootTable(this.lootTable(),"container")
+        this.constructor.count--
+    }
+}
+
+class Gem1 extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Nephrite`;
+        this.flavor = `"An impure variety of jade. Despite that, it still can fetch a good price."`;
+        this.source = `Obtained by rarely by mining or opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 22;
+        this.quality = `Common`;
+        Object.assign(this, properties);
+    }
+}
+
+class Gem2 extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Malachite`;
+        this.flavor = `"A striking green mineral, prized for its vivid color and used in jewelry for centuries."`;
+        this.source = `Obtained by rarely by mining or opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 42;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
+
+class Gem3 extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Shadow Diamond`;
+        this.flavor = `"A deep purple gemstone with a sinister aura."`;
+        this.source = `Obtained by rarely by mining or opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 418;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
+
+class Gem4 extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Citrokine`;
+        this.flavor = `"A gem with an unnatural orange luster."`;
+        this.source = `Obtained rarely while mining or by opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 359;
+        this.quality = `Rare`;
+        Object.assign(this, properties);
+    }
+}
+
+
+
+class GemRuby extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Ruby`;
+        this.flavor = `"A deep red variety of corundum, often associated with tales of conflict and bloodshed."`;
+        this.source = `Obtained rarely while mining or by opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 227;
+        this.quality = `Uncommon`;
+        this.value = function() { return 2000 }
+        Object.assign(this, properties);
+    }
+}
+
+class GemSapphire extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Sapphire`;
+        this.flavor = `"A deep red variety of corundum, often associated with tales of conflict and bloodshed."`;
+        this.source =  `Obtained rarely while mining or by opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 233;
+        this.quality = `Uncommon`;
+        this.value = function() { return 5000 }
+        Object.assign(this, properties);
+    }
+}
+
+class GemTopaz extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Topaz`;
+        this.flavor = `"Often used in jewelry and believed to bring strength and healing properties."`;
+        this.source = `Obtained rarely while mining or by opening geodes. Can be turned into socket gems or sold for a good price`;
+        this.img = 228;
+        this.quality = `Uncommon`;
+        this.value = function() { return 7000 }
+        Object.assign(this, properties);
+    }
+}
+
+
+
 
 class GoldenClover extends Key {
     constructor(properties = {}) {
         super(properties);
         this.name = `Golden Clover`;
         this.flavor = `"Today seems like a good day to buy lottery."`;
-        this.source = `Obtained randomly as a 1/777777 chance`;
+        this.source = `Obtained randomly as a 1/77777 chance`;
         this.img = 102;
-        this.quality = `Legendary`;
+        this.quality = `Epic`;
         this.value = function() { return 777 }
         Object.assign(this, properties);
     }
@@ -696,7 +1152,7 @@ class AreaChest1 extends Consumable {
         this.description = function() { return `<span style="color:#1eff00">★ Use: Unlock with a${itemIcon("I41")}Copper Key to open</span><FONT COLOR="#edd585"><br>${bestiaryTag("🎲 Possible Contents 🎲", "#815C42")+generateContainerTable(this.lootTable())}`}
         this.img = 10;
         this.quality = `Uncommon`;
-        this.lootTable = function() { return { Potara : { c : chances.chest.mythic, a : 1}, FoliarBlade : { c : chances.chest.uncommon, a : 1}, ThornBinding : { c : chances.chest.uncommon, a : 1}, DruidSkirt : { c : chances.chest.uncommon, a : 1},  Geode1 : { c : chances.chest.common, a : 1},  FoodCheese : { c : chances.chest.poor, a : 1} } }; 
+        this.lootTable = function() { return { Potara : { c : chances.chest.mythic, a : 1}, FoliarBlade : { c : chances.chest.uncommon, a : 1}, ThornBinding : { c : chances.chest.uncommon, a : 1}, DruidSkirt : { c : chances.chest.uncommon, a : 1}, Whiskers : { c : chances.chest.uncommon, a : 1, l : function(){return ( Whiskers.timesGot===0 )}},  Geode1 : { c : chances.chest.common, a : 1},  FoodCheese : { c : chances.chest.poor, a : 1} } }; 
         this.canMultiuse = true;
         this.value = function() { return 500 }
         Object.assign(this, properties);
@@ -717,6 +1173,7 @@ function generateContainerTable(table){
         const returnedOdds = table
         dropDesc = "";
         for (i in returnedOdds) {
+         if (returnedOdds[i].l !== undefined && !returnedOdds[i].l()) continue
           dropDesc += dropInfo(eval(i), returnedOdds[i].c, returnedOdds[i].a,"chest")+"<br>"
         }
   
@@ -726,31 +1183,25 @@ function generateContainerTable(table){
 
 
 
-class HealPotion extends Consumable {
+
+class MonsterSoul extends Consumable {
     constructor(properties = {}) {
         super(properties);
-        this.name = `Healing Flask`;
-        this.flavor = `"This potion operates by abruptly shattering your entire internal structure, causing your body to make an immediate effort to rebuild them in order to avert a sudden death. It also has a mild strawberry flavor."`;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores ${beautify(returnPotionLevel("I19")*playerMaxHp/100)} Health`}
-        this.img = 19;
-        this.quality = `Common`;
-        this.quickAccess = true;
-        this.value = function() { return 100000 }
+        this.name = `Monster Soul`;
+        this.flavor = `"An amalgamation of restless spirits, waiting for their time to shine again."`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 1 Boss Charges <span style="color:gray">(Maximum 10 charges)</span>`}
+        this.img = 590;
+        this.quality = `Rare`;
         Object.assign(this, properties);
     }
 
     use(){
-        HealPotion.count--;
-        voidAnimation("playerAnimation", "gelatine 0.5s 1 ease")
-        particleTrackers.push(new ParticleThrowUp());
-        setTimeout(() => {
-            voidAnimation("playerAnimation", "gelatine 0.5s 1 ease, flash 0.5s 1")
-            particleTrackers.push(new ParticleShockwaveHeal());
-            playerHealingDamage(200)
-
-        }, 800);
-
-
+        if (rpgPlayer.BossCharges<10){
+            rpgPlayer.BossCharges++
+            this.constructor.count--;
+            encounterButtonPress()
+            playSound("audio/gacha1.mp3");
+        }
     }
 }
 
@@ -779,11 +1230,31 @@ class AreaChest1Key extends Key {
         this.flavor = `"For the easily-influenced locks."`;
         this.source = "Commonly crafted by blacksmiths. Can open small containers";
         this.img = 41;
-        this.quality = `Uncommon`;
+        this.quality = `Common`;
         Object.assign(this, properties);
     }
 }
 
+class Mattock extends Equipable {
+
+    static upgrade = undefined
+
+
+    constructor(properties = {}) {
+        super(properties);
+        this.slot = `Weapon`
+        this.sort = `Key`
+        this.noScrap = true;
+        this.gemSlot = {red:null,blue:null,yellow:null}
+        this.attackSpeed = 1;
+        Object.assign(this, properties);
+    }
+}
+
+
+
+const prefixTierMod = 1.2 //antes 1.4
+const upgradeMod = 1.8 //antes 1.8
 
 class Weapon extends Equipable {
 
@@ -803,12 +1274,13 @@ class Weapon extends Equipable {
         this.skillChance = 1;
         this.skillDamage = 1;
 
-        this.finalDamage = function() {return Math.floor(  ( (this.baseDamage * this.damage) * Math.pow(1.4, this.prefixTier) ) * (  Math.pow(1.8, this.constructor.upgrade)  )  ) }
+        this.finalDamage = function() {return Math.floor(  ( (this.baseDamage * this.damage) * Math.pow(prefixTierMod, this.prefixTier) ) * (  Math.pow(upgradeMod, this.constructor.upgrade)  )  ) }
 
 
         this.slot = `Weapon`
         this.sort = `Weapon`
 
+        this.gemSlot = {red:null,blue:null,yellow:null}
 
 
         Object.assign(this, properties);
@@ -826,9 +1298,9 @@ class Weapon extends Equipable {
         console.log(mod)
 
         if (mod==="container") {
-            tier1Chance = 5
-            tier2Chance = 15
-            tier3Chance = 35
+            tier1Chance = 6
+            tier2Chance = 30
+            tier3Chance = 80
             tier4Chance = 200
         }
 
@@ -893,11 +1365,11 @@ class Weapon extends Equipable {
         if (this.prefix1 === "Powerful") {this.attackSpeed *= 2; this.damage *= 3; }
         if (this.prefix1 === "Echoing") {this.multishot += 1; this.damage *= 0.5;}
         if (this.prefix1 === "Masterful") {this.skillChance *= 0.5; this.skillDamage *= 0.5;}
-        if (this.prefix1 === "Technical") {this.skillDamage *= 2; this.skillChance *= 1.5;}
+        if (this.prefix1 === "Technical") {this.skillDamage *= 2; this.skillChance *= 2;}
         if (this.prefix1 === "Recursive") {this.multishot += 4; this.attackSpeed *= 3.25}
 
         if (this.prefix2 === "Runic") {this.skillMultishot += 1; }
-        if (this.prefix2 === "Kingslaying") {this.damage *= 1.5; }
+        if (this.prefix2 === "Kingslaying") {this.damage *= 1.2; }
         if (this.prefix2 === "Double") {this.multishot +=1; }
         if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.9; }
         if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.8; }
@@ -907,7 +1379,7 @@ class Weapon extends Equipable {
         if (this.prefix3 === "Ultimate") {this.multishot +=2; }
         if (this.prefix3 === "Final") {this.skillDamage *= 2; }
         if (this.prefix3 === "Polychrome") {this.multishot +=1; this.skillMultishot += 1; }
-        if (this.prefix3 === "Godslaying") {this.damage *= 2; }
+        if (this.prefix3 === "Godslaying") {this.damage *= 1.5; }
 
         //sorting purposes
         if (this.prefix1 !== undefined) this.prefixTier = 1
@@ -930,7 +1402,7 @@ class Armor extends Equipable {
 
         //these are multipliers
         this.hp = 1;
-        this.finalHp = function() {return ( (this.baseHp * this.hp) * Math.pow(1.4, this.prefixTier)  ) * (  Math.pow(1.8, this.constructor.upgrade) ) }
+        this.finalHp = function() {return ( (this.baseHp * this.hp) * Math.pow(prefixTierMod, this.prefixTier)  ) * (  Math.pow(upgradeMod, this.constructor.upgrade) ) }
 
         Object.assign(this, properties);
 
@@ -948,14 +1420,22 @@ class Armor extends Equipable {
         } 
 
 
+        if (this.sort === `Luma`){
+            let align = rng(1,3)
+            if (align===1) this.align = `Elemental`;
+            if (align===2) this.align = `Nature`;
+            if (align===3) this.align = `Occult`;
+        }
+
+
         let tier1Chance = chances.reforges.tier1
         let tier2Chance = chances.reforges.tier2
         let tier3Chance = chances.reforges.tier3
 
         if (mod==="container") {
-            tier1Chance = 5
-            tier2Chance = 15
-            tier3Chance = 35
+            tier1Chance = 6
+            tier2Chance = 30
+            tier3Chance = 80
         }
 
 
@@ -966,7 +1446,7 @@ class Armor extends Equipable {
             if (chance(1/tier2Chance)) {this.prefix1 = returnArrayPick(trinketPrefix1); this.prefix2 = returnArrayPick(miscPrefix2);}
             if (chance(1/tier3Chance)) {this.prefix1 = returnArrayPick(trinketPrefix1); this.prefix2 = returnArrayPick(miscPrefix2); this.prefix3 = returnArrayPick(miscPrefix3);}
                
-        } else if (this.sort === `Ring`) {
+        } else if (this.sort === `Ring` || this.sort === `Luma`) {
             
             if (chance(1/tier1Chance)) {this.prefix1 = returnArrayPick(miscPrefix1); }
             if (chance(1/tier2Chance)) {this.prefix1 = returnArrayPick(miscPrefix1); this.prefix2 = returnArrayPick(miscPrefix2);}
@@ -1041,14 +1521,12 @@ class HopperoonaPhylactery extends ArmorTrinket {
         this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to inflict Poisoned for ${this.baseSkillDamage*3*this.skillDamage} seconds and dealing x${1+this.baseSkillDamage*this.skillDamage} of your Power as Nature Damage` };
         this.img = 47;
         this.baseSkillChance = 10;
-        this.baseSkillDamage = 2;
+        this.baseSkillDamage = 1;
         this.quality = `Uncommon`;
         this.contextTooltip = function() { return [ `<img src="img/src/buffs/B1.jpg"> <span style="color:lawngreen">Poisoned</span> enemies take 1/3 of your Power per second as Nature Damage` ] };
         Object.assign(this, properties);
     }
     dealDamage(){
-
-
         if (chance(1/(this.baseSkillChance*this.skillChance))) {
             buffs.EnemyPoison.time=this.baseSkillDamage*3*this.skillDamage;
             playerBuffs()
@@ -1060,9 +1538,55 @@ class HopperoonaPhylactery extends ArmorTrinket {
             particleTrackers.push(new ParticleBubble(this.x,this.y,{x:enemyRectX, y:enemyRectY,imageHue:50}));
             particleTrackers.push(new ParticleBubble(this.x,this.y,{x:enemyRectX, y:enemyRectY,imageHue:50}));
             particleTrackers.push(new ParticleBubble(this.x,this.y,{x:enemyRectX, y:enemyRectY,imageHue:50}));
-        
         }
+    }
+}
 
+class BushidoMedallion extends ArmorTrinket {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Bushido Medallion`;
+        this.flavor = `"Hesitation is defeat."`;
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to deal 5 quick slashes dealing x${1+this.baseSkillDamage*this.skillDamage} of your Power as Nature Damage` };
+        this.img = 585;
+        this.baseSkillChance = 8;
+        this.baseSkillDamage = 0.5;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    dealDamage(){
+
+
+        if (chance(1/(this.baseSkillChance*this.skillChance))) {
+
+
+/*
+            buffs.EnemyPoison.time=this.baseSkillDamage*3*this.skillDamage;
+            playerBuffs()
+            enemyNatureDamage(stat.Power*(this.baseSkillDamage*this.skillDamage))
+            enemyDamageAnimation("medium")
+
+            animatedSplash("enemy", "bite","impact",0)
+            particleTrackers.push(new ParticleShockwave());
+            particleTrackers.push(new ParticleBubble(this.x,this.y,{x:enemyRectX, y:enemyRectY,imageHue:50}));
+            particleTrackers.push(new ParticleBubble(this.x,this.y,{x:enemyRectX, y:enemyRectY,imageHue:50}));
+            particleTrackers.push(new ParticleBubble(this.x,this.y,{x:enemyRectX, y:enemyRectY,imageHue:50}));
+*/
+
+            for (let b = 0; b < 5; b++) { setTimeout(() => loop(this), 100 * b) }
+
+
+            function loop(e) {
+
+                particleTrackers.push(new ParticleSlash(undefined,undefined,{rotation:rngD(0,3)}));
+                enemyNatureDamage(stat.Power*(e.baseSkillDamage*e.skillDamage))
+                enemyDamageAnimation("medium")
+
+            }
+
+
+
+        }
     }
 }
 
@@ -1134,35 +1658,76 @@ class ArmorRing extends Armor {
     }
 }
 
-class Luma extends Equipable {
+class Luma extends Armor {
+    static upgrade = undefined
     constructor(properties = {}) {
         super(properties);
+        this.slot = `Luma`;
+        this.sort = `Luma`;
+        this.hp = undefined;
+        this.baseHp = undefined
         Object.assign(this, properties);
     }
 }
 
-class LumaDefault extends Luma { //this is the default luma behaviour when you dont have any luma equipped
+
+
+class LumaSquirrel extends Luma { 
     constructor(properties = {}) {
         super(properties);
+        this.name = `Will Of The Squirrel`;
+        this.slot = `Luma`;
+        this.img = 586;
+        this.skillDescription = function() { return `<span>Flings an acorn on enemy click dealing x1 of your Power<span style="color:gray"> (Chance depends on clicking speed)</span></span>` };
+        this.quality = `Common`;
+        this.flavor = `"The will inherited from all the squirrels arround the world. It seeps your very being with autumnal colors."`
         Object.assign(this, properties);
     }
-
     luma(){
-
-        particleTrackers.push(new TrackerLumaFrostBolt());
-        particleTrackers.push(new TrackerExplosionBit(mouseClickX, mouseClickY));
-        setTimeout(() => {
-            enemyDamageAnimation("high")
-            enemyElementalDamage(5345345)
-        }, 1500);
-        did("lumaCharge").style.visibility = "visible"
-        voidAnimation("lumaCharge", "gelatineHigh 0.3s 1")
-        did("lumaCharge").style.top = mousePositionY + -15+ 'px';
-        did("lumaCharge").style.left = mousePositionX + 30+ 'px';
-        this.cd = 10
-        
+         if (chance(Math.pow(lumaCharge / 10, 3))) { 
+            particleTrackers.push(new ParticleLumaAcorn());
+            setTimeout(() => {
+               returnWeaponDamageType(this.align,stat.Power,"luma")
+               enemyDamageAnimation("medium")
+            }, 600);
+         } 
     }
+}
 
+
+class LumaTiger extends Luma { 
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Will Of The Tiger`;
+        this.slot = `Luma`;
+        this.img = 587;
+        this.skillDescription = function() { return `<span>+ 10% Crit Damage<br>Increases Attack Speed by 5% on enemy click<br>Can stack up to 10<span style="color:gray"> (Chance depends on clicking speed)</span></span>` };
+        this.quality = `Uncommon`;
+        this.flavor = `"The will inherited from all the tigers arround the world. It seeps your very being with stripped might."`
+        Object.assign(this, properties);
+    }
+    luma(){
+         if (chance(Math.pow(lumaCharge / 10, 3))) { 
+            if (chance(1/1.5)) return
+            particleTrackers.push(new ParticleLumaTiger());
+            playSound("audio/spell8.mp3");
+
+            setTimeout(() => {
+                buffs.LumaTiger.time=6
+                if (buffs.LumaTiger.stacks<10) buffs.LumaTiger.stacks++
+                playerBuffs()
+                statsUpdate()
+                updateStatsUI()
+                voidAnimation("playerAnimation","gelatine 0.3s 1")
+                playSound("audio/spell6.mp3");
+
+            }, 1650);
+
+         } 
+    }
+    stats(){
+        stat.CritDamage += 10
+    }
 }
 
 
@@ -1309,7 +1874,7 @@ class VendorTrash extends Item {
 
         
 
-        this.savedInfo = areas[stats.currentArea].value * 8
+        this.savedInfo = areas[stats.currentArea].value * 3
 
 
     }
@@ -1338,6 +1903,58 @@ class SlimyResidue extends Material {
         Object.assign(this, properties);
     }
 }
+
+class Dayleaf extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Dayleaf`;
+        this.flavor = `"A leaf shining as dazzling as sunlight."`;
+        this.source = `Gathered in Lost Dojo. Crafting material`;
+        this.img = 38;
+        this.quality = `Common`;
+        this.value = function() { return 5 }
+
+        Object.assign(this, properties);
+    }
+}
+
+class GemshellBeetle extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Gemshell Beetle`;
+        this.flavor = `"A bug with a naturally hard, almost rocky, chitin shell."`;
+        this.source = `Rarely gathered in Lost Dojo. Crafting material`;
+        this.img = 591;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
+
+class TinyLifeMote extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Tiny Life Mote`;
+        this.flavor = `"A fleeting thread of life. Blink and watch it go."`;
+        this.source = `Rarely dropped by Jabbits in Lost Dojo. Crafting material`;
+        this.img = 592;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
+
+class CopperOre extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Copper Ore`;
+        this.flavor = `"A ductile, malleable, and highly thermal metal."`;
+        this.source = `Gathered in Cradle Hills. Crafting material`;
+        this.img = 31;
+        this.quality = `Common`;
+        this.value = function() { return 5 }
+        Object.assign(this, properties);
+    }
+}
+
 
 class WhiteStinger extends Material {
     constructor(properties = {}) {
@@ -1374,7 +1991,7 @@ class Stamp2 extends Key {
         super(properties);
         this.name = `Spirit Stamper`;
         this.flavor = `"Doink."`;
-        this.source = `Dropped from presents, dungeons and other rare sources. Can reroll Tier 1 (✨) modifiers`;
+        this.source = `Dropped from presents, dungeons and other rare sources. Can reroll Tier 2 (✨) modifiers`;
         this.description = function() { return `<span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>`}
         this.mergeStack = 10;
         this.img = 92;
@@ -1447,11 +2064,49 @@ class DungeonKey3 extends Key {
     }
 }
 
+class GlassFlask extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Glass Flask`;
+        this.flavor = `"A specialized flask crafted from materials designed to interact with alchemical substances."`;
+        this.source = `Bought in Lost Dojo. Crafting material`;
+        this.img = 48;
+        this.quality = `Common`;
+        Object.assign(this, properties);
+    }
+}
+
+class BlankParchment extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Blank Parchment`;
+        this.flavor = `"Slightly aged, rough edges, and faint creases, perfect for crafting scrolls."`;
+        this.source = `Bought in Lost Dojo. Crafting material`;
+        this.img = 574;
+        this.quality = `Common`;
+        Object.assign(this, properties);
+    }
+}
+
+
+class StarPiece extends Material {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Star Piece`;
+        this.flavor = `"A tiny bit of hope."`;
+        this.source = `Bought in the Achievement Shop. Crafting material`;
+        this.img = 569;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
 
 class ScrapMaterial extends Material {
     constructor(properties = {}) {
         super(properties);
         this.flavor = `"Raw material salvaged from gear."`;
+        this.description = function() { return `<span style="color:#2DD8CF">★ Merge: Combine 100 into a higher-quality item</span>` }
+        this.mergeStack = 100;
         Object.assign(this, properties);
     }
 }
@@ -1464,6 +2119,7 @@ class ScrapMaterial1 extends ScrapMaterial {
         this.source = `Scrapped from Common gear. Crafting material`;
         Object.assign(this, properties);
     }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(ScrapMaterial2) }
 }
 
 class ScrapMaterial2 extends ScrapMaterial {
@@ -1475,6 +2131,8 @@ class ScrapMaterial2 extends ScrapMaterial {
         this.quality = `Uncommon`;
         Object.assign(this, properties);
     }
+    merge(){ this.constructor.count-=this.mergeStack; spawnItem(ScrapMaterial3) }
+
 }
 
 class ScrapMaterial3 extends ScrapMaterial {
@@ -1519,7 +2177,7 @@ class UpgradeMaterial1 extends Material {
         this.quality = `Common`;
         this.flavor = `"A dense, knotted root with a vibrant, glowing core, known for its potent spiritual energy."`;
         this.source = `Commonly dropped by bosses on Cradle Hills and Lost Dojo. Common upgrading material`;
-        this.value = function() { return 2 }
+        this.value = function() { return 0 }
         Object.assign(this, properties);
     }
 }
@@ -1531,7 +2189,7 @@ class UpgradeMaterial2 extends Material {
         this.img = 555;
         this.quality = `Uncommon`;
         this.flavor = `"Raw material salvaged from gear."`;
-        this.source = `Miau. Uncommon upgrading material`;
+        this.source = `Commonly dropped by bosses on Granite Grotto and Hallow Forest. Uncommon upgrading material`;
         this.value = function() { return 50 }
 
         Object.assign(this, properties);
@@ -1585,13 +2243,13 @@ class WebthreadedPromise extends ArmorRing {
         super(properties);
         this.name = `Web-Threaded Promise`;
         this.flavor = `"Hardened, sharp cobweb in the shape of a ring."`;
-        this.skillDescription = function() { return `+ 40% Occult Bonus` };
+        this.skillDescription = function() { return `+ 30% Occult Bonus` };
         this.img = 192;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
     }
     stats(){
-        stat.OccultBonus += 40
+        stat.OccultBonus += 30
     }
 }
 
@@ -1622,6 +2280,89 @@ class ScorpionRing extends ArmorRing {
     }
     stats(){
         stat.CritChance += 10
+    }
+}
+
+class BroccoliRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Broccoli Ring`;
+        this.flavor = `"A signet embedded with a depiction full of nutrients and good stuff for your body, unfortunately."`;
+        this.skillDescription = function() { return `+ 1 Extra Life` };
+        this.img = 584;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.ExtraLives += 1
+    }
+}
+
+class TopazRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Topaz-Embedded Ring`;
+        this.flavor = `"A captivating jewelry piece with a topaz gemstone intricately set within the ring. The lush gemstone represents nature itself."`;
+        this.skillDescription = function() { return `+ 30% Nature Bonus` };
+        this.img = 44;
+        this.quality = `Uncommon`;
+        this.valueMultiplier = 3;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.NatureBonus += 30
+    }
+}
+
+class AquaRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Aqua Ring`;
+        this.flavor = `"A signet with fluvial colors. Serene waves can be heard upclose."`;
+        this.skillDescription = function() { return `+ 30% Elemental Bonus` };
+        this.img = 45;
+        this.quality = `Uncommon`;
+        this.noScrap = true;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.ElementalBonus += 30
+    }
+}
+
+class NatureConverter extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Makeshift Green Psyconverter`;
+        this.flavor = `"A device capable of shifting the wave length of the align forces for the desire of those who are specially lazy about optimising their gear."`;
+        this.skillDescription = function() { return `Converts the damage of your equipped weapon to Nature at 50% efficiency` };
+        this.img = 570;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
+
+class ElementalConverter extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Makeshift Orange Psyconverter`;
+        this.flavor = `"A device capable of shifting the wave length of the align forces for the desire of those who are specially lazy about optimising their gear."`;
+        this.skillDescription = function() { return `Converts the damage of your equipped weapon to Elemental at 50% efficiency` };
+        this.img = 571;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+}
+
+class OccultConverter extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Makeshift Purple Psyconverter`;
+        this.flavor = `"A device capable of shifting the wave length of the align forces for the desire of those who are specially lazy about optimising their gear."`;
+        this.skillDescription = function() { return `Converts the damage of your equipped weapon to Occult at 50% efficiency` };
+        this.img = 572;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
     }
 }
 
@@ -1693,6 +2434,63 @@ class CabbageBoots extends ArmorFeet {
     }
 }
 
+let tierMonkDescription = '+1 Extra Actions';
+let tierMonkItems = [576,580]
+
+class MonkFeet extends ArmorFeet {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Monk Sandals`;
+        this.flavor = `"Surprisingly confortable and durable."`;
+        this.skillDescription = function() { return `+ 15% Crit Damage` };
+        this.img = 576;
+        this.set = `Monk`;
+        this.quality = `Uncommon`;
+        this.baseHp = 2100;
+        this.setMin = 2;
+
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.CritDamage += 10
+    }
+}
+
+class MonkHead extends ArmorHead {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Monk Hat`;
+        this.flavor = `"It chimes a loud crackling noise everytime you bob your head."`;
+        this.skillDescription = function() { return `+ 15% Crit Damage` };
+        this.img = 580;
+        this.set = `Monk`;
+        this.quality = `Uncommon`;
+        this.baseHp = 2200;
+        this.setMin = 2;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.CritDamage += 10
+    }
+}
+
+class RubberFeet extends ArmorFeet {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Rubber Boots`;
+        this.flavor = `"Splish Splash."`;
+        this.skillDescription = function() { return `+ 10 Gathering Power` };
+        this.img = 582;
+        this.quality = `Uncommon`;
+        this.baseHp = 77;
+
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.GatheringPower += 10
+    }
+}
+
 
 function updateOffhandDurability(item){
 
@@ -1705,6 +2503,27 @@ function updateOffhandDurability(item){
         changeLoadout()
     }
 
+}
+
+class SapphireChisel extends ArmorOffhand {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Sapphire-Tipped Chisel`;
+        this.flavor = `"Seems like a waste, but the results speak for themselves."`;
+        this.skillDescription = function() { return `+ 15 Gathering Power<br>+ 15% Luck` };
+        this.img = 583;
+        this.quality = `Uncommon`;
+
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.Luck += 15
+        stat.GatheringPower += 15
+    }
+    dealDamage(){
+       this.uses--
+       updateOffhandDurability(this)
+    }
 }
 
 class WoodenShield extends ArmorOffhand {
@@ -1724,6 +2543,97 @@ class WoodenShield extends ArmorOffhand {
     receiveDamage(){
        this.uses--
        updateOffhandDurability(this)
+    }
+}
+
+class CopperShield extends ArmorOffhand {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Copper Shield`;
+        this.flavor = `"Robust defense against most medieval weaponry."`;
+        this.skillDescription = function() { return `+ 2000 Max Health` };
+        this.img = 588;
+        this.quality = `Common`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.MaxHealth += 2000
+    }
+    receiveDamage(){
+       this.uses--
+       updateOffhandDurability(this)
+    }
+}
+
+class CraftingTools extends ArmorOffhand {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Crafting Tools`;
+        this.flavor = `"A set of rather expensive-looking tools dedicated to crafting. As fine as they look, they will still deteriorate while working."`;
+        this.skillDescription = function() { return `+ 1 Extra Second added while Crafting` };
+        this.img = 593;
+        this.initialUses = 1000;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        statHidden.extraCraftingTime += 1
+    }
+}
+
+class ShurikenFan extends ArmorOffhand {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Shuriken Fan`;
+        this.flavor = `"A stack of gleaming shurikens, perfectly balanced with razor-sharp. Once tools of turtle ninjas, not just for lethality but to distract and disorient."`;
+        this.skillDescription = function() { return `1/3 chance to deal x1 of your Power as Occult Damage` };
+        this.img = 568;
+        this.quality = `Common`;
+        this.initialUses = 300;
+        Object.assign(this, properties);
+    }
+
+    dealDamage(){
+       if (chance(1/3)){
+        this.uses--
+        particleTrackers.push(new ParticleShuriken());
+        setTimeout(() => {
+         enemyOccultDamage(stat.Power)
+         enemyDamageAnimation("low")
+        }, 400);
+        updateOffhandDurability(this)
+       }
+       
+    }
+}
+
+class FireScroll extends ArmorOffhand {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Fire Bolt Scroll`;
+        this.flavor = `"A parchment depicting volatile and incandescent enchantments."`;
+        this.skillDescription = function() { return `1/5 chance to deal x1 of your Power as Elemental Damage and inflict Burning for 3 seconds` };
+        this.img = 573;
+        this.quality = `Uncommon`;
+        this.initialUses = 200;
+        this.contextTooltip = function() { return [ `<img src="img/src/buffs/B16.jpg"> <span style="color:lawngreen">Burned</span> enemies take 1/3 of your Power per second as Elemental Damage` ] };
+
+        Object.assign(this, properties);
+    }
+
+    dealDamage(){
+       if (chance(1/5)){
+        this.uses--
+        particleTrackers.push(new ParticleFireBolt());
+        setTimeout(() => {
+         enemyElementalDamage(stat.Power)
+         enemyDamageAnimation("medium")
+         buffs.EnemyBurning.time = 3
+         playerBuffs()
+        }, 900);
+        updateOffhandDurability(this)
+       }
+       
     }
 }
 
@@ -1865,6 +2775,24 @@ class RanaHat extends ArmorHead {
     }
 }
 
+class SashHead extends ArmorHead {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Red Sash`;
+        this.flavor = `"A rough-looking band tightened on the head."`;
+        this.skillDescription = function() { return `+ 10% All Resist Up` };
+        this.img = 578;
+        this.quality = `Common`;
+        this.baseHp = 110;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.NatureResist += 10
+        stat.OccultResist += 10
+        stat.ElementalResist += 10
+    }
+}
+
 class FlowerGarland extends ArmorHead {
     constructor(properties = {}) {
         super(properties);
@@ -1880,6 +2808,9 @@ class FlowerGarland extends ArmorHead {
         stat.NatureBonus += 15
     }
 }
+
+let tierClothDescription = '+10% Dodge Chance';
+let tierClothItems = [3,2,5,6]
 
 class ClothHead extends ArmorHead {
     constructor(properties = {}) {
@@ -1939,6 +2870,149 @@ class ClothLegs extends ArmorLegs {
     }
 }
 
+
+
+class ShinigamiChest extends ArmorChest {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Shinigami Robe`;
+        this.flavor = `"Despite the grim appearance, it has a faint smell of strawberries."`;
+        this.img = 581;
+        this.quality = `Common`;
+        this.baseHp = 113;
+        this.skillDescription = function() { return `+ 15% Occult Bonus` };
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.OccultBonus += 15
+    }
+}
+
+
+let tierExplorerDescription = 'Attacks have a 1/2 chance to summon a leaf, dealing x1 of your Power as Nature Damage';
+let tierExplorerItems = [74,73,76,77]
+
+class ExplorerHead extends ArmorHead {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Explorer Boonie`;
+        this.flavor = `"Blends with nature perfectly."`;
+        this.img = 74;
+        this.quality = `Common`;
+        this.baseHp = 105;
+        this.set = `Explorer`;
+        this.setMin = 3;
+        this.valueMultiplier = 3;
+        Object.assign(this, properties);
+    }
+}
+
+class ExplorerFeet extends ArmorFeet {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Explorer Boots`;
+        this.flavor = `"Adventures await at every step."`;
+        this.img = 73;
+        this.quality = `Common`;
+        this.baseHp = 104;
+        this.set = `Explorer`;
+        this.setMin = 3;
+        this.valueMultiplier = 3;
+        Object.assign(this, properties);
+    }
+
+}
+
+class ExplorerChest extends ArmorChest {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Explorer Cuirass`;
+        this.flavor = `"Includes camouflage."`;
+        this.img = 76;
+        this.quality = `Common`;
+        this.baseHp = 110;
+        this.set = `Explorer`;
+        this.setMin = 3;
+        this.valueMultiplier = 3;
+        Object.assign(this, properties);
+    }
+}
+
+class ExplorerLegs extends ArmorLegs {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Explorer Pants`;
+        this.flavor = `"The copper bolts aimed at the knees emphasize the importance of avoiding falling."`;
+        this.img = 77;
+        this.quality = `Common`;
+        this.baseHp = 107;
+        this.set = `Explorer`;
+        this.setMin = 3;
+        this.valueMultiplier = 3;
+        Object.assign(this, properties);
+    }
+}
+
+let tierTigerDescription = 'Attacks have a 1/15 chance to let out a mighty roar, increasing crit chance by 100% for 10 seconds';
+let tierTigerItems = [133,132,136,135]
+
+class TigerHead extends ArmorHead {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Jungle King Helm`;
+        this.flavor = `"It\'s hard to look mighty with those fluffy ears looking at me."`;
+        this.img = 133;
+        this.quality = `Uncommon`;
+        this.baseHp = 2300;
+        this.set = `Tiger`;
+        this.setMin = 3;
+        Object.assign(this, properties);
+    }
+}
+
+class TigerFeet extends ArmorFeet {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Jungle King Paws`;
+        this.flavor = `"Pawsitively adorable."`;
+        this.img = 132;
+        this.quality = `Uncommon`;
+        this.baseHp = 2200;
+        this.set = `Tiger`;
+        this.setMin = 3;
+        Object.assign(this, properties);
+    }
+
+}
+
+class TigerChest extends ArmorChest {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Jungle King Chestplate`;
+        this.flavor = `"Adorned with the fierce pattern of a tiger."`;
+        this.img = 135;
+        this.quality = `Uncommon`;
+        this.baseHp = 2400;
+        this.set = `Tiger`;
+        this.setMin = 3;
+        Object.assign(this, properties);
+    }
+}
+
+class TigerLegs extends ArmorLegs {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Jungle King Tail`;
+        this.flavor = `"Doesn\'t need to be plugged anywhere fortunately."`;
+        this.img = 136;
+        this.quality = `Uncommon`;
+        this.baseHp = 2300;
+        this.set = `Tiger`;
+        this.setMin = 3;
+        Object.assign(this, properties);
+    }
+}
+
 class DruidSkirt extends ArmorLegs {
     constructor(properties = {}) {
         super(properties);
@@ -1956,6 +3030,111 @@ class DruidSkirt extends ArmorLegs {
     }
 }
 
+class BlackBelt extends ArmorLegs {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Black Belt`;
+        this.flavor = `"I fear not the man who has practiced 10000 kicks once, but the turtle who sat five hours headbutting a rabbit 100000 times."`;
+        this.img = 127;
+        this.skillDescription = function() { return `+ 15% Occult Resist` };
+        this.quality = `Common`;
+        this.baseHp = 118;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.OccultResist += 15
+    }
+}
+
+class ChampionBelt extends ArmorLegs {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Champion Belt`;
+        this.flavor = `"🢂★🢃🢆Ⓐ"`;
+        this.img = 15;
+        this.skillDescription = function() { return `+ 10% Crit Damage<br>+ 5% Luck` };
+        this.quality = `Common`;
+        this.baseHp = 110;
+        this.noScrap = true;
+        Object.assign(this, properties);
+    }
+    stats(){
+        stat.CritDamage += 10
+        stat.Luck += 5
+    }
+}
+
+class LottoTicket extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Lotto Ticket`;
+        this.flavor = `"If you want to win the lottery, you've got to make scutes to get a ticket."`;
+        this.quality = `Uncommon`;
+        this.img = 579;
+        this.isStackable = false
+        Object.assign(this, properties);
+    }
+    init(){
+        this.savedInfo = {expired:false,number:rng(0,999)}
+    }
+    invInit(){
+    if (this.savedInfo.expired===true){
+
+        let winText = 'Better luck next time!'
+        this.quality = "Poor"
+        if (this.savedInfo.prize===1){
+            winText = 'One number is better than none!'
+            this.quality = "Rare"
+            this.description = function() { return `<span style="color:#1eff00">★ Use: Claim your prize!</span>`}
+            this.use = function(){
+                itemInventory.splice(this.index, 1);
+                for (let i = 0; i < 5; i++) { loop();}
+                function loop() {
+                    logs.PLOTTO.unlocked=true;
+                    if (chance(1/5)) spawnItem(returnArrayPick(rareLootTable2))
+                    else spawnItem(returnArrayPick(rareLootTable1))
+                }
+            }
+        }
+
+        if (this.savedInfo.prize===2){
+            winText = 'Two matching numbers! Lucky!'
+            this.quality = "Epic"
+            this.description = function() { return `<span style="color:#1eff00">★ Use: Claim your prize!</span>`}
+            this.use = function(){
+                itemInventory.splice(this.index, 1);
+                for (let i = 0; i < 5; i++) { loop();}
+                function loop() {
+                    logs.PLOTTO2.unlocked=true;
+                    if (chance(1/5)) spawnItem(returnArrayPick(rareLootTable3))
+                    else spawnItem(returnArrayPick(rareLootTable2))
+                }
+            }
+        }
+
+        if (this.savedInfo.prize===3){
+            winText = 'Three out of three!'
+            this.quality = "Legendary"
+            this.description = function() { return `<span style="color:#1eff00">★ Use: Claim your prize!</span>`}
+            this.use = function(){
+                itemInventory.splice(this.index, 1);
+                for (let i = 0; i < 5; i++) { loop();}
+                function loop() {
+                    spawnItem(returnArrayPick(rareLootTable3))
+                }
+            }
+        }
+
+        this.skillDescription = function() { return `Your numbers were ${this.savedInfo.number} and the winning ones ${this.savedInfo.winNumber}! ${winText}` };
+
+
+        return
+    }
+    
+     this.skillDescription = function() { return `Your lucky numbers are ${this.savedInfo.number}. See the results in ${convertSecondsToHMS( biWeeklyReset())}!` };
+    }
+}
+
 class MysteriousPackage extends Key {
     constructor(properties = {}) {
         super(properties);
@@ -1968,6 +3147,64 @@ class MysteriousPackage extends Key {
     }
 }
 
+class ChickenCage1 extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Chicken Cage`;
+        this.flavor = `"A standard cage with a standard chicken-shaped hole inside."`;
+        this.quality = `Quest`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Cage a Roostrika inside <span style="color:gray">(5 minute Cooldown)</span></span>`}
+        this.img = 121;
+        this.quickAccess = true;
+        this.value = function() { return 0 }
+        Object.assign(this, properties);
+    }
+    use(){
+        if (this.constructor.cd>0) return
+        if (stats.currentEnemy !== "E7") return
+        playSound("audio/throw.mp3");
+        this.constructor.cd = 5*60
+        this.constructor.count--;
+        setTimeout(() => { itemContextMenuBegone() }, 1);
+        animatedSplash("enemy","net","downwards",0)
+        spawnItem(ChickenCage2)
+    }
+}
+
+class ChickenCage2 extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Chicken In A Cage`;
+        this.flavor = `"There is no longer a chicken-shaped hole inside but a chicken-shaped-chicken."`;
+        this.quality = `Quest`;
+        this.img = 122;
+        this.value = function() { return 0 }
+        Object.assign(this, properties);
+    }
+}
+
+class RabbitHide extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Rabbit Hide`;
+        this.flavor = `"A supple and furry hide harvested from rabbits. Regretting now is useless, the deed has been done."`;
+        this.quality = `Quest`;
+        this.img = 114;
+        Object.assign(this, properties);
+    }
+}
+
+class Acorn extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Acorn`;
+        this.flavor = `"A small, nut-like seed from oak trees. Additionally, in the Squirrel Kingdom, it\'s a standard form of currency."`;
+        this.quality = `Quest`;
+        this.img = 115;
+        Object.assign(this, properties);
+    }
+}
+
 class FrogLeg extends Key {
     constructor(properties = {}) {
         super(properties);
@@ -1976,6 +3213,18 @@ class FrogLeg extends Key {
         this.quality = `Quest`;
         this.img = 51;
         this.value = function() { return 10 }
+        Object.assign(this, properties);
+    }
+}
+
+class Whiskers extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Whiskers`;
+        this.flavor = `"meow meow meow"`;
+        this.quality = `Quest`;
+        this.img = 123;
+        this.value = function() { return 0 }
         Object.assign(this, properties);
     }
 }
@@ -2001,9 +3250,7 @@ class MedicatedBandaid extends Consumable {
         this.quality = `Common`;
         this.quickAccess = true
         this.description = function() { return `<span style="color:#1eff00">★ Use: Clears Poison. Uses 1 Combat Action</span>`}
-        this.contextTooltip = function() { return [ `<img src="img/src/buffs/B4.jpg">Up to <span style="color:coral">5 Combat Actions</span> can be used on boss encounters. Combat Actions immediately recharge once the battle ends<br><br><span style="display:flex;justify-content:center">${colorTag("✦ "+combatActions + " remaining", "#789E45")}</span>`,
-            ,`<img src="img/src/buffs/B1.jpg"> <span style="color:lawngreen">Poison</span> takes 1/100 of your Max Health as Nature Damage per second per stack`
-         ] };
+        this.contextTooltip = function() { return [ contextTooltipCombatActions() , contextTooltipPlayerPoison()] };
 
         Object.assign(this, properties);
     }
@@ -2013,7 +3260,233 @@ class MedicatedBandaid extends Consumable {
         if (bossTime) combatActions--
         buffs.PlayerPoison.time = 0
         playerBuffs();
+        updateCombatActions()
         this.constructor.count--;
+    }
+}
+
+class AlcoholSake extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Sake`;
+        this.flavor = `"A small porcelain bottle of sake. Smooth and slightly sweet, with delicate floral and rice aromas."`;
+        this.img = 566;
+        this.quality = `Common`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: A light alcoholic beverage. Drink it!</span>`}
+        Object.assign(this, properties);
+    }
+
+    use(){
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        if (chance(1/8)){
+            buffs.Tipsy.time=10*60;
+            if (buffs.Tipsy.stacks<3) buffs.Tipsy.stacks++
+        }
+    }
+}
+
+class BrightBug extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Bright Bug`;
+        this.flavor = `"A small, yellow luminiscent bug that rarely appears within folliage. Its skittish nature makes it a rare sight."`;
+        this.img = 589;
+        this.quickAccess = true;
+        this.quality = `Uncommon`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Increase all align bonuses by 40% for 10 minutes. Can stack. Can only be used against bosses. Uses 1 Combat Action</span>`}
+        this.contextTooltip = function() { return [ contextTooltipCombatActions()] };
+        Object.assign(this, properties);
+    }
+
+    use(){
+        if (!bossTime) return
+        if (combatActions<1) {playSound("audio/thud.mp3"); return}
+        if (bossTime) combatActions--
+        updateCombatActions();
+
+        playSound("audio/Gacha2.mp3")
+        this.constructor.count--;
+            buffs.Brightbug.time=10*60;
+            buffs.Brightbug.stacks++
+        statsUpdate();
+        playerBuffs();
+        updateStatsUI();
+        
+    }
+}
+
+class PoisonFlask extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Poison Flask`;
+        this.flavor = `"In the midst of chaos, there is also opportunity."`;
+        this.img = 21;
+        this.quality = `Common`;
+        this.quickAccess = true;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Inflicts Poisoned over 60 seconds <span style="color:gray">(2 minute Cooldown)</span></span>`}
+        Object.assign(this, properties);
+        this.contextTooltip = function() { return [ `<img src="img/src/buffs/B1.jpg"> <span style="color:lawngreen">Poisoned</span> enemies take 1/3 of your Power per second as Nature Damage` ] };
+
+    }
+    use(){
+        if (this.constructor.cd>0) return
+        this.constructor.cd=60*2
+        this.constructor.count--;
+        playSound("audio/potion.mp3")
+        particleTrackers.push(new ParticleItemThrow());
+        voidAnimation("playerAnimation", "gelatineHigh 0.5s 1 ease")
+
+        setTimeout(() => {
+            buffs.EnemyPoison.time=60;
+            playerBuffs();
+            enemyDamageAnimation("medium")
+
+        }, 700);
+
+        
+    }
+}
+
+class NatureFlask extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Nature Flask`;
+        this.flavor = `"Beware of hallucinations of colorful round forest creatures."`;
+        this.img = 49;
+        this.quality = `Common`;
+        this.quickAccess = true;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 60% Nature Bonus for 20 seconds <span style="color:gray">(2 minute Cooldown)</span> <span style="color:gray">(Only one potion buff can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        if (this.constructor.cd>0) return
+        this.constructor.cd=60*2
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("potion");
+        buffs.NatureFlask.time=20;
+        playerBuffs();
+    }
+}
+
+class ElementalFlask extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Elemental Flask`;
+        this.flavor = `"Also known as fireball."`;
+        this.img = 154;
+        this.quality = `Common`;
+        this.quickAccess = true;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 60% Elemental Bonus for 20 seconds <span style="color:gray">(2 minute Cooldown)</span> <span style="color:gray">(Only one potion buff can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        if (this.constructor.cd>0) return
+        this.constructor.cd=60*2
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("potion");
+        buffs.ElementalFlask.time=20;
+        playerBuffs();
+    }
+}
+
+class OccultFlask extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Occult Flask`;
+        this.flavor = `"When the abyss peers into your soul, take a sip out of it."`;
+        this.img = 156;
+        this.quality = `Common`;
+        this.quickAccess = true;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 60% Occult Bonus for 20 seconds <span style="color:gray">(2 minute Cooldown)</span></span> <span style="color:gray">(Only one potion buff can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        if (this.constructor.cd>0) return
+        this.constructor.cd=60*2
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("potion");
+        buffs.OccultFlask.time=20;
+        playerBuffs();
+    }
+}
+
+class NaturalTincture extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Natural Tincture`;
+        this.flavor = `"A popular alternative among alchemists."`;
+        this.img = 110;
+        this.quality = `Common`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 30% Nature Bonus for 30 minutes <span style="color:gray">(Only one tincture can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("tincture");
+        buffs.NaturalTincture.time=30*60;
+        playerBuffs();
+    }
+}
+
+class ElementalTincture extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Elemental Tincture`;
+        this.flavor = `"High temperature rocks are poured into the stew for heating. You are not supposed to eat them, but I\'m not a cop."`;
+        this.img = 188;
+        this.quality = `Common`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 30% Elemental Bonus for 30 minutes <span style="color:gray">(Only one tincture can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("tincture");
+        buffs.ElementalTincture.time=30*60;
+        playerBuffs();
+    }
+}
+
+class SinisterTincture extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Sinister Tincture`;
+        this.flavor = `"May have lingering effects on the soul, but it\'s definitely worth it."`;
+        this.img = 189;
+        this.quality = `Common`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 30% Occult Bonus for 30 minutes <span style="color:gray">(Only one tincture can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("tincture");
+        buffs.SinisterTincture.time=30*60;
+        playerBuffs();
+    }
+}
+
+class LuckyTincture extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Lucky Tincture`;
+        this.flavor = `"Also called "liquid luck" in some countries, they find themselves banned in casinos and other gambling spaces."`;
+        this.img = 129;
+        this.quality = `Uncommon`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: + 20% Luck for 30 minutes <span style="color:gray">(Only one tincture can be active at a time)</span></span>`}
+        Object.assign(this, properties);
+    }
+    use(){
+        playSound("audio/potion.mp3")
+        this.constructor.count--;
+        removeBuffs("tincture");
+        buffs.LuckyTincture.time=30*60;
+        playerBuffs();
     }
 }
 
@@ -2082,6 +3555,29 @@ class Sparkler3 extends Consumable {
 }
 
 
+class HealingFlask extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Healing Flask`;
+        this.flavor = `"This potion operates by abruptly shattering your entire internal structure, causing your body to make an immediate effort to rebuild them in order to avert a sudden death. It also has a mild strawberry flavor."`;
+        this.img = 19;
+        this.quality = `Common`;
+        this.quickAccess = true;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 40% of your Max Health instantly. Uses 1 Combat Action</span>`}
+        this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
+        Object.assign(this, properties);
+    }
+
+    use(){
+        if (combatActions<1) {playSound("audio/thud.mp3"); return}
+        if (bossTime) combatActions--
+        playSound("audio/potion.mp3")
+        playerHealingDamage(stat.MaxHealth*0.4)
+        updateCombatActions()
+        this.constructor.count--;
+    }
+}
+
 class FoodLizard extends Consumable {
     constructor(properties = {}) {
         super(properties);
@@ -2090,8 +3586,8 @@ class FoodLizard extends Consumable {
         this.img = 12;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 1000 Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
-        this.contextTooltip = function() { return [ `<img src="img/src/buffs/B4.jpg">Up to <span style="color:coral">5 Combat Actions</span> can be used on boss encounters. Combat Actions immediately recharge once the battle ends<br><br><span style="display:flex;justify-content:center">${colorTag("✦ "+combatActions + " remaining", "#789E45")}</span>` ] };
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 1000 Health <span style="color:gray">(Up to 100% of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
+        this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
         Object.assign(this, properties);
     }
 
@@ -2104,9 +3600,16 @@ class FoodLizard extends Consumable {
         buffs.FoodRegen.time=20;
         buffs.FoodRegen.stacks=Math.min(stat.MaxHealth/20,1000/20);
         playerBuffs();
+        updateCombatActions();
         this.constructor.count--;
     }
 }
+
+
+
+
+
+
 
 class FoodCheese extends Consumable {
     constructor(properties = {}) {
@@ -2116,8 +3619,8 @@ class FoodCheese extends Consumable {
         this.img = 34;
         this.quality = `Common`;
         this.quickAccess = true;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 2000 Health <span style="color:gray">(Up to a maximum of 1/20 of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
-        this.contextTooltip = function() { return [ `<img src="img/src/buffs/B4.jpg">Up to <span style="color:coral">5 Combat Actions</span> can be used on boss encounters. Combat Actions immediately recharge once the battle ends<br><br><span style="display:flex;justify-content:center">${colorTag("✦ "+combatActions + " remaining", "#789E45")}</span>` ] };
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 5000 Health <span style="color:gray">(Up to 100% of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
+        this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
         Object.assign(this, properties);
     }
 
@@ -2128,9 +3631,36 @@ class FoodCheese extends Consumable {
         buffs.FoodRegen.time=0
         playerBuffs();
         buffs.FoodRegen.time=20;
-        buffs.FoodRegen.stacks=Math.min(stat.MaxHealth/20,2000/20);
-        //stat.MaxHealth/20 > 1500/20 ? buffs.FoodRegen.stacks = 1500/20 : buffs.FoodRegen.stacks = stat.MaxHealth/20
+        buffs.FoodRegen.stacks=Math.min(stat.MaxHealth/20,5000/20);
         playerBuffs();
+        updateCombatActions()
+        this.constructor.count--;
+    }
+}
+
+class FoodDango extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Tricolor Dango`;
+        this.flavor = `"Soft, chewy and colorful dumplings skewed on a stick."`;
+        this.img = 567;
+        this.quality = `Common`;
+        this.quickAccess = true;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Restores 10K Health <span style="color:gray">(Up to 100% of your Max Health)</span> over 20 seconds. Uses 1 Combat Action</span>`}
+        this.contextTooltip = function() { return [ contextTooltipCombatActions() ] };
+        Object.assign(this, properties);
+    }
+
+    use(){
+        if (combatActions<1) {playSound("audio/thud.mp3"); return}
+        if (bossTime) combatActions--
+        playSound("audio/monch.mp3")
+        buffs.FoodRegen.time=0
+        playerBuffs();
+        buffs.FoodRegen.time=20;
+        buffs.FoodRegen.stacks=Math.min(stat.MaxHealth/20,10000/20);
+        playerBuffs();
+        updateCombatActions()
         this.constructor.count--;
     }
 }
@@ -2139,65 +3669,112 @@ class FoodCheese extends Consumable {
 
 
 
-let tierClothDescription = '+10% Dodge Chance';
-let tierClothItems = [3,2,5,6]
 
+function returnWeaponDamageType(type, formula,source){
 
-function returnWeaponDamageType(type, formula){
+    if (equippedRing && equippedRing.img===570) {enemyNatureDamage((formula+100)/2); return}
+    if (equippedRing && equippedRing.img===571) {enemyElementalDamage((formula+100)/2); return}
+    if (equippedRing && equippedRing.img===572) {enemyOccultDamage((formula+100)/2); return}
 
 if (type==="Nature") enemyNatureDamage(formula+100)
 if (type==="Elemental") enemyElementalDamage(formula+100)
 if (type==="Occult") enemyOccultDamage(formula+100)
 
+
+    if (source==="auto" || source ==="skill"){
+        if (equippedWeapon.gemSlot.blue!==null){
+            const balls = eval(equippedWeapon.gemSlot.blue)
+            const item = new balls()
+            item.gemSkill()
+
+            if (equippedWeapon.gemSlot.yellow!==null){
+                const yellowGemClass = eval(equippedWeapon.gemSlot.yellow)
+                const yellowGem = new yellowGemClass()
+
+                if ( typeof yellowGem.gemOnSkill === 'function'){
+                    yellowGem.gemOnSkill()
+                }
+
+
+            }
+
+
+        }
+    }
+
 }
+
+
+stats.monsterCardsObtainedLog = 0
+stats.monsterCardsObtained = 0
 
 
 class MonsterCard extends Item {
     constructor(properties = {}) {
         super(properties);
         this.flavor = `"A trading-based collectors edition card depicting a monster. Initially only valuable among young turtles, was later introduced into the turtle market as a legal trade currency."`;
-        this.description = function() { return `<span style="color:#1eff00">★ Use: Add this card to your Bestiary collection</span>`}
+        this.unique = true;
+        this.description = function() {            
+            let alreadyGot = ""
+            if (this.quality==="Rare" && enemies[this.savedInfo.monster].card1.got) alreadyGot = `<br><span style="color:gray">✔️ You already got this card!</span>`
+            if (this.quality==="Epic" && enemies[this.savedInfo.monster].card2.got) alreadyGot = `<br><span style="color:gray">✔️ You already got this card!</span>`
+            if (this.quality==="Mythic" && enemies[this.savedInfo.monster].card3.got) alreadyGot = `<br><span style="color:gray">✔️ You already got this card!</span>`
+            return `<span style="color:#1eff00">★ Use: Add this card to your Bestiary collection</span>${alreadyGot}`
+        }
+        this.sort = "Key"
         Object.assign(this, properties);
     }
 
 
-    init() {
+    init(rarity) {
 
-         this.savedName = `${enemies[stats.currentEnemy].name} Collectible Card`
-         this.savedImg = 434
-         this.savedQuality = `Rare`;
+         this.name = `${enemies[stats.currentEnemy].name} Collectible Card`
+         this.img = 434
+         this.quality = `Rare`;
 
-         if (chance(1/3)){
-            this.savedName = `${enemies[stats.currentEnemy].name} Time-Limited Card`
-            this.savedImg = 435
-            this.savedQuality = `Epic`;
-
-         }
-
-
-         if (chance(1/6)){
-            this.savedName = `${enemies[stats.currentEnemy].name} Ultra Rare Card`
-            this.savedImg = 436
-            this.savedQuality = `Mythic`;
+         if (rarity===2){
+            this.name = `${enemies[stats.currentEnemy].name} Time-Limited Card`
+            this.img = 435
+            this.quality = `Epic`;
 
          }
 
-         this.savedInfo = stats.currentEnemy
+
+         if (rarity===3){
+            this.name = `${enemies[stats.currentEnemy].name} Ultra Rare Card`
+            this.img = 436
+            this.quality = `Mythic`;
+
+         }
+
+         this.savedInfo = {
+            name:this.name,
+            monster:stats.currentEnemy,
+            img: this.img,
+            quality: this.quality
+        }
          
 
     }
 
     use(){
-        if(this.quality==="Rare")  enemies[this.savedInfo].card1.got = true;
-        if(this.quality==="Epic")  enemies[this.savedInfo].card2.got = true;
-        if(this.quality==="Mythic")  enemies[this.savedInfo].card3.got = true;
+        if(this.quality==="Rare")  enemies[this.savedInfo.monster].card1.got = true;
+        if(this.quality==="Epic")  enemies[this.savedInfo.monster].card2.got = true;
+        if(this.quality==="Mythic")  enemies[this.savedInfo.monster].card3.got = true;
+        itemInventory.splice(this.index, 1);
+        playSound("audio/talent.mp3");
+        statsUpdate()
+        updateStatsUI()
+
+        stats.monsterCardsObtained ++
+        stats.monsterCardsObtainedLog ++
     }
 
 
     invInit(){
-        this.name = this.savedName
-        this.img = this.savedImg
-        this.quality = this.savedQuality
+        this.name = this.savedInfo.name
+        this.img = this.savedInfo.img
+        this.quality = this.savedInfo.quality
     }
 
     
@@ -2213,7 +3790,7 @@ class AncientChestplate extends ArmorChest {
         this.skillDescription = function() { return `- 10% Attack Speed<br>+ 20% All Resist Up` };
         this.img = 396;
         this.quality = `Common`;
-        this.baseHp = 89;
+        this.baseHp = 79;
         Object.assign(this, properties);
     }
     stats(){
@@ -2222,6 +3799,31 @@ class AncientChestplate extends ArmorChest {
         stat.OccultResist += 20
         stat.ElementalResist += 20
     }
+}
+
+
+class StoneMattock extends Mattock {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Stone Mattock`
+        this.flavor = `"Three thousand years ago, this baby would be considered top-notch engineering, but right now it\'s better than punching rocks."`
+        this.source = `Can be used to gather ores and herbs`;
+        this.img = 84
+        this.quality = `Common`
+        this.noScrap = true
+        this.tool = "mattock"
+        this.finalDamage = function() {return 10 }
+        Object.assign(this, properties);
+    }
+
+    stats(){ stat.GatheringPower += 10 }
+    attack(){
+        attackAnimation("melee");
+        enemyDamageAnimation("low");
+        enemyBasicDamage(stat.GatheringPower);
+    }
+        
+    
 }
 
 
@@ -2249,7 +3851,7 @@ class WoodenSword extends Weapon {
 
 
             enemyDamageAnimation("low")
-                returnWeaponDamageType(i.align,i.finalDamage())
+            returnWeaponDamageType(i.align,i.finalDamage(),"auto")
 
         }
 
@@ -2266,7 +3868,7 @@ class WoodenSword extends Weapon {
             particleTrackers.push(new ParticleSparks(enemyRect.left - containerRect.left + enemyRect.width / 2 * rngD(0.8,1.2), enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 * rngD(0.9,1.1)));
             particleTrackers.push(new ParticleSparks(enemyRect.left - containerRect.left + enemyRect.width / 2 * rngD(0.8,1.2), enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 * rngD(0.9,1.1)));
             enemyDamageAnimation("medium")
-            returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage))
+            returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
 
             
         }
@@ -2277,6 +3879,252 @@ class WoodenSword extends Weapon {
 }
 
 
+class BoxingGloves extends Weapon {
+
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Boxing Gloves`
+        this.flavor = `"If a turtle wore boxing gloves, would they wear them like this or...?"`
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to wind up ${1+this.skillMultishot} finishing blow, dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
+        this.img = 69
+        this.baseDamage = 112
+        this.baseSkillChance = 10
+        this.baseSkillDamage = 8
+        this.quality = `Common`
+        Object.assign(this, properties);
+    }
+
+    attack(){
+
+        if (chance(1/(this.baseSkillChance*this.skillChance))) {for (let i = 0; i < 1+this.skillMultishot; i++) { setTimeout(() => weaponSkill(this), 100 * i) }}
+        else {for (let i = 0; i < 1+this.multishot; i++) { setTimeout(() => weaponAttack(this), 100 * i) }}
+
+        function weaponAttack(i){
+            attackAnimation("melee")
+            enemyDamageAnimation("low")
+            returnWeaponDamageType(i.align,i.finalDamage(),"auto")
+        }
+
+        function weaponSkill(i){
+
+            attackAnimation("melee")
+
+            let huerotation = 0
+
+            
+            if (i.align != undefined && i.align === "Elemental") huerotation = 320;
+            if (i.align != undefined && i.align === "Occult") huerotation = 230;
+            if (i.align != undefined && i.align === "Nature") huerotation = 50;
+
+            animatedSplash("enemy","punch","impact",huerotation)
+            particleTrackers.push(new ParticleShockwave3(undefined,undefined,{imageHue:huerotation, alpha:0.7}));
+            particleTrackers.push(new ParticleSparks(enemyCenterX,enemyCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+            particleTrackers.push(new ParticleSparks(enemyCenterX,enemyCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+            particleTrackers.push(new ParticleSparks(enemyCenterX,enemyCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+            particleTrackers.push(new ParticleSparks(enemyCenterX,enemyCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+            particleTrackers.push(new ParticleSparks(enemyCenterX,enemyCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+            particleTrackers.push(new ParticleSparks(enemyCenterX,enemyCenterY*1.05,{size:8, width:8*8, speedY: rngD(-50,50), speedX:rngD(-50,50), widthDecay: 8}));
+            
+            enemyDamageAnimation("high")
+            returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
+
+  
+            
+        }
+
+    }
+
+}
+
+class CopperworkAxe extends Weapon {
+
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Copperwork Axe`
+        this.flavor = `"This must be the sort of weapon that turtles had been using before the iron age, which began approximately in 1200 BC."`
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to blow hot steam, dealing x${this.baseSkillDamage*this.skillDamage} weapon damage ${3+this.skillMultishot} times and inflicting Burning for ${1+this.baseSkillDamage*this.skillDamage} seconds`}
+        this.img = 80
+        this.baseDamage = 85
+        this.baseSkillChance = 6
+        this.baseSkillDamage = 1.5
+        this.quality = `Common`
+        this.valueMultiplier = 3;
+        this.contextTooltip = function() { return [ contextTooltipEnemyBurning() ] };
+        Object.assign(this, properties);
+    }
+
+    attack(){
+
+        if (chance(1/(this.baseSkillChance*this.skillChance))) {for (let i = 0; i < 1; i++) { setTimeout(() => weaponSkill(this), 100 * i) }}
+        else {for (let i = 0; i < 1+this.multishot; i++) { setTimeout(() => weaponAttack(this), 100 * i) }}
+
+        function weaponAttack(i){
+            attackAnimation("melee")
+            enemyDamageAnimation("low")
+            returnWeaponDamageType(i.align,i.finalDamage(),"auto")
+        }
+
+        function weaponSkill(i){
+
+            attackAnimation("melee")
+
+
+            let huerotation = 0
+
+            if (i.align != undefined && i.align === "Elemental") huerotation = 300;
+            if (i.align != undefined && i.align === "Occult") huerotation = 200;
+            if (i.align != undefined && i.align === "Nature") huerotation = 100;
+
+
+            buffs.EnemyBurning.time=i.baseSkillDamage*3*i.skillDamage;
+            playerBuffs()
+            playSound("audio/gas.mp3")
+            //enemyDamageAnimation("high")
+
+            //returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage))
+
+
+
+            for (let b = 0; b < 3+(i.skillMultishot); b++) { setTimeout(() => loop(i), 100 * b) }
+
+            function loop(e) {
+
+                particleTrackers.push(new ParticleCopperworkAxe(undefined,undefined,{imageHue:huerotation}));
+                particleTrackers.push(new ParticleCopperworkAxe(undefined,undefined,{imageHue:huerotation}));
+                particleTrackers.push(new ParticleCopperworkAxe(undefined,undefined,{imageHue:huerotation}));
+
+                setTimeout(() => {
+                    enemyDamageAnimation("medium")
+                    returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
+                }, 600);
+
+            }
+
+  
+            
+        }
+
+    }
+
+}
+
+class KingKatDecapitator extends Weapon {
+
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `King-Kat Decapitator`
+        this.flavor = `"It\'s not flawed, it\'s just a one-handed axe."`
+        this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to increase Crit Damage by 3%. Stacks up to 10 times. Once it reaches 10 stacks, deal x${this.baseSkillDamage*this.skillDamage} weapon damage ${3+this.skillMultishot} times`}
+        this.img = 137
+        this.baseDamage = 1900
+        this.baseSkillChance = 5
+        this.baseSkillDamage = 2
+        this.quality = `Uncommon`
+        Object.assign(this, properties);
+    }
+
+    attack(){
+
+        if (chance(1/(this.baseSkillChance*this.skillChance))) {for (let i = 0; i < 1; i++) { setTimeout(() => weaponSkill(this), 100 * i) }}
+        else {for (let i = 0; i < 1+this.multishot; i++) { setTimeout(() => weaponAttack(this), 100 * i) }}
+
+        function weaponAttack(i){
+            attackAnimation("melee")
+            enemyDamageAnimation("low")
+            returnWeaponDamageType(i.align,i.finalDamage(),"auto")
+        }
+
+        function weaponSkill(i){
+
+            attackAnimation("melee")
+            enemyDamageAnimation("low")
+            returnWeaponDamageType(i.align,i.finalDamage(),"auto")
+
+            playSound("audio/spell7.mp3")
+            particleTrackers.push(new ParticleTigerRoar());
+
+
+
+
+            buffs.KingKatDecapitator.time=60;
+            buffs.KingKatDecapitator.stacks++;
+            statsUpdate()
+            updateStatsUI()
+
+            if (buffs.KingKatDecapitator.stacks>=10){
+                buffs.KingKatDecapitator.time=0
+                animatedSplash("player","KKD","spinningThrow",0)
+                playSound("audio/spell4.mp3")
+
+                setTimeout(() => {
+
+
+                    for (let b = 0; b < 3+(i.skillMultishot); b++) { setTimeout(() => loop(i), 100 * b) }
+
+                    function loop(e) {
+        
+                            enemyDamageAnimation("medium")
+                            returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
+               
+        
+                    }
+
+
+
+                    
+                }, 1000);
+
+
+            }
+
+            playerBuffs()
+
+
+
+
+
+
+            /*
+
+            if (i.align != undefined && i.align === "Elemental") huerotation = 300;
+            if (i.align != undefined && i.align === "Occult") huerotation = 200;
+            if (i.align != undefined && i.align === "Nature") huerotation = 100;
+
+
+            buffs.EnemyBurning.time=i.baseSkillDamage*3*i.skillDamage;
+            playerBuffs()
+            playSound("audio/gas.mp3")
+            //enemyDamageAnimation("high")
+
+            //returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage))
+
+
+
+            for (let b = 0; b < 3+(i.skillMultishot); b++) { setTimeout(() => loop(i), 100 * b) }
+
+            function loop(e) {
+
+                particleTrackers.push(new ParticleCopperworkAxe(undefined,undefined,{imageHue:huerotation}));
+                particleTrackers.push(new ParticleCopperworkAxe(undefined,undefined,{imageHue:huerotation}));
+                particleTrackers.push(new ParticleCopperworkAxe(undefined,undefined,{imageHue:huerotation}));
+
+                setTimeout(() => {
+                    enemyDamageAnimation("medium")
+                    returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
+                }, 600);
+
+            }
+
+
+            */
+
+  
+            
+        }
+
+    }
+
+}
 
 
 class WoodenBow extends Weapon {
@@ -2287,7 +4135,7 @@ class WoodenBow extends Weapon {
         this.flavor = `"It should hold together for a few shots before falling apart entirely."`
         this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to fire ${2+this.skillMultishot} explosive arrows dealing x${this.baseSkillDamage*this.skillDamage} weapon damage`}
         this.img = 9
-        this.baseDamage = 45
+        this.baseDamage = 32
         this.baseSkillChance = 5
         this.baseSkillDamage = 2
         this.quality = `Common`
@@ -2307,7 +4155,7 @@ class WoodenBow extends Weapon {
 
             setTimeout(() => {
                 enemyDamageAnimation("low")
-                returnWeaponDamageType(i.align,i.finalDamage())
+                returnWeaponDamageType(i.align,i.finalDamage(),"auto")
             }, 500);
 
         }
@@ -2322,7 +4170,7 @@ class WoodenBow extends Weapon {
 
             setTimeout(() => {
                 enemyDamageAnimation("medium")
-                returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage))
+                returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
             }, 500);
             
         }
@@ -2360,7 +4208,7 @@ class ChrysalisRecurver extends Weapon {
 
             setTimeout(() => {
                 enemyDamageAnimation("low")
-                returnWeaponDamageType(i.align,i.finalDamage())
+                returnWeaponDamageType(i.align,i.finalDamage(),"auto")
             }, 500);
 
         }
@@ -2382,7 +4230,7 @@ class ChrysalisRecurver extends Weapon {
 
             setTimeout(() => {
                 enemyDamageAnimation("medium")
-                returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage))
+                returnWeaponDamageType(i.align,i.finalDamage()*(i.baseSkillDamage*i.skillDamage),"skill")
             }, 500);
             
         }
@@ -2418,7 +4266,7 @@ class FoliarBlade extends Weapon {
 
 
             enemyDamageAnimation("low")
-                returnWeaponDamageType(i.align,i.finalDamage())
+                returnWeaponDamageType(i.align,i.finalDamage(),"auto")
         }
 
         function weaponSkill(i){
@@ -2435,7 +4283,7 @@ class FoliarBlade extends Weapon {
 
 
             enemyDamageAnimation("low")
-            returnWeaponDamageType(i.align,i.finalDamage())
+            returnWeaponDamageType(i.align,i.finalDamage(),"skill")
 
 
 
@@ -2444,20 +4292,12 @@ class FoliarBlade extends Weapon {
 
             function loop(e) {
 
-
                 particleTrackers.push(new ParticleLeaf(undefined,undefined,{imageHue:miau}));
                 
-    
                 setTimeout(() => {
-                    returnWeaponDamageType(e.align,e.finalDamage()*(e.baseSkillDamage*e.skillDamage))
+                    returnWeaponDamageType(e.align,e.finalDamage()*(e.baseSkillDamage*e.skillDamage),"skill")
                     enemyDamageAnimation("medium")
                 }, 700);
-
-
-
-
-
-
             }
 
 
@@ -2495,6 +4335,10 @@ function attackAnimation(type){
 function enemyDamageAnimation(type, target){
 
     if (!document.hasFocus()) return
+    if (enemyIsDefeated) return
+    if (currentHP<=0) return
+    
+
 
 
 
@@ -2558,18 +4402,17 @@ class SkullRing extends ArmorRing {
     constructor(properties = {}) {
         super(properties);
         this.name = `Skull Ring`;
-        this.flavor = `"A omnious ring shaped like a skull, promising great riches to the wearer. Usually, these kinds of jewelry happen to be cursed, but we are here for the short run."`;
-        this.skillDescription = function() { return `+ 10 Income ?` };
+        this.flavor = `"A omnious ring shaped like a skull. Usually, these kinds of jewelry happen to be cursed, but we are here for the short run."`;
+        this.skillDescription = function() { return `+ 20 Income ?` };
         this.img = 427;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
     }
     stats(){
-        stat.Income += 10
-        stat.Luck = 0
-        stat.HealingBonus = 0
-        stat.DodgeChance = 0
-        stat.OfflineBonus = 0
+        stat.ElementalResist -= 300
+        stat.NatureResist -= 300
+        stat.OccultResist -= 300
+        stat.Income += 20
     }
 }
 

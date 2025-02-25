@@ -11,6 +11,7 @@
 
     <canvas id="globalParticles"></canvas>
 
+    <canvas id="fxCanvas"></canvas>
 
 
 <div id="tooltip" style="display: none">
@@ -71,7 +72,26 @@
 
 
 <div id="itemContextMenu" class="itemContextMenu" style="display: none;">
-    <img class="itemcontextMenuArrow" src="img/src/icons/contextTriangle.png">
+
+
+    <div id ="itemContextMenuDailyPresents">
+        <div id="dailyPresentEmpty">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z"/><rect width="2" height="7" x="11" y="6" fill="currentColor" rx="1"><animateTransform attributeName="transform" dur="36s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></rect><rect width="2" height="9" x="11" y="11" fill="currentColor" rx="1"><animateTransform attributeName="transform" dur="5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></rect></svg>
+            Come again in x!
+        </div>
+
+        <div class="dailyPresent" id="dailyPresent1" style="display: flex;">5m</div>
+        <div class="dailyPresent" id="dailyPresent2" style="display: flex;">5m</div>
+        <div class="dailyPresent" id="dailyPresent3" style="display: flex;">5m</div>
+        <div class="dailyPresent" id="dailyPresent4" style="display: flex;">5m</div>
+        <div class="dailyPresent" id="dailyPresent5" style="display: flex;">5m</div>
+        <div class="dailyPresent" id="dailyPresent6" style="display: flex;">5m</div>
+    </div>
+
+
+
+
+    <img id="itemcontextMenuArrow" src="img/src/icons/contextTriangle.png">
     <div id ="itemContextMenuButtonEquip" class="itemContextMenuButton" onclick="equipSelectedItem()">Equip</div>
     <div id ="itemContextMenuButtonUnequip" class="itemContextMenuButton" onclick="UnequipSelectedItem()">Unequip</div>
     <!-- <div onclick='lockSelectedItem()' id ="itemContextMenuButtonLock" class="itemContextMenuButton">Lock</div> --> 
@@ -83,7 +103,7 @@
 
     <div id ="itemContextMenuButtonUseMenu" class="itemContextMenuSell">
         <input id="itemContextUseInput" type="text" autocomplete="off" placeholder="1" maxlength="3" onclick="itemContextUseInput.value=''">
-        <div onclick='useSelectedItem(itemContextUseInput.value)' class="itemContextMenuButton" style="width: 4rem; display: flex;">Use</div>
+        <div onclick='useSelectedItem(itemContextUseInput.value); itemContextUseInput.value="";' class="itemContextMenuButton" style="width: 4rem; display: flex;">Use</div>
     </div>
 
 
@@ -114,10 +134,9 @@
 
     <div id="tipJarInfo"><span>1.29K Left</span><div class="separator" style="margin: 0.2rem 0; width: 80%;"></div>More Stock</div>
 
-    <div id ="itemContextMenuButtonTipMenu" class="itemContextMenuSell" style="width: 7rem;">
-        <input style="width: 6rem;" id="itemContextTipInput" type="text" autocomplete="off" placeholder="0" maxlength="99" onclick="itemContextTipInput.value='';itemContextTipInputHidden=0;itemContextTipInput.placeholder=0;      "  oninput="itemContextTipInputHidden += itemContextTipInput.value; itemContextTipInput.value = ''; itemContextTipInput.placeholder = beautify(itemContextTipInputHidden); if (rpgPlayer.coins<itemContextTipInputHidden) {itemContextTipInput.placeholder=beautify(rpgPlayer.coins)} ">
-        <div onclick='tipJar()' class="itemContextMenuButton" style="width: 6rem; display: flex;">Tip</div>
-    </div>
+        <!-- <input style="width: 6rem;" id="itemContextTipInput" type="text" autocomplete="off" placeholder="0" maxlength="99" onclick="itemContextTipInput.value='';itemContextTipInputHidden=0;itemContextTipInput.placeholder=0;      "  oninput="itemContextTipInputHidden += itemContextTipInput.value; itemContextTipInput.value = ''; itemContextTipInput.placeholder = beautify(itemContextTipInputHidden); if (rpgPlayer.coins<itemContextTipInputHidden) {itemContextTipInput.placeholder=beautify(rpgPlayer.coins)} ">
+        <div onclick='tipJar()' class="itemContextMenuButton" style="width: 6rem; display: flex;">Tip</div>-->
+        <div onclick='tipJar()' id ="itemContextMenuButtonTipMenu" class="itemContextMenuButton" style="width: 6rem; display: flex;">Tip</div>
 
 </div>
 
@@ -145,6 +164,7 @@
  </div>
 
     <div id="stampMenu" class="tooltip" style="display: none">
+        <img src="img/src/projectiles/none.png" id="stampMenuAlign">
         <div id="upperTooltip">
         <div class="upperTooltipLeft"><img id="stampMenuImg" src="img/src/upgrades/C21.jpg"></div>
         <div class="upperTooltipRight">
@@ -190,10 +210,17 @@
             </div>
 
         <div class="dedicatedShopContent" id="achievementListing" style="display: flex;">
-            <div class="achievementCategory" id="achievementListing1">
+            <div class="achievementCategory" id="achievementListingA1">
                 <div class="bannerTitle" style="position: absolute; top: -10%; left: -5%; color: white;">Cradle Hills</div>
-
             </div>
+
+            <div class="achievementCategory" id="achievementListingA2">
+                <div class="bannerTitle" style="position: absolute; top: -10%; left: -5%; color: white;">Lost Dojo</div>
+            </div>
+
+            
+
+
         </div>
 
         <div class="dedicatedShopContent" id="achievementInsideShop" style="display: none;">
@@ -212,17 +239,15 @@
     <div class="dedicatedShop" id="bestiaryShop" style="display: none; height: 0%;">
         <div id="bestiaryShopBg"></div>
         <div class="dedicatedShopBanner" style="background: linear-gradient(90deg, #B77394 0%, #694C81 100%);">
-                <svg onclick='closeDedicatedShop("bestiaryShop")' class="dedicatedShopTab" style="background: rgba(0, 0, 0, 0.2); margin-right: 3rem;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M6.545.998a1 1 0 0 0 0 2h2.728a2.638 2.638 0 0 1 0 5.275H4.817V6.545a1 1 0 0 0-1.707-.707L.384 8.564a1 1 0 0 0-.22 1.09q.073.18.218.327l2.728 2.728a1 1 0 0 0 1.707-.707v-1.729h4.456a4.638 4.638 0 1 0 0-9.275z" clip-rule="evenodd"/></svg>
-                <div class="dedicatedShopLevelBox" id="bestiaryShopLevelBox">
-                    <div class="dedicatedShopLevel"><span id="bestiaryShopLevel">5</span></div>
-                    <div class="dedicatedShopBarBox">
-                        <span id="bestiaryShopExp">1389 / 1000 📖</span>
-                        <div><div id="bestiaryShopExpBar"></div></div>
+                <div class="dedicatedShopLevelBox" id="bestiaryShopLevelBox" style="overflow: visible;">
+                    <div class="dedicatedShopLevel" style="margin-left: -2rem; margin-right: 1.5rem;"><span id="bestiaryShopLevel" style="font-size: 1.8rem;">5</span></div>
+
+                    <div class="dedicatedShopBarBox" style="font-size: 2rem; color: white; text-shadow: rgba(0, 0, 0, 0.2) 2px 5px; flex-wrap: nowrap; overflow: visible;">
+                        Bestiary <strong style="background:transparent; overflow: visible; margin-top: -1rem; font-size: 2rem; color: #BD7A54;-webkit-text-stroke: white 6px;paint-order: stroke fill; overflow: visible; text-shadow: rgba(0, 0, 0, 0.2) 2px 5px;">Score</strong>
                     </div>
                 </div>
-                <div class="currencyElement">
-                    <img src="img/src/icons/scutes.jpg">
-                </div>
+                <svg onclick='closeDedicatedShop("bestiaryShop")' class="dedicatedShopTab" style="background: rgba(0, 0, 0, 0.2); margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M6.545.998a1 1 0 0 0 0 2h2.728a2.638 2.638 0 0 1 0 5.275H4.817V6.545a1 1 0 0 0-1.707-.707L.384 8.564a1 1 0 0 0-.22 1.09q.073.18.218.327l2.728 2.728a1 1 0 0 0 1.707-.707v-1.729h4.456a4.638 4.638 0 1 0 0-9.275z" clip-rule="evenodd"/></svg>
+
             </div>
 
         <div class="dedicatedShopContent" id="bestiaryContent" style="display: flex;">
@@ -356,7 +381,7 @@
 
 
 
-
+<div class="screenDarken" id="loadoutBgCover" style="opacity: 0; animation: none;" ></div>
 
 
     <div class="itemContextMenu" id="loadoutMenu" style="display: none;">
@@ -409,7 +434,9 @@
 
             <h2>Notifications</h2>
             <h3>Disable auto-scrap notifications<button id="disableScrapPopup" onclick="toggleSettings('disableScrapPopup')">OFF</button></h3>
+            <h3>Disable notifications while tabbed out<button id="disableTabPopup" onclick="toggleSettings('disableTabPopup')">OFF</button></h3>
             <h3>Disable autosave notifications<button id="disableAutosavePopup" onclick="toggleSettings('disableAutosavePopup')">OFF</button></h3>
+            <h3>Disable crafting notifications<button id="disableCraftPopup" onclick="toggleSettings('disableCraftPopup')">OFF</button></h3>
 
             <h2>Visual Settings</h2>
             <h3><span id="zoomLevelText">Zoom Level</span><button style="width: 4rem;" onclick="resolutionIncrease('more')">+</button><button style="margin-left: 1rem; width: 4rem;" onclick="resolutionIncrease('less')">-</button></h3>
@@ -487,7 +514,7 @@
             </div>
         </div>
         
-        
+
         <div id="estadisticas" class="panelOpciones" style="display:none">
 
             <h1>STATISTICS</h1>
@@ -495,7 +522,7 @@
             <span class="settingsFlex">
             <img src="img/sys/estadisticas.png">
             <br>
-            <div id="boughtUpgradesButton">Check obtained upgrades</div>
+            <div id="boughtUpgradesButton" style="display: none;">Check obtained upgrades</div>
             <h2>General</h2>
             <h3>Active playtime: <button id="estadisticaPlaytime"></button></h3>
             <h3>Total playtime: <button id="statTotalPlaytime"></button></h3>
@@ -669,9 +696,9 @@
         <div id="tipPanel" class="panelOpciones" style="display:none;">
             <h1 id="tipPanelName">🐢 Welcome! 🐢</h1>
             <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
-            <span class="settingsFlex">
+            <span class="settingsFlex" id="tipPanelDesc">
             <img src="img/sys/nerd.png">
-            <p id="tipPanelDesc"><br>Welcome to Super Turtle Idle, an incremental idle RPG. Complete quests, gather materials by idling, and tackle mighty foes!<br><br>Upgrade any weapon or armor you want, no pressure or strings attached. Is the foe too mighty? Engage with the different systems of the game to gain Mastery or try your luck getting new gear you never got before.<br><br>Getting rare items can be a daunting task at first, so dont hesitate to come back later when you're able to efficiently farm them. Do not worry, as said gear will always be useful no matter when you decide to get it!</p>
+            <p><br>Welcome to Super Turtle Idle, an incremental idle RPG. Complete quests, gather materials by idling, and tackle mighty foes!<br><br>Upgrade any weapon or armor you want, no pressure or strings attached. Is the foe too mighty? Engage with the different systems of the game to gain Mastery or try your luck getting new gear you never got before.<br><br>Getting rare items can be a daunting task at first, so dont hesitate to come back later when you're able to efficiently farm them. Do not worry, as said gear will always be useful no matter when you decide to get it!</p>
             </span>
         </div>
 
@@ -1275,14 +1302,15 @@
 
         <div class="widgetUI" style="right: 0; left: auto;">
 
-            <span style="display: none;"><img src="img/src/icons/presentIcon.png"></span>
-            <span style="display: none;"><img onclick='openDedicatedShop("bestiaryShop"); updateBestiary()' src="img/src/icons/monsterIcon.png" id="bestiaryShopWidget"></span>
-            <span style="display: none;" id="exportWidget" onclick='exportJSON()'><img src="img/src/icons/exportIcon.png" ></span>
-            <span><img onclick='openDedicatedShop("achievementShop"); did("achievementShopWidget").style.animation = "none"' src="img/src/icons/achievementIcon.png" id="achievementShopWidget" ></span>
+            <span style="display: none;" id="bestiaryWidget"><img onclick='openDedicatedShop("bestiaryShop"); updateBestiary()' src="img/src/icons/monsterIcon.png" id="bestiaryShopWidget"></span>
+            <span style="display: none;" id="exportWidget" onclick='exportJSON()'><img src="img/src/icons/exportIcon.png" style="animation: widgetAlert 2s infinite" ></span>
+            <span style="display: none;" id="dailyPresent" onclick="dailyPresentMenu()"><img id="dailyPresentImg" src="img/src/icons/presentIcon.png"></span>
+            <span><img onclick='openDedicatedShop("achievementShop"); did("achievementShopWidget").style.animation = "none"; updateAchievementShop()' src="img/src/icons/achievementIcon.png" id="achievementShopWidget" ></span>
             <span style="display: none;"><img src="img/src/icons/collectibleIcon.png"></span>
+            
             <span style="display: none;" id="gachaWidget"><img onclick="openGacha()" src="img/src/icons/gachaIcon.png" ></span>
             <span style="display: none;" id="mailButton" onclick='did("mailWidget").style.animation = "none"'><img src="img/src/icons/mailIcon.png" id="mailWidget"></span>
-            <span><img onclick="openSettings()" src="img/src/icons/settingsIcon.png"  id="settingsWidget"></span>
+            <span ><img onclick="openSettings()" src="img/src/icons/settingsIcon.png"  id="settingsWidget"></span>
 
 
 
@@ -1345,7 +1373,7 @@
                             </div>
                         </div>
                         <div id="rpgHeadSlot">  </div>
-                        <div class="slotButtonHolder" onclick="toggleLoadoutMenu()" style="visibility: hidden;">
+                        <div class="slotButtonHolder" id="slotButtonHolderLoadout" onclick="toggleLoadoutMenu()" style="visibility: hidden;">
                             <div id="loadoutButton" style="background: #A6637F;">
                                 🔥
 
@@ -1491,6 +1519,11 @@
                                 Crit Chance: <span id="statCritChance">20</span>%
                             </div>
 
+                            <div class="newStat" id="statDisplayCritDamage">
+                                <svg style="background: rgb(196, 58, 81);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m12 16.975l1.475-1.475H15.5v-2.025L16.975 12L15.5 10.525V8.5h-2.025L12 7.025L10.525 8.5H8.5v2.025L7.025 12L8.5 13.475V15.5h2.025zm0 6.325L8.65 20H4v-4.65L.7 12L4 8.65V4h4.65L12 .7L15.35 4H20v4.65L23.3 12L20 15.35V20h-4.65z"/></svg>
+                                 Crit Damage: <span id="statCritDamage">20</span>%
+                            </div>
+
                             <div class="newStat" id="statDisplayThorns">
                                 <svg style="background: #31493a;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" d="M256 16c-5.718 51.466-24.204 93.997-32.813 124.687c-8.896 2.525-17.386 5.918-25.312 10.313c-27.803-15.645-71.13-32.34-111.563-64.688c32.348 40.434 49.043 83.76 64.688 111.563c-4.395 7.926-7.788 16.416-10.313 25.312C109.997 231.797 67.467 250.282 16 256c51.466 5.718 93.997 24.204 124.687 32.812c2.525 8.897 5.918 17.387 10.313 25.313c-15.645 27.802-32.34 71.128-64.688 111.562c40.434-32.347 83.76-49.042 111.563-64.687c7.926 4.395 16.416 7.788 25.312 10.312c8.61 30.69 27.095 73.22 32.813 124.688c5.718-51.467 24.204-93.998 32.812-124.688c8.897-2.524 17.387-5.917 25.313-10.312c27.802 15.645 71.128 32.34 111.562 64.687c-32.347-40.434-49.042-83.76-64.687-111.562c4.395-7.926 7.788-16.416 10.312-25.313c30.69-8.608 73.22-27.094 124.688-32.812c-51.467-5.718-93.998-24.204-124.688-32.813c-2.524-8.896-5.917-17.386-10.312-25.312c15.645-27.803 32.34-71.13 64.687-111.563c-40.434 32.348-83.76 49.043-111.562 64.688c-7.926-4.395-16.416-7.788-25.313-10.313C280.204 109.997 261.718 67.467 256 16m0 180c16.57 0 31.798 6.486 42.657 17.343S316 239.43 316 256s-6.486 31.798-17.343 42.657C287.797 309.515 272.57 316 256 316s-31.8-6.486-42.657-17.343C202.483 287.797 196 272.57 196 256s6.486-31.8 17.343-42.657C224.2 202.483 239.43 196 256 196"/></svg>
                                 Thorns: <span id="statThorns">20%</span>%
@@ -1499,6 +1532,11 @@
                             <div class="newStat" id="statDisplayStealLevel">
                                 <svg style="background: #242424;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6H5C3.346 6 2 7.346 2 9v5c0 2.206 1.794 4 4 4h1.637c1.166 0 2.28-.557 2.981-1.491c.66-.879 2.104-.88 2.764.001A3.74 3.74 0 0 0 16.363 18H18c2.206 0 4-1.794 4-4V9c0-1.654-1.346-3-3-3M7.5 13C6.119 13 5 12.328 5 11.5S6.119 10 7.5 10s2.5.672 2.5 1.5S8.881 13 7.5 13m9 0c-1.381 0-2.5-.672-2.5-1.5s1.119-1.5 2.5-1.5s2.5.672 2.5 1.5s-1.119 1.5-2.5 1.5"/></svg>
                                Steal Level: <span id="statStealLevel">6</span>
+                            </div>
+
+                            <div class="newStat" id="statDisplayExtraActions">
+                                <svg style="background: #c28b4c;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M10.998 1.58a2 2 0 0 1 2.004 0l7.5 4.342a2 2 0 0 1 .998 1.731v8.694a2 2 0 0 1-.998 1.73l-7.5 4.343a2 2 0 0 1-2.004 0l-7.5-4.342a2 2 0 0 1-.998-1.731V7.653a2 2 0 0 1 .998-1.73zM5.25 8.092a.5.5 0 0 0-.751.433v6.669a2 2 0 0 0 .998 1.73l5.751 3.33a.5.5 0 0 0 .751-.432v-6.669a2 2 0 0 0-.998-1.73zm10.517-2.575c-.478-.276-1.254-.276-1.732 0s-.478.724 0 1s1.254.276 1.732 0s.478-.724 0-1m-5.8 0c-.478-.276-1.254-.276-1.732 0s-.478.724 0 1s1.254.276 1.732 0c.479-.276.479-.724 0-1m7.025 10.328c.597-.345 1.082-1.184 1.082-1.875c0-.69-.485-.97-1.082-.625S15.91 14.53 15.91 15.22s.485.97 1.082.625M6.365 12.2c.478.277.866.053.866-.5c0-.552-.388-1.223-.866-1.5s-.866-.052-.866.5c0 .553.388 1.224.866 1.5m4.33 5.498c0 .552-.389.776-.867.5s-.866-.948-.866-1.5s.388-.776.866-.5s.866.948.866 1.5M7.231 15.7c0 .553-.388.777-.866.5c-.478-.276-.866-.947-.866-1.5c0-.552.388-.776.866-.5c.478.277.866.948.866 1.5m3.463-2c0 .553-.388.777-.866.5c-.479-.275-.866-.947-.866-1.5c0-.551.387-.775.866-.5c.478.277.866.949.866 1.5"/></svg>
+                                Extra Actions: <span id="statExtraActions">6</span>
                             </div>
 
                             <div class="newStat" id="statDisplayLifesteal">
@@ -1604,18 +1642,35 @@
 
                         <div class="inventoryTab" onclick='changeSort("Key")' id="inventoryKeyTarget">
                             <div id="inventoryKeyIndicator">0</div>
-
                             <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M8.95 8.6a6.554 6.554 0 0 1 6.55-6.55c3.596 0 6.55 2.819 6.55 6.45a6.554 6.554 0 0 1-6.55 6.55a6.2 6.2 0 0 1-1.552-.204A1.25 1.25 0 0 1 12.7 16.05h-1.75v1.75c0 .69-.56 1.25-1.25 1.25H7.95v1.25a1.75 1.75 0 0 1-1.75 1.75H3.7a1.75 1.75 0 0 1-1.75-1.75v-2.172c0-.73.29-1.429.806-1.944L8.99 9.948a.28.28 0 0 0 .07-.244A6.4 6.4 0 0 1 8.95 8.6m9.3-1.6a1.25 1.25 0 1 0-2.5 0a1.25 1.25 0 0 0 2.5 0"/></svg>
-                                                                        </div>
+                        </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Gem")' id="inventoryGemTarget">
+                            <div id="inventoryGemIndicator">0</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="currentColor" d="M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8h240c7.6 0 14.8 3.6 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-4.5 5-11 7.9-17.8 7.9s-13.2-2.9-17.8-7.9l-232-256c-7.7-8.5-8.3-21.2-1.5-30.4zm38.5 39.8c-3.3 2.5-4.2 7-2.1 10.5l57.4 95.6L63.3 192c-4.1.3-7.3 3.8-7.3 8s3.2 7.6 7.3 8l192 16h1.3l192-16c4.1-.3 7.3-3.8 7.3-8s-3.2-7.6-7.3-8l-147.1-12.2l57.4-95.6c2.1-3.5 1.2-8.1-2.1-10.5s-7.9-2-10.7 1L256 172.2l-90.1-97.6c-2.8-3-7.4-3.4-10.7-1"/></svg>
+                        </div>
+
+                        <div class="inventoryTab" onclick='changeSort("Garden")' id="inventoryGardenTarget">
+                            <div id="inventoryGardenIndicator">0</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><path fill="currentColor" d="M205.41 159.07a60.9 60.9 0 0 1-31.83 8.86a71.7 71.7 0 0 1-27.36-5.66A55.55 55.55 0 0 0 136 194.51V224a8 8 0 0 1-8.53 8a8.18 8.18 0 0 1-7.47-8.25v-12.44l-38.62-38.62A52.5 52.5 0 0 1 63.44 176a45.8 45.8 0 0 1-23.92-6.67C17.73 156.09 6 125.62 8.27 87.79a8 8 0 0 1 7.52-7.52c37.83-2.23 68.3 9.46 81.5 31.25a46 46 0 0 1 6.45 28.48a4 4 0 0 1-6.89 2.43l-19.2-20.1a8 8 0 0 0-11.31 11.31l53.88 55.25c.06-.78.13-1.56.21-2.33a68.56 68.56 0 0 1 18.64-39.46l50.59-53.46a8 8 0 0 0-11.31-11.32l-49 51.82a4 4 0 0 1-6.78-1.74c-4.74-17.48-2.65-34.88 6.4-49.82c17.86-29.48 59.42-45.26 111.18-42.22a8 8 0 0 1 7.52 7.52c3 51.77-12.78 93.33-42.26 111.19"/></svg>
+                         </div>
+
+                         <div class="inventoryTab" onclick='changeSort("Pet")' id="inventoryPetTarget">
+                            <div id="inventoryPetIndicator">0</div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="640" height="512" viewBox="0 0 640 512"><path fill="currentColor" d="M208 64a16 16 0 1 0-32 0a16 16 0 1 0 32 0m48 0c0 16.2-6 31.1-16 42.3l15.6 31.2c18.7-6 39.9-9.5 64.4-9.5s45.8 3.5 64.4 9.5l15.6-31.2c-10-11.2-16-26.1-16-42.3c0-35.3 28.7-64 64-64s64 28.7 64 64s-28.7 64-64 64c-1.7 0-3.4-.1-5.1-.2L427.8 158c21.1 13.6 37.7 30.2 51.4 46.4c7.1 8.3 13.5 16.6 19.3 24l1.4 1.8c6.3 8.1 11.6 14.8 16.7 20.4c10.7 11.7 16.1 13.4 19.4 13.4c2.5 0 4.3-.6 7.1-3.3c3.7-3.5 7.1-8.8 12.5-17.4l.6-.9c4.6-7.4 11-17.6 19.4-25.7c9.7-9.3 22.9-16.7 40.4-16.7c13.3 0 24 10.7 24 24s-10.7 24-24 24c-2.5 0-4.3.6-7.1 3.3c-3.7 3.5-7.1 8.8-12.5 17.4l-.6.9c-4.6 7.4-11 17.6-19.4 25.7c-9.7 9.3-22.9 16.7-40.4 16.7c-18.5 0-32.9-8.5-44.3-18.6c-3.1 4-6.6 8.3-10.5 12.7c1.4 4.3 2.8 8.5 4 12.5c.9 3 1.8 5.8 2.6 8.6c3 9.8 5.5 18.2 8.6 25.9c3.9 9.8 7.4 15.4 10.8 18.5c2.6 2.4 5.9 4.3 12.8 4.3c8.7 0 16.9-4.2 33.7-13.2c15-8 35.7-18.8 62.3-18.8c13.3 0 24 10.7 24 24s-10.7 24-24 24c-13.4 0-24.7 5.2-39.7 13.2c-1 .6-2.1 1.1-3.2 1.7C559.9 414 541.4 424 520 424c-18.4 0-33.6-6.1-45.5-17.2c-11.1-10.3-17.9-23.7-22.7-36c-3.6-9-6.7-19.1-9.5-28.5c-16.4 12.3-36.1 23.6-58.9 31.3c3.6 10.8 8.4 23.5 14.4 36.2c7.5 15.9 16.2 30.4 25.8 40.5C433 460.5 441.2 464 448 464c13.3 0 24 10.7 24 24s-10.7 24-24 24c-25.2 0-45-13.5-59.5-28.8c-14.5-15.4-25.7-34.9-34.2-53c-8-17-14.1-33.8-18.3-46.9c-5.2.4-10.6.6-16 .6s-10.8-.2-16-.6c-4.2 13-10.3 29.9-18.3 46.9c-8.5 18.1-19.8 37.6-34.2 53C237 498.5 217.2 512 192 512c-13.3 0-24-10.7-24-24s10.7-24 24-24c6.8 0 15-3.5 24.5-13.7c9.5-10.1 18.3-24.6 25.8-40.5c5.9-12.6 10.7-25.4 14.4-36.2c-22.8-7.7-42.5-19-58.9-31.3c-2.9 9.4-6 19.5-9.5 28.5c-4.8 12.2-11.6 25.6-22.7 36c-12 11.1-27.2 17.2-45.6 17.2c-21.4 0-39.9-10-53.1-17.1c-1.1-.6-2.2-1.2-3.2-1.7c-15-8-26.3-13.2-39.7-13.2c-13.3 0-24-10.7-24-24s10.7-24 24-24c26.6 0 47.3 10.8 62.3 18.8c16.8 9 25 13.2 33.7 13.2c6.8 0 10.2-1.9 12.8-4.3c3.4-3.2 7-8.8 10.8-18.5c3-7.7 5.6-16.1 8.6-25.9c.8-2.7 1.7-5.6 2.6-8.6c1.2-4 2.6-8.2 4-12.5c-3.9-4.5-7.4-8.8-10.5-12.7c-11.4 10-25.8 18.5-44.3 18.5c-17.5 0-30.7-7.4-40.4-16.7c-8.4-8.1-14.8-18.3-19.4-25.7l-.6-.9c-5.4-8.6-8.8-13.9-12.5-17.4c-2.8-2.7-4.6-3.3-7.1-3.3c-13.3 0-24-10.7-24-24s10.7-24 24-24c17.5 0 30.7 7.4 40.4 16.7c8.4 8.1 14.8 18.3 19.4 25.7l.6.9c5.4 8.6 8.8 13.9 12.5 17.4c2.8 2.7 4.6 3.3 7.1 3.3c3.3 0 8.7-1.7 19.4-13.4c5.1-5.6 10.4-12.3 16.7-20.4l1.4-1.8c5.8-7.4 12.2-15.7 19.3-24c13.8-16.2 30.3-32.8 51.4-46.4l-15.1-30.2c-1.7.1-3.4.2-5.1.2c-35.3 0-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64m208 0a16 16 0 1 0-32 0a16 16 0 1 0 32 0"/></svg>
+                         </div>
 
 
+                        <div class="inventoryTab" onclick="inventoryQuickSelect()" id="inventoryTopButtonQuickSelect" style="opacity: 1 !important">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 256 256"><path fill="currentColor" d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16M104 200H72a16 16 0 0 1-16-16v-32a8 8 0 0 1 16 0v32h32a8 8 0 0 1 0 16m0-128H72v32a8 8 0 0 1-16 0V72a16 16 0 0 1 16-16h32a8 8 0 0 1 0 16m96 112a16 16 0 0 1-16 16h-32a8 8 0 0 1 0-16h32v-32a8 8 0 0 1 16 0Zm0-80a8 8 0 0 1-16 0V72h-32a8 8 0 0 1 0-16h32a16 16 0 0 1 16 16Z"/></svg>
+                        </div>
 
 
 
 
                     </div>
 
-                    <div class="inventorySelectButtons">
+                    <div class="inventorySelectButtons" style="display: none;">
 
                         <div class="inventoryTopButton" onclick="inventoryQuickSelect()" id="inventoryTopButtonQuickSelect">
 
@@ -1647,7 +1702,7 @@
 
 
 
-            <span class="inventoryPage" id="inventoryCraftingPage">
+            <span class="inventoryPage" id="inventoryCraftingPage" >
 
 
 
@@ -1807,19 +1862,17 @@
 
         <div class="areaWidget" id="areaWidget">
             <div class="areaName">
-                <div class="areaArrow" style="left: -3rem; display: none;">
+                <div class="areaArrow" style="left: -3rem;" id="areaArrow1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m4.431 12.822l13 9A1 1 0 0 0 19 21V3a1 1 0 0 0-1.569-.823l-13 9a1.003 1.003 0 0 0 0 1.645"/></svg>
                 </div>
-                <div class="areaArrow" style="right: -3rem; display: none;">
+                <div class="areaArrow" style="right: -3rem;" id="areaArrow2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5.536 21.886a1 1 0 0 0 1.033-.064l13-9a1 1 0 0 0 0-1.644l-13-9A1 1 0 0 0 5 3v18a1 1 0 0 0 .536.886"/></svg>
                 </div>
-                <span id="areaName" style="pointer-events: none;"></span>
-                <div id="areaSwitch" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18v-2h18v2zm0-5v-2h18v2zm0-5V6h18v2z"/></svg>
-                </div>
+                <span id="areaName"></span>
+                
                 
             </div>
-            <div class="areaEncounters">
+            <div id="areaEncounters">
                 <div id="encounterEasy"></div>
                 <div id="encounterMedium"></div>
                 <div id="encounterHard"></div>
@@ -1849,14 +1902,16 @@
             <div id="rpgWidget2"><div id="heatIcon" onclick="switchHeat()"><img src="img/src/icons/heatStatic.png" id="heatLevel"><img src="img/src/icons/heat4.png"id="heatTurtle"><span id="heatNumber">4</span></div></div>
 
             <div class="areaListing" id="areaListing">
-                <div class="areaSelect">
-                    <div>Areas</div>
-                    <div>Dungeons</div>
+                <div class="areaSelect" id="areaSelect">
+                    <div id="travelSelectAreas">Areas</div>
+                    <div id="travelSelectLandmarks">Landmarks</div>
+                    <div id="travelSelectDungeons">Dungeons</div>
                 </div>
 
-                <div id="areaList">
+                <div id="areaList"></div>
+                <div id="dungeonList" style="display: none;"></div>
+                <div id="landmarkList" style="display: none;"></div>
 
-                </div>
 
 
             </div>
@@ -1869,6 +1924,8 @@
 
         <div id="mainGroundFront"></div>
 
+
+        <div id="areaTransition"></div>
 
         <div id="areaBg"></div>
         <div id="dayNightCycle"></div>
@@ -1953,6 +2010,13 @@
                         </div>
 
                         <div id="playerBuffWrapper"></div>
+                        <div id="playerActionsWrapper">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
 
                     </div>
 
@@ -1980,7 +2044,7 @@
                 </div>
 
 
-                <div class="npcScreenspace">
+                <div class="npcScreenspace" id="enemyPanel">
 
 
                     <div class="npcInfo">
@@ -2010,19 +2074,19 @@
 
                     <div class="npcArea">
 
-                        <div class="enemyAdd" style="left: -110%;" >
+                        <div class="enemyAdd" style="left: -110%;" id="addPanel1">
                             <div class="targetTriangle" id="targetAdd1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" fill-opacity="0" stroke-dasharray="28" stroke-dashoffset="28" d="M12 10l4 7h-8Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"/><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="28;0"/></path><path d="M12 10l4 7h-8Z" opacity="0"><animate attributeName="d" begin="0.4s" dur="0.8s" keyTimes="0;0.25;1" repeatCount="indefinite" values="M12 10l4 7h-8Z;M12 4l9.25 16h-18.5Z;M12 4l9.25 16h-18.5Z"/><animate attributeName="opacity" begin="0.4s" dur="0.8s" keyTimes="0;0.1;0.75;1" repeatCount="indefinite" values="0;1;1;0"/></path></g></svg>
                             </div>
                             
-                            <div class="addHealthBar"></div> <div id="enemyAdd1" onclick='clickTarget("Add1")'></div> </div>
+                            <div class="addHealthBar" id="addHealthBar1"></div> <span id="enemyAdd1Anim"><div id="enemyAdd1" onclick='clickTarget("Add1")'></div></span> </div>
 
-                        <div class="enemyAdd" style="right: -110%;" >
+                        <div class="enemyAdd" style="right: -110%;" id="addPanel2">
                             <div class="targetTriangle" id="targetAdd2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" fill-opacity="0" stroke-dasharray="28" stroke-dashoffset="28" d="M12 10l4 7h-8Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"/><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="28;0"/></path><path d="M12 10l4 7h-8Z" opacity="0"><animate attributeName="d" begin="0.4s" dur="0.8s" keyTimes="0;0.25;1" repeatCount="indefinite" values="M12 10l4 7h-8Z;M12 4l9.25 16h-18.5Z;M12 4l9.25 16h-18.5Z"/><animate attributeName="opacity" begin="0.4s" dur="0.8s" keyTimes="0;0.1;0.75;1" repeatCount="indefinite" values="0;1;1;0"/></path></g></svg>
                             </div>
                             
-                            <div class="addHealthBar"></div> <div id="enemyAdd2" onclick='clickTarget("Add2")'></div> </div>
+                            <div class="addHealthBar" id="addHealthBar2"></div> <span id="enemyAdd2Anim"><div id="enemyAdd2" onclick='clickTarget("Add2")'></div></span> </div>
                         <span id="npcPanel" onclick='clickTarget("Enemy")'>
 
                             <div class="targetTriangle" style="margin-top: -120%;" id="targetEnemy">
@@ -2816,7 +2880,6 @@
 
                 <div id="rpgCanvas">
 
-                    <canvas id="fxCanvas"></canvas>
 
                     <div class="extraBattleUI" id="dungeonUI"> <div class="dungeonBar"><div class="dungeonBox"></div><div id="dungeonMeter"></div></div><img id="dungeonBox2" src="img/src/icons/skull5.png"> </div>
                         
@@ -3333,9 +3396,9 @@
     <script type="text/javascript" src="scripts/fuse.js"></script>
     <script type="text/javascript" src="scripts/initialisation.js"></script>
     <script src="patreon.js"></script>
+    <script type="text/javascript" src="scripts/stats.js"></script>
     <script src="itemDictionary.js"></script>
     <script type="text/javascript" src="scripts/offline.js"></script>
-    <script type="text/javascript" src="scripts/stats.js"></script>
     <script src="gameObjects.js"></script>
     <script type="text/javascript" src="scripts/enemyDictionary.js"></script>
     <script type="text/javascript" src="scripts/buffDictionary.js"></script>
@@ -3354,9 +3417,9 @@
     <script src="garrison.js"></script>
     <script src="fx.js"></script>
     <script type="text/javascript" src="scripts/particles.js"></script>
+    <script type="text/javascript" src="scripts/crafting.js"></script>
     <script type="text/javascript" src="scripts/shop.js"></script>
     <script type="text/javascript" src="scripts/bestiary.js"></script>
-    <script type="text/javascript" src="scripts/crafting.js"></script>
     <script src="gacha.js"></script>
 
 

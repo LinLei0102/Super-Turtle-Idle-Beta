@@ -31,7 +31,10 @@ playerTurnTimer();
 
 function playerTurn() {
 
-    if (!rpgPlayer.alive) return
+  if (!rpgPlayer.alive) return
+  if (buffs.PlayerPetrify.time>0) return
+  if (did("enemyPanel").style.display === "none") return
+
 
     equippedItems.forEach((item) => {
   
@@ -52,8 +55,22 @@ function playerTurn() {
     });
 
 
-    
-  
+    playerAttackCheck()
+  }
+
+
+
+  function resetEncounter(){
+
+    enemyTurn = 0;
+    bossTime = false
+    removeBuffs("clear");
+    playerBuffs();
+    enemyAdd1CurrentHp = 0
+    enemyAdd2CurrentHp = 0
+    enemyUpdate()
+
+
   }
 
 let extraLivesUsed = stat.ExtraLives
@@ -68,7 +85,7 @@ function playerUpdate(){ //updates player HP and checks if its dead
 
 
     did("enemyAttackBox").style.display = "none";
-    enemyTurn = 0;
+    resetEncounter()
 
     setTimeout(() => {
       updateOfflineIndicator()
@@ -104,9 +121,18 @@ function playerUpdate(){ //updates player HP and checks if its dead
       stats.currentDifficulty="easy"
       encounterButtonPress() 
       deleteEnemy();
+      resetEncounter()
       did("rpgCanvas").style.animation = "";
       void did("rpgCanvas").offsetWidth;
       did("rpgCanvas").style.animation = "rpgFade 1s 1";
+    }
+
+    if ((enemies[stats.currentEnemy].tag === "arena")) { //if an arena boss kills the turtle
+      bossTime = false;
+      //deleteEnemy();
+      resetEncounter();
+      did("enemyPanel").style.display = "none";
+
     }
     
     if (dungeonTime && buffs.B64.time<=0){ //dies on a dungeon
@@ -160,42 +186,59 @@ function playerUpdate(){ //updates player HP and checks if its dead
 
 }
 
+let currentTarget = ""
+
 function clickTarget(target){
 
 
     if (!rpgPlayer.alive) return
 
-    //voidAnimation("target"+target,"targetTriangle 4s 1, gelatineHigh 0.3s 1")
+    if (target!==currentTarget) voidAnimation("target"+target,"targetTriangle 1s 1, gelatineHigh 0.3s 1")
     
     if (target==="Enemy") enemy = document.getElementById('npcPanel');
     if (target==="Add1") enemy = document.getElementById('enemyAdd1');
     if (target==="Add2") enemy = document.getElementById('enemyAdd2');
     
     enemyRect = enemy.getBoundingClientRect();
+    currentTarget = target
 
 
-
-    
 
 
 
     enemyDamageAnimation("low");
-     
-    let lumaDamage = (stat.Power/10*lumaCharge)
-
-    if (stat.LumaPower>0) lumaDamage += lumaDamage * (stat.LumaPower/100)
-    
-    enemyNatureDamage(  lumaDamage  );
-
-
-    lumaCharge = 0.1;
-
 
     setTimeout(() => {
       particleTrackers.push(new ParticleSparks(mouseClickX, mouseClickY))
       particleTrackers.push(new ParticleSparks(mouseClickX, mouseClickY))
       particleTrackers.push(new ParticleSparks(mouseClickX, mouseClickY))
     }, 10); 
+     
+    let lumaDamage = (stat.Power/10*lumaCharge)
+    if (stat.LumaPower>0) lumaDamage += lumaDamage * (stat.LumaPower/100)
+    
+
+
+    if (enemies[stats.currentEnemy].resource==="ore" || enemies[stats.currentEnemy].resource==="herb"){
+
+      playSound("audio/oreHit.mp3")
+      lumaDamage = (stat.GatheringPower/2*lumaCharge)
+      enemyBasicDamage(lumaDamage);
+      lumaCharge = 0.1;
+      return
+    }
+
+    if (equippedLuma!==undefined) equippedLuma.luma()
+    if (equippedLuma!==undefined && equippedLuma.align === "Occult") enemyOccultDamage(lumaDamage);
+    else if (equippedLuma!==undefined && equippedLuma.align === "Elemental") enemyElementalDamage(lumaDamage);
+    else  enemyNatureDamage(lumaDamage);
+   
+
+
+    lumaCharge = 0.1;
+
+
+ 
 
 
     
@@ -246,9 +289,27 @@ function animatedSplash(target, image, animation, hue){ //image on top of a targ
     setTimeout(() => { div.remove() }, 700);
   }
 
+  if (animation==="downwards"){
+    div.getElementsByTagName("img")[0].style.animation = "gelatineDownwards 1.1s";
+    setTimeout(() => { div.remove() }, 1000);
+  }
+
   if (animation==="float"){
     div.getElementsByTagName("img")[0].style.animation = "skillFloat 1.5s 1";
     setTimeout(() => { div.remove() }, 1500);
+  }
+
+  if (animation==="taunt"){
+    div.getElementsByTagName("img")[0].style.animation = "gelatineTaunt 1s";
+    div.getElementsByTagName("img")[0].style.scale = 1.4;
+    div.getElementsByTagName("img")[0].style.translate = "0 5px";
+    setTimeout(() => { div.remove() }, 900);
+  }
+
+  if (animation==="spinningThrow"){
+    div.getElementsByTagName("img")[0].style.animation = "spinningThrow 3s 1 ease-in-out"; 
+    div.getElementsByTagName("img")[0].style.scale = 1;
+    setTimeout(() => { div.remove() }, 2900);
   }
 
 
@@ -309,6 +370,7 @@ function enemyAttackTurn() {
       //gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty) || !rpgPlayer.alive || (stats.currentArea === "A7" && !skirmishTime && !showdownTime) || (buffs.B6.time>0 || buffs.B44.time>0)) { //conditions to not attack
 
       if (!rpgPlayer.alive) return
+      if (did("enemyPanel").style.display === "none") return
 
 
       if (enemies[stats.currentEnemy].ai!==undefined) {enemyTurn++; enemies[stats.currentEnemy].ai();}
@@ -576,7 +638,9 @@ function playerBuffsDecay() {
 
     if (buffs.B75.time>0) {did("playerNpcPanel").style.filter = "brightness(0)"} else if (did("playerNpcPanel").style.filter === "brightness(0)" && buffs.B75.time<=0) did("playerNpcPanel").style.filter = "none";
   
-    if (buffs.B85.time>0) {did("rpgPlayerImg").style.filter = "grayscale(1)"} else if (did("rpgPlayerImg").style.filter === "grayscale(1)" && buffs.B85.time<=0) did("rpgPlayerImg").style.filter = "none";
+    if (buffs.PlayerPetrify.time>0) {did("playerAnimation").style.filter = "grayscale(1)"}
+    else if (did("playerAnimation").style.filter === "grayscale(1)" && buffs.PlayerPetrify.time<=0) did("playerAnimation").style.filter = "none";
+
 
     if (stats.currentArea==="A10") buffs.B91.time = 3;
     if (stats.currentArea==="A11") buffs.B96.time = 3;
@@ -658,6 +722,7 @@ function playerBuffs() { //only UI
 
     if (buffs[b].time < 0.99 && did(b + "buff")) {
       did(b + "buff").remove();
+      buffs[b].time = 0
       if ('stacks' in buffs[b]) buffs[b].stacks = 0;
       statsUpdate();
       updateStatsUI();
@@ -719,8 +784,14 @@ const playerRectYRNG = playerRect.top - containerRect.top + playerRect.height / 
 
 
   if (buffs.EnemyPoison.time>0) particleTrackers.push(new ParticleBubble(enemyRectXRNG,enemyRectYRNG,{imageHue:50}));
-
   if (buffs.PlayerPoison.time>0) particleTrackers.push(new ParticleBubble(playerRectXRNG,playerRectYRNG,{imageHue:50}));
+
+
+  if (buffs.EnemyBurning.time>0) particleTrackers.push(new ParticleEmber(enemyRectXRNG,enemyRectYRNG));
+  if (buffs.EnemyEnrage.time>0) particleTrackers.push(new ParticleBuffEnrage(enemyRectXRNG,enemyRectYRNG));
+
+
+
 
   if (buffs.Sparkler1.time>0) {
     particleTrackers.push(new ParticleCursorSparkler(mousePositionX,mousePositionY)); setTimeout(() => { particleTrackers.push(new ParticleCursorSparkler(mousePositionX,mousePositionY)); }, 100); setTimeout(() => { particleTrackers.push(new ParticleCursorSparkler(mousePositionX,mousePositionY)); }, 200); setTimeout(() => { particleTrackers.push(new ParticleCursorSparkler(mousePositionX,mousePositionY)); }, 300);
@@ -750,4 +821,46 @@ const playerRectYRNG = playerRect.top - containerRect.top + playerRect.height / 
 
 
 
+function updateCombatActions(){
+    const fullAction = '<div></div>'
+    let emtpyActionList = ""
+
+    function returnEmptyActionList(number){
+
+        const emptyAction = '<div style="background:#4B4B4B"></div>'
+    
+        let gang = ""
+            
+        
+            for (let i = 0; i < number; i++) { loop();}
+        
+            function loop() {
+                gang+=emptyAction
+            }
+            
+        
+            return gang
+        }
+
+    
+
+    if (combatActions===8) did("playerActionsWrapper").innerHTML = fullAction+fullAction+fullAction+fullAction+fullAction+fullAction+fullAction+fullAction+returnEmptyActionList(stat.ExtraActions-5)
+    if (combatActions===7) did("playerActionsWrapper").innerHTML = fullAction+fullAction+fullAction+fullAction+fullAction+fullAction+fullAction+returnEmptyActionList(stat.ExtraActions-4)
+    if (combatActions===6) did("playerActionsWrapper").innerHTML = fullAction+fullAction+fullAction+fullAction+fullAction+fullAction+returnEmptyActionList(stat.ExtraActions-3)
+    if (combatActions===5) did("playerActionsWrapper").innerHTML = fullAction+fullAction+fullAction+fullAction+fullAction+returnEmptyActionList(stat.ExtraActions-2)
+    if (combatActions===4) did("playerActionsWrapper").innerHTML = fullAction+fullAction+fullAction+fullAction+returnEmptyActionList(stat.ExtraActions-1)
+    if (combatActions===3) did("playerActionsWrapper").innerHTML = fullAction+fullAction+fullAction+returnEmptyActionList(stat.ExtraActions)
+    if (combatActions===2) did("playerActionsWrapper").innerHTML = fullAction+fullAction+returnEmptyActionList(stat.ExtraActions+1)
+    if (combatActions===1) did("playerActionsWrapper").innerHTML = fullAction+returnEmptyActionList(stat.ExtraActions+2)
+    if (combatActions===0) did("playerActionsWrapper").innerHTML = returnEmptyActionList(stat.ExtraActions+3)
+}
+
+
+document.addEventListener('DOMContentLoaded', initializationCombat);
+
+function initializationCombat() {
+  updateCombatActions()
+
+    
+}
 

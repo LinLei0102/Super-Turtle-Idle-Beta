@@ -27,7 +27,6 @@ quests.A1QN1 = {
     logic : function() {return enemies.E1.killCount>4},
     effect: function() {
         spawnItem(WoodenSword);
-        tipPopUp("About Gear!","<br>You just recieved a piece of gear!<br>Search it on your inventory on the left tab and equip it<br><br>Gear can come with different modifiers and flavors, so pay attention!<br><br>With a weapon equipped, the game will automatically defeat enemies while you\'re away, even offline")
     },
     reward: `${itemData(WoodenSword)} x1`
 }
@@ -37,17 +36,19 @@ quests.A1QN2 = {
     difficulty: 1,
     icon: `img/src/enemies/E1M.png`,
     description: `We are in DIRE need of a stick-like-weapon-wielding prince to help us with the caulislug problem! Oh, if only they knew that <span style="color:orange;font-weight:600; font-size:1.2rem"> their game runs normally even if the browser tab is not active</span>, I bet it would appear right now!`,
-    objective: function() { return `Defeat another bunch of slugs with your mighty weapon <span class="questProgress">${beautify(enemies.E1.killCount)}/30</span>`},
+    objective: function() { return `Defeat another bunch of slugs with your mighty weapon <span class="questProgress">${beautify(enemies.E1.killCount)}/30</span><br><span style="color:gray">(Tip: Equip your sword by finding it in your left inventory tab)</span>`},
     logic : function() {return enemies.E1.killCount>29},
     effect: function() {
-        spawnItem(ClothHead);
+        spawnItem(ClothHead,3);
+        tipPopUp("About Gear!","<div class='tipPanelImage'><img src=img/src/gametips/G1.png></div><br>Gear can appear with different reforges [⭐,✨,🌠], each with different effects. <br><br>Better gear reforges become more common the higher your Shellshock level is.<br><br>If you are having issues progressing with the area, try getting better reforges!<br><br><p style='color:gray;font-weight:400'>(This information can be read again on the Game Guide in Settings)<p>")
+
     },
-    reward: `${itemData(ClothHead)} x1`
+    reward: `${itemData(ClothHead)} x3`
 }
 
 quests.A1QN3 = {
     name: 'Those who croak',
-    difficulty: 1,
+    difficulty: 2,
     icon: `img/src/items/I51.jpg`,
     description: `Those damn frogs need to be taken care of, we already have enough green-colored fellas arround here! If you want to find them, you will have to <span style="color:orange;font-weight:600; font-size:1.2rem">switch encounter by clicking the buttons above the screen!</span>`,
     objective: function() { return `Defeat 20 Ribulls <span class="questProgress">${beautify(enemies.E3.killCount)}/20</span>`},
@@ -55,6 +56,8 @@ quests.A1QN3 = {
     effect: function() {
         spawnItem(ClothChest);
         spawnItem(VendorTrash,1,"noPopup")
+        tipPopUp("Levels and EXP!","<div class='tipPanelImage'><img src=img/src/gametips/G3.png></div><br>Leveling up does not increase your stats by themselves, but it will affect how much damage you deal and receive from foes.<br><br>You will deal extra damage to enemies leveled below your own, and take extra damage if the enemy is too high leveled.<br><br>Level difference also affects your EXP rate. It will be reduced if the enemy level is marked as green, and wont yield any at all if its gray.<br><br><p style='color:gray;font-weight:400'>(This information can be read again on the Game Guide in Settings)<p>")
+
 
     },
     reward: `${itemData(ClothChest)} x1`
@@ -86,7 +89,7 @@ quests.A1QN6 = {
   effect: function() {
     MysteriousPackage.count--
     spawnItem(WoodenSword,2);
-    tipPopUp("About Aligns!","<br>Every weapon can come in three different aligns; Nature, Occult and Elemental, and so does all foes<br><br>Using an advantageous align on an enemy will cause it to deal x1.5 extra damage, indicated by a [▲] next to the damage number<br><br>There is no penalty for not using aligns correctly, but they can help you farm faster!<br><br>If you need a reminder of the align hierarchy, hover over your Power stat at any time")
+    tipPopUp("About Aligns!","<div class='tipPanelImage'><img src=img/src/gametips/G2.png></div><br>Every weapon comes in three different aligns; Nature, Occult and Elemental, and so does all foes.<br><br>Your weapon align will determine what type of damage you deal, and will be boosted by your specific align bonus stat, as well as the align of the enemy you are facing<br><br>Attacking with an effective align will deal x1.5 extra damage to the enemy, and will be marked with a (▲) in your damage.<br><br><p style='color:gray;font-weight:400'>(This information can be read again on the Game Guide in Settings)<p>")
 
   },
   reward: `${itemData(WoodenSword)} x2`
@@ -94,7 +97,7 @@ quests.A1QN6 = {
 
 quests.A1QN5 = {
   name: 'Natural Remedy',
-  difficulty: 2,
+  difficulty: 3,
   icon: `img/src/items/I49.jpg`,
   description: `I\'m feeling kinda drowzy lately and I need something to wake me up!`,
   objective: function() { return `Hand over 3 White Stingers <span class="questProgress">${beautify(WhiteStinger.count)}/3</span>`},
@@ -108,14 +111,14 @@ quests.A1QN5 = {
 
 quests.A1QN7 = {
   name: 'Have You Seen It?',
-  difficulty: 3,
+  difficulty: 4,
   icon: `img/src/enemies/E4M.png`,
   description: `My pet Hoopperoona has gone missing. You will recognise her for her eight legs, rocky skin, and the ability to melt steel beams with her saliva. She usually hangs arround <span style="color:orange;font-weight:600; font-size:1.2rem">at the top of the screen as the boss of the area</span>`,
   objective: function() { return `Defeat Hoopperoona<br><span style="color:gray">(Tip: Healing items, such as food sold in the shops, will appear on your pocket next to your name for ease of access)</span>`},
   logic : function() {return enemies.E4.killCount>0},
   effect: function() {
       spawnItem(SilverRing,2);
-      tipPopUp("About Shellshock!","<br>After you beat the area boss, you can increase the difficulty of the area by pressing the widget on the top left of the screen<br><br>By increasing the difficulty of the area, the levels of the enemies will rise, but so will the chances of getting their loot, alongside the ones of getting stronger tiers of them!<br><br>Beware! With each difficulty increase, bosses in the area will evolve, and gain new and perilous skills!")
+      tipPopUp("About Shellshock!","<div class='tipPanelImage'><img src=img/src/gametips/G4.png></div><br>After you beat the area boss, you can increase the difficulty of the zone by pressing the button next to the area name.<br><br>By increasing the difficulty of the area, the levels of the enemies will rise, but so will the chances of getting their loot, alongside the ones of getting stronger variants from foes and shops!<br><br>Beware! With each difficulty increase, the boss in the area will evolve, and gain new perilous skills!<br><br><p style='color:gray;font-weight:400'>(This information can be read again on the Game Guide in Settings)<p>")
 
   },
   reward: `${itemData(SilverRing)} x2`
@@ -126,7 +129,7 @@ quests.A1QN8 = {
   difficulty: 1,
   icon: `img/src/items/I554.jpg`,
   description: `I never saw an upgraded piece of equipment, and neither did you apparently. You would think that I have nothing to gain with this request and that it blatantly feels like some sort of introduction to a mechanic, and you would be partially right `,
-  objective: function() { return `Upgrade 2 pieces of equipment <span class="questProgress">${beautify(stats.upgradedItems)}/4</span><br><span style="color:gray">(Tip: The upgrading option on the inventory will only appear once you met the material requirements. Only equipment can be upgraded)</span>`},
+  objective: function() { return `Upgrade 2 pieces of equipment <span class="questProgress">${beautify(stats.upgradedItems)}/2</span>`},
   logic : function() {return stats.upgradedItems>1},
   effect: function() {
       spawnItem(UpgradeMaterial1,5);
@@ -136,11 +139,11 @@ quests.A1QN8 = {
 
 quests.A1QN9 = {
   name: 'Those who croak II',
-  difficulty: 2,
+  difficulty: 5,
   icon: `img/src/items/I51.jpg`,
   description: `I can still hear them, ya know? Not a very clean job you did. Give me proof that you got them good this time`,
-  objective: function() { return `Hand over 5 Frog Legs <span class="questProgress">${beautify(FrogLeg.count)}/5</span><br><span style="color:gray">(Tip: Some items, specially from quests, will only drop on certain difficulty levels. Watch out for yellow-colored items on enemy loot)</span>`},
-  logic : function() {return FrogLeg.count>4},
+  objective: function() { return `Hand over 3 Frog Legs <span class="questProgress">${beautify(FrogLeg.count)}/3</span><br><span style="color:gray">(Tip: Some items, specially from quests, will only drop on certain difficulty levels. Watch out for yellow-colored items on enemy loot)</span>`},
+  logic : function() {return FrogLeg.count>2},
   effect: function() {
       FrogLeg.count=-5
       spawnItem(RanaHat);
@@ -167,10 +170,10 @@ quests.A1QN11 = {
   difficulty: 1,
   icon: `img/src/items/I16.jpg`,
   description: `Postman here! I got a new shift on these lands and to my surprise, you don\'t have a mail installed arround these parts! I would build it myself, but I didn\'t brought materials on me`,
-  objective: function() { return `Hand over 30 Wood Bundles <span class="questProgress">${ScrapMaterial1.count}/30</span> <span style="color:gray"><br>(Tip: Items will automatically scrap if an exact copy is adquired)</span>`},
-  logic : function() {return ScrapMaterial1.count>29},
+  objective: function() { return `Hand over 20 Wood Bundles <span class="questProgress">${ScrapMaterial1.count}/20</span> <span style="color:gray"><br>(Tip: Items will automatically scrap if an exact copy is adquired)</span>`},
+  logic : function() {return ScrapMaterial1.count>19},
   effect: function() {
-      ScrapMaterial1.count-=30
+      ScrapMaterial1.count-=20
       unlocks.mail = true
       sendMail("BETA")
       unlockAnimation("Mail Unlocked!", "Recieve letters from time to time<br>Sometimes they might send you items attached!", "img/src/items/I16.jpg")
@@ -180,10 +183,10 @@ quests.A1QN11 = {
 
 quests.A1QN12 = {
   name: 'The Ultimatea',
-  difficulty: 3,
+  difficulty: 5,
   icon: `img/src/items/I382.jpg`,
   description: `My beverage doesn\'t give me enough energy! I need to remedy this!`,
-  objective: function() { return `Hand over 300 Spirit Ginseng <span class="questProgress">${UpgradeMaterial1.count}/150</span> <span style="color:gray"><br>(Tip: Bosses will often drop more Upgrading Materials on higher shellshock levels)</span>`},
+  objective: function() { return `Hand over 300 Spirit Ginseng <span class="questProgress">${UpgradeMaterial1.count}/300</span> <span style="color:gray"><br>(Tip: Bosses will often drop more Upgrading Materials on higher shellshock levels)</span>`},
   logic : function() {return UpgradeMaterial1.count>299},
   effect: function() {
       UpgradeMaterial1.count-=299
@@ -194,9 +197,9 @@ quests.A1QN12 = {
 
 quests.A1QN13 = {
   name: 'Feeling Peckish',
-  difficulty: 2,
+  difficulty: 6,
   icon: `img/src/buffs/B56.jpg`,
-  description: `Lately I have been carving salad. Although I\'d assume asking for some kind of creature who just happens to be made out of salad would be too far-fetched`,
+  description: `Lately I have been craving salad. Although I\'d assume asking for some kind of creature who just happens to be made out of salad would be too far-fetched`,
   objective: function() { return `Hand over 5 Salads <span class="questProgress">${CaesarSalad.count}/5</span>`},
   logic : function() {return CaesarSalad.count>4},
   effect: function() {
@@ -206,6 +209,222 @@ quests.A1QN13 = {
   reward: `${itemData(Stamp2)} x5`
 }
 
+quests.A1QN14 = {
+  name: 'Hare Control',
+  difficulty: 7,
+  icon: `img/src/items/I69.jpg`,
+  description: `Giant boxing rabbits are leaking through the colliding dojo in the north. They simply reproduce too fast, and it\'s going to be an ecological tragedy`,
+  objective: function() { return `Defeat 10 Jabbits in Lost Dojo <span class="questProgress">${enemies.E5.killCount}/10</span> <span style="color:gray"><br>(Tip: Switch areas at any time by clicking the area name at the top of the screen)</span>`},
+  logic : function() {return enemies.E5.killCount>9},
+  effect: function() {
+      spawnItem(ScrapMaterial2,2);
+  },
+  reward: `${itemData(ScrapMaterial2)} x2`
+}
+
+quests.A1QN15 = {
+  name: 'Mineralogy Enthusiast',
+  difficulty: 1,
+  icon: `img/src/items/I488.jpg`,
+  description: `All these cool rocks laying arround, and we have no way to peek what\'s inside them`,
+  objective: function() { return `Hand over 3 Cracked Rough Geodes <span class="questProgress">${Geode1Open.count}/3</span><span style="color:gray"><br>(Tip: Some quests will have requirements not found in their current area)</span>`},
+  logic : function() {return Geode1Open.count>2},
+  effect: function() {
+    Geode1Open.count-=3
+    spawnItem(GemTopaz,1);
+
+  },
+  reward: `${itemData(GemTopaz)} x1`
+}
+
+
+
+//-------------------a2--------------
+
+quests.A2Q1 = {
+  name: 'Blacksmith Request',
+  difficulty: 1,
+  icon: `img/src/items/I84.jpg`,
+  description: `We could use some help here in the mines, where the turtles yearn. Might teach you one or two secrets of the trade as a reward`,
+  objective: function() { return `Hand over 10 Copper Ore <span class="questProgress">${CopperOre.count}/10</span> <span style="color:gray"><br>(Tip: Herbs and ores can be gathered with a mattock)</span>`},
+  logic : function() {return CopperOre.count>9},
+  effect: function() {
+      CopperOre.count-=10
+      unlocks.crafting = true;
+      unlockAnimation("Crafting Unlocked!", "Transform resources into useful items!", "img/src/items/I31.jpg")
+  },
+  reward: `${itemIcon("I31")} Unlock Crafting`
+}
+
+unlocks.dailyPresent = false
+
+quests.A2Q2 = {
+  name: 'Missing Cat!',
+  difficulty: 1,
+  icon: `img/src/items/I123.jpg`,
+  description: `My cat Whiskers is missing. He likes dark closed spaces. I have nothing to offer but Whiskers grattitude`,
+  objective: function() { return `Find Whiskers`},
+  logic : function() {return Whiskers.count>0},
+  effect: function() {
+      unlockAnimation("Whiskers Grattitude Unlocked!", "Whiskers will bless you with free stuff!<br>Check the widget on the top right screen<br>Thanks a lot, Mr. Whiskers!", "img/src/icons/newPresents.jpg")
+      unlocks.dailyPresent = true;
+      Whiskers.count=0
+
+
+      stats.cddailyPresent1 = 5*60
+      stats.cddailyPresent2 = 10*60
+      stats.cddailyPresent3 = 15*60
+      stats.cddailyPresent4 = 20*60
+      stats.cddailyPresent5 = 25*60
+      stats.cddailyPresent6 = 30*60
+  },
+  reward: `${itemIcon("I123")} Whiskers Gratitude`
+}
+
+
+quests.A2Q4 = {
+  name: 'Like a hen in a cage',
+  difficulty: 2,
+  icon: `img/src/items/I121.jpg`,
+  description: `My chickens escaped from my coop and learnt full body combat. Help me bring them back`,
+  objective: function() { return `Capture 10 Roostrikas <span class="questProgress">${ChickenCage2.count}/10</span>`},
+  logic : function() {return ChickenCage2.count>9},
+  effect: function() {
+    ChickenCage2.count=0
+    spawnItem(Geode1,6)
+
+  },
+  reward: `${itemData(Geode1)} x6`
+}
+
+quests.A2Q5 = {
+  name: 'Fine Furs',
+  difficulty: 3,
+  icon: `img/src/items/I114.jpg`,
+  description: `I need to survive the winter but the rabbits are too cute. What a moral dilemma`,
+  objective: function() { return `Hand over 3 Rabbit Hide <span class="questProgress">${RabbitHide.count}/3</span>`},
+  logic : function() {return RabbitHide.count>2},
+  effect: function() {
+      RabbitHide.count-=3;
+      unlockAnimation("Monster Arena Unlocked!", "Fight your way up to fearsome foes for unique rewards!<br>Locate it by navigating into Landmarks on the area panel", "img/src/buffs/B2.jpg");
+      areas.L1.locked = false;
+      createAreaPanel();
+  },
+  reward: `${buffIcon("B2")}Unlock Monster Arena`
+}
+
+quests.A2Q6 = {
+  name: 'Strawberry Jam',
+  difficulty: 1,
+  icon: `img/src/items/I53.jpg`,
+  description: `I need to spike my cake with something sweet and regular, non-reactive, non-transmutable ingredients just won\'t cut it`,
+  objective: function() { return `Hand over 10 Healing Flasks <span class="questProgress">${HealingFlask.count}/10</span>`},
+  logic : function() {return HealingFlask.count>9},
+  effect: function() {
+    HealingFlask.count-=10;
+    spawnItem(ScrapMaterial1,20)
+  },
+  reward: `${itemData(ScrapMaterial1)} x20`
+}
+
+quests.A2Q7 = {
+  name: 'A Corny Request',
+  difficulty: 4,
+  icon: `img/src/items/I115.jpg`,
+  description: `Heh. See what I did there? Now move your ass pronto`,
+  objective: function() { return `Hand over 5 Acorns <span class="questProgress">${Acorn.count}/5</span>`},
+  logic : function() {return Acorn.count>4},
+  effect: function() {
+      Acorn.count-=5;
+      spawnItem(BushidoMedallion,1)
+  },
+  reward: `${itemData(BushidoMedallion)} x1`}
+
+  quests.A2Q8 = {
+    name: 'Gelatinous Gladiator',
+    difficulty: 5,
+    icon: `img/src/buffs/B2.jpg`,
+    description: `I am the number one fan of Royal Pudding, he is so handsome and pink. You would not stand a chance against his mighty wobble in the monster arena!`,
+    objective: function() { return `Defeat Royal Pudding`},
+    logic : function() {return enemies.E29.killCount>0},
+    effect: function() {
+      unlockAnimation("Bestiary Unlocked!", "Look up monster information, get rewards by repeatedly defeating enemies, or collect cards for permanent stat increases!<br>Check the widget on the top right screen", "img/src/items/I290.jpg");
+      unlocks.bestiary = true
+    },
+    reward: `${itemIcon("I290")}Unlock Bestiary`
+  }
+
+  quests.A2Q9 = {
+    name: 'Medal Enthusiast',
+    difficulty: 1,
+    icon: `img/src/items/I289.jpg`,
+    description: `I wanna see a silver Roostrika medal! Comply with my requests and I shall give you riches beyond your imagination`,
+    objective: function() { return `Adquire a silver medal on Roostrika\'s bestiary entry`},
+    logic : function() {return enemies.E7.medal > 1},
+    effect: function() {
+      spawnItem(CoinPile2,1)
+    },
+    reward: `${itemData(CoinPile2)} x1`
+  }
+
+
+
+
+
+//-------------------monster arena--------------
+
+
+quests.L1Training = {
+  name: 'Sparring: Multitarget',
+  difficulty: 1,
+  icon: `img/src/enemies/E57M.png`,
+  arena: true,
+  enemy: 'E57',
+  level: 25,
+  logic : function() {return enemies.E57.killCount>0},
+  effect: function() {
+    unlockAnimation("Loadouts Unlocked!", "Switch between multiple gear sets!<br>Locate it next to your gear slots", "img/src/buffs/B2.jpg");
+    unlocks.loadouts = true
+  },
+  reward: `${itemIcon("I395")} Unlock Loadout Switching`
+}
+
+quests.L1RoyalPudding = {
+  name: 'Royal Pudding',
+  difficulty: 2,
+  icon: `img/src/enemies/E29M.png`,
+  arena: true,
+  enemy: 'E29',
+  level: 35,
+  logic : function() {return enemies.E29.killCount>0},
+  effect: function() { spawnItem(RecipeNatureConverter); },
+  reward: `${itemData(Recipe,"img")} Recipe: Makeshift Green Psyconverter `
+}
+
+quests.L1DaiGoran = {
+  name: 'Dai-Goran',
+  difficulty: 3,
+  icon: `img/src/enemies/E28M.png`,
+  arena: true,
+  enemy: 'E28',
+  level: 40,
+  logic : function() {return enemies.E28.killCount>0},
+  effect: function() { spawnItem(RecipeOccultConverter); },
+  reward: `${itemData(Recipe,"img")} Recipe: Makeshift Purple Psyconverter `
+}
+
+/*
+quests.L1Litavela = {
+  name: 'Litavela',
+  difficulty: 4,
+  icon: `img/src/enemies/E51M.png`,
+  arena: true,
+  enemy: 'E51',
+  level: 40,
+  logic : function() {return enemies.E51.killCount>0},
+  effect: function() { spawnItem(RecipeElementalConverter); },
+  reward: `${itemData(Recipe,"img")} Recipe: Makeshift Orange Psyconverter `
+}*/
 
 
 
@@ -1084,6 +1303,38 @@ function createQuest() {
       
 
       did(q + "quest").addEventListener("click", function () {
+
+
+
+
+        if (quests[q].arena && quests[q].state !== "complete"){
+
+          
+          resetEncounter()
+
+          did("enemyPanel").style.display="flex"
+
+
+          for (let i in enemies) {
+            if (did(i + "enemy")) {
+              
+          did(i + "enemy").remove();
+          currentHP = 0;
+          
+            }}
+
+            spawnEnemy(quests[q].enemy);
+            playSound("audio/arena.mp3");
+            repositionQuickAccessMenu()
+            bossTime = true
+
+        
+
+
+
+        }
+
+
         if (quests[q].state === "complete" || rpgPlayer.debug) {
             playSound("audio/startup.mp3","noPitch");
             playSound("audio/button5.mp3");
@@ -1189,29 +1440,91 @@ function tooltipQuests(id) {
           did("tooltipName").innerHTML = quests[id].name;
           did("tooltipPrice").innerHTML = "";
           did("tooltipRarity").textContent = "Quest";
+          if (quests[id].arena) did("tooltipRarity").innerHTML = "Recommended level: "+colorTag(quests[id].level, "darkorange");
           did("tooltipRarity").style.color = "#FFD100";
           did("tooltipName").style.color = "#FFD100";
+          did("tooltipFlavor").textContent = "";
+          did("tooltipImage").src = "img/src/items/quest.jpg";
+          
           let questMoney = areas[stats.currentArea].value;
+          
+
+          if (quests[id].arena) {
+
+            did("tooltipDescription").innerHTML = '<span style="color:#FFD100; font-size:1vw"> Rewards:</span></span><br><span style="color:#79ed8b">★ '+quests[id].reward+'</span><br><span style="color:#ffbd54">★ '+beautify(questMoney)+coinIcon+'Shells</span><br><span style="color:#ae77f7">★ '+beautify(rpgClass[stats.currentClass].nextExp*0.4)+expIcon+'Experience</span><br><span style="color:#00FFCA">★ 300'+scuteIcon+'Prism Scutes</span>'
+
+
+
+          }
+
+          else {
+
           if ("money" in quests[id]) questMoney=quests[id].money;
           let excessWarning = ""
           if ("warning1" in quests[id] && (items[quests[id].warning1].count+quests[id].warning2)>items[quests[id].warning1].max) excessWarning = "⚠️"
           did("tooltipDescription").innerHTML = '<span style="font-weight:400">“ '+quests[id].description+' ”</span><br><br><span style="color:#FFD100; font-size:1vw"> Objective:</span><br><span style="color:#deaf6a">❖ '+quests[id].objective()+'</span><br><br><span style="color:#FFD100; font-size:1vw"> Rewards:</span></span><br><span style="color:#79ed8b">★ '+quests[id].reward+excessWarning+'</span><br><span style="color:#ffbd54">★ '+beautify(questMoney)+coinIcon+'Shells</span><br><span style="color:#ae77f7">★ '+beautify(rpgClass[stats.currentClass].nextExp*0.4)+expIcon+'Experience</span><br><span style="color:#00FFCA">★ 300'+scuteIcon+'Prism Scutes</span>'
-          did("tooltipFlavor").textContent = "";
-          did("tooltipImage").src = "img/src/items/quest.jpg";
+    
+          }
+
           //position related code
           const movingDiv = did("tooltip");
-  const referenceDiv = did(id + "quest");
-  const referenceRect = referenceDiv.getBoundingClientRect();
+          const referenceDiv = did(id + "quest");
+          const referenceRect = referenceDiv.getBoundingClientRect();
   
-  const newLeft = referenceRect.right/(stats.zoomLevel/100);  // Esquina derecha de "referenceDiv"
-  const newTop = referenceRect.top/(stats.zoomLevel/100);     // Esquina superior de "referenceDiv"
-  
-  movingDiv.style.left = newLeft + 20 + "px";
-  movingDiv.style.top = newTop + -15 + "px";
-        
+          const newLeft = referenceRect.right/(stats.zoomLevel/100);  
+          const newTop = referenceRect.top/(stats.zoomLevel/100);  
+          movingDiv.style.left = newLeft + 20 + "px";
+          movingDiv.style.top = newTop + -15 + "px";
+
+
+
+        /*
+
+          if (quests[id].enemy){ //enemy preview
+
+
+            const enemy = quests[id].enemy;
+            
+            did("stampMenu").style.display = "flex";
+      
+            did("stampMenuName").innerHTML = `${enemies[enemy].name}`; 
+            
+
+
+            let skilldesc = ""
+    if ("bestiarySkills" in enemies[enemy]) skilldesc = ''+bestiaryTag("🌠 Skills 🌠", "#7B6890")+'<FONT COLOR="#edd585">'+enemies[enemy].bestiarySkills()
+    
+    did("stampMenuDescription").innerHTML =  "<span>"+skilldesc+"</span>"
+
+
+            did("stampMenuRarity").innerHTML = 'Enemy Preview';
+            did("stampMenuRarity").style.color = 'white';
+            did("stampMenuImg").src = "img/src/enemies/" + enemy + "M.png";
+             did("stampMenuAlign").src = `img/src/projectiles/none.png`;
+      
+      
+              let movingDiv2 = did("stampMenu");
+              let referenceDiv2 = did("tooltip");
+              let referenceRect2 = referenceDiv2.getBoundingClientRect();
+              var Left = referenceRect2.right/ (stats.zoomLevel/100) + 10;
+              var Top = referenceRect2.top/ (stats.zoomLevel/100) - 0;
+      
+              movingDiv2.style.left = Left + "px";
+              movingDiv2.style.top = Top + "px";
+              did("stampMenu").style.display="flex" 
+      
+          }
+
+*/
+
+
+
+
       });
       did(id + "quest").addEventListener("mouseleave", function () {
         resetTooltip();
+        //if (quests[id].enemy)   did("stampMenu").style.display="none";
+
       });
     }
   }

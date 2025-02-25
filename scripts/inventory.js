@@ -92,6 +92,9 @@ did("inventoryMainPageSquare").addEventListener('click', function() {
 
 did("inventoryCraftingPageSquare").addEventListener('click', function() {
 
+  playSound("audio/throw.mp3")
+
+
   did("inventoryCraftingPageSquare").style.animation = "";
   void did("inventoryCraftingPageSquare").offsetWidth;
   did("inventoryCraftingPageSquare").style.animation = "faintStrike 0.3s"
@@ -264,7 +267,7 @@ const trinketPrefix1 = [`Heirloom`,`Mystic`,`Voodoo`,`Hexed`]
 //used for rings and trinkets
 const miscPrefix1 = [`Jagged`,`Drowsy`,`Heartfelt`]
 const miscPrefix2 = [`Widsithing`,`Medical`,`Spiked`,`Sleepy`,`Hopeful`]
-const miscPrefix3 = [`Lucky`,`Vampiric`,`Lazaro`]
+const miscPrefix3 = [`Lucky`,`Critical`,`Lazaro`,`Radioactive`,`Clicky`,`Dreamy`]
 
 
 function returnArrayPick(array) {
@@ -286,12 +289,19 @@ function spawnItem(id,amount,source){
   const item = new id()
 
 
-  if (!itemInventoryMemory.some(existingItem => existingItem.img === item.img)) {
+  let notification = true
+  if (source?.startsWith("craft") && settings.disableCraftPopup) notification = false
+  if (source==="noPopup") notification = false
+
+
+  if (item.img===103) item.init() //hack for recipes. i hate this
+  if (!itemInventoryMemory.some(existingItem => existingItem.img === item.img) || ( item.img===103 && !itemInventoryMemory.some(existingItem => existingItem.savedInfo === item.savedInfo) ) ) {
     itemInventoryMemory.push(item);
+    console.log(item.name+" Added to the memory")
   }
 
 
-  if (chance(1/777777)) spawnItem(GoldenClover)
+  if (chance(1/77777)) spawnItem(GoldenClover)
 
   if (item.isStackable) {
     
@@ -303,7 +313,9 @@ function spawnItem(id,amount,source){
 
     item.constructor.timesGot += toAdd
 
-    if (source!=="noPopup") createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} x${toAdd} got!</span>`)
+    if (item.init) item.init(source)
+
+    if (notification) createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} x${beautify(toAdd)} got!</span>`)
 
 
   } else {
@@ -318,22 +330,28 @@ function spawnItem(id,amount,source){
       else if (item.init) iteminstance.init(source)
 
 
+        let prefixName = ""
+        if (iteminstance.prefix1!==undefined || iteminstance.prefix2!==undefined || iteminstance.prefix3!==undefined || iteminstance.prefix4!==undefined || iteminstance.prefix5!==undefined) prefixName = returnPrefixName(iteminstance)+"&nbsp;"
 
         
       
       // autoscrapping
       if (itemInventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
 
-        if (source!=="noPopup" && !settings.disableScrapPopup) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${iteminstance.name} got! <span style="color:lawngreen;background:transparent; margin-left:1rem"> [ Scrapped ] </span></span>`)
-         spawnItem(returnScrapMaterial(iteminstance),1,"noPopup")
+        if (notification && !settings.disableScrapPopup) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${prefixName} ${iteminstance.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">scrapped! </span></span>`)
+         if (!iteminstance.noScrap) spawnItem(returnScrapMaterial(iteminstance),1,"noPopup")
          item.constructor.timesGot ++
           return;
       }
 
 
+      // unique filtering
+      //if (item.unique && itemInventory.some(existingItem => areItemsExact(existingItem, iteminstance))) {console.log("u"); return } //check for unique tag
 
 
-      if (source!=="noPopup") createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${iteminstance.name} got!</span>`)
+
+      if (notification) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${prefixName} ${iteminstance.name} got!</span>`)
+      
       itemInventory.push(iteminstance)
       item.constructor.timesGot ++
 
@@ -360,6 +378,9 @@ function spawnItem(id,amount,source){
 
 
 
+
+
+
   //if (item.init) item.init()
 
 
@@ -369,7 +390,7 @@ function spawnItem(id,amount,source){
     setTimeout(() => {
       if (item.sort!=currentSort){
       did(`inventory${item.sort}Indicator`).style.display = "flex"
-      did(`inventory${item.sort}Indicator`).innerHTML = parseInt(did(`inventory${item.sort}Indicator`).innerHTML) + toAdd
+      did(`inventory${item.sort}Indicator`).innerHTML = beautify(parseInt(did(`inventory${item.sort}Indicator`).innerHTML) + (toAdd) )
       voidAnimation(`inventory${item.sort}Indicator`, 'areaClick 0.5s 1')   
       }
     }, 1000);
@@ -383,6 +404,8 @@ function spawnItem(id,amount,source){
   if (item.sort==="Hat") updateHatInventory()
   updateInventory()
 }
+
+
 
 
 function purgeItems(){ //failsafe handler
@@ -410,6 +433,10 @@ function areItemsEqual(item1, item2) {
          item1.prefix3 === item2.prefix3 &&
          item1.prefix5 === item2.prefix5 &&
          item1.align === item2.align;
+}
+
+function areItemsExact (item1, item2) { //check for unique tag 
+  return  item1.name === item2.name;
 }
 
 function resetInventory(){
@@ -497,7 +524,7 @@ function updateInventory(mode) {
     } 
 
     let itemCount = "";
-    if (item.isStackable && item.constructor.count > 0) itemCount = `<div id="${item.img}Count" class="inventoryItemCount">${ beautify(item.constructor.count) }</div>`
+    if (item.isStackable && item.constructor.count > 0) itemCount = `<div id="${item.img}Count" class="inventoryItemCount">${ beautify(item.constructor.count,"mini") }</div>`
     if (item.slot==="Offhand"){
 
       let percentageEXP = (item.uses / item.initialUses) * 100;
@@ -508,8 +535,12 @@ function updateInventory(mode) {
 
     let itemLock = ""
     if (item.locked) itemLock = `<div class="itemLock">🔒</div>`
+
+    let gemIndicator = ""
+    if (item.gemSlot && (item.gemSlot.red!==null || item.gemSlot.yellow!==null || item.gemSlot.blue!==null)) gemIndicator = `<div style="left:60%; background:transparent !important" class="itemAlign">💠</div>`
     
-    itemDiv.innerHTML = `${itemLock} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
+    
+    itemDiv.innerHTML = `${itemLock} ${gemIndicator} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
     itemDiv.className = "inventoryItem";
     itemDiv.item = item; 
     itemDiv.item.index = index; 
@@ -575,6 +606,30 @@ function updateInventory(mode) {
   updateQuickItemAcessMenu()
 
 
+  fadeInventoryTabs()
+
+
+}
+
+function fadeInventoryTabs(){
+
+  if (currentInventoryTab !== "inventoryMainPage" || stats.leftUi === "contracted"){ return}
+
+  document.querySelectorAll('.inventoryTab').forEach(div => { div.style.opacity = '0.3'; });
+
+  
+  itemInventory.forEach((item, index) => {
+
+    if (equippedItems.some(equippedItem => equippedItem === item)) return //skip equipped items
+
+    if ( did(`inventory${item.sort}Target`) && did(`inventory${item.sort}Target`).style.opacity != 1) did(`inventory${item.sort}Target`).style.opacity = 1
+
+
+  })
+
+    
+
+
 }
 
 
@@ -615,6 +670,18 @@ function sortInventory() {
     const quality2 = returnQualityNumber(b.quality) !== undefined ? returnQualityNumber(b.quality) : '';
     if (quality1 > quality2) {return -1;}
     if (quality1 < quality2) {return 1;}
+
+    //hp
+    const hp1 = a.baseHp !== undefined ? a.baseHp : '';
+    const hp2 = b.baseHp !== undefined ? b.baseHp : '';
+    if (hp1 > hp2) {return -1;}
+    if (hp1 < hp2) {return 1;}
+
+    //atk
+    const atk1 = a.baseDamage !== undefined ? a.baseDamage : '';
+    const atk2 = b.baseDamage !== undefined ? b.baseDamage : '';
+    if (atk1 > atk2) {return -1;}
+    if (atk1 < atk2) {return 1;}
 
 
     //image
@@ -739,7 +806,7 @@ document.addEventListener('click', function(event) { //context menus
 
   if (itemDiv && itemDiv.item && itemDiv.tag === "quickUse") {
    contextSelectedItem = itemDiv
-   useSelectedItem(1)
+   useSelectedItem(1,"quick")
   }
 
   if (itemDiv && itemDiv.item && itemDiv.tag==="hat") {  
@@ -963,9 +1030,9 @@ function returnUpgradeMaterialAmount(currentLevel){
   if (currentLevel===0) return 10;
   if (currentLevel===1) return 50;
   if (currentLevel===2) return 250;
-  if (currentLevel===3) return 100000;
-  if (currentLevel===4) return 100000;
-  if (currentLevel===5) return 100000;
+  if (currentLevel===3) return 6250;
+  if (currentLevel===4) return 31250;
+  if (currentLevel===5) return 156250;
   }
 
 
@@ -986,11 +1053,11 @@ function upgradeMenuTooltip(){
 
   let materialToUseName = `&nbsp;<span style="color:${returnQualityColor(returnUpgradeMaterial(item.quality).quality)}">${returnUpgradeMaterial(item.quality).name}</span>&nbsp;`
   let materialToUseImg = returnUpgradeMaterial(item.quality).img
-  let materialToUseCount = beautify(returnUpgradeMaterial(item.quality).constructor.count)
+  let materialToUseCount = returnUpgradeMaterial(item.quality).constructor.count
 
   let dmgorhp = "";
-  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(1.4, item.prefixTier)  ) * (  Math.pow(1.8, item.constructor.upgrade+1) ) );
-  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(1.4, item.prefixTier) ) * ( Math.pow(1.8, item.constructor.upgrade+1) )  );
+  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(prefixTierMod, item.prefixTier)  ) * (  Math.pow(upgradeMod, item.constructor.upgrade+1) ) );
+  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(prefixTierMod, item.prefixTier) ) * ( Math.pow(upgradeMod, item.constructor.upgrade+1) )  );
 
   const dmgorhpnext = dmgorhp
 
@@ -1013,7 +1080,7 @@ function upgradeMenuTooltip(){
 
   <div class="separator"></div>
   <div class="upgradeTooltipWidget3" style="outline:none;color:gray"><strong>✨</strong>Upgrade the base stats of all items of the same type by using same-quality materials</span></div>
-  <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg">Will use${materialToUseName}x${beautify(returnUpgradeMaterialAmount(item.constructor.upgrade))}  &nbsp;<span style="color:gray">(${beautify(materialToUseCount)} in bag)</span></div>
+  <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg"><span>Will use${materialToUseName}x${beautify(returnUpgradeMaterialAmount(item.constructor.upgrade))}  &nbsp;<span style="color:gray">(${beautify(materialToUseCount)} in bag)</span></span></div>
   `;
 
   if (item.constructor.upgrade===6) did("tooltipDescription").innerHTML = `
@@ -1245,11 +1312,12 @@ function sellSelectedItem(mode){
   let itemDiv = contextSelectedItem
 
 
-  if (contextSelectedItem.item!==undefined && contextSelectedItem.item.value()===0) {playSound("audio/thud.mp3"); return}
-
 
   playSound("audio/coins.mp3")
   playSound("audio/pop2.mp3")
+
+
+
 
 
   //let item = contextSelectedItem.item
@@ -1258,6 +1326,10 @@ function sellSelectedItem(mode){
   if (mode==="amount"){
 
     let item = contextSelectedItem.item
+
+
+    if (item.value()===0) {playSound("audio/thud.mp3"); return}
+
 
     let toSell = 1
     if (itemContextSellInput.value !== "" && itemContextSellInput.value<=item.constructor.count) toSell = itemContextSellInput.value
@@ -1273,7 +1345,9 @@ function sellSelectedItem(mode){
           //if (item.constructor.count===0) toSell = 1 //non stackable items
   
           rpgPlayer.coins += toSell * item.value();
+          stats.totalCoins += toSell * item.value();
           item.constructor.count -= toSell;
+          stats.soldItems += toSell;
 
           if (item.constructor.count<1) itemContextMenuBegone();
   
@@ -1281,6 +1355,11 @@ function sellSelectedItem(mode){
           //itemInventory.splice(i, 1);
           successSell();
           updateInventory();
+
+          if (itemContextSellInput.value>1){
+            itemContextSellInput.value = ""
+            itemContextMenuBegone()
+          }
       
   
 
@@ -1291,11 +1370,16 @@ function sellSelectedItem(mode){
 
   if (mode==="all"){
 
-
     for (let i = itemInventory.length - 1; i >= 0; i--) {
       let item = itemInventory[i];
   
       if (item.selected === true && item.locked!==true) {
+
+
+
+        if (item.value()===0) {playSound("audio/thud.mp3"); continue}
+
+
           divRect = item.div;
           selectedItemRect = divRect.getBoundingClientRect();
   
@@ -1335,6 +1419,7 @@ function sellSelectedItem(mode){
   
     particleTrackers.push(new ParticleSellCoins());
     particleTrackers.push(new ParticleSellPulse());
+
     
     
 
@@ -1442,7 +1527,7 @@ function selectAllItems(){
 
 
     item.selected = true
-    itemSelect.style.display = 'flex'; 
+    if (itemSelect) itemSelect.style.display = 'flex'; 
 
 
   })
@@ -1497,16 +1582,18 @@ if (did("selectionContextMenu").style.display === "flex"){
 
 }
 
-function useSelectedItem(amount){
+function useSelectedItem(amount,tag){
 
   let item = contextSelectedItem.item
-  let divRect = item.div;
+
+  
+  if(tag==="quick"){
+    particleTrackers.push(new ParticleSellPulse(mousePositionX, mousePositionY,{x:mousePositionX,y:mousePositionY}));
+  }
+
+  if (tag===undefined){
+    let divRect = item.div;
   selectedItemRect = divRect.getBoundingClientRect();
-
-  let times = 1
-  if (amount!==undefined && amount!=="" && amount<=item.constructor.count) times = amount
-
-  for (let i = 0; i < times; i++) { loop() ;}
 
   divRect.style.animation = "";
   void divRect.offsetWidth;
@@ -1517,15 +1604,29 @@ function useSelectedItem(amount){
 
   playSound("audio/pop3.mp3")
   playSound("audio/use.mp3")
+  }
 
+
+
+  let times = 1
+  if (amount!==undefined && amount!=="" && amount<=item.constructor.count) times = amount
+
+  for (let i = 0; i < times; i++) { loop() ;}
 
   function loop() { item.use();}
 
   if (item.constructor.count<1) {itemContextMenuBegone(); resetTooltip()}
 
-
-  
   updateInventory();
+
+
+
+
+
+
+
+
+
 }
 
 function mergeSelectedItem(){
@@ -1724,6 +1825,10 @@ function itemContextMenuBegone(){
     did("itemContextMenuButtonHatSell").style.display = "none";
     did("itemContextMenuButtonHatFavorite").style.display = "none";
     did("itemContextMenuButtonHatEquip").style.display = "none";
+    did("itemContextMenuButtonHatEquip").style.display = "none";
+    did("itemContextMenuDailyPresents").style.display = "none";
+    did("itemcontextMenuArrow").style.display = "flex";
+
     deselectAllItems()
     updateInventory()
 
@@ -1780,36 +1885,42 @@ document.addEventListener('mouseover', function(event) {
 
     did("tooltip").style.display = "flex";
     did("tooltipName").innerHTML = `${returnPrefixName(item)} ${item.name}`; 
-    did("tooltipDescription").innerHTML = `${returnUpgradeLevel(item)} ${returnTierSet(item)} ${returnWeaponDescription(item)} ${returnPrefixSkills(item)} ${returnSourceDescription()} ${returnItemDescription()} <div class="separador"></div> ${returnItemPrice(item)}`;
+    did("tooltipDescription").innerHTML = `${returnUpgradeLevel(item)}  ${returnTierSet(item)} ${returnWeaponDescription(item)} ${returnSourceDescription()} ${returnGemstoneUi(item)} ${returnPrefixSkills(item)}  ${returnItemDescription()}  <div class="separador"></div> ${returnItemPrice(item)}`;
     did("tooltipFlavor").innerHTML = item.flavor;
+    if (item.flavor===undefined) did("tooltipFlavor").style.display = "none"
     did("tooltipImage").src = `img/src/items/I${item.img}.jpg`;
-    if (item.align !== undefined) did("tooltipAlign").src = `img/src/icons/${item.align}.jpg`;
     did("tooltipRarity").innerHTML = returnRarity(item);
     did("tooltipRarity").style.color = returnQualityColor(item.quality);
     did("tooltipName").style.color = returnQualityColor(item.quality);
     did("tooltip").style.outline = `${returnQualityColor(item.quality)} solid 2px`;
     did("tooltipPrice").innerHTML = "";
 
+
+    
+
+    if (item.align !== undefined) {
+      did("tooltipAlign").style.height = "2.7rem"
+      did("tooltipAlign").style.width = "2.7rem"
+      did("tooltipAlign").src = `img/src/icons/${item.align}.jpg`;
+    }
+    else if (item.slot) {
+      did("tooltipAlign").style.height = "3rem"
+      did("tooltipAlign").style.width = "3rem"
+      did("tooltipAlign").src = returnEquipSlotIcon(item.slot)
+    }
+
+
     if (itemDiv.tag2 === "shopArea") did("tooltipFlavor").innerHTML = ""
 
     if (item.contextTooltip!==undefined && itemDiv.tag2 !== "shopArea") {
 
-      
       did("contextList").innerHTML = ""
-
       const lista = item.contextTooltip()
-      
-
       lista.forEach(i => {
-
         const itemDiv = document.createElement("div");
-
         itemDiv.className = "tooltipContext"
         itemDiv.innerHTML = i
-
         did("contextList").appendChild(itemDiv);
-
-        
       });
     
     }
@@ -1880,11 +1991,15 @@ movingDiv.style.top = newTop + 'px';
 
       did("stampMenuName").innerHTML = `${returnPrefixName(slotItem)} ${slotItem.name}`; 
 
-      did("stampMenuDescription").innerHTML = `${returnUpgradeLevel(slotItem)} ${returnTierSet(slotItem)} ${returnWeaponDescription(slotItem)} ${returnPrefixSkills(slotItem)}<br><br>`;
+
+
+
+      did("stampMenuDescription").innerHTML = `${returnUpgradeLevel(slotItem)} ${returnTierSet(slotItem)} ${returnWeaponDescription(slotItem)} ${returnGemstoneUi(slotItem)} ${returnPrefixSkills(slotItem)}<br><br>`;
 
       did("stampMenuRarity").innerHTML = returnRarity(slotItem);
       did("stampMenuRarity").style.color = returnQualityColor(slotItem.quality);
       did("stampMenuImg").src = `img/src/items/I${slotItem.img}.jpg`;
+      if (slotItem.align) did("stampMenuAlign").src = `img/src/icons/${slotItem.align}.jpg`; else did("stampMenuAlign").src = `img/src/projectiles/none.png`;
 
 
         let movingDiv2 = did("stampMenu");
@@ -1966,8 +2081,11 @@ movingDiv.style.top = newTop + 'px';
       if (itemDiv.tag2 === "shopAchievement") {
 
 
+        let condition = ""
+        if (achievementShop[itemDiv.shopID].condition && !achievementShop[itemDiv.shopID].condition()) condition = `<br><span style="display:flex;justify-content:center;align-items:center; border-radius:0.2rem; background:#512922; padding: 0.5rem; outline: coral 2px solid">${achievementShop[itemDiv.shopID].conditionText}</span>`
+
         let itemprice = achievementShop[itemDiv.shopID].price
-        return `<div style=" text-align: center;background:transparent;overflow:visible"><FONT COLOR="white"> Price: <FONT COLOR="#ffbd54">${ beautify(itemprice)}${scuteIcon}Prism Scutes</div>`;
+        return `<div style=" text-align: center;background:transparent;overflow:visible"><FONT COLOR="white"> Price: <FONT COLOR="#ffbd54">${ beautify(itemprice)}${scuteIcon}Prism Scutes</div>${condition}`;
       }
 
       if (itemDiv.tag === "crafting") {
@@ -2026,6 +2144,46 @@ function returnTierSet(item){
 }
 
 
+function returnGemstoneUi(item){
+
+  if (item.gemSlot===undefined) return ""
+  
+  
+  let redSlot = ""
+  if (item.gemSlot.red!==null){
+    const gemclass = eval(item.gemSlot.red)
+    const gem = new gemclass()
+    redSlot = `<div class="tooltipGemContainer">
+    <div class="tooltipGemImage" style="border: solid 1px red"> <img src="img/src/items/I${gem.img}.jpg"> </div>
+    <span style="color:gray"> <span style="color:${returnQualityColor(gem.quality)};font-weight:700;margin-right:0.5rem">${gem.name}:</span>${gem.skillDescription()}</span>
+    </div>`
+  }
+  
+  let blueSlot = ""
+  if (item.gemSlot.blue!==null){
+    const gemclass = eval(item.gemSlot.blue)
+    const gem = new gemclass()
+    blueSlot = `<div class="tooltipGemContainer">
+    <div class="tooltipGemImage" style="border: solid 1px cyan"> <img src="img/src/items/I${gem.img}.jpg"> </div>
+    <span style="color:gray"> <span style="color:${returnQualityColor(gem.quality)};font-weight:700;margin-right:0.5rem">${gem.name}:</span>${gem.skillDescription()}</span>
+    </div>`
+  }
+  
+  let yellowSlot = ""
+  if (item.gemSlot.yellow!==null){
+    const gemclass = eval(item.gemSlot.yellow)
+    const gem = new gemclass()
+    yellowSlot = `<div class="tooltipGemContainer">
+    <div class="tooltipGemImage" style="border: solid 1px yellow"> <img src="img/src/items/I${gem.img}.jpg"> </div>
+    <span style="color:gray"> <span style="color:${returnQualityColor(gem.quality)};font-weight:700;margin-right:0.5rem">${gem.name}:</span>${gem.skillDescription()}</span>
+    </div>`
+  }
+  
+  
+  return `<div class="tooltipGem"> ${redSlot} ${blueSlot} ${yellowSlot} </div>`
+  }
+
+
 function returnUpgradeLevel(item){ 
 
   if (item.constructor.upgrade===undefined) return ""
@@ -2056,7 +2214,7 @@ function returnPrefixSkills(item){
   let prefix5 = ""
 
   //t1
-  if (item.prefix1 === `Light`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Attack Speed, x0.8 Weapon Damage</span>`;}
+  if (item.prefix1 === `Light`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.25 Attack Speed, x0.8 Weapon Damage</span>`;}
   if (item.prefix1 === `Powerful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x0.5 Attack Speed, x3 Weapon Damage</span>`;}
   if (item.prefix1 === `Echoing`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, x0.5 Weapon Damage</span>`;}
   if (item.prefix1 === `Masterful`) {prefix1 = `<span style="display:flex;align-items:center;white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Chance, x0.5 Weapon Skill Damage</span>`;}
@@ -2065,9 +2223,9 @@ function returnPrefixSkills(item){
 
   //t2
   if (item.prefix2 === `Runic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Weapon Skill Attack</span>`;}
-  if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Damage</span>`;}
+  if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Weapon Damage</span>`;}
   if (item.prefix2 === `Double`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack</span>`;}
-  if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Attack Speed</span>`;}
+  if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.15 Attack Speed</span>`;}
   if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Chance</span>`;}
   if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
 
@@ -2076,7 +2234,7 @@ function returnPrefixSkills(item){
   if (item.prefix3 === `Ultimate`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+2 Extra Attacks</span>`;}
   if (item.prefix3 === `Final`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Damage</span>`;}
   if (item.prefix3 === `Polychrome`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, +1 Extra Weapon Skill Attack</span>`;}
-  if (item.prefix3 === `Godslaying`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Damage</span>`;}
+  if (item.prefix3 === `Godslaying`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Damage</span>`;}
  
   //if (item.prefix2 === `Vampiric`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">1/2 chance to steal life</span>`;}
   //if (item.prefix2 === `Fulgurant`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">1/2 chance to chain lightning</span>`;}
@@ -2147,15 +2305,29 @@ function returnPrefixSkills(item){
   if (item.prefix2 === `Sleepy`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Offline Bonus</span>`;} 
   if (item.prefix2 === `Hopeful`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 20% Luma Power</span>`;}
   
-  if (item.prefix3 === `Lucky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Luck</span>`;}
-  if (item.prefix3 === `Vampiric`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 5% Lifesteal</span>`;}
+  if (item.prefix3 === `Lucky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 15% Luck</span>`;}
+  if (item.prefix3 === `Critical`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Crit Chance</span>`;}
   if (item.prefix3 === `Lazaro`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 1 Extra Life</span>`;}
-
+  if (item.prefix3 === `Radioactive`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 30% Thorns</span>`;}
+  if (item.prefix3 === `Dreamy`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 15% Offline Bonus</span>`;} 
+  if (item.prefix3 === `Clicky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 30% Luma Power</span>`;}
   
   
   
   
   return prefix1+prefix2+prefix3+prefix4+prefix5
+}
+
+
+
+function returnEquipSlotIcon(slot){
+
+return `img/sys/${slot.toLowerCase()}Slot.png`
+
+
+
+
+
 }
 
 
@@ -2330,13 +2502,30 @@ function tierCheck(){
   did("rpgPlayerImg").src = "img/src/armor/A0.png";
   did("playerHat").src = "img/src/projectiles/none.png";
   tierBonus = function(){}
+  currentSet = "none"
 
 
   if (tierMatch(equippedItems, tierClothItems,3)) {
     did("rpgPlayerImg").src = "img/src/armor/A1.png";
-    did("playerHat").src = "img/src/armor/A1H.png";
     tierBonus = function(){ stat.DodgeChance+=10}
   }
+
+
+  if (tierMatch(equippedItems, tierExplorerItems,3)) {
+    did("rpgPlayerImg").src = "img/src/armor/A3.png";
+    currentSet = "explorer"    
+  }
+
+  if (tierMatch(equippedItems, tierTigerItems,3)) {
+    did("rpgPlayerImg").src = "img/src/armor/A4.png";
+    currentSet = "tiger"    
+  }
+
+  if (tierMatch(equippedItems, tierMonkItems,2)) {
+    tierBonus = function(){ stat.ExtraActions+=1}
+    updateCombatActions()
+  }
+
 
 
   equipHat()
@@ -2411,20 +2600,9 @@ function openQuickAccessMenu(){
 
 
 
-  var movingDiv = did("quickItemTooltip");
-var referenceDiv = did("quickItemAccess");
-var referenceRect = referenceDiv.getBoundingClientRect();
-
-function miau(){
-  const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
-  const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
-  movingDiv.style.left = `${newLeft - 0}px`;
-  movingDiv.style.top = `${newTop - 30}px`;
-}
-
-miau()
-miau()
-miau()
+repositionQuickAccessMenu()
+repositionQuickAccessMenu()
+repositionQuickAccessMenu()
   
 
   isQuickItemAccessOpen = true
@@ -2443,7 +2621,29 @@ miau()
 
 }
 
+function repositionQuickAccessMenu(){
+
+  var movingDiv = did("quickItemTooltip");
+  var referenceDiv = did("quickItemAccess");
+  var referenceRect = referenceDiv.getBoundingClientRect();
+  const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+  const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
+  movingDiv.style.left = `${newLeft - 0}px`;
+  movingDiv.style.top = `${newTop - 30}px`;
+}
+
 function updateQuickItemAcessMenu(){
+
+
+  var movingDiv = did("quickItemTooltip");
+  var referenceDiv = did("quickItemAccess");
+  var referenceRect = referenceDiv.getBoundingClientRect();
+    const newLeft = referenceRect.left/(stats.zoomLevel/100) + (referenceRect.width - movingDiv.offsetWidth) / 2;
+    const newTop = referenceRect.top/(stats.zoomLevel/100) - movingDiv.offsetHeight;
+    movingDiv.style.left = `${newLeft - 0}px`;
+    movingDiv.style.top = `${newTop - 30}px`;
+
+
 
   did("quickItemTooltip").innerHTML = "";
 
@@ -2458,13 +2658,23 @@ function updateQuickItemAcessMenu(){
       let itemCount = ""
       if (item.isStackable && item.constructor.count > 0) itemCount = `<div id="${item.img}Count" class="inventoryItemCount">${ item.constructor.count }</div>`
   
+
+      let itemCDScreen = ""
+    if (item.constructor.cd){
+
+      const percentage = (((item.constructor.cd-1) / 10) * 100);
+
+
+      const resultado = item.constructor.cd < 60 ? item.constructor.cd : Math.floor(item.constructor.cd / 60) + "m";
+      itemCDScreen = `<div class="itemCooldownTimerText">${resultado}</div> <div class="itemCooldownTimer" style="height:${percentage}"></div>`
+    } 
   
-      itemDiv.innerHTML = `${itemCount} <img src="img/src/items/I${item.img}.jpg">`;
+      itemDiv.innerHTML = ` ${itemCDScreen} ${itemCount} <img src="img/src/items/I${item.img}.jpg">`;
       itemDiv.className = "inventoryItem";
       itemDiv.item = item; 
       itemDiv.item.index = index; 
       itemDiv.tag = "quickUse"; 
-      item.div = itemDiv
+      //item.div = itemDiv
       item.index = index
   
       itemDiv.style.outline = `0.2rem solid ${returnQualityColor(item.quality)}`; 
@@ -2491,6 +2701,9 @@ function updateQuickItemAcessMenu(){
 isLoadoutMenuOpen = false
 function toggleLoadoutMenu(){
 
+  playSound("audio/button2.mp3")
+
+
   updateQuickItemAcessMenu()
 
   did("loadoutButton").style.animation = "";
@@ -2500,9 +2713,11 @@ function toggleLoadoutMenu(){
 
   if (!isLoadoutMenuOpen) {
 
+
+  did("loadoutBgCover").style.display = "flex";
+
+
   did("loadoutMenu").style.display = "flex";
-
-
   did("loadoutMenu").style.animation = "";
   void did("loadoutMenu").offsetWidth;
   did("loadoutMenu").style.animation = "interactableTooltip 0.3s 1 ease,interactableTooltipIdleHigh 7s infinite ease";
@@ -2526,6 +2741,8 @@ function toggleLoadoutMenu(){
 
   } else {
 
+
+
       did("loadoutMenu").style.animation = "";
       void did("loadoutMenu").offsetWidth;
       did("loadoutMenu").style.animation = "shrinkFadeOut 0.2s 1 ease";
@@ -2537,6 +2754,20 @@ function toggleLoadoutMenu(){
   }
 
 }
+
+
+did("loadoutBgCover").addEventListener('click', function() {
+
+  did("loadoutBgCover").style.display = "none";
+  did("loadoutMenu").style.animation = "";
+  void did("loadoutMenu").offsetWidth;
+  did("loadoutMenu").style.animation = "shrinkFadeOut 0.2s 1 ease";
+  did("loadoutMenu").style.animationFillMode = "forwards";
+
+
+  isLoadoutMenuOpen = false
+
+})
 
 rpgPlayer.currentLoadout = 1
 
@@ -2575,22 +2806,43 @@ function lootTable(table, source){
 
 function dropMonsterCard(){
 
+  if (!unlocks.bestiary) return
 
 
-const item = new MonsterCard()
-
-item.constructor.timesGot ++
-
-item.savedName = `${enemies[stats.currentEnemy].name} Collectible Card`
-
-item.name = item.savedName
+  const item = new MonsterCard()
 
 
+    if (!enemies[stats.currentEnemy].card1.got){
+      item.init()
+      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }
+      itemInventory.push(item)
+      updateInventory()
+      createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${item.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
+      return
+    }
 
-//if (item.init) item.init()
-itemInventory.push(item)
+    if (!enemies[stats.currentEnemy].card2.got && chance(1/4)){
+      item.init(2)
+      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }
+      itemInventory.push(item)
+      updateInventory()
+      createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${item.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
+      return
 
-updateInventory()
+    }
+
+    if (!enemies[stats.currentEnemy].card3.got && chance(1/7)){
+      item.init(3)
+      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }
+      itemInventory.push(item)
+      updateInventory()
+      createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${item.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
+      return
+
+    }
+
+
+
 
 
 

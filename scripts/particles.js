@@ -2,11 +2,18 @@
 
 
 
-setTimeout(() => {
+setInterval(() => {
 
     //particleTrackers.push(new ParticleGlimmerVortex())
     //animatedSplash("player","magicCircle","magicCircle",250)
     //particleTrackers.push(new ParticleFirework())
+
+
+    //particleTrackers.push(new ParticleExplosionFlare5())
+    //particleTrackers.push(new ParticleExplosionShockwave2())
+    //particleTrackers.push(new ParticleExplosionLinger1())
+
+
 
 }, 1000);
 
@@ -14,11 +21,24 @@ setTimeout(() => {
 setInterval(() => {
 
     if (specialWeather){
-        particleTrackers.push(new ParticleAmbienceLeaf())
-        setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 400);
-        setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 800);
-        setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 1200);
-        setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 1600);
+
+
+        if (stats.currentArea==="A1") {
+            particleTrackers.push(new ParticleAmbienceLeaf())
+            setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 400);
+            setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 800);
+            setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 1200);
+            setTimeout(() => { particleTrackers.push(new ParticleAmbienceLeaf()) }, 1600);
+        }
+
+        if (stats.currentArea==="A2") {
+            particleTrackers.push(new ParticleAmbienceFirefly())
+            particleTrackers.push(new ParticleAmbienceFirefly())
+            particleTrackers.push(new ParticleAmbienceFirefly())
+        }
+
+
+
     } 
     
 }, 2000);
@@ -385,6 +405,35 @@ class ParticleGachaBox extends NewParticle {
 
         Object.assign(this, options);
 
+    }
+}
+
+class ParticleCopperworkAxe extends NewParticle { //green
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.x = playerCenterX;
+        this.y = playerCenterY;
+        this.tSpeed = 0.005
+        this.size = 50; //m
+        this.speedX = 15;
+        this.speedY = 1;
+        this.accelerationY = -0.05;
+        this.accelerationX = -0.2 //optional
+        this.alphaDecay = 0.01
+        this.alpha = 0.25
+        this.sizeDecay = 0.3;
+        this.simpleColor = "transparent"
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/aura.png"; //optional
+        this.spawnStyle = "fade" //"increase", "fade", optional
+        this.rotationSpeed = rngD(0.003,-0.003); 
+        this.rotation = rngD(0,5); 
+        this.wobbleY = rngD(-3,3); 
+        this.wobbleX = rngD(-3,3); 
+        this.wobbleFrequency = rngD(-1,1); 
+        this.maxAlpha = this.alpha
+
+        Object.assign(this, options);
     }
 }
 
@@ -855,6 +904,319 @@ class ParticleFireworkExplosion4 extends NewParticle { //green
 }
 
 
+class ParticleExplosionFlare1 extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"; //optional
+        this.tSpeed = 0.01;
+        this.size = 1;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/aura.png"; //optional
+        this.sizeDecay = -8
+        this.alpha = 1
+        this.alphaDecay = 0.05
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 
+        this.rotation = rngD(0,2)
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionFlare2 extends ParticleExplosionFlare1 {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/halo.png"; //optional
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionFlare3 extends ParticleExplosionFlare1 {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/halo2.png"; //optional
+        this.alpha = 0.9
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionFlare4 extends ParticleExplosionFlare1 {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/halo3.png"; //optional
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionFlare5 extends ParticleExplosionFlare1 {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/halo4.png"; //optional
+        this.sizeDecay = -13
+        this.alpha = 1
+        this.alphaDecay = 0.08
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionFlare6 extends ParticleExplosionFlare1 {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/flare.png"; //optional
+        this.size = 100;
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionFlare7 extends ParticleExplosionFlare1 {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/flare2.png"; //optional
+        this.rotation = 0
+        this.size = 300;
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionShockwave1 extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"; //optional
+        this.tSpeed = 0.001;
+        this.size = 1;
+        this.alphaDecay = 0.04
+        this.sizeDecay = -10
+        this.strokeColor = "white"
+        this.strokeSize = 10
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 
+        this.pulseAmplitude = 0.1; 
+        this.pulseSpeed = 0.01; 
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionShockwave2 extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"; //optional
+        this.tSpeed = 0.01;
+        this.size = 1;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/halo5.png"; //optional
+        this.sizeDecay = -8
+        this.alpha = 1
+        this.alphaDecay = 0.05
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 
+        this.rotation = rngD(0,2);
+        this.pulseAmplitude = 0.05; 
+        this.pulseSpeed = 0.01; 
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionShockwave3 extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"; //optional
+        this.tSpeed = 0.01;
+        this.size = 1;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/halo6.png"; //optional
+        this.sizeDecay = -8
+        this.alpha = 1
+        this.alphaDecay = 0.05
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 
+        this.rotation = rngD(0,2);
+        Object.assign(this, options);
+    }
+}
+
+
+class ParticleTigerRoar extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"; //optional
+        this.tSpeed = 0.01;
+        this.size = 1;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/halo6.png"; //optional
+        this.sizeDecay = -15
+        this.alpha = 1
+        this.alphaDecay = 0.05
+        this.x = playerCenterX;
+        this.y = playerCenterY; 
+        this.rotation = rngD(0,2);
+        this.imageHue = -40
+
+        Object.assign(this, options);
+    }
+}
+
+class ParticleLumaTiger extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+
+        this.tSpeed = 0.01;
+        this.freeflow = false
+        this.playerCenterX = mousePositionX;
+        this.playerCenterY = mousePositionY;
+        this.enemyCenterX = playerCenterX;
+        this.enemyCenterY = playerCenterY;
+        this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2 - rngD(-600, -300); //optional
+        this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(-300, 300); //optional
+        this.trailParticle = ParticleAlignTrail; //optional
+        this.particleConfig = {
+            sizeDecay : 1,
+            initialColor : { r: 255, g: 117, b: 90 },
+            finalColor : { r: 125, g: 92, b: 49 },
+            size:10,
+            strokeSize:2,
+            strokeColor:"red",
+        }
+        this.simpleColor = "transparent";
+        this.wobbleY = rngD(1,10)
+        this.wobbleFrequency = 20
+        this.particleDensity = 1; //optional
+        Object.assign(this, options);
+    }
+    end(){
+        particleTrackers.push(new ParticleShockwave2(this.x,this.y,{x:this.x,y:this.y,imageHue:-50}));
+    }
+}
+
+
+class ParticleExplosionLinger1 extends NewParticle { //glow
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"
+        this.offsetX = rngD(-80,80);
+        this.offsetY = rngD(-80,80);
+        this.speedX = rngD(-2,2);
+        this.speedY = rngD(-2,2);
+        this.size = 100;
+        this.sizeDecay = 3
+        this.wobbleX = rngD(-1,1); 
+        this.wobbleY = 0; 
+        this.alpha = 0.5;
+        this.wobbleFrequency = 10; 
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 ;
+        this.pulseAmplitude = 0.02; 
+        this.pulseSpeed = 0.03; 
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/glow2.png"; //optional
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionLinger2 extends NewParticle { //smoke
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.size = 100; //m
+        this.wobbleX = rngD(-1,1); 
+        this.wobbleY = 0; 
+        this.speedY = rngD(0,-8);
+        this.wobbleFrequency = 10; 
+        this.simpleColor= undefined;
+        this.sizeDecay = 3
+        this.alphaDecay = 0.01
+        this.initialColor = { r: 255, g: 171, b: 0 }; 
+        this.finalColor = { r: 100, g: 100, b: 100 }; 
+        this.offsetX = rngD(-60,60);
+        this.offsetY = rngD(-60,60);
+        //this.initialColor = { r: 118, g: 73, b: 196 }; 
+        //this.finalColor = { r: 247, g: 126, b: 203 }; 
+        //this.initialColor = { r: 74, g: 145, b: 66 }; 
+        //this.finalColor = { r: 98, g: 235, b: 166 }; 
+        this.colorLife = 0.5;
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 ;
+        this.pulseAmplitude = 0.02; 
+        this.pulseSpeed = 0.03; 
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionLinger3 extends NewParticle { //stars
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.size = 15; //m
+        this.wobbleX = rngD(-1,1); 
+        this.wobbleY = 0; 
+        this.speedY = rngD(-2,-5);
+        this.wobbleFrequency = 10; 
+        this.simpleColor= "transparent";
+        this.sizeDecay = 0.5
+        this.alphaDecay = 0.005
+        this.offsetX = rngD(-80,80);
+        this.offsetY = rngD(-80,80);
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/drop_star.png"; //optional
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 ;
+        this.rotationSpeed = rngD(-0.2,0.2)
+        this.rotation = rngD(0,2);
+        this.alpha = 0.7
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionLinger4 extends NewParticle { //lightning
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.simpleColor = "transparent"
+        this.offsetX = rngD(-80,80);
+        this.offsetY = rngD(-80,80);
+        this.size = rngD(80,100);
+        this.wobbleY = 0; 
+        this.alpha = 0.7;
+        this.alphaDecay = rngD(0.015,0.04)
+        this.wobbleFrequency = 10; 
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 ;
+        this.pulseAmplitude = 0.02; 
+        this.pulseSpeed = 0.1; 
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/lightning1.png"; //optional
+        this.rotation = rngD(0,5); 
+        this.rotationLock = true;
+        this.startX = this.x;
+        this.startY = this.y;
+        Object.assign(this, options);
+    }
+}
+
+class ParticleExplosionLinger5 extends NewParticle { //healing
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.size = 15; //m
+        this.wobbleX = rngD(-1,1); 
+        this.wobbleY = 0; 
+        this.speedY = rngD(-2,-5);
+        this.wobbleFrequency = 10; 
+        this.simpleColor= "transparent";
+        this.sizeDecay = 0.5
+        this.alphaDecay = 0.005
+        this.offsetX = rngD(-80,80);
+        this.offsetY = rngD(-80,80);
+        this.image = new Image(); //optional
+        this.alpha = 0.7
+        this.image.src = "img/src/projectiles/health.png"; //optional
+        this.x = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.y = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4 ;
+        this.alpha = 0.7
+        Object.assign(this, options);
+    }
+}
+
+
+
+
+
+
+
 
 
 class ParticleGlimmerBrimstone extends NewParticle {
@@ -1062,6 +1424,15 @@ class ParticleShockwave2 extends ParticleShockwave {
     }
 }
 
+class ParticleShockwave3 extends ParticleShockwave {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/halo2.png"; //optional
+        Object.assign(this, options);
+    }
+}
+
 class ParticleBubble extends NewParticle {
     constructor(x,y,options = {}) {
         super(x, y);
@@ -1090,6 +1461,117 @@ class ParticleBubble extends NewParticle {
     }
 }
 
+class ParticleEmber extends NewParticle {
+    constructor(x,y,options = {}) {
+        super(x, y);
+
+        this.simpleColor= undefined
+        this.initialColor = { r: 255, g: 171, b: 0 }; 
+        this.finalColor = { r: 100, g: 100, b: 100 };
+        this.colorLife = 0.2;
+        this.tSpeed = 0.01;
+        this.speedY = rngD(-5,-4);
+        this.wobbleX = rngD(-10,10); 
+        this.wobbleY = 0; 
+        this.wobbleFrequency = 1; 
+        this.x = x;
+        this.y = y;
+        this.size = 16;
+        this.alphaDecay = 0.02
+        this.maxSize = this.size
+        this.maxAlpha = this.alpha
+        this.pulseAmplitude = 0; 
+        this.pulseSpeed = 0; 
+        this.spawnStyle = "increase";
+        Object.assign(this, options);
+
+    }
+}
+
+class ParticleBuffEnrage extends NewParticle {
+    constructor(x,y,options = {}) {
+        super(x, y);
+
+        this.simpleColor = "transparent"
+        this.tSpeed = 0.01;
+        this.speedY = rngD(-0.5,-1.5);
+        this.x = x;
+        this.y = y;
+        this.size = 40;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/aura.png"; //optional
+        this.imageHue = -80
+        this.alpha = 0.8
+        this.alphaDecay = 0.015
+        this.maxSize = this.size
+        this.maxAlpha = this.alpha
+        this.spawnStyle = "fade"
+        this.pulseAmplitude = 0.005; 
+        this.pulseSpeed = 0.005; 
+        this.rotation = rngD(0,10)
+        this.rotationSpeed = rngD(-0.01,0.01);
+        Object.assign(this, options);
+
+    }
+}
+
+
+class ParticleExplorerSet1 extends NewParticle {
+    constructor(x,y,options = {}) {
+        super(x, y);
+
+        this.simpleColor = "transparent"
+        this.tSpeed = 0.01;
+        this.x = x;
+        this.y = y;
+        this.size = 10;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/leaf2.png"; //optional
+        this.maxSize = this.size
+        this.maxAlpha = this.alpha
+        this.spawnStyle = "increase"
+        this.pulseAmplitude = 0.005; 
+        this.pulseSpeed = 0.005; 
+        this.rotation = rngD(0,10)
+        this.rotationSpeed = 0.15;
+        Object.assign(this, options);
+    }
+
+    end(){
+        particleTrackers.push(new ParticlePulse(this.x,this.y));
+        particleTrackers.push(new ParticleExplorerSet2(this.x,this.y));
+    }
+}
+
+class ParticleExplorerSet2 extends NewParticle {
+    constructor(x,y,options = {}) {
+        super(x, y);
+
+        this.simpleColor = "transparent"
+        this.freeflow = false
+        this.tSpeed = 0.04;
+        this.size = 15;
+        this.playerCenterX = x;
+        this.playerCenterY = y;
+        this.enemyCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2  ;
+        this.enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 2 *1.4;
+        this.size = 10;
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/leaf2.png"; //optional
+        this.maxSize = this.size
+        this.maxAlpha = this.alpha
+        this.spawnStyle = "increase"
+        this.pulseAmplitude = 0.005; 
+        this.pulseSpeed = 0.005; 
+        this.rotation = 0.8
+        Object.assign(this, options);
+    }
+
+    end(){
+        particleTrackers.push(new ParticlePulse(this.x,this.y));
+    }
+}
+
 
 
 
@@ -1102,7 +1584,6 @@ class ParticlePoisonBolt extends NewParticle {
         this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(300, 200); //optional
         this.simpleColor = "transparent"; //optional
         this.trailParticle = ParticleAlignTrail; //optional
-
         this.particleDensity = 1; //optional
         this.particleConfig = {
             initialColor : { r: 81, g: 215, b: 126 },
@@ -1111,34 +1592,49 @@ class ParticlePoisonBolt extends NewParticle {
             sizeDecay : 0,
             alphaDecay : 0.05,
         }; 
-
         this.pulseAmplitude = 0.1; 
         this.pulseSpeed = 4; 
-
         this.image = new Image(); 
         this.image.src = "img/src/projectiles/halo4.png"; 
         this.imageHue = 100;
         this.size = 10;
         this.rotationSpeed = 0.1 ; 
-         this.alpha = 0.5
-
-        
-    
-        //optional
-
+        this.alpha = 0.5
         Object.assign(this, options);
-
     }
-
-
     end(){
         particleTrackers.push(new ParticleShockwave2(this.x,this.y,{x:this.x,y:this.y,imageHue:50}));
         particleTrackers.push(new ParticleBubble(this.x,this.y,{x:this.x,y:this.y,imageHue:50}));
         particleTrackers.push(new ParticleBubble(this.x,this.y,{x:this.x,y:this.y,imageHue:50}));
         particleTrackers.push(new ParticleBubble(this.x,this.y,{x:this.x,y:this.y,imageHue:50}));
-
     }
 }
+
+class ParticleFireBolt extends ParticlePoisonBolt {
+    constructor(x, y, options = {}) {
+        super(x, y);
+
+        this.particleConfig = {
+            initialColor : { r: 252, g: 170, b: 105 },
+            finalColor : { r: 255, g: 80, b: 3 },
+            size : 6,
+            sizeDecay : 0,
+            alphaDecay : 0.05,
+        }; 
+        this.image = new Image(); 
+        this.image.src = "img/src/projectiles/halo4.png"; 
+        this.imageHue = -20;
+        Object.assign(this, options);
+    }
+    end(){
+        particleTrackers.push(new ParticleShockwave2(this.x,this.y,{x:this.x,y:this.y,imageHue:-20}));
+    }
+}
+
+
+
+
+
 
 class ParticleShockwaveHeal extends ParticleShockwave {
     constructor(x, y, options = {}) {
@@ -1247,6 +1743,90 @@ class ParticleArrow extends NewParticle {
     }
 }
 
+class ParticleItemThrow extends NewParticle {
+    constructor(x, y, options = {}) {
+
+        super(x, y);
+
+        this.simpleColor = "transparent"
+        this.freeflow = false
+        this.tSpeed = 0.025;
+        this.size = 13;
+        this.playerCenterX = playerRect.left - containerRect.left + playerRect.width / 1.5;
+        this.playerCenterY = playerRect.top - containerRect.top + playerRect.height / 1.5;
+        this.enemyCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2 + rngD(-50,50);
+        this.enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 2 + rngD(10,-10);
+        this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2; //optional
+        this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(300,400); 
+        this.image = new Image(); 
+        this.image.src = "img/src/projectiles/poison.png"; 
+        this.rotationSpeed = 0.15 ; 
+        this.trailParticle = ParticleSimpleTrail; //optional
+        this.particleDensity = 1; //optional
+        this.rotation = -0.5 ; 
+        Object.assign(this, options);
+    }
+    end(){
+        particleTrackers.push(new ParticlePulse(this.x,this.y));
+    }
+}
+
+
+class ParticleShuriken extends NewParticle {
+    constructor(x, y, options = {}) {
+
+        super(x, y);
+
+        this.simpleColor = "transparent"
+        this.freeflow = false
+        this.tSpeed = 0.04;
+        this.size = 10;
+        this.playerCenterX = playerRect.left - containerRect.left + playerRect.width / 1.5;
+        this.playerCenterY = playerRect.top - containerRect.top + playerRect.height / 1.5;
+        this.enemyCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2 + rngD(-50,50);
+        this.enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 2 + rngD(10,-10);
+        this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2; //optional
+        this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(80,150); 
+        this.image = new Image(); 
+        this.image.src = "img/src/projectiles/shuriken.png"; 
+        this.rotationSpeed = 0.1 ; 
+        this.trailParticle = ParticleSimpleTrail; //optional
+        this.particleDensity = 1; //optional
+        Object.assign(this, options);
+    }
+    end(){
+        particleTrackers.push(new ParticlePulse(this.x,this.y));
+    }
+}
+
+
+class ParticleLumaAcorn extends NewParticle {
+    constructor(x, y, options = {}) {
+
+        super(x, y);
+
+        this.freeflow = false
+        this.tSpeed = 0.025 ; // Track Speed
+        this.simpleColor = "transparent"; //optional
+        this.playerCenterX = rngD(0,100);
+        this.playerCenterY = -20;
+        this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2; //optional
+        this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(100, 300); //optional
+        this.enemyCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2 - rngD(-100, 100);
+        this.enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 1.3 - rngD(-100, 100);
+        
+        this.image = new Image(); 
+        this.image.src = "img/src/projectiles/acorn.png"; 
+        this.size = 5;
+        this.rotationSpeed = 0.15 ; 
+        this.rotation = rngD(0,2)
+        Object.assign(this, options);
+    }
+    end(){
+        particleTrackers.push(new ParticlePulse(this.x,this.y));
+    }
+}
+
 class ParticleEnemyShot extends NewParticle {
     constructor(x, y, options = {}) {
 
@@ -1257,7 +1837,7 @@ class ParticleEnemyShot extends NewParticle {
         this.tSpeed = 0.03;
         this.size = 15;
         this.enemyCenterX = playerRect.left - containerRect.left + playerRect.width / 2;
-        this.enemyCenterY = playerRect.top - containerRect.top + playerRect.height / 1.5;
+        this.enemyCenterY = playerRect.top - containerRect.top + playerRect.height / 1.4;
         this.playerCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2 + rngD(-50,50);
         this.playerCenterY = enemyRect.top - containerRect.top + enemyRect.height / 2 + rngD(10,-10);
         this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2; //optional
@@ -1283,6 +1863,23 @@ class ParticleWebShot extends ParticleEnemyShot {
         this.particleDensity = 1; //optional
         this.particleConfig = {
             simpleColor : "white"
+        }
+
+        Object.assign(this, options);
+    }
+}
+
+class ParticleSlimeShot extends ParticleEnemyShot {
+    constructor(x, y, options = {}) {
+        super(x, y);
+
+        this.trailParticle = ParticleAlignTrail; //optional
+        this.particleDensity = 1; //optional
+        this.particleConfig = {
+            simpleColor : "#FD8BE0",
+            strokeColor : "#CE73EC",
+            strokeSize : 7,
+            speedY: rngD(4,7)
         }
 
         Object.assign(this, options);
@@ -1579,6 +2176,7 @@ class ParticleAmbienceLeaf extends NewParticle {
         this.x = rngD(-(containerRect.width/2),containerRect.width);
         this.y = -10;
 
+        this.tag = "ambience";
 
         this.speedY = 1;
         this.speedX = 1;
@@ -1600,6 +2198,42 @@ class ParticleAmbienceLeaf extends NewParticle {
     }
     
 }
+
+
+class ParticleAmbienceFirefly extends NewParticle {
+    constructor(x, y, options = {}) {
+        super(x, y);
+        
+        this.tSpeed = 0.0008 ; // Track Speed
+        this.simpleColor = "transparent"; //optional
+        this.x = rngD(0,containerRect.width);
+        this.y = rngD(containerRect.height/2.5,containerRect.height/4);
+
+        this.tag = "ambience";
+
+        //this.speedY = 1;
+        //this.speedX = 1;
+        
+        this.image = new Image(); 
+        this.image.src = "img/src/projectiles/glow2.png"; 
+        //this.imageHue = 200;
+        this.size = 5;
+        this.rotationSpeed = rngD(-0.01,0.01) ; 
+        this.wobbleY = rngD(-0.2,0.2); 
+        this.wobbleX = rngD(-0.2,0.2); 
+        this.wobbleFrequency = 5; 
+        this.mouseForce = 0.5; //optional
+        this.pulseAmplitude = 0.1; 
+        this.pulseSpeed = 1; 
+        this.alpha = 0.8
+        this.despawnStyle = "fade"
+        this.spawnStyle = "fade"
+        this.maxAlpha = this.alpha
+        Object.assign(this, options);
+    }
+    
+}
+
 
 
 

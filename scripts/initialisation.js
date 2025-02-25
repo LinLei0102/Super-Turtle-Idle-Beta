@@ -169,6 +169,41 @@ did("pokomuni").addEventListener("click", function () {
 });
 
 
+did("bestiaryMonster").addEventListener("mouseenter", function () {
+  if (enemies[currentBestiaryEntry].resource)return
+  patCursor = true
+  document.body.style.cursor = "url('img/sys/cursorPat.png'), auto";
+});
+did("bestiaryMonster").addEventListener("mouseleave", function () {
+  patCursor = false
+  setCursor();
+});
+
+did("bestiaryMonster").addEventListener("click", function () {
+  if (enemies[currentBestiaryEntry].resource)return
+
+  document.body.style.cursor = "url('img/sys/cursorPat2.png'), auto";
+  setTimeout(() => {
+    document.body.style.cursor = "url('img/sys/cursorPat.png'), auto";
+  }, 100);
+
+  voidAnimation("bestiaryMonster", "gelatine 0.3s 1")
+
+
+  if (chance(1/10)){
+    if (chance(1/10))playSound("audio/pet2.mp3","all");
+    playSound("audio/pet3.mp3","all")
+  }
+  playSound("audio/throw.mp3")
+
+  
+
+  setTimeout(() => {
+    if (chance(1/3)) particleTrackers.push(new ParticleFloatingHeart(mouseClickX, mouseClickY, { targetCanvas: `globalParticles` }))
+  }, 10); 
+});
+
+
 
 
 

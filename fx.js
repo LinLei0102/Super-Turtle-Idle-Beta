@@ -35,11 +35,15 @@ const enemyRectY = enemyRect.top - containerRect.top + enemyRect.height / 1.4
 const playerRectX = playerRect.left - containerRect.left + playerRect.width / 2
 const playerRectY = playerRect.top - containerRect.top + playerRect.height / 1.4
 
+const add1div = document.getElementById('addPanel1');
+let add1Rect = add1div.getBoundingClientRect();
+let add1RectX = add1Rect.left - containerRect.left + add1Rect.width / 2
+let add1RectY = add1Rect.top - containerRect.top + add1Rect.height / 1.4
 
-
-
-
-
+const add2div = document.getElementById('addPanel2');
+let add2Rect = add2div.getBoundingClientRect();
+let add2RectX = add2Rect.left - containerRect.left + add2Rect.width / 2
+let add2RectY = add2Rect.top - containerRect.top + add2Rect.height / 1.4
 
 
 
@@ -65,7 +69,7 @@ window.addEventListener('resize', function() {
 
 
 const playerCenterX = playerRect.left - containerRect.left + playerRect.width / 2;
-const playerCenterY = playerRect.top - containerRect.top + playerRect.height / 2;
+const playerCenterY = playerRect.top - containerRect.top + playerRect.height / 1.4;
 const enemyCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2;
 const enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 2;
 
@@ -395,7 +399,7 @@ class Particle {
 
         } else {
 
-            ctx.font = `${this.size}px lilita`;
+            ctx.font = `${this.size}px damageText`;
 
 
             if (this.strokeSize > 0) {
@@ -430,7 +434,7 @@ class NewParticle {
         this.playerCenterX = playerRect.left - containerRect.left + playerRect.width / 2;
         this.playerCenterY = playerRect.top - containerRect.top + playerRect.height / 2;
         this.enemyCenterX = enemyRect.left - containerRect.left + enemyRect.width / 2;
-        this.enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 2;
+        this.enemyCenterY = enemyRect.top - containerRect.top + enemyRect.height / 1.5;
         //this.controlPointX = (this.playerCenterX + this.enemyCenterX) / 2; //optional
         //this.controlPointY = Math.min(this.playerCenterY, this.enemyCenterY) - rngD(200, 300); //optional
         // free-flow behaviour
@@ -936,7 +940,7 @@ class ParticleDamageText extends Particle {
     constructor(x, y, options = {}) {
         super(x, y);
 
-        this.size = 50*(stats.zoomLevel/100);
+        this.size = 60*(stats.zoomLevel/100);
         this.age = 0; // Initial Age
         this.life = 1000;
         this.sizeDecay = 0;

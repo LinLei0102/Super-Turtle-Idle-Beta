@@ -1,31 +1,277 @@
 const craftingRecipes = {}
 
-craftingRecipes.R1 = {
-    category: `SN`,
-    item: {AreaChest1:1, ExpGummy1:10},
-    reagents: {UpgradeMaterial1:10, UpgradeMaterial0:20},
+
+
+craftingRecipes.CopperworkAxe = {
+    category: `SA`,
+    item: {CopperworkAxe:1},
+    reagents: {ScrapMaterial1:10,ScrapMaterial2:1,CopperOre:10},
+    time: 2.5*60,
+    level: 1,
+    exp: 15,
+}
+
+craftingRecipes.CopperShield = {
+    category: `SA`,
+    item: {CopperShield:1},
+    reagents: {ScrapMaterial1:10,ScrapMaterial2:1,CopperOre:5},
+    time: 60*2,
+    level: 7,
+    exp: 15,
+}
+
+craftingRecipes.ShurikenFan = {
+    category: `SA`,
+    item: {ShurikenFan:1},
+    reagents: {ScrapMaterial1:10,ScrapMaterial2:1,CopperOre:5},
+    time: 60*2,
+    level: 8,
+    exp: 20,
+    locked: true,
+}
+
+craftingRecipes.ExplorerHead = {
+    category: `SG`,
+    item: {ExplorerHead:1},
+    reagents: {ScrapMaterial1:10,CopperOre:5},
+    time: 2*60,
+    level: 1,
+    exp: 15,
+}
+
+craftingRecipes.ExplorerChest = {
+    category: `SG`,
+    item: {ExplorerChest:1},
+    reagents: {ScrapMaterial1:10,CopperOre:5},
+    time: 2*60,
+    level: 2,
+    exp: 15,
+}
+
+craftingRecipes.ExplorerLegs = {
+    category: `SG`,
+    item: {ExplorerLegs:1},
+    reagents: {ScrapMaterial1:10,CopperOre:5},
+    time: 2*60,
+    level: 3,
+    exp: 15,
+}
+
+craftingRecipes.ExplorerFeet = {
+    category: `SG`,
+    item: {ExplorerFeet:1},
+    reagents: {ScrapMaterial1:10,CopperOre:5},
+    time: 2*60,
+    level: 4,
+    exp: 15,
+}
+
+
+craftingRecipes.Geode1Open = {
+    category: `SO`,
+    item: {Geode1Open:1},
+    reagents: {Geode1:1},
+    time: 10*60,
+    level: 5,
+    exp: 10,
+}
+
+
+
+craftingRecipes.HealingFlask = {
+    category: `AA`,
+    item: {HealingFlask:1},
+    reagents: {GlassFlask:1,Dayleaf:5},
+    time: 60,
+    level: 1,
+    exp: 5,
+}
+
+
+craftingRecipes.NaturalTincture = {
+    category: `AT`,
+    item: {NaturalTincture:1},
+    reagents: {GlassFlask:1,Dayleaf:5,WhiteStinger:3},
+    time: 60,
+    level: 2,
+    exp: 15,
+}
+
+craftingRecipes.SinisterTincture = {
+    category: `AT`,
+    item: {SinisterTincture:1},
+    reagents: {GlassFlask:1,Dayleaf:5,SlimyResidue:3},
+    time: 60,
+    level: 3,
+    exp: 15,
+}
+
+craftingRecipes.ElementalTincture = {
+    category: `AT`,
+    item: {ElementalTincture:2},
+    reagents: {GlassFlask:2,Dayleaf:10,TinyLifeMote:1},
+    time: 60,
+    level: 4,
+    exp: 15,
+}
+
+craftingRecipes.LuckyTincture = {
+    category: `AT`,
+    item: {LuckyTincture:1},
+    reagents: {GlassFlask:1,Dayleaf:5,StarPiece:1},
+    time: 60,
+    level: 9,
+    exp: 15,
+    locked: true,
+}
+
+
+
+/*
+craftingRecipes.NatureFlask = {
+    category: `AA`,
+    item: {NatureFlask:1},
+    reagents: {GlassFlask:1,AlchemicalDust:5,WhiteStinger:5},
     time: 1,
-    description: `Open up with a key`,
     level: 1,
     exp: 30,
 }
 
-craftingRecipes.R2 = {
-    category: `SN`,
-    item: {DungeonKey1:1, ExpGummy1:10},
-    reagents: {UpgradeMaterial1:10},
-    time: 5,
-    description: `Open up with a key`,
+craftingRecipes.ElementalFlask = {
+    category: `AA`,
+    item: {ElementalFlask:1},
+    reagents: {GlassFlask:1,AlchemicalDust:5,WhiteStinger:5},
+    time: 1,
     level: 1,
-    exp: 52,
+    exp: 30,
 }
 
-craftingRecipes.R3 = {
-    category: `AN`,
-    item: {ExpGummy1:10},
-    reagents: {UpgradeMaterial1:10, UpgradeMaterial0:20},
-    time: 4,
-    description: `Open up with a key`,
+craftingRecipes.OccultFlask = {
+    category: `AA`,
+    item: {OccultFlask:1},
+    reagents: {GlassFlask:1,AlchemicalDust:5,SlimyResidue:5},
+    time: 1,
+    level: 1,
+    exp: 30,
+}
+
+*/
+
+
+craftingRecipes.FireScroll = {
+    category: `AO`,
+    item: {FireScroll:1},
+    reagents: {BlankParchment:1,TinyLifeMote:1},
+    time: 60,
+    level: 5,
+    exp: 20,
+}
+
+craftingRecipes.PoisonScroll = {
+    category: `AO`,
+    item: {PoisonScroll:1},
+    reagents: {BlankParchment:1,TinyLifeMote:1,WhiteStinger:5},
+    time: 60,
+    level: 8,
+    exp: 20,
+}
+
+craftingRecipes.PoisonFlask = {
+    category: `EA`,
+    item: {PoisonFlask:1},
+    reagents: {GlassFlask:1,WhiteStinger:1},
+    time: 30,
+    level: 3,
+    exp: 15,
+}
+
+craftingRecipes.TopazRing = {
+    category: `EI`,
+    item: {TopazRing:1},
+    reagents: {CopperOre:5,ScrapMaterial2:1,GemTopaz:1},
+    time: 2*60,
+    level: 7,
+    exp: 30,
+    locked: true,
+
+}
+
+craftingRecipes.NatureConverter = {
+    category: `EI`,
+    item: {NatureConverter:1},
+    reagents: {CopperOre:5,ScrapMaterial2:1,TinyLifeMote:2,GemSapphire:1,},
+    time: 60*3,
+    level: 10,
+    exp: 40,
+    locked: true,
+
+}
+
+craftingRecipes.OccultConverter = {
+    category: `EI`,
+    item: {OccultConverter:1},
+    reagents: {CopperOre:5,ScrapMaterial2:1,TinyLifeMote:2,GemSapphire:1,},
+    time: 60*3,
+    level: 10,
+    exp: 40,
+    locked: true,
+
+}
+
+craftingRecipes.ElementalConverter = {
+    category: `EI`,
+    item: {ElementalConverter:1},
+    reagents: {CopperOre:5,ScrapMaterial2:1,TinyLifeMote:2,GemSapphire:1,},
+    time: 60*3,
+    level: 1,
+    exp: 40,
+    locked: true,
+
+}
+
+craftingRecipes.GemCritical1 = {
+    category: `EG`,
+    item: {GemCritical1:1},
+    reagents: {GemRuby:1},
+    time: 60*5,
+    level: 6,
+    exp: 30,
+}
+
+craftingRecipes.GemMoon1 = {
+    category: `EG`,
+    item: {GemMoon1:1},
+    reagents: {GemSapphire:1},
+    time: 60*5,
+    level: 7,
+    exp: 30,
+}
+
+craftingRecipes.GemScarab1 = {
+    category: `EG`,
+    item: {GemScarab1:1},
+    reagents: {GemRuby:1,GemshellBeetle:1,},
+    time: 60*5,
+    level: 9,
+    exp: 30,
+}
+
+craftingRecipes.GemRebound1 = {
+    category: `EG`,
+    item: {GemRebound1:1},
+    reagents: {GemTopaz:1},
+    time: 60*5,
+    level: 11,
+    exp: 30,
+}
+
+
+
+craftingRecipes.AreaChest1Key = {
+    category: `EK`,
+    item: {AreaChest1Key:1},
+    reagents: {CopperOre:3,},
+    time: 30,
     level: 1,
     exp: 5,
 }
@@ -46,8 +292,13 @@ function updateRecipes(){
 
     for (let r in craftingRecipes) {
 
+
+        if (craftingRecipes[r].locked) continue
+
         const parent = eval(Object.keys(craftingRecipes[r].item)[0])
         const item = new parent()
+
+        if ( did(r+"recipe") ) {did(r+"recipe").className = 'craftRecipe';}
 
         if (!did(r+"recipe")) {
 
@@ -56,20 +307,25 @@ function updateRecipes(){
 
          const div = document.createElement('div');
          div.id = r+"recipe";
-         div.innerHTML = '<span id="'+r+'recipeLevel">'+craftingRecipes[r].level+'</span><img id="'+r+'recipeImage" src="img/src/items/I'+item.img+'.jpg"><strong id="'+r+'recipeName">?????</strong><span style="margin-left: auto; background: #603E56; color: #7ACCDE; transition:0s !important;" id="'+r+'craftQueue"><img id="'+r+'craftIcon" src="img/src/icons/craftOne.png">200</span>';
+         div.innerHTML = '<span id="'+r+'recipeLevel">'+craftingRecipes[r].level+'</span><img id="'+r+'recipeImage" src="img/src/items/I'+item.img+'.jpg"><strong id="'+r+'recipeName">?????</strong><span style="margin-left: auto; background: #603E56; color: #7ACCDE; transition:0s !important; white-space:nowrap !important" id="'+r+'craftQueue"><img id="'+r+'craftIcon" src="img/src/icons/craftOne.png">200</span>';
          did(craftingRecipes[r].category + "panel").appendChild(div);
          div.className = 'craftRecipe';
 
 
          div.addEventListener('click', function() {
+            if (craftingRecipes[r].level > (jobs[rpgPlayer.currentJob].level)) return
             currentRecipe = r;
+            playSound("audio/button4.mp3")
+            for (let r in craftingRecipes) { if ( did(r+"recipe") ) {did(r+"recipe").className = 'craftRecipe'} }
+            div.className = 'craftRecipeActive';
             recipePanel();
+
         });
 
     }
 
-        if(craftingRecipes[r].level <= (jobs[rpgPlayer.currentJob].level)) {did(r+'recipeName').innerHTML = limitText(item.name,14); did(r+"recipeName").style.color = "white"; did(r+"recipeImage").style.display = "flex"}
-        else{ did(r+'recipeName').innerHTML = '?????'; did(r+"recipeName").style.color = "gray"; did(r+"recipeLevel").style.background = "gray"; did(r+"recipeImage").style.display = "none";}
+        if(craftingRecipes[r].level <= (jobs[rpgPlayer.currentJob].level)) {did(r+'recipeName').innerHTML = limitText(item.name,14); did(r+"recipeName").style.color = "white"; did(r+"recipeImage").style.display = "flex"; did(r+'craftQueue').style.display = "flex"}
+        else{ did(r+'recipeName').innerHTML = '?????'; did(r+"recipeName").style.color = "gray"; did(r+"recipeLevel").style.background = "gray"; did(r+"recipeImage").style.display = "none"; did(r+'craftQueue').style.display = "none"}
    
 
 
@@ -128,6 +384,11 @@ function recipePanel(){
     did('recipeImage').src = "img/src/items/I"+item.img+".jpg";
     did('recipeTitle').innerHTML = item.name;
     did('recipeTimer').innerHTML = convertSecondsToHMS(craftingRecipes[currentRecipe].time, "mini") + " ⏱️";
+    did('recipeTimer').style.color = "white"
+    if (craftingRecipes[currentRecipe].que>0) {did('recipeTimer').innerHTML = convertSecondsToHMS(craftingRecipes[currentRecipe].time*craftingRecipes[currentRecipe].que-craftingRecipes[currentRecipe].timeCurrent, "mini") + " ⏱️"; did('recipeTimer').style.color = "#9ADE7A"}
+    if (craftingRecipes[currentRecipe].que>=10000) did('recipeTimer').innerHTML = "♾️⏱️";
+
+    
     let extraDescription = ""
     craftingRecipes[currentRecipe].description!==undefined ? extraDescription = "<br>"+craftingRecipes[currentRecipe].description : extraDescription = ""
     did('recipeDescription').innerHTML = `Create ${item.name} ${extraDescription}`;
@@ -190,7 +451,6 @@ function recipePanel(){
             div.tag = "crafting"
             did('recipeOutcome').appendChild(div);
             div.style.outline = returnQualityColor(item.quality) +' solid 2px';
-            if (item.constructor.count<craftingRecipes[currentRecipe].item[i]) div.style.outline = "#f54842 solid 2px"
         }
     } 
     
@@ -237,6 +497,9 @@ voidAnimation(currentRecipe+'craftQueue','areaClick 0.3s 1')
 if (craftingRecipes[currentRecipe].que>=100000) craftingRecipes[currentRecipe].que = 0
 if (count === "all") craftingRecipes[currentRecipe].que = 100000
 craftingRecipes[currentRecipe].que += parseInt(itemQueueValue)
+playSound("audio/craft.mp3")
+voidAnimation(currentRecipe+"recipe","areaClick 0.2s 1")
+recipePanel()
 
 updateRecipes()
 
@@ -246,7 +509,30 @@ updateRecipes()
 did('craftButtonCancel').addEventListener('click', cancelCrafting);
 
 
+
+function simulateCraftingTime(seconds){
+
+
+    for (let r in craftingRecipes) {
+
+        if (craftingRecipes[r].que===0) continue
+        craftingRecipes[r].timeCurrent+=seconds
+
+
+
+
+    }
+
+
+
+
+
+
+}
+
+
 function cancelCrafting() {
+    playSound("audio/close.mp3")
     voidAnimation(currentRecipe+'craftQueue','areaClick 0.3s 1')
 
     craftingRecipes[currentRecipe].que = 0
@@ -255,9 +541,12 @@ function cancelCrafting() {
 
         did('craftBar').style.transition = "0s all linear"
         did('craftBar').style.width = "0%";
+        recipePanel()
+
     
  }
 
+ let noCraftTime = false
 
  setInterval(craftingProgress,1000);
  function craftingProgress(){
@@ -266,15 +555,32 @@ function cancelCrafting() {
         if (craftingRecipes[r].que===0) continue
 
 
-        craftingRecipes[r].timeCurrent++
-        console.log(craftingRecipes[r].timeCurrent)
+        if (r === currentRecipe) did('recipeTimer').innerHTML = convertSecondsToHMS((craftingRecipes[currentRecipe].time*craftingRecipes[currentRecipe].que-craftingRecipes[currentRecipe].timeCurrent), "mini") + " ⏱️";
+        if(craftingRecipes[currentRecipe]?.que>=10000) did('recipeTimer').innerHTML = "♾️⏱️";
+
+
+
+        craftingRecipes[r].timeCurrent+=nofarmToggleBonus+statHidden.extraCraftingTime
+
+        if (equippedOffhand?.img===593){
+        equippedOffhand.uses--
+        updateOffhandDurability(equippedOffhand)
+        }
+
+        if (noCraftTime) craftingRecipes[r].timeCurrent+=craftingRecipes[r].time*craftingRecipes[r].que
 
 
         if (craftingRecipes[r].timeCurrent>=craftingRecipes[r].time){ //on finish craft
 
+
+
+            for (i in craftingRecipes[r].reagents) {//checks if the player still has materials for the recipe before proceeding
+                const parent = eval(i)
+                if (!(parent.count>=craftingRecipes[r].reagents[i])) { craftingRecipes[r].que = 0; craftingRecipes[r].timeCurrent = 0; updateRecipes(); recipePanel();  return }
+            }
+
+
             craftingRecipes[r].que--
-
-
             for (i in craftingRecipes[r].item) { //add items
 
 
@@ -288,8 +594,9 @@ function cancelCrafting() {
 
                 const parent = eval(i)
                 const item = new parent()
-                spawnItem(parent, craftingRecipes[r].item[i])
-                console.log("itemCreated! " + item.name +"x"+craftingRecipes[r].item[i])
+                spawnItem(parent, craftingRecipes[r].item[i], "container")
+                stats.craftedItems++
+                //console.log("itemCreated! " + item.name +"x"+craftingRecipes[r].item[i])
             }
 
 
@@ -302,14 +609,16 @@ function cancelCrafting() {
                 }
             }
 
-
-            craftingRecipes[r].timeCurrent = 0
+            
+            craftingRecipes[r].timeCurrent -= craftingRecipes[r].time //controls overflow of crafting time, used for offline
+            if (craftingRecipes[r].timeCurrent>craftingRecipes[r].time) craftingProgress()
+            if (craftingRecipes[r].que === 0) craftingRecipes[r].timeCurrent = 0
             updateRecipes()
 
 
             const category = craftingRecipes[r].category
 
-            const recipeJob = "blacksmith"
+            let recipeJob = "blacksmith"
             if (category.startsWith("A")) recipeJob = "alchemy"
             if (category.startsWith("E")) recipeJob = "engineering"
 
