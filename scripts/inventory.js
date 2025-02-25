@@ -537,7 +537,7 @@ function updateInventory(mode) {
     if (item.locked) itemLock = `<div class="itemLock">🔒</div>`
 
     let gemIndicator = ""
-    if (item.gemSlot && (item.gemSlot.red!==null || item.gemSlot.yellow!==null || item.gemSlot.blue!==null)) gemIndicator = `<div style="left:60%" class="itemAlign">💠</div>`
+    if (item.gemSlot && (item.gemSlot.red!==null || item.gemSlot.yellow!==null || item.gemSlot.blue!==null)) gemIndicator = `<div style="left:60%; background:transparent !important" class="itemAlign">💠</div>`
     
     
     itemDiv.innerHTML = `${itemLock} ${gemIndicator} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;

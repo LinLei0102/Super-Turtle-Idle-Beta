@@ -319,7 +319,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
           if (chance(1/1000)) {spawnItem(VendorTrash,1,"noPopup"); flyingLoot()}
           
-          if (unlocks.bestiary && chance(1/1000)) {dropMonsterCard()}
+          if (unlocks.bestiary && chance(1/ (1000/nofarmToggleBonus) )) {dropMonsterCard()}
 
           lootTable(areas[stats.currentArea].lootTable(),"enemy")
 
@@ -366,7 +366,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
       }
       rpgPlayer.BossCharges--
       stats.areaBossKills++
-      if (unlocks.bestiary && chance(1/20)) {dropMonsterCard()}
+      if (unlocks.bestiary && chance(1/ (20/nofarmToggleBonus) )) {dropMonsterCard()}
       stats.areaBossKillsLog++
       stats.currentDifficulty="easy"
       encounterButtonPress(); 
