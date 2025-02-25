@@ -174,7 +174,7 @@ function offlineRewards(seconds){
 
     function loop() {
         lootTable(enemies[stats.currentEnemy].lootTable(),"hidden")
-        if (unlocks.bestiary && chance(1/1000)) {dropMonsterCard()}
+        if (unlocks.bestiary && chance(1/ (1000/nofarmToggleBonus) )) {dropMonsterCard()}
     }
 
     enemies[stats.currentEnemy].killCount+=Math.floor(times)

@@ -2093,7 +2093,7 @@ class StarPiece extends Material {
     constructor(properties = {}) {
         super(properties);
         this.name = `Star Piece`;
-        this.flavor = `"A specialized flask crafted from materials designed to interact with alchemical substances."`;
+        this.flavor = `"A tiny bit of hope."`;
         this.source = `Bought in the Achievement Shop. Crafting material`;
         this.img = 569;
         this.quality = `Uncommon`;
@@ -2562,6 +2562,22 @@ class CopperShield extends ArmorOffhand {
     receiveDamage(){
        this.uses--
        updateOffhandDurability(this)
+    }
+}
+
+class CraftingTools extends ArmorOffhand {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Crafting Tools`;
+        this.flavor = `"A set of rather expensive-looking tools dedicated to crafting. As fine as they look, they will still deteriorate while working."`;
+        this.skillDescription = function() { return `+ 1 Extra Second added while Crafting` };
+        this.img = 593;
+        this.initialUses = 1000;
+        this.quality = `Uncommon`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        statHidden.extraCraftingTime += 1
     }
 }
 

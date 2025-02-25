@@ -294,8 +294,10 @@ function spawnItem(id,amount,source){
   if (source==="noPopup") notification = false
 
 
-  if (!itemInventoryMemory.some(existingItem => existingItem.img === item.img)) {
+  if (item.img===103) item.init() //hack for recipes. i hate this
+  if (!itemInventoryMemory.some(existingItem => existingItem.img === item.img) || ( item.img===103 && !itemInventoryMemory.some(existingItem => existingItem.savedInfo === item.savedInfo) ) ) {
     itemInventoryMemory.push(item);
+    console.log(item.name+" Added to the memory")
   }
 
 
@@ -533,8 +535,12 @@ function updateInventory(mode) {
 
     let itemLock = ""
     if (item.locked) itemLock = `<div class="itemLock">🔒</div>`
+
+    let gemIndicator = ""
+    if (item.gemSlot && (item.gemSlot.red!==null || item.gemSlot.yellow!==null || item.gemSlot.blue!==null)) gemIndicator = `<div style="left:60%" class="itemAlign">💠</div>`
     
-    itemDiv.innerHTML = `${itemLock} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
+    
+    itemDiv.innerHTML = `${itemLock} ${gemIndicator} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
     itemDiv.className = "inventoryItem";
     itemDiv.item = item; 
     itemDiv.item.index = index; 
@@ -2075,8 +2081,11 @@ movingDiv.style.top = newTop + 'px';
       if (itemDiv.tag2 === "shopAchievement") {
 
 
+        let condition = ""
+        if (achievementShop[itemDiv.shopID].condition && !achievementShop[itemDiv.shopID].condition()) condition = `<br><span style="display:flex;justify-content:center;align-items:center; border-radius:0.2rem; background:#512922; padding: 0.5rem; outline: coral 2px solid">${achievementShop[itemDiv.shopID].conditionText}</span>`
+
         let itemprice = achievementShop[itemDiv.shopID].price
-        return `<div style=" text-align: center;background:transparent;overflow:visible"><FONT COLOR="white"> Price: <FONT COLOR="#ffbd54">${ beautify(itemprice)}${scuteIcon}Prism Scutes</div>`;
+        return `<div style=" text-align: center;background:transparent;overflow:visible"><FONT COLOR="white"> Price: <FONT COLOR="#ffbd54">${ beautify(itemprice)}${scuteIcon}Prism Scutes</div>${condition}`;
       }
 
       if (itemDiv.tag === "crafting") {
@@ -2704,9 +2713,11 @@ function toggleLoadoutMenu(){
 
   if (!isLoadoutMenuOpen) {
 
+
+  did("loadoutBgCover").style.display = "flex";
+
+
   did("loadoutMenu").style.display = "flex";
-
-
   did("loadoutMenu").style.animation = "";
   void did("loadoutMenu").offsetWidth;
   did("loadoutMenu").style.animation = "interactableTooltip 0.3s 1 ease,interactableTooltipIdleHigh 7s infinite ease";
@@ -2730,6 +2741,8 @@ function toggleLoadoutMenu(){
 
   } else {
 
+
+
       did("loadoutMenu").style.animation = "";
       void did("loadoutMenu").offsetWidth;
       did("loadoutMenu").style.animation = "shrinkFadeOut 0.2s 1 ease";
@@ -2741,6 +2754,20 @@ function toggleLoadoutMenu(){
   }
 
 }
+
+
+did("loadoutBgCover").addEventListener('click', function() {
+
+  did("loadoutBgCover").style.display = "none";
+  did("loadoutMenu").style.animation = "";
+  void did("loadoutMenu").offsetWidth;
+  did("loadoutMenu").style.animation = "shrinkFadeOut 0.2s 1 ease";
+  did("loadoutMenu").style.animationFillMode = "forwards";
+
+
+  isLoadoutMenuOpen = false
+
+})
 
 rpgPlayer.currentLoadout = 1
 

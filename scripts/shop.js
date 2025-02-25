@@ -358,6 +358,8 @@ function createShopItem() {
     }
   
     if (contextSelectedItem.tag2==="shopAchievement"){
+
+      if (achievementShop[contextSelectedItem.shopID].condition && !achievementShop[contextSelectedItem.shopID].condition()) {playSound("audio/thud.mp3","all"); return}
   
       if (rpgPlayer.scutes>=achievementShop[contextSelectedItem.shopID].price*toBuy) {
 

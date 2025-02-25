@@ -554,21 +554,33 @@ function cancelCrafting() {
 
         if (craftingRecipes[r].que===0) continue
 
+
         if (r === currentRecipe) did('recipeTimer').innerHTML = convertSecondsToHMS((craftingRecipes[currentRecipe].time*craftingRecipes[currentRecipe].que-craftingRecipes[currentRecipe].timeCurrent), "mini") + " ⏱️";
         if(craftingRecipes[currentRecipe]?.que>=10000) did('recipeTimer').innerHTML = "♾️⏱️";
 
 
 
-        craftingRecipes[r].timeCurrent+=nofarmToggleBonus
+        craftingRecipes[r].timeCurrent+=nofarmToggleBonus+statHidden.extraCraftingTime
+
+        if (equippedOffhand?.img===593){
+        equippedOffhand.uses--
+        updateOffhandDurability(equippedOffhand)
+        }
 
         if (noCraftTime) craftingRecipes[r].timeCurrent+=craftingRecipes[r].time*craftingRecipes[r].que
 
 
         if (craftingRecipes[r].timeCurrent>=craftingRecipes[r].time){ //on finish craft
 
+
+
+            for (i in craftingRecipes[r].reagents) {//checks if the player still has materials for the recipe before proceeding
+                const parent = eval(i)
+                if (!(parent.count>=craftingRecipes[r].reagents[i])) { craftingRecipes[r].que = 0; craftingRecipes[r].timeCurrent = 0; updateRecipes(); recipePanel();  return }
+            }
+
+
             craftingRecipes[r].que--
-
-
             for (i in craftingRecipes[r].item) { //add items
 
 

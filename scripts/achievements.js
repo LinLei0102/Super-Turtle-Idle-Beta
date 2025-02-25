@@ -1233,35 +1233,38 @@ achievementShop.I2 = {
   item: new ChanceDie1(),
   price: 400,
   level: 0,
-  effect : function() {},
 };
 
 achievementShop.I3 = {
   item: new Stamp1(),
   price: 600,
   level: 0,
-  effect : function() {},
 };
 
 achievementShop.I4 = {
   item: new LuckyCloverRing(),
   price: 2500,
   level: 1,
-  effect : function() {},
 };
 
 achievementShop.I5 = {
   item: new LottoTicket(),
   price: 300,
   level: 1,
-  effect : function() {},
 };
 
 achievementShop.I6 = {
   item: new StarPiece(),
-  price: 300,
+  price: 600,
   level: 2,
-  effect : function() {},
+};
+
+achievementShop.I7 = {
+  item: new CraftingTools(),
+  price: 850,
+  level: 2,
+  condition : function() { if (jobs.blacksmith.level>9 && jobs.alchemy.level>9 && jobs.engineering.level>9) return true },
+  conditionText : '<span style="color:coral">❌ Reach level 10 in all crafting categories to purchase this item</span>'
 };
 
 rpgPlayer.shop = {}
@@ -1355,6 +1358,9 @@ function updateAchievementShop() {
 
 
      if (rpgPlayer.shop.achievement.level >= achievementShop[i].level) {
+
+
+      if (achievementShop[i].condition && !achievementShop[i].condition()) div.style.filter = "brightness(0.5)"
 
       
       div.item = achievementShop[i].item; 

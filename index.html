@@ -381,7 +381,7 @@
 
 
 
-
+<div class="screenDarken" id="loadoutBgCover" style="opacity: 0; animation: none;" ></div>
 
 
     <div class="itemContextMenu" id="loadoutMenu" style="display: none;">
@@ -1304,7 +1304,7 @@
             <span style="display: none;" id="bestiaryWidget"><img onclick='openDedicatedShop("bestiaryShop"); updateBestiary()' src="img/src/icons/monsterIcon.png" id="bestiaryShopWidget"></span>
             <span style="display: none;" id="exportWidget" onclick='exportJSON()'><img src="img/src/icons/exportIcon.png" style="animation: widgetAlert 2s infinite" ></span>
             <span style="display: none;" id="dailyPresent" onclick="dailyPresentMenu()"><img id="dailyPresentImg" src="img/src/icons/presentIcon.png"></span>
-            <span><img onclick='openDedicatedShop("achievementShop"); did("achievementShopWidget").style.animation = "none"' src="img/src/icons/achievementIcon.png" id="achievementShopWidget" ></span>
+            <span><img onclick='openDedicatedShop("achievementShop"); did("achievementShopWidget").style.animation = "none"; updateAchievementShop()' src="img/src/icons/achievementIcon.png" id="achievementShopWidget" ></span>
             <span style="display: none;"><img src="img/src/icons/collectibleIcon.png"></span>
             
             <span style="display: none;" id="gachaWidget"><img onclick="openGacha()" src="img/src/icons/gachaIcon.png" ></span>

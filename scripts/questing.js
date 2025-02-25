@@ -199,7 +199,7 @@ quests.A1QN13 = {
   name: 'Feeling Peckish',
   difficulty: 6,
   icon: `img/src/buffs/B56.jpg`,
-  description: `Lately I have been carving salad. Although I\'d assume asking for some kind of creature who just happens to be made out of salad would be too far-fetched`,
+  description: `Lately I have been craving salad. Although I\'d assume asking for some kind of creature who just happens to be made out of salad would be too far-fetched`,
   objective: function() { return `Hand over 5 Salads <span class="questProgress">${CaesarSalad.count}/5</span>`},
   logic : function() {return CaesarSalad.count>4},
   effect: function() {

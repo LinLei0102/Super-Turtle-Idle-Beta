@@ -707,6 +707,8 @@ statHidden.playerElementalDot = 0;
 statHidden.playerOccultDot = 0;
 statHidden.playerHealingDot = 0;
 
+statHidden.extraCraftingTime = 0;
+
 
 let combatActions = 3+stat.ExtraActions
 

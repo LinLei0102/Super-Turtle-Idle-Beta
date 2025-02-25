@@ -3183,8 +3183,8 @@ function retroactiveUpdate(){
 
     if (stats.currentVersion<1.04){ Luma.upgrade = undefined }
 
-    stats.currentVersion = 1.05;
-    did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(2)}`
+    stats.currentVersion = 1.051;
+    did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(3)}`
 }
 
 
