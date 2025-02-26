@@ -623,14 +623,14 @@ class GemLucky2 extends Gem {
         super(properties);
         this.name = `Lucky Gemstone II`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
-        this.skillDescription = function() { return `+ 20% Luck` };
+        this.skillDescription = function() { return `+ 15% Luck` };
         this.img = 518;
         this.gemColor = 'red';
         this.quality = `Rare`;
         Object.assign(this, properties);
     }
     merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemLucky3) }
-    stats(){ stat.Luck+=20 }
+    stats(){ stat.Luck+=15 }
 }
 
 class GemLucky3 extends Gem {
@@ -638,13 +638,13 @@ class GemLucky3 extends Gem {
         super(properties);
         this.name = `Lucky Gemstone III`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
-        this.skillDescription = function() { return `+ 30% Luck` };
+        this.skillDescription = function() { return `+ 25% Luck` };
         this.img = 519;
         this.gemColor = 'red';
         this.quality = `Epic`;
         Object.assign(this, properties);
     }
-    stats(){ stat.Luck+=30 }
+    stats(){ stat.Luck+=25 }
 }
 
 class GemMoon1 extends Gem {
@@ -705,6 +705,9 @@ class GemMoon3 extends Gem {
         }
     }
 }
+
+
+
 
 class GemRebound1 extends Gem {
     constructor(properties = {}) {
@@ -2572,7 +2575,7 @@ class CraftingTools extends ArmorOffhand {
         this.flavor = `"A set of rather expensive-looking tools dedicated to crafting. As fine as they look, they will still deteriorate while working."`;
         this.skillDescription = function() { return `+ 1 Extra Second added while Crafting` };
         this.img = 593;
-        this.initialUses = 1000;
+        this.initialUses = 2500;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
     }

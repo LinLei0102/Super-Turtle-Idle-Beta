@@ -1319,10 +1319,10 @@ function enemyDamage(damage, align, icon, type){
   //if (!settings.disableDamageLog) logPrint( enemies[stats.currentEnemy].name + " receives <FONT COLOR='#e8643c'>" + beautify(finalDamage) +" "+ align+" Damage");
 
 
-  //if (finalDamage.toFixed(0) == 69) logs.L1P4.unlocked = true;
+  if (finalDamage.toFixed(0) == 69) logs.L1P4.unlocked = true;
   //if (finalDamage.toFixed(0) == 0) logs.L1P4A1.unlocked = true;
-  //if (finalDamage > 999) logs.P35.unlocked = true;
-  //if (finalDamage > 99999) logs.P35A.unlocked = true;
+  if (finalDamage > 999) logs.P35.unlocked = true;
+  if (finalDamage > 9999) logs.P35A.unlocked = true;
   //if (finalDamage > 999999) logs.P35B.unlocked = true;
   //if (finalDamage > 9999999) logs.P35BA.unlocked = true;
   //if (finalDamage > 99999999) logs.P35BB.unlocked = true;

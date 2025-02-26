@@ -2812,6 +2812,9 @@ function dropMonsterCard(){
   const item = new MonsterCard()
 
 
+  if (enemies[stats.currentEnemy].card1===undefined) return
+
+
     if (!enemies[stats.currentEnemy].card1.got){
       item.init()
       if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }

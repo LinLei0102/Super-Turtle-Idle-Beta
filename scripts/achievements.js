@@ -675,8 +675,8 @@ logs.PCARD.logic = 'stats.monsterCardsObtainedLog>4';
 logs.PCARD.tag = '🎴';
 logs.PCARD.category = "A2";
 logs.PCARD.repeatable = true;
-logs.PCARD.repeatableClick = function() {return stats.monsterCardsObtainedLog -= 10};
-logs.PCARD.progressDescription = function() { return `${beautify(stats.monsterCardsObtainedLog )}/10` };
+logs.PCARD.repeatableClick = function() {return stats.monsterCardsObtainedLog -= 5};
+logs.PCARD.progressDescription = function() { return `${beautify(stats.monsterCardsObtainedLog )}/5` };
 
 logs.PCARD2 = {} 
 logs.PCARD2.name = "Monster Blackjack";
@@ -1241,6 +1241,12 @@ achievementShop.I3 = {
   level: 0,
 };
 
+achievementShop.I8 = {
+  item: new GemLucky1(),
+  price: 1000,
+  level: 1,
+};
+
 achievementShop.I4 = {
   item: new LuckyCloverRing(),
   price: 2500,
@@ -1266,6 +1272,7 @@ achievementShop.I7 = {
   condition : function() { if (jobs.blacksmith.level>9 && jobs.alchemy.level>9 && jobs.engineering.level>9) return true },
   conditionText : '<span style="color:coral">❌ Reach level 10 in all crafting categories to purchase this item</span>'
 };
+
 
 rpgPlayer.shop = {}
 rpgPlayer.shop.achievement = {}
@@ -1311,6 +1318,7 @@ voidAnimation(id,"areaClick 0.5s 1")
 
 
 if (id==="achievementShopButton1"){
+  did("achievementShop").style.backgroundColor = "#43171B";
   voidAnimation("achievementListing","menuSlideEnter 0.4s 1")
   voidAnimation("achievementInsideShop","menuSlideExit 0.4s 1")
   setTimeout(() => {
@@ -1321,6 +1329,7 @@ if (id==="achievementShopButton1"){
 }
 
 if (id==="achievementShopButton2"){
+  did("achievementShop").style.backgroundColor = "#40132C";
   voidAnimation("achievementInsideShop","menuSlideEnter 0.4s 1")
   voidAnimation("achievementListing","menuSlideExit 0.4s 1")
   setTimeout(() => {

@@ -608,7 +608,7 @@ justify-content: center;
     background-size: 20em 20em;
     background-color: #43171B;
     animation: bgPatternVertical2 60s infinite linear;
-
+    transition: 1s;
 }
 
 #bestiaryShopBg{
@@ -672,7 +672,7 @@ justify-content: center;
 .dedicatedShopBanner {
     height: 7.5rem;
     width: 100%;
-    background: linear-gradient(90deg, #885172 0%, #AF4040 100%);
+    background: #884C46;
     display: flex;
     align-items: center;
     padding: 0 3%;
@@ -9852,6 +9852,7 @@ background: rgba(47, 34, 22, 0.77);
     color: white;
     opacity: 0.8;
     font-weight: 400;
+    z-index: 10;
 }
 
 
@@ -11621,6 +11622,7 @@ flex-shrink: 0;
     width: 5rem;
     background: transparent;
     color: #EDEEEE;
+    pointer-events: none;
 }
 
 
