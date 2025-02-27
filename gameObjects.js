@@ -7772,6 +7772,7 @@ Object.keys(areas).forEach(function(key) {
   areas[key].shopProgress = 0;      
   areas[key].heat = 1;      
   areas[key].heatMax = 1;      
+  areas[key].savedDifficulty = "easy";      
   if (areas[key].locked===undefined) areas[key].locked = false;      
 });
 

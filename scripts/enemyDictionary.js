@@ -446,6 +446,7 @@ Object.keys(enemies).forEach(function(key) {
     if (enemies[key].card2!==undefined) enemies[key].card2.got = false;
     if (enemies[key].card3!==undefined) enemies[key].card3.got = false;
 
+    enemies[key].heatBeaten = {heat1:false,heat2:false,heat3:false,heat4:false};  
 
     enemies[key].killCount = 0;  
     enemies[key].medal = 0;  

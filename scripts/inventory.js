@@ -297,7 +297,7 @@ function spawnItem(id,amount,source){
   if (item.img===103) item.init() //hack for recipes. i hate this
   if (!itemInventoryMemory.some(existingItem => existingItem.img === item.img) || ( item.img===103 && !itemInventoryMemory.some(existingItem => existingItem.savedInfo === item.savedInfo) ) ) {
     itemInventoryMemory.push(item);
-    console.log(item.name+" Added to the memory")
+    //console.log(item.name+" Added to the memory")
   }
 
 
@@ -336,7 +336,7 @@ function spawnItem(id,amount,source){
         
       
       // autoscrapping
-      if (itemInventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
+      if (iteminstance.prefix5 === undefined && itemInventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
 
         if (notification && !settings.disableScrapPopup) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${prefixName} ${iteminstance.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">scrapped! </span></span>`)
          if (!iteminstance.noScrap) spawnItem(returnScrapMaterial(iteminstance),1,"noPopup")
@@ -1955,17 +1955,17 @@ document.addEventListener('mouseover', function(event) {
 
     if (itemDiv.tag2 === "shopArea") {
       const newLeft = (referenceRect.right - tooltipRect.width)/ (stats.zoomLevel/100);
-const newTop = referenceRect.bottom/ (stats.zoomLevel/100);
-
-movingDiv.style.left = newLeft + 'px';
-movingDiv.style.top = newTop + 'px';
+      const newTop = referenceRect.bottom/ (stats.zoomLevel/100);
+      movingDiv.style.left = newLeft + 'px';
+      movingDiv.style.top = newTop + 'px';
     }
-    
-    if (itemDiv.tag2 === "shopAchievement") {
-      const newLeft = referenceRect.right/ (stats.zoomLevel/100);
-      const newTop = referenceRect.top/ (stats.zoomLevel/100);
-      movingDiv.style.left = newLeft + 15 + 'px';
-      movingDiv.style.top = newTop + -10 + 'px';
+
+
+    if ( referenceRect.left > (window.innerWidth * 0.5) ) {
+      const newLeft = (referenceRect.right - tooltipRect.width)/ (stats.zoomLevel/100);
+      const newTop = referenceRect.bottom/ (stats.zoomLevel/100);
+      movingDiv.style.left = newLeft + 'px';
+      movingDiv.style.top = newTop + 10 + 'px';
     }
 
 
@@ -2817,7 +2817,7 @@ function dropMonsterCard(){
 
     if (!enemies[stats.currentEnemy].card1.got){
       item.init()
-      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }
+      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) { return }
       itemInventory.push(item)
       updateInventory()
       createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${item.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
@@ -2826,7 +2826,7 @@ function dropMonsterCard(){
 
     if (!enemies[stats.currentEnemy].card2.got && chance(1/4)){
       item.init(2)
-      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }
+      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) { return }
       itemInventory.push(item)
       updateInventory()
       createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${item.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)
@@ -2836,7 +2836,7 @@ function dropMonsterCard(){
 
     if (!enemies[stats.currentEnemy].card3.got && chance(1/7)){
       item.init(3)
-      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) {console.log("u"); return }
+      if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) { return }
       itemInventory.push(item)
       updateInventory()
       createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${item.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">got! </span></span>`)

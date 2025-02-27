@@ -9840,20 +9840,45 @@ background: rgba(47, 34, 22, 0.77);
     pointer-events: none !important;
 }
 
-#versionNumber{
-    height: 1.5rem;
-    background: coral;
+#gameInfo{
     position: fixed;
     top: 0.5rem;
     right: 0.5rem;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 1.5rem;
+    background: transparent;
     width: auto;
-    padding: 0.2rem 1rem;
-    border-radius: 0.2rem;
-    color: white;
-    opacity: 0.8;
-    font-weight: 400;
     z-index: 10;
+    gap: 0.5rem;
 }
+
+#gameInfo div{
+    color: white;
+    opacity: 0.7;
+    font-weight: 400;
+    border-radius: 0.2rem;
+    padding: 0.2rem 1rem;
+    width: auto;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#versionNumber{
+    background: coral;
+}
+
+#fastModeInfo{
+    background: #9971DD;
+}
+
+#hardModeInfo{
+    background: #E14873;
+}
+
 
 
 #rankButton{

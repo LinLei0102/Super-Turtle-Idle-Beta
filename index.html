@@ -419,6 +419,7 @@
 
             <h2 class="specialSettings" style="display: flex;">Game Modifiers 🧬</h2>
             <h3 class="gamemodeToggle">Fast mode <strong style="color: rgb(146, 134, 134);">(Increased game pacing)</strong><button id="nofarmToggle" onclick="toggleSettings('nofarmToggle'); updateDroprates()">OFF</button></h3>
+            <h3 class="gamemodeToggle">Hard mode <strong style="color: rgb(146, 134, 134);">(Unbeaten bosses will be tougher)</strong><button id="hardmodeToggle" onclick="toggleSettings('hardmodeToggle');">OFF</button></h3>
 
             <h2>General</h2>
             <h3>Save manually <strong style="color: rgb(85, 80, 80);">[Shortcut: "S"]</strong><button onclick="autosave(); playSound('audio/button1.mp3')">Save</button></h3>
@@ -2278,7 +2279,11 @@
                 <div class="topWidget" id="weatherButton"><img id="currentWeather" src="img/src/projectiles/none.png"/></div></div>
             </div>
 
-            <div id="versionNumber">BETA 1.00</div>
+            <div id="gameInfo">
+                <div id="hardModeInfo" style="display: none;">💠 Hard Mode</div>
+                <div id="fastModeInfo" style="display: none;">⏱️ Fast Mode</div>
+                <div id="versionNumber">BETA 1.00</div>
+            </div>
         </div>
         <!-- ---------------Barra Inferior------------ -->
 

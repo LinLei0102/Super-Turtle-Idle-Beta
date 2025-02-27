@@ -1289,6 +1289,12 @@ function toggleSettingsUI(){
 
     }
 }
+
+
+settings.nofarmToggle ? did("fastModeInfo").style.display = "flex" : did("fastModeInfo").style.display = "none"
+settings.hardmodeToggle ? did("hardModeInfo").style.display = "flex" : did("hardModeInfo").style.display = "none"
+
+
 }
 
 //-----category button on the left----- (weird placement but oh well)
@@ -2472,6 +2478,7 @@ function save() {
   saveData.savedEnemyMedalProgress = {}; for (const i in enemies) { saveData.savedEnemyMedalProgress[i] = enemies[i].medalProgress;}
   saveData.savedEnemyNerf = {}; for (const i in enemies) { saveData.savedEnemyNerf[i] = enemies[i].nerfed;}
   saveData.savedEnemyMedal = {}; for (const i in enemies) { saveData.savedEnemyMedal[i] = enemies[i].medal;}
+  saveData.savedheatBeaten = {}; for (const i in enemies) { saveData.savedheatBeaten[i] = enemies[i].heatBeaten;}
 
   saveData.savedEnemyCard1 = {}; for (const i in enemies) { if (enemies[i].card1) saveData.savedEnemyCard1[i] = enemies[i].card1.got;}
   saveData.savedEnemyCard2 = {}; for (const i in enemies) { if (enemies[i].card2) saveData.savedEnemyCard2[i] = enemies[i].card2.got;}
@@ -2496,6 +2503,7 @@ function save() {
   saveData.savedShopProgress = {}; for (const i in areas) { saveData.savedShopProgress[i] = areas[i].shopProgress;}
   saveData.savedCurrentHeat = {}; for (const i in areas) { saveData.savedCurrentHeat[i] = areas[i].heat;}
   saveData.savedMaxHeat = {}; for (const i in areas) { saveData.savedMaxHeat[i] = areas[i].heatMax;}
+  saveData.savedDifficulty = {}; for (const i in areas) { saveData.savedDifficulty[i] = areas[i].savedDifficulty;}
 
 
 
@@ -2822,6 +2830,7 @@ function load() {
     for (const i in parsedData.savedShopProgress) if (areas[i]) { areas[i].shopProgress = parsedData.savedShopProgress[i];}
     for (const i in parsedData.savedCurrentHeat) if (areas[i]) { areas[i].heat = parsedData.savedCurrentHeat[i];}
     for (const i in parsedData.savedMaxHeat) if (areas[i]) { areas[i].heatMax = parsedData.savedMaxHeat[i];}
+    for (const i in parsedData.savedDifficulty) if (areas[i]) { areas[i].savedDifficulty = parsedData.savedDifficulty[i];}
 
 
     for (const i in parsedData.savedRecipeTime) { if (craftingRecipes[i]) craftingRecipes[i].timeCurrent = parsedData.savedRecipeTime[i];}
@@ -2859,6 +2868,7 @@ function load() {
     for (const i in parsedData.savedEnemyMedalProgress) { enemies[i].medalProgress = parsedData.savedEnemyMedalProgress[i];}
     for (const i in parsedData.savedEnemyNerf) { enemies[i].nerfed = parsedData.savedEnemyNerf[i];}
     for (const i in parsedData.savedEnemyMedal) { enemies[i].medal = parsedData.savedEnemyMedal[i];}
+    for (const i in parsedData.savedheatBeaten) { enemies[i].heatBeaten = parsedData.savedheatBeaten[i];}
 
     for (const i in parsedData.savedEnemyCard1) { enemies[i].card1.got = parsedData.savedEnemyCard1[i];}
     for (const i in parsedData.savedEnemyCard2) { enemies[i].card2.got = parsedData.savedEnemyCard2[i];}
@@ -3184,7 +3194,7 @@ function retroactiveUpdate(){
     if (stats.currentVersion<1.04){ Luma.upgrade = undefined }
 
     stats.currentVersion = 1.051;
-    did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(3)}`
+    did("versionNumber").innerHTML = `📃 [BETA] ${stats.currentVersion.toFixed(3)}`
 }
 
 

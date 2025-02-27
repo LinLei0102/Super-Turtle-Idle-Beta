@@ -1325,12 +1325,12 @@ class Weapon extends Equipable {
 
         this.savedInfo = {}
 
-        this.savedInfo.damageSaved = rngD(-0.5,3)
-        this.savedInfo.attackSpeedSaved = rngD(0.3,3)
-        this.savedInfo.multishotSaved = rng(-1,7)
-        this.savedInfo.skillMultishotSaved = rngD(-1,5)
-        this.savedInfo.skillChanceSaved = rngD(-1,5)
-        this.savedInfo.skillDamageSaved = rngD(-1,7)
+        this.savedInfo.damageSaved = rngD(-0.5,2)
+        this.savedInfo.attackSpeedSaved = rngD( 0.3 + this.savedInfo.damageSaved ,2)
+        this.savedInfo.multishotSaved = rngD(-1, 1+(this.savedInfo.attackSpeedSaved*3) )
+        this.savedInfo.skillChanceSaved = rngD(-1,2.5)
+        this.savedInfo.skillMultishotSaved = rngD(-1, 1+(this.savedInfo.skillChanceSaved*2) )
+        this.savedInfo.skillDamageSaved =  rngD(0, Math.min(2, 0+this.savedInfo.skillChanceSaved )  ) 
 
         }
         
@@ -1480,7 +1480,7 @@ class Armor extends Equipable {
 
         //trinket stuff
         if (this.prefix1 === "Heirloom") {this.skillDamage = 2; }
-        if (this.prefix1 === "Hexed") {this.skillChance = 0.8;}
+        if (this.prefix1 === "Hexed") {this.skillChance = 0.75;}
         if (this.prefix1 === "Voodoo") {this.skillChance = 0.5; this.skillDamage = 0.5; }
         if (this.prefix1 === "Mystic") {this.skillChance = 2; this.skillDamage = 3; }
    

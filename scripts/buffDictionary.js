@@ -87,6 +87,38 @@ buffs.PlayerSlow = {
     position: `player`,
 }
 
+buffs.HardModeCurse1 = {
+    name: 'Curse Of Fraility',
+    description: '<FONT COLOR="#8fbaff">- 30% All Align Bonus (Hard Mode Debuff)',
+    effect : function() { stat.OccultBonus-=30; stat.NatureBonus-=30; stat.ElementalBonus-=30; },
+    img : 'img/src/buffs/B60.jpg',
+    debuff: true,
+    tag: "clear",
+    position: `player`,
+}
+
+buffs.HardModeCurse2 = {
+    name: 'Curse Of Weakness',
+    description: '<FONT COLOR="#8fbaff">- 30% All Align Resist (Hard Mode Debuff)',
+    effect : function() { stat.OccultResist-=30; stat.NatureResist-=30; stat.ElementalResist-=30; },
+    img : 'img/src/buffs/B61.jpg',
+    debuff: true,
+    tag: "clear",
+    position: `player`,
+}
+
+buffs.HardModeCurse3 = {
+    name: 'Curse Of Blighting',
+    description: '<FONT COLOR="#8fbaff">- 30% Healing Bonus (Hard Mode Debuff)',
+    effect : function() { stat.HealingBonus-=30; },
+    img : 'img/src/buffs/B62.jpg',
+    debuff: true,
+    tag: "clear",
+    position: `player`,
+}
+
+
+
 buffs.KingKatDecapitator = {
     name: 'Mighty Grip',
     description: '<FONT COLOR="#8fbaff">+ 3% Crit Damage per Stack',
