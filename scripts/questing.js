@@ -56,7 +56,7 @@ quests.A1QN3 = {
     effect: function() {
         spawnItem(ClothChest);
         spawnItem(VendorTrash,1,"noPopup")
-        tipPopUp("Levels and EXP!","<div class='tipPanelImage'><img src=img/src/gametips/G3.png></div><br>Leveling up does not increase your stats by themselves, but it will affect how much damage you deal and receive from foes.<br><br>You will deal extra damage to enemies leveled below your own, and take extra damage if the enemy is too high leveled.<br><br>Level difference also affects your EXP rate. It will be reduced if the enemy level is marked as green, and wont yield any at all if its gray.<br><br><p style='color:gray;font-weight:400'>(This information can be read again on the Game Guide in Settings)<p>")
+        tipPopUp("Levels and EXP!","<div class='tipPanelImage'><img src=img/src/gametips/G3.png></div><br>Leveling up does not increase your stats by itself, but it will affect how much damage you deal and receive from foes.<br><br>You will deal extra damage to enemies leveled below your own, and take extra damage if the enemy is too high leveled.<br><br>Level difference also affects your EXP rate. It will be reduced if the enemy level is marked as green, and wont yield any at all if its gray.<br><br><p style='color:gray;font-weight:400'>(This information can be read again on the Game Guide in Settings)<p>")
 
 
     },

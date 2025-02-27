@@ -292,6 +292,7 @@ function spawnItem(id,amount,source){
   let notification = true
   if (source?.startsWith("craft") && settings.disableCraftPopup) notification = false
   if (source==="noPopup") notification = false
+  if (source==="offline") notification = false
 
 
   if (item.img===103) item.init() //hack for recipes. i hate this
@@ -338,6 +339,12 @@ function spawnItem(id,amount,source){
       // autoscrapping
       if (iteminstance.prefix5 === undefined && itemInventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
 
+        if (source==="offline" && !iteminstance.noScrap) {
+          spawnItem(returnScrapMaterial(iteminstance),1,"offline")
+          item.constructor.timesGot ++
+          return;
+         } 
+
         if (notification && !settings.disableScrapPopup) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem">${prefixName} ${iteminstance.name} <span style="color:lawngreen;background:transparent; margin-left:0.3rem">scrapped! </span></span>`)
          if (!iteminstance.noScrap) spawnItem(returnScrapMaterial(iteminstance),1,"noPopup")
          item.constructor.timesGot ++
@@ -355,7 +362,7 @@ function spawnItem(id,amount,source){
       itemInventory.push(iteminstance)
       item.constructor.timesGot ++
 
-      if (item.sort!=currentSort && item.sort!="Hat"){ // got inventory notification
+      if (source!=="offline" && item.sort!=currentSort && item.sort!="Hat"){ // got inventory notification
         setTimeout(() => {
           if (item.sort!=currentSort){
           did(`inventory${item.sort}Indicator`).style.display = "flex"
@@ -385,8 +392,7 @@ function spawnItem(id,amount,source){
 
 
 
-
-   if (item.sort!=currentSort && item.sort!="Hat" && item.isStackable){ // got inventory notification
+   if (source!=="offline" && item.sort!=currentSort && item.sort!="Hat" && item.isStackable){ // got inventory notification
     setTimeout(() => {
       if (item.sort!=currentSort){
       did(`inventory${item.sort}Indicator`).style.display = "flex"
@@ -402,7 +408,7 @@ function spawnItem(id,amount,source){
 
 
   if (item.sort==="Hat") updateHatInventory()
-  updateInventory()
+  if (source!=="offline") updateInventory()
 }
 
 
@@ -2788,6 +2794,7 @@ function lootTable(table, source){
     if (source==="hidden") isHidden = "noPopup"
 
     if (source==="container") {spawnItem(eval(i), table[i].a, "container")}
+    if (source==="offline") {spawnItem(eval(i), table[i].a, "offline")}
     else spawnItem(eval(i), table[i].a,isHidden)
 
     
