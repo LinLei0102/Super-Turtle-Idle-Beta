@@ -170,7 +170,8 @@ function offlineRewards(seconds){
 
 
 
-    for (let i = 0; i < times; i++) { loop();}
+        for (let i = 0; i < times; i++) { setTimeout(loop, 1 * i);}
+
 
     function loop() {
         lootTable(enemies[stats.currentEnemy].lootTable(),"hidden")
