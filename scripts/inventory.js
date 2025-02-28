@@ -2794,7 +2794,7 @@ function lootTable(table, source){
     if (source==="hidden") isHidden = "noPopup"
 
     if (source==="container") {spawnItem(eval(i), table[i].a, "container")}
-    if (source==="offline") {spawnItem(eval(i), table[i].a, "offline")}
+    else if (source==="offline") {spawnItem(eval(i), table[i].a, "offline")}
     else spawnItem(eval(i), table[i].a,isHidden)
 
     
