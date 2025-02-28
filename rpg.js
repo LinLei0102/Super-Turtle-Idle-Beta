@@ -5200,16 +5200,16 @@ function mailButton(id) {
       playSound("audio/button4.mp3")
         currentMail = id;
         did("mailLeft").style.visibility = "visible"
-        did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body+'</div>'
+        did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body()+'</div>'
         
         
         
         if ("item" in mail[id]){
 
           const item = new mail[id].item()
+          item.tag = "mail"
 
-
-          did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body+'</div><div class="separator" style="margin:2rem 0; background:gray;flex-shrink: 0;"></div><div id="'+item.img+'Mail" class="inventoryItem" style="flex-shrink: 0;border-radius:0.5rem; height:4rem; width:4rem"><img src="img/src/items/I'+item.img+'.jpg"></div>'
+          did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body()+'</div><div class="separator" style="margin:2rem 0; background:gray;flex-shrink: 0;"></div><div id="'+item.img+'Mail" class="inventoryItem" style="flex-shrink: 0;border-radius:0.5rem; height:4rem; width:4rem"><img src="img/src/items/I'+item.img+'.jpg"></div>'
 
           did(item.img+'Mail').item = item
 

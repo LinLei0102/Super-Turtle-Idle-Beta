@@ -2568,7 +2568,7 @@ function castTrainingDummy(){
             particleTrackers.push(new ParticleExplosionFlare7())
             particleTrackers.push(new ParticleExplosionShockwave1())
             enemyDamageAnimation("high")
-            setTimeout(() => { enemyTurn=0; buffs.EnemyInvulnerable.time=60*10; playerBuffs();particleTrackers.push(new ParticleExplosionFlare6())  }, 7000);
+            setTimeout(() => { enemyTurn=0; buffs.EnemyInvulnerable.time=60*30; playerBuffs();particleTrackers.push(new ParticleExplosionFlare6())  }, 7000);
         }
     }
 

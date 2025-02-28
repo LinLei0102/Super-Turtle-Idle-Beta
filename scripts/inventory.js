@@ -1967,7 +1967,7 @@ document.addEventListener('mouseover', function(event) {
     }
 
 
-    if ( referenceRect.left > (window.innerWidth * 0.5) ) {
+    if ( itemDiv.item?.tag!=="mail" && referenceRect.left > (window.innerWidth * 0.5) ) {
       const newLeft = (referenceRect.right - tooltipRect.width)/ (stats.zoomLevel/100);
       const newTop = referenceRect.bottom/ (stats.zoomLevel/100);
       movingDiv.style.left = newLeft + 'px';
@@ -2302,21 +2302,21 @@ function returnPrefixSkills(item){
   //t1
   if (item.prefix1 === `Jagged`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Thorns</span>`;}
   if (item.prefix1 === `Drowsy`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 5% Offline Bonus</span>`;} 
-  if (item.prefix1 === `Heartfelt`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Luma Power</span>`;}
+  if (item.prefix1 === `Heartfelt`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Clicking Power</span>`;}
   //if (item.prefix1 === `Enchanted`) {prefix1 = `<span style="display:flex;align-items:center; white-space: nowrap;">⭐ ${item.prefix1}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 5% Spellpower</span>`;}
 
   if (item.prefix2 === `Widsithing`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Exp Bonus</span>`;}
   if (item.prefix2 === `Medical`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Healing Bonus</span>`;}
   if (item.prefix2 === `Spiked`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 20% Thorns</span>`;}
   if (item.prefix2 === `Sleepy`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Offline Bonus</span>`;} 
-  if (item.prefix2 === `Hopeful`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 20% Luma Power</span>`;}
+  if (item.prefix2 === `Hopeful`) {prefix2 = `<span style="display:flex;align-items:center; white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 20% Clicking Power</span>`;}
   
   if (item.prefix3 === `Lucky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 15% Luck</span>`;}
   if (item.prefix3 === `Critical`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 10% Crit Chance</span>`;}
   if (item.prefix3 === `Lazaro`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 1 Extra Life</span>`;}
   if (item.prefix3 === `Radioactive`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 30% Thorns</span>`;}
   if (item.prefix3 === `Dreamy`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 15% Offline Bonus</span>`;} 
-  if (item.prefix3 === `Clicky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 30% Luma Power</span>`;}
+  if (item.prefix3 === `Clicky`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+ 30% Clicking Power</span>`;}
   
   
   

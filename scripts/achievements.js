@@ -1253,6 +1253,14 @@ achievementShop.I4 = {
   level: 1,
 };
 
+achievementShop.I9 = {
+  item: new Area1AchievementRing(),
+  price: 5000,
+  level: 2,
+  condition : function() { if (checkAchievementCompletion("A1")===true) return true },
+  conditionText : '<span style="color:coral">❌ Complete all achievements of Cradle Hills to purchase this item</span>'
+};
+
 achievementShop.I5 = {
   item: new LottoTicket(),
   price: 300,
@@ -1271,6 +1279,14 @@ achievementShop.I7 = {
   level: 2,
   condition : function() { if (jobs.blacksmith.level>9 && jobs.alchemy.level>9 && jobs.engineering.level>9) return true },
   conditionText : '<span style="color:coral">❌ Reach level 10 in all crafting categories to purchase this item</span>'
+};
+
+achievementShop.I10 = {
+  item: new Area2AchievementRing(),
+  price: 5000,
+  level: 3,
+  condition : function() { if (checkAchievementCompletion("A2")===true) return true },
+  conditionText : '<span style="color:coral">❌ Complete all achievements of Lost Dojo to purchase this item</span>'
 };
 
 

@@ -2256,6 +2256,51 @@ class WebthreadedPromise extends ArmorRing {
     }
 }
 
+function checkAchievementCompletion(area){
+    let completed = true
+
+    for (i in logs) {
+        if (logs[i].category!==area) continue
+        if (logs[i].unlocked === false) completed = false
+    }
+    
+    return completed
+}
+
+class Area1AchievementRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Hill Dominion Ring`;
+        this.flavor = `"Only for the worthy."`;
+        this.skillDescription = function() { if (checkAchievementCompletion("A1")===false) {return `<span style="color:coral">You are not worthy</span>`} else return `+ 50% Occult Bonus<br>+ 10% Luck` };
+        this.img = 594;
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        if (checkAchievementCompletion("A1")===false) return
+        stat.OccultBonus += 50
+        stat.Luck += 10
+    }
+}
+
+class Area2AchievementRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Dojo Dominion Ring`;
+        this.flavor = `"Only for the worthy."`;
+        this.skillDescription = function() { if (checkAchievementCompletion("A2")===false) {return `<span style="color:coral">You are not worthy</span>`} else return `+ 50% Nature Bonus<br>+ 10% Luck` };
+        this.img = 595;
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        if (checkAchievementCompletion("A2")===false) return
+        stat.NatureBonus += 50
+        stat.Luck += 10
+    }
+}
+
 class LuckyCloverRing extends ArmorRing {
     constructor(properties = {}) {
         super(properties);

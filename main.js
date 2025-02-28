@@ -1499,7 +1499,7 @@ for (let i = 0; i < patreonTier3.length; i++) {
 
 settingsPanel ("statsCard", "estadisticas");
 
-settingsPanel ("botonGameGuide", "gameGuide");
+settingsPanel ("guideCard", "gameGuide");
 
 
 window.addEventListener('load', function () { //gets date started
@@ -1664,7 +1664,7 @@ document.addEventListener('click', function(event) {
             }
         }
 
-        did("gameGuideImage").src = 'img/src/gametips/'+imgID+'.jpg'
+        did("gameGuideImage").src = 'img/src/gametips/'+imgID+'.png'
         did("gameGuideDescription").innerHTML = gametip[itemID].description
 
         did("gameGuideLeft").style.display = "inline"
@@ -3325,7 +3325,7 @@ function randomTabName(icon){ //displays a random browser tab name
 
     if (random===1) document.title = reminder+" Your Turtle Is Working Hard"; 
     if (random===2) document.title = reminder+" Where Is My Day Off?";
-    if (random===3) document.title = reminder+" They Shall Rise Again";
+    if (random===3) document.title = reminder+" They Shell Rise Again";
     if (random===4) document.title = reminder+" Slaying Beasts";
     if (random===5) document.title = reminder+" Exploring Uncharted Lands";
     if (random===6) document.title = reminder+" Adventuring In Progress";

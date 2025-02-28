@@ -253,9 +253,9 @@ enemies.E7 = {
   difficulty: 'hard',
   lootTable: function() { return { SashHead : { c : chances.enemies.poor, a : 1}, MonkFeet : { c : chances.enemies.epic, a : 1}, BushidoMedallion : { c : chances.enemies.epic, a : 1} } },
   align: 'nature',
-  card1 : { description:"x1.05 Luma Power", effect: function() {stat.LumaPower*=1.05} },
-  card2 : { description:"x1.1 Luma Power", effect: function() {stat.LumaPower*=1.1}},
-  card3 : { description:"x1.15 Luma Power", effect: function() {stat.LumaPower*=1.15} },
+  card1 : { description:"x1.05 Clicking Power", effect: function() {stat.LumaPower*=1.05} },
+  card2 : { description:"x1.1 Clicking Power", effect: function() {stat.LumaPower*=1.1}},
+  card3 : { description:"x1.15 Clicking Power", effect: function() {stat.LumaPower*=1.15} },
 }
 
 
@@ -271,7 +271,7 @@ enemies.E57 = {
   passive: true,
   ai: function () { castTrainingDummy() },
   start: function () { buffs.EnemyInvulnerable.time = 10*60; playerBuffs() },
-  bestiarySkills : function() { return `❖ Briefly stop being ${buffIcon("B33")}Invulnerable after its summon gets defeated` },
+  bestiarySkills : function() { return `❖ Briefly stop being ${buffIcon("B33")}Invulnerable after its summon gets defeated. Click on the summon to switch targets` },
 }
 
 

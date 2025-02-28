@@ -234,7 +234,7 @@ buffs.Bloon1Exp = {
 
 buffs.Bloon1Luma = {
     name: 'Click Boost!',
-    description: '<FONT COLOR="#8fbaff">Luma Power increased by 20%',
+    description: '<FONT COLOR="#8fbaff">Clicking Power increased by 20%',
     effect : function() { stat.LumaPower += 20 },
     img : 'img/src/buffs/B53.jpg',
     position: `global`,
@@ -274,7 +274,7 @@ buffs.Bloon2Exp = {
 
 buffs.Bloon2Luma = {
     name: 'Click Frenzy!',
-    description: '<FONT COLOR="#8fbaff">Luma Power increased by 100%',
+    description: '<FONT COLOR="#8fbaff">Clicking Power increased by 100%',
     effect : function() { stat.LumaPower += 100 },
     img : 'img/src/buffs/B54.jpg',
     position: `global`,
@@ -314,7 +314,7 @@ buffs.Bloon3Exp = {
 
 buffs.Bloon3Luma = {
     name: 'Click Mania!',
-    description: '<FONT COLOR="#8fbaff">Luma Power increased by 200%',
+    description: '<FONT COLOR="#8fbaff">Clicking Power increased by 200%',
     effect : function() { stat.LumaPower += 200 },
     img : 'img/src/buffs/B55.jpg',
     position: `global`,
