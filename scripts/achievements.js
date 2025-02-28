@@ -1253,18 +1253,18 @@ achievementShop.I4 = {
   level: 1,
 };
 
+achievementShop.I5 = {
+  item: new LottoTicket(),
+  price: 300,
+  level: 1,
+};
+
 achievementShop.I9 = {
   item: new Area1AchievementRing(),
   price: 5000,
   level: 2,
   condition : function() { if (checkAchievementCompletion("A1")===true) return true },
   conditionText : '<span style="color:coral">❌ Complete all achievements of Cradle Hills to purchase this item</span>'
-};
-
-achievementShop.I5 = {
-  item: new LottoTicket(),
-  price: 300,
-  level: 1,
 };
 
 achievementShop.I6 = {

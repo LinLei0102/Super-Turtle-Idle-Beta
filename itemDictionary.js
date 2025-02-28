@@ -1163,7 +1163,6 @@ class AreaChest1 extends Consumable {
 
     use(){
         if (AreaChest1Key.count<=0) return
-
         AreaChest1Key.count--
         lootTable(this.lootTable(),"container")
         this.constructor.count--

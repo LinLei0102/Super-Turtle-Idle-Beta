@@ -3855,7 +3855,6 @@ function stampWeapon(tier){
 
   playSound("audio/stamp.mp3");
   stampStatUp()
-  gametipUnlock("gt4")
 
 }
 
@@ -4184,7 +4183,6 @@ function areaButton(id) {
         updateHeat();
         tipJarUpdate()
 
-      if (id==="A8") gametipUnlock("gt19")
 
       if (areas[id].dungeon && (areas[id].charges>0 || items.I174.count>0)){ //dungeon voucher
 

@@ -4636,7 +4636,7 @@ items.I70.flavor = '"Paginated bookmarks used to sort pages. They are scented ac
 items.I70.quality = 'Upgrade';
 items.I70.sell = 0;
 items.I70.max = 1;
-items.I70.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.inventorySorting = true; unlocksReveal();  items.I70.count--; gametipUnlock("gt9");  ';
+items.I70.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.inventorySorting = true; unlocksReveal();  items.I70.count--;  ';
 
 unlocks.bestiary = false;
 items.I290 = {}; 
@@ -4656,7 +4656,7 @@ items.I474.flavor = '"How do you plan on carrying all of that?."';
 items.I474.quality = 'Upgrade';
 items.I474.sell = 0;
 items.I474.max = 1;
-items.I474.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.armory = true; unlocksReveal(); items.I474.count--; gametipUnlock("gt7")';
+items.I474.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.armory = true; unlocksReveal(); items.I474.count--;';
 
 
 
@@ -9338,7 +9338,7 @@ mail.MR2 = {};
 mail.MR2.title = 'Your very own Armory!'
 mail.MR2.body = 'The Super Turtle Program is pleased with your accomplishments and has chosen to issue you with your own Armory, which will undoubtedly help you on your adventures.<br><br>Collect and upgrade all found gear inside! We deeply encourage you to step back and check it from time to time to further hone your Mastery!.<br><br>We will be very vigilant about your future accomplishments.'
 mail.MR2.item = 'I474'
-mail.MR2.effect = "items.I474.gotOnce=true; unlocks.armory = true; unlocksReveal();gametipUnlock('gt7'); unlockAnimation('Armory Unlocked!', 'Find the armory at the top of the screen. Store and level up gear and weapons on it to gain Mastery. You can buy back adquired gear too.', 'img/src/items/I474.jpg')" 
+mail.MR2.effect = "items.I474.gotOnce=true; unlocks.armory = true; unlocksReveal(); unlockAnimation('Armory Unlocked!', 'Find the armory at the top of the screen. Store and level up gear and weapons on it to gain Mastery. You can buy back adquired gear too.', 'img/src/items/I474.jpg')" 
 mail.MR2.sender = "Super Turtle Inc"
 mail.MR2.cover = "I108"
 

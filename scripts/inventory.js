@@ -307,7 +307,7 @@ function spawnItem(id,amount,source){
   if (item.isStackable) {
     
     if (item.constructor.count === 0) itemInventory.push(item)
-    
+
 
     if (amount === undefined) item.constructor.count++
     else item.constructor.count += amount
@@ -2793,7 +2793,7 @@ function lootTable(table, source){
     let isHidden = ""
     if (source==="hidden") isHidden = "noPopup"
 
-    if (source==="container") {spawnItem(eval(i), table[i].a, "container")}
+    if (source==="container") {spawnItem(eval(i), table[i].a, "container");}
     else if (source==="offline") {spawnItem(eval(i), table[i].a, "offline")}
     else spawnItem(eval(i), table[i].a,isHidden)
 

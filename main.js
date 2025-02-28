@@ -3005,7 +3005,6 @@ function unlocksReveal(){
         did("minipenguin2").style.display = "flex"
         did("minipenguin3").style.display = "flex"
 
-        gametipUnlock("gt10") 
     }
     if (unlocks.inventorySorting) {
         //did('inventorySorters2').style.display = "flex";
@@ -3016,7 +3015,7 @@ function unlocksReveal(){
         did('addVaultButton').style.display = "flex";
 }
 
-    if (unlocks.garden) {did('gardenLockedPanel').style.display = "none"; gametipUnlock("gt13")}
+    if (unlocks.garden) {did('gardenLockedPanel').style.display = "none"; }
     if (unlocks.gardenUpgrade1) did('gardenRow3').style.display = "flex";
     if (unlocks.gardenUpgrade2) did('gardenRow4').style.display = "flex";
     if (unlocks.gardenUpgrade3) did('gardenRow5').style.display = "flex";
@@ -3028,12 +3027,11 @@ function unlocksReveal(){
     if (unlocks.fertiliser) did('gardenFertiliserButton').style.display = "flex";
 
     //if (unlocks.shop) { if (stats.currentArea !== "A7") did('shopButton').innerHTML = '<img src="img/sys/coin.png" style="margin-right: 0.3rem;">Shop'; did('shopButton').className = "contentHeaderButton" }
-    if (unlocks.dungeons) {did('dungeonButton').innerHTML = '<img src="img/src/areas/A3M.png" style="margin-right: 0.3rem;">Dungeon'; did('dungeonButton').className = "contentHeaderButton"; gametipUnlock("gt12")}
+    if (unlocks.dungeons) {did('dungeonButton').innerHTML = '<img src="img/src/areas/A3M.png" style="margin-right: 0.3rem;">Dungeon'; did('dungeonButton').className = "contentHeaderButton";}
     if (unlocks.areas) {did('areaButton').innerHTML = '<img src="img/src/icons/expedition.png" style="margin-right: 0.3rem;">Area'; did('areaButton').className = "contentHeaderButton"  }
     //if (quests.A2Q3.state==="completed") {area1Common.I126 = {}; area1Common.I126.D=30; area1Common.I126.C=1; }
     if (unlocks.skills) {
         did("expPanel").className = "expPanelUnlocked"; 
-        gametipUnlock('gt11');
         did('skillsButton').innerHTML = '<img src="img/src/icons/skillsIcon.jpg">Skills'; did('skillsButton').className = "contentHeaderButton"}
     if (unlocks.magic) {
         did('manaBox').style.display = "flex";
