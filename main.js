@@ -3043,28 +3043,12 @@ function unlocksReveal(){
         did('rpgCanvasUnder').style.background = "#19191C";
     }
 
-    //rank
-    /*
-    if (stats.questsCompleted>=7) sendMail("MR1");
-    if (stats.questsCompleted>=12) sendMail("MR2");
-    if (stats.questsCompleted>=19) sendMail("MR3");
-    if (stats.questsCompleted>=26) sendMail("MR4");
-    if (stats.questsCompleted>=36) sendMail("MR5"); //garden
-    if (stats.questsCompleted>=50) sendMail("MR6"); //garrison
 
-    //flavor
-    if (stats.questsCompleted>=4) sendMail("MF1"); //mom
-    if (stats.questsCompleted>=16) sendMail("MF2"); //spam
-    if (stats.questsCompleted>=22) sendMail("MF3"); //mom
-    if (stats.questsCompleted>=29) sendMail("MF4"); //omious warning
-    if (stats.questsCompleted>=43) sendMail("MF5"); //mom
-    if (stats.questsCompleted>=48) sendMail("MF6"); //
+    if (stats.questsCompleted>=1) sendMail("FLAVOR1"); //mom
+    if (stats.questsCompleted>=13) sendMail("FLAVOR2"); //gem
+    if (stats.questsCompleted>=17) sendMail("FLAVOR3"); //mom
+    if (stats.questsCompleted>=20) sendMail("FLAVOR4"); //mom
 
-    //other    
-    if (enemies.E23.killCount>0) sendMail("MO1");
-    if (rpgClass.noClass.level===30) sendMail("MO2");
-    if (stats.questsCompleted>=14) sendMail("MO3"); //rasmondius pre30
-    */
 
     
 }
@@ -3082,6 +3066,7 @@ VanillaTilt.init(document.querySelectorAll(".introCard"), {
 function startGameCard(mode){
 
     if (mode==="nofarm") {toggleSettings('nofarmToggle'); statsUpdate()}
+    if (mode==="hard") {toggleSettings('hardmodeToggle');}
 
     playSound("audio/button5.mp3","all")
     playSound("audio/lily.mp3","all")

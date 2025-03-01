@@ -190,6 +190,8 @@ enemies.E13.gatheringLevel = 1;
 enemies.E13.bestiaryItem = 'bestiaryTag("Requires: ⛏️ Gathering Level 1")+bestiaryItem("I32", "drop")';
 */
 
+statHidden.extraCopperOre = 0
+
 enemies.E13 = {
   name: 'Copper Vein',
   initialLevel: function() { return 1},
@@ -201,7 +203,13 @@ enemies.E13 = {
   align: 'nature',
   passive: true,
   resource: "ore",
+  card1 : { description:"+ 5% Chance of gathering +1 Copper Ore from this node", effect: function() {statHidden.extraCopperOre+=0.05} },
+  card2 : { description:"+ 10% Chance of gathering +1 Copper Ore from this node", effect: function() {statHidden.extraCopperOre+=0.1}},
+  card3 : { description:"+ 15% Chance of gathering +1 Copper Ore from this node", effect: function() {statHidden.extraCopperOre+=0.15} },
+  onDeath : function () { if (chance(statHidden.extraCopperOre)) spawnItem(CopperOre,1,"noPopup")},
 }
+
+statHidden.extraDayleaf = 0
 
 enemies.E14 = {
   name: 'Dayleaf Shrub',
@@ -214,6 +222,10 @@ enemies.E14 = {
   align: 'nature',
   passive: true,
   resource: "herb",
+  card1 : { description:"+ 5% Chance of gathering +1 Dayleaf from this node", effect: function() {statHidden.extraDayleaf+=0.05} },
+  card2 : { description:"+ 10% Chance of gathering +1 Dayleaf from this node", effect: function() {statHidden.extraDayleaf+=0.1}},
+  card3 : { description:"+ 15% Chance of gathering +1 Dayleaf from this node", effect: function() {statHidden.extraDayleaf+=0.15} },
+  onDeath : function () { if (chance(statHidden.extraDayleaf)) spawnItem(Dayleaf,1,"noPopup")},
 }
 
 

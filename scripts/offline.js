@@ -180,6 +180,7 @@ function offlineRewards(seconds){
     function loop() {
         lootTable(enemies[stats.currentEnemy].lootTable(),"offline")
         if (unlocks.bestiary && chance(1/ (1000/nofarmToggleBonus) )) {dropMonsterCard()}
+        if (enemies[stats.currentEnemy].resource && unlocks.bestiary && chance(1/ (100/nofarmToggleBonus) )) {dropMonsterCard();}
     }
 
     enemies[stats.currentEnemy].killCount+=Math.floor(times)

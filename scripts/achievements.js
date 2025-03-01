@@ -156,14 +156,14 @@ stats.areaBossKillsLog = 0
 
 logs.B1 = {}
 logs.B1.name = "Drop The Loot";
-logs.B1.description = "Defeat an Area Boss 10 Times";
+logs.B1.description = "Defeat an Area Boss 15 Times";
 logs.B1.hint = '"I need your materials, old man."';
-logs.B1.logic = 'stats.areaBossKillsLog>9';
+logs.B1.logic = 'stats.areaBossKillsLog>14';
 logs.B1.tag = '💀';
 logs.B1.category = "A1";
 logs.B1.repeatable = true;
-logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  -= 10};
-logs.B1.progressDescription = function() { return `${beautify(stats.areaBossKillsLog )}/10` };
+logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  -= 15};
+logs.B1.progressDescription = function() { return `${beautify(stats.areaBossKillsLog )}/15` };
 
 logs.B2 = {}
 logs.B2.name = "Monster Hunter";
@@ -245,9 +245,9 @@ logs.HAT2.category = "A1";
 
 logs.HAT3 = {}
 logs.HAT3.name = "Grand Gambling";
-logs.HAT3.description = "Buy 100 Shell Co. Delivery Boxes";
+logs.HAT3.description = "Buy 110 Shell Co. Delivery Boxes";
 logs.HAT3.hint = '"At least it didn\'t drained my wallet."';
-logs.HAT3.logic = 'stats.hatsGot>99';
+logs.HAT3.logic = 'stats.hatsGot>119';
 logs.HAT3.tag = '🧢';
 logs.HAT3.category = "A1";
 
@@ -1241,12 +1241,6 @@ achievementShop.I3 = {
   level: 0,
 };
 
-achievementShop.I8 = {
-  item: new GemLucky1(),
-  price: 1000,
-  level: 1,
-};
-
 achievementShop.I4 = {
   item: new LuckyCloverRing(),
   price: 2500,
@@ -1281,6 +1275,14 @@ achievementShop.I7 = {
   conditionText : '<span style="color:coral">❌ Reach level 10 in all crafting categories to purchase this item</span>'
 };
 
+achievementShop.I8 = {
+  item: new RubberFeet(),
+  price: 2000,
+  level: 2,
+  condition : function() { if (enemies.E14.card1.got && enemies.E14.card2.got && enemies.E14.card3.got) return true },
+  conditionText : '<span style="color:coral">❌ Obtain all bestiary cards of Dayleaf Shrub to purchase this item</span>'
+};
+
 achievementShop.I10 = {
   item: new Area2AchievementRing(),
   price: 5000,
@@ -1288,6 +1290,7 @@ achievementShop.I10 = {
   condition : function() { if (checkAchievementCompletion("A2")===true) return true },
   conditionText : '<span style="color:coral">❌ Complete all achievements of Lost Dojo to purchase this item</span>'
 };
+
 
 
 rpgPlayer.shop = {}

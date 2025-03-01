@@ -4548,6 +4548,15 @@ background: transparent;
     -webkit-text-stroke: 5px rgb(54, 35, 77);
 }
 
+.bestiaryCardFooter span{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+}
+
 .bestiaryCardFooter Strong{
     position: absolute;
     background: transparent;

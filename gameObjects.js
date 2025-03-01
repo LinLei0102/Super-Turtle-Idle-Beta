@@ -9271,6 +9271,37 @@ mail.Shellshine.sender = "ShellShine Co."
 mail.Shellshine.cover = "I218"
 
 
+mail.FLAVOR1 = {};
+mail.FLAVOR1.title = 'Hows over there, dear?'
+mail.FLAVOR1.body = function() { return `I\'ve heard youve made the decision to pursue adventures. While I\'m cheering you on from afar, just like any mother would, I\'m still worried about my cub.<br><br>We will pray for your safety, every single one of us. I\'m sure that you are assisting others and that you are not ignoring their requests. You better not.<br><br>Anyhow, these are some cookies I baked for you. Love you, Tortumom. <br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(Cookie)} x3</span><br><br>` }
+mail.FLAVOR1.item = Cookie
+mail.FLAVOR1.effect = function () {spawnItem(Cookie,3);}
+mail.FLAVOR1.sender = "Tortumom"
+mail.FLAVOR1.cover = "I14"
+
+mail.FLAVOR2 = {};
+mail.FLAVOR2.title = 'Nice work out there!'
+mail.FLAVOR2.body = function() { return `Saw you helping with the requests on the board, thats cool. Do you believe in karma? Well I dont, so it would be a shame if nothing good down the road happened to you after all that fuzz, so instead im just gonna do my part here.<br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(GemRebound1)} x1</span><br><br>` }
+mail.FLAVOR2.item = GemRebound1
+mail.FLAVOR2.effect = function () {spawnItem(GemRebound1,1);}
+mail.FLAVOR2.sender = "Joema"
+mail.FLAVOR2.cover = "I223"
+
+mail.FLAVOR3 = {};
+mail.FLAVOR3.title = 'Wazz up'
+mail.FLAVOR3.body = function() { return `Hey! We are number number neighbors! Or postal neighbors? How was that thing again?<br><br>Post office wants me to send something so im just going to send whatever lol<br><br>k byee<br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(Dayleaf)} x20</span><br><br>` }
+mail.FLAVOR3.item = Dayleaf
+mail.FLAVOR3.effect = function () {spawnItem(Dayleaf,20);}
+mail.FLAVOR3.sender = "Brilli"
+mail.FLAVOR3.cover = "I72"
+
+mail.FLAVOR4 = {};
+mail.FLAVOR4.title = 'FREE!'
+mail.FLAVOR4.body = function() { return `Dear [name] Valued Customer nº1829931,<br><br>We are [emotion] to announce a special offer from Alch Inc.! As a token of our appreciation, we\'re giving away a selection of our finest potions for you, completely free!<br><br><br><FONT COLOR="gray">(the user is solely responsible for the consumption of any product, Alch Inc. or any of its parent companies hold any liability)</font><br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(NatureFlask)} x3</span><br><span>${itemData(OccultFlask)} x3</span><br><span>${itemData(ElementalFlask)} x3</span><br><br>` }
+mail.FLAVOR4.item = ElementalFlask
+mail.FLAVOR4.effect = function () {spawnItem(ElementalFlask,3);spawnItem(NatureFlask,3);spawnItem(OccultFlask,3);}
+mail.FLAVOR4.sender = "Alch Inc."
+mail.FLAVOR4.cover = "I52"
 
 /*
 
@@ -9376,13 +9407,7 @@ mail.MR6.cover = "I208"
 
 //flavor
 
-mail.MF1 = {};
-mail.MF1.title = 'Hi, my dear hatchling, hows over there, dear?'
-mail.MF1.body = 'I\'m hoping you can still recall your dear mother. I\'ve heard youve made the decision to pursue adventures. While I\'m cheering you on from afar, just like any mother would, I\'m still worried about my cub.<br><br>We will pray for your safety, every single one of us. I\'m sure that you are assisting others and that you are not ignoring their requests. You better not.<br><br>Anyhow, these are some cookies I baked for you. Love you, Tortumom.'
-mail.MF1.item = 'I14'
-mail.MF1.effect = "items.I14.count++"
-mail.MF1.sender = "Tortumom"
-mail.MF1.cover = "I14"
+
 
 mail.MF2 = {};
 mail.MF2.title = '🐢 URGENT: Transform Your Shell with ShellShine Co.! 🐢'

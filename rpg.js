@@ -354,6 +354,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
           if (chance(1/1000)) {spawnItem(VendorTrash,1,"noPopup"); flyingLoot()}
           
           if (unlocks.bestiary && chance(1/ (1000/nofarmToggleBonus) )) {dropMonsterCard()}
+          if (enemies[stats.currentEnemy].resource && unlocks.bestiary && chance(1/ (100/nofarmToggleBonus) )) {dropMonsterCard();}
 
           lootTable(areas[stats.currentArea].lootTable(),"enemy")
 
@@ -4470,7 +4471,7 @@ function difficultyButton(div, difficulty){
     if (difficulty === "boss" && rpgPlayer.BossCharges<1) {playSound("audio/thud.mp3"); return}
 
     stats.currentDifficulty = difficulty;
-    areas[stats.currentArea].savedDifficulty = difficulty
+    if (stats.currentDifficulty !== "boss") areas[stats.currentArea].savedDifficulty = difficulty
 
     
     combatActions = 3+stat.ExtraActions

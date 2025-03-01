@@ -373,7 +373,7 @@ function updateRecipes(){
 
 function recipePanel(){
 
-    if (Object.keys(craftingRecipes[currentRecipe].item)[0]===undefined) return
+    if (currentRecipe!==undefined && Object.keys(craftingRecipes[currentRecipe].item)[0]===undefined) return
 
     const parent = eval(Object.keys(craftingRecipes[currentRecipe].item)[0])
     const item = new parent()

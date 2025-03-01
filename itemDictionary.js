@@ -607,6 +607,7 @@ class GemLucky1 extends Gem {
     constructor(properties = {}) {
         super(properties);
         this.name = `Lucky Gemstone I`;
+        this.source = `Reward from the Lotto in the Achievement Shop`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
         this.skillDescription = function() { return `+ 10% Luck` };
         this.img = 517;
@@ -622,6 +623,7 @@ class GemLucky2 extends Gem {
     constructor(properties = {}) {
         super(properties);
         this.name = `Lucky Gemstone II`;
+        this.source = `Reward from the Lotto in the Achievement Shop`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
         this.skillDescription = function() { return `+ 15% Luck` };
         this.img = 518;
@@ -637,6 +639,7 @@ class GemLucky3 extends Gem {
     constructor(properties = {}) {
         super(properties);
         this.name = `Lucky Gemstone III`;
+        this.source = `Reward from the Lotto in the Achievement Shop`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
         this.skillDescription = function() { return `+ 25% Luck` };
         this.img = 519;
@@ -1325,7 +1328,7 @@ class Weapon extends Equipable {
         this.savedInfo = {}
 
         this.savedInfo.damageSaved = rngD(-0.5,2)
-        this.savedInfo.attackSpeedSaved = rngD( 0.3 + this.savedInfo.damageSaved ,2)
+        this.savedInfo.attackSpeedSaved = Math.max(0.3, rngD( 0.3 + this.savedInfo.damageSaved ,2) )
         this.savedInfo.multishotSaved = rngD(-1, 1+(this.savedInfo.attackSpeedSaved*3) )
         this.savedInfo.skillChanceSaved = rngD(-1,2.5)
         this.savedInfo.skillMultishotSaved = rngD(-1, 1+(this.savedInfo.skillChanceSaved*2) )
@@ -1373,7 +1376,7 @@ class Weapon extends Equipable {
         if (this.prefix2 === "Runic") {this.skillMultishot += 1; }
         if (this.prefix2 === "Kingslaying") {this.damage *= 1.2; }
         if (this.prefix2 === "Double") {this.multishot +=1; }
-        if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.9; }
+        if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.865; }
         if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.8; }
         if (this.prefix2 === "Titanic") {this.skillDamage *= 1.5; }
 
@@ -2529,7 +2532,7 @@ class RubberFeet extends ArmorFeet {
         this.skillDescription = function() { return `+ 10 Gathering Power` };
         this.img = 582;
         this.quality = `Uncommon`;
-        this.baseHp = 77;
+        this.baseHp = 2000;
 
         Object.assign(this, properties);
     }
@@ -3138,6 +3141,7 @@ class LottoTicket extends Key {
                 for (let i = 0; i < 5; i++) { loop();}
                 function loop() {
                     logs.PLOTTO.unlocked=true;
+                    if (chance(1/2)) spawnItem(GemLucky1)
                     if (chance(1/5)) spawnItem(returnArrayPick(rareLootTable2))
                     else spawnItem(returnArrayPick(rareLootTable1))
                 }
@@ -3153,6 +3157,7 @@ class LottoTicket extends Key {
                 for (let i = 0; i < 5; i++) { loop();}
                 function loop() {
                     logs.PLOTTO2.unlocked=true;
+                    if (chance(1/2)) spawnItem(GemLucky2)
                     if (chance(1/5)) spawnItem(returnArrayPick(rareLootTable3))
                     else spawnItem(returnArrayPick(rareLootTable2))
                 }
@@ -3167,6 +3172,7 @@ class LottoTicket extends Key {
                 itemInventory.splice(this.index, 1);
                 for (let i = 0; i < 5; i++) { loop();}
                 function loop() {
+                    if (chance(1/2)) spawnItem(GemLucky3)
                     spawnItem(returnArrayPick(rareLootTable3))
                 }
             }
@@ -3598,6 +3604,24 @@ class Sparkler3 extends Consumable {
         setTimeout(() => {
             itemContextMenuBegone()
         }, 1);
+    }
+}
+
+
+class Cookie extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Chocolate Chip Cookies`;
+        this.flavor = `"Their flavor is quite familiar. Nothing happens if you press them, though."`;
+        this.img = 14;
+        this.quality = `Common`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Gnam</span>`}
+        Object.assign(this, properties);
+    }
+
+    use(){
+        playSound("audio/monch.mp3")
+        this.constructor.count--;
     }
 }
 

@@ -1891,7 +1891,7 @@ document.addEventListener('mouseover', function(event) {
 
     did("tooltip").style.display = "flex";
     did("tooltipName").innerHTML = `${returnPrefixName(item)} ${item.name}`; 
-    did("tooltipDescription").innerHTML = `${returnUpgradeLevel(item)}  ${returnTierSet(item)} ${returnWeaponDescription(item)} ${returnSourceDescription()} ${returnGemstoneUi(item)} ${returnPrefixSkills(item)}  ${returnItemDescription()}  <div class="separador"></div> ${returnItemPrice(item)}`;
+    did("tooltipDescription").innerHTML = `${returnUpgradeLevel(item)}  ${returnTierSet(item)} ${returnWeaponDescription(item)}  ${returnGemstoneUi(item)} ${returnSourceDescription()} ${returnPrefixSkills(item)}  ${returnItemDescription()}  <div class="separador"></div> ${returnItemPrice(item)}`;
     did("tooltipFlavor").innerHTML = item.flavor;
     if (item.flavor===undefined) did("tooltipFlavor").style.display = "none"
     did("tooltipImage").src = `img/src/items/I${item.img}.jpg`;
