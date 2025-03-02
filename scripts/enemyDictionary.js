@@ -190,6 +190,8 @@ enemies.E13.gatheringLevel = 1;
 enemies.E13.bestiaryItem = 'bestiaryTag("Requires: ⛏️ Gathering Level 1")+bestiaryItem("I32", "drop")';
 */
 
+statHidden.extraCopperOre = 0
+
 enemies.E13 = {
   name: 'Copper Vein',
   initialLevel: function() { return 1},
@@ -201,7 +203,13 @@ enemies.E13 = {
   align: 'nature',
   passive: true,
   resource: "ore",
+  card1 : { description:"+ 5% Chance of gathering +1 Copper Ore from this node", effect: function() {statHidden.extraCopperOre+=0.05} },
+  card2 : { description:"+ 10% Chance of gathering +1 Copper Ore from this node", effect: function() {statHidden.extraCopperOre+=0.1}},
+  card3 : { description:"+ 15% Chance of gathering +1 Copper Ore from this node", effect: function() {statHidden.extraCopperOre+=0.15} },
+  onDeath : function () { if (chance(statHidden.extraCopperOre)) spawnItem(CopperOre,1,"noPopup")},
 }
+
+statHidden.extraDayleaf = 0
 
 enemies.E14 = {
   name: 'Dayleaf Shrub',
@@ -214,6 +222,10 @@ enemies.E14 = {
   align: 'nature',
   passive: true,
   resource: "herb",
+  card1 : { description:"+ 5% Chance of gathering +1 Dayleaf from this node", effect: function() {statHidden.extraDayleaf+=0.05} },
+  card2 : { description:"+ 10% Chance of gathering +1 Dayleaf from this node", effect: function() {statHidden.extraDayleaf+=0.1}},
+  card3 : { description:"+ 15% Chance of gathering +1 Dayleaf from this node", effect: function() {statHidden.extraDayleaf+=0.15} },
+  onDeath : function () { if (chance(statHidden.extraDayleaf)) spawnItem(Dayleaf,1,"noPopup")},
 }
 
 
@@ -253,9 +265,9 @@ enemies.E7 = {
   difficulty: 'hard',
   lootTable: function() { return { SashHead : { c : chances.enemies.poor, a : 1}, MonkFeet : { c : chances.enemies.epic, a : 1}, BushidoMedallion : { c : chances.enemies.epic, a : 1} } },
   align: 'nature',
-  card1 : { description:"x1.05 Luma Power", effect: function() {stat.LumaPower*=1.05} },
-  card2 : { description:"x1.1 Luma Power", effect: function() {stat.LumaPower*=1.1}},
-  card3 : { description:"x1.15 Luma Power", effect: function() {stat.LumaPower*=1.15} },
+  card1 : { description:"x1.05 Clicking Power", effect: function() {stat.LumaPower*=1.05} },
+  card2 : { description:"x1.1 Clicking Power", effect: function() {stat.LumaPower*=1.1}},
+  card3 : { description:"x1.15 Clicking Power", effect: function() {stat.LumaPower*=1.15} },
 }
 
 
@@ -271,7 +283,7 @@ enemies.E57 = {
   passive: true,
   ai: function () { castTrainingDummy() },
   start: function () { buffs.EnemyInvulnerable.time = 10*60; playerBuffs() },
-  bestiarySkills : function() { return `❖ Briefly stop being ${buffIcon("B33")}Invulnerable after its summon gets defeated` },
+  bestiarySkills : function() { return `❖ Briefly stop being ${buffIcon("B33")}Invulnerable after its summon gets defeated. Click on the summon to switch targets` },
 }
 
 
@@ -446,6 +458,7 @@ Object.keys(enemies).forEach(function(key) {
     if (enemies[key].card2!==undefined) enemies[key].card2.got = false;
     if (enemies[key].card3!==undefined) enemies[key].card3.got = false;
 
+    enemies[key].heatBeaten = {heat1:false,heat2:false,heat3:false,heat4:false};  
 
     enemies[key].killCount = 0;  
     enemies[key].medal = 0;  

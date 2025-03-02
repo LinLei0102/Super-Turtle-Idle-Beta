@@ -4636,7 +4636,7 @@ items.I70.flavor = '"Paginated bookmarks used to sort pages. They are scented ac
 items.I70.quality = 'Upgrade';
 items.I70.sell = 0;
 items.I70.max = 1;
-items.I70.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.inventorySorting = true; unlocksReveal();  items.I70.count--; gametipUnlock("gt9");  ';
+items.I70.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.inventorySorting = true; unlocksReveal();  items.I70.count--;  ';
 
 unlocks.bestiary = false;
 items.I290 = {}; 
@@ -4656,7 +4656,7 @@ items.I474.flavor = '"How do you plan on carrying all of that?."';
 items.I474.quality = 'Upgrade';
 items.I474.sell = 0;
 items.I474.max = 1;
-items.I474.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.armory = true; unlocksReveal(); items.I474.count--; gametipUnlock("gt7")';
+items.I474.use = 'playSound("audio/retro2.mp3"); animParticleBurst(5 , "particleSpark", "cursor", 0); unlocks.armory = true; unlocksReveal(); items.I474.count--;';
 
 
 
@@ -7772,6 +7772,7 @@ Object.keys(areas).forEach(function(key) {
   areas[key].shopProgress = 0;      
   areas[key].heat = 1;      
   areas[key].heatMax = 1;      
+  areas[key].savedDifficulty = "easy";      
   if (areas[key].locked===undefined) areas[key].locked = false;      
 });
 
@@ -9254,7 +9255,7 @@ var mail = {};
 
 mail.BETA = {};
 mail.BETA.title = 'Thank you for participating in the Beta!'
-mail.BETA.body = 'Thank you from the bottom of my heart for sticking with Super Turtle Idle all this time, it really means a lot to me! I cannot express how much joy developing this game and sharing it with people like you has given to me.<br><br>How has the beta been treating you? I would be incredibly glad if you gave me your feedback on it on the beta chanel of my discord<br><br>How are you finding the new difficulty mechanics? How about the randomised loot? And the general pacing? Something that doesnt fully convince you? Something that you missed from the previous version?<br><br>While I read all the feedback, I will continue developing Super Turtle Idle as that has been my passion for over a year, and work hard to bring a cute rpg about turtles inside your browser tab<br><br>- Duck'
+mail.BETA.body = function() { return `Thank you from the bottom of my heart for sticking with Super Turtle Idle all this time, it really means a lot to me! I cannot express how much joy developing this game and sharing it with people like you has given to me.<br><br>How has the beta been treating you? I would be incredibly glad if you gave me your feedback on it on the beta chanel of my discord<br><br>How are you finding the new difficulty mechanics? How about the randomised loot? And the general pacing? Something that doesnt fully convince you? Something that you missed from the previous version?<br><br>While I read all the feedback, I will continue developing Super Turtle Idle as that has been my passion for over a year, and work hard to bring a cute rpg about turtles inside your browser tab<br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(Sparkler1)} x5</span><br><span>${itemData(Sparkler2)} x5</span><br><span>${itemData(Sparkler3)} x5</span><br><br>- Duck` }
 mail.BETA.item = Sparkler1
 mail.BETA.effect = function () {spawnItem(Sparkler1,5);spawnItem(Sparkler2,5);spawnItem(Sparkler3,5)}
 mail.BETA.sender = "🦆"
@@ -9264,12 +9265,43 @@ unlocks.gacha = false
 
 mail.Shellshine = {};
 mail.Shellshine.title = '🐢 URGENT: ShellShine Co. Offers delivery to YOUR area! 🐢'
-mail.Shellshine.body = 'Dear Esteemed Turtle,<br><br>ShellShine Co. is revolutionizing the way turtles like YOU live! We are glad to accept your forgotten Sheddings in exchange for a myriad of life-changing cosmetics! Upgrade your shell NOW and experience:<br><br>✨ Unmatched Durability - Lasts a lifetime!<br><br>✨ Stylish Designs - Stand out in the pond!<br><br>✨ Ultimate Comfort - Perfect fit guaranteed!<br><br>ACT FAST! Join the THOUSANDS of satisfied turtles who have already made the switch. Don\'t miss your chance to SHINE with ShellShine Co.!'
+mail.Shellshine.body = function() { return 'Dear Esteemed Turtle,<br><br>ShellShine Co. is revolutionizing the way turtles like YOU live! We are glad to accept your forgotten Sheddings in exchange for a myriad of life-changing cosmetics! Upgrade your shell NOW and experience:<br><br>✨ Unmatched Durability - Lasts a lifetime!<br><br>✨ Stylish Designs - Stand out in the pond!<br><br>✨ Ultimate Comfort - Perfect fit guaranteed!<br><br>ACT FAST! Join the THOUSANDS of satisfied turtles who have already made the switch. Don\'t miss your chance to SHINE with ShellShine Co.!'}
 mail.Shellshine.effect = function () {unlocks.gacha = true; unlocksReveal(); unlockAnimation("Shellshine Delivery Unlocked!", "Spend Sheddings to receive cosmetics<br>Obtain Sheddings by spending Prism Scutes", "img/src/hats/H5.jpg")}
 mail.Shellshine.sender = "ShellShine Co."
 mail.Shellshine.cover = "I218"
 
 
+mail.FLAVOR1 = {};
+mail.FLAVOR1.title = 'Hows over there, dear?'
+mail.FLAVOR1.body = function() { return `I\'ve heard youve made the decision to pursue adventures. While I\'m cheering you on from afar, just like any mother would, I\'m still worried about my cub.<br><br>We will pray for your safety, every single one of us. I\'m sure that you are assisting others and that you are not ignoring their requests. You better not.<br><br>Anyhow, these are some cookies I baked for you. Love you, Tortumom. <br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(Cookie)} x3</span><br><br>` }
+mail.FLAVOR1.item = Cookie
+mail.FLAVOR1.effect = function () {spawnItem(Cookie,3);}
+mail.FLAVOR1.sender = "Tortumom"
+mail.FLAVOR1.cover = "I14"
+
+mail.FLAVOR2 = {};
+mail.FLAVOR2.title = 'Nice work out there!'
+mail.FLAVOR2.body = function() { return `Saw you helping with the requests on the board, thats cool. Do you believe in karma? Well I dont, so it would be a shame if nothing good down the road happened to you after all that fuzz, so instead im just gonna do my part here.<br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(GemRebound1)} x1</span><br><br>` }
+mail.FLAVOR2.item = GemRebound1
+mail.FLAVOR2.effect = function () {spawnItem(GemRebound1,1);}
+mail.FLAVOR2.sender = "Joema"
+mail.FLAVOR2.cover = "I223"
+
+mail.FLAVOR3 = {};
+mail.FLAVOR3.title = 'Wazz up'
+mail.FLAVOR3.body = function() { return `Hey! We are number number neighbors! Or postal neighbors? How was that thing again?<br><br>Post office wants me to send something so im just going to send whatever lol<br><br>k byee<br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(Dayleaf)} x20</span><br><br>` }
+mail.FLAVOR3.item = Dayleaf
+mail.FLAVOR3.effect = function () {spawnItem(Dayleaf,20);}
+mail.FLAVOR3.sender = "Brilli"
+mail.FLAVOR3.cover = "I72"
+
+mail.FLAVOR4 = {};
+mail.FLAVOR4.title = 'FREE!'
+mail.FLAVOR4.body = function() { return `Dear [name] Valued Customer nº1829931,<br><br>We are [emotion] to announce a special offer from Alch Inc.! As a token of our appreciation, we\'re giving away a selection of our finest potions for you, completely free!<br><br><br><FONT COLOR="gray">(the user is solely responsible for the consumption of any product, Alch Inc. or any of its parent companies hold any liability)</font><br><br><strong>There is something attached to the letter:</strong><br><span>${itemData(NatureFlask)} x3</span><br><span>${itemData(OccultFlask)} x3</span><br><span>${itemData(ElementalFlask)} x3</span><br><br>` }
+mail.FLAVOR4.item = ElementalFlask
+mail.FLAVOR4.effect = function () {spawnItem(ElementalFlask,3);spawnItem(NatureFlask,3);spawnItem(OccultFlask,3);}
+mail.FLAVOR4.sender = "Alch Inc."
+mail.FLAVOR4.cover = "I52"
 
 /*
 
@@ -9337,7 +9369,7 @@ mail.MR2 = {};
 mail.MR2.title = 'Your very own Armory!'
 mail.MR2.body = 'The Super Turtle Program is pleased with your accomplishments and has chosen to issue you with your own Armory, which will undoubtedly help you on your adventures.<br><br>Collect and upgrade all found gear inside! We deeply encourage you to step back and check it from time to time to further hone your Mastery!.<br><br>We will be very vigilant about your future accomplishments.'
 mail.MR2.item = 'I474'
-mail.MR2.effect = "items.I474.gotOnce=true; unlocks.armory = true; unlocksReveal();gametipUnlock('gt7'); unlockAnimation('Armory Unlocked!', 'Find the armory at the top of the screen. Store and level up gear and weapons on it to gain Mastery. You can buy back adquired gear too.', 'img/src/items/I474.jpg')" 
+mail.MR2.effect = "items.I474.gotOnce=true; unlocks.armory = true; unlocksReveal(); unlockAnimation('Armory Unlocked!', 'Find the armory at the top of the screen. Store and level up gear and weapons on it to gain Mastery. You can buy back adquired gear too.', 'img/src/items/I474.jpg')" 
 mail.MR2.sender = "Super Turtle Inc"
 mail.MR2.cover = "I108"
 
@@ -9375,13 +9407,7 @@ mail.MR6.cover = "I208"
 
 //flavor
 
-mail.MF1 = {};
-mail.MF1.title = 'Hi, my dear hatchling, hows over there, dear?'
-mail.MF1.body = 'I\'m hoping you can still recall your dear mother. I\'ve heard youve made the decision to pursue adventures. While I\'m cheering you on from afar, just like any mother would, I\'m still worried about my cub.<br><br>We will pray for your safety, every single one of us. I\'m sure that you are assisting others and that you are not ignoring their requests. You better not.<br><br>Anyhow, these are some cookies I baked for you. Love you, Tortumom.'
-mail.MF1.item = 'I14'
-mail.MF1.effect = "items.I14.count++"
-mail.MF1.sender = "Tortumom"
-mail.MF1.cover = "I14"
+
 
 mail.MF2 = {};
 mail.MF2.title = '🐢 URGENT: Transform Your Shell with ShellShine Co.! 🐢'
@@ -11260,6 +11286,25 @@ function gametipUnlock(number){
 
 let gametip = {}
 
+
+gametip.G3 = {}
+gametip.G3.name = "Levels and Exp";
+gametip.G3.description ='Leveling up does not increase your stats by itself, but it will affect how much damage you deal and receive from foes.<br><br>You will deal extra damage to enemies leveled below your own, and take extra damage if the enemy is too high leveled.<br><br>Level difference also affects your EXP rate. It will be reduced if the enemy level is marked as green, and wont yield any at all if its gray.';
+
+gametip.G1 = {}
+gametip.G1.name = "Gear and Reforges";
+gametip.G1.description ='Gear can appear with different reforges [⭐,✨,🌠], each with different effects. <br><br>Better gear reforges become more common the higher your Shellshock level is.<br><br>If you are having issues progressing with the area, try getting better reforges!';
+
+gametip.G2 = {}
+gametip.G2.name = "Gear Align";
+gametip.G2.description ='Every weapon comes in three different aligns; Nature, Occult and Elemental, and so does all foes.<br><br>Your weapon align will determine what type of damage you deal, and will be boosted by your specific align bonus stat, as well as the align of the enemy you are facing<br><br>Attacking with an effective align will deal x1.5 extra damage to the enemy, and will be marked with a (▲) in your damage.';
+
+gametip.G4 = {}
+gametip.G4.name = "Shellshock Levels";
+gametip.G4.description ='After you beat the area boss, you can increase the difficulty of the zone by pressing the button next to the area name.<br><br>By increasing the difficulty of the area, the levels of the enemies will rise, but so will the chances of getting their loot, alongside the ones of getting stronger variants from foes and shops!<br><br>Beware! With each difficulty increase, the boss in the area will evolve, and gain new perilous skills!';
+
+
+/*
 gametip.gt0 = {}
 gametip.gt0.name = "Introduction";
 gametip.gt0.description ='Welcome to Super Turtle Idle, an incremental idle RPG. Complete quests, gather materials by idling, and tackle mighty foes!<br><br>Upgrade any weapon or armor you want, no pressure or strings attached. Is the foe too mighty? Engage with the different systems of the game to gain Mastery or try your luck getting new gear you never got before.<br><br>Getting rare items can be a daunting task at first, so dont hesitate to come back later when you\'re able to efficiently farm them. Do not worry, as said gear will always be useful no matter when you decide to get it!';
@@ -11351,11 +11396,17 @@ gametip.gt18.description ='Fishing Power determines both the quality and quantit
 gametip.gt19 = {}
 gametip.gt19.name = "Field Effects";
 gametip.gt19.description ='Some areas have unique quirks to them. Field effects will appear on the right of the area name. Hover over them to know more about them';
-
+*/
 for (var i in gametip) {
   gametip[i].unlocked = false;
 }
 
+gametip.G1.unlocked = true;
+gametip.G2.unlocked = true;
+gametip.G3.unlocked = true;
+gametip.G4.unlocked = true;
+
+/*
 gametip.gt0.unlocked = true;
 gametip.gt1.unlocked = true;
 gametip.gt2.unlocked = true;
@@ -11366,3 +11417,4 @@ gametip.gt17.unlocked = true;
 gametip.gt20.unlocked = true;
 gametip.gt21.unlocked = true;
 gametip.gt22.unlocked = true;
+*/

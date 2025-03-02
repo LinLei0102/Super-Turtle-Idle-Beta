@@ -115,7 +115,41 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
 
   if (enemies[currentEnemy].breakBar!==undefined) {currentBreakBar = enemies[currentEnemy].breakBar()}
   else currentBreakBar = 0
+
+
+
+  if (settings.hardmodeToggle && enemies[currentEnemy].tag==="areaBoss"){
+
+    if (!enemies[currentEnemy].heatBeaten.heat1 && areas[stats.currentArea].heat===1) {
+      currentBreakBar++
+    }
+
+    if (!enemies[currentEnemy].heatBeaten.heat2 && areas[stats.currentArea].heat===2) {
+      currentBreakBar++
+      buffs.HardModeCurse1.time = 60*60
+    }
+
+    if (!enemies[currentEnemy].heatBeaten.heat3 && areas[stats.currentArea].heat===3) {
+      currentBreakBar++
+      buffs.HardModeCurse1.time = 60*60
+      buffs.HardModeCurse2.time = 60*60
+    }
+
+    if (!enemies[currentEnemy].heatBeaten.heat4 && areas[stats.currentArea].heat===4) {
+      currentBreakBar++
+      buffs.HardModeCurse1.time = 60*60
+      buffs.HardModeCurse2.time = 60*60
+      buffs.HardModeCurse3.time = 60*60
+    }
+
+      
+      playerBuffs()
+  }
+
   setBreakBarColor()
+
+
+
 
   // present if (!bossTime && document.hasFocus() && !settings.randomEventToggle && rng(1,50) === 1 && !gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty) && !skirmishTime && !showdownTime && !dungeonTime && cd.presentCanSpawn<=0) {currentEnemy="E15"; }
 
@@ -320,6 +354,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
           if (chance(1/1000)) {spawnItem(VendorTrash,1,"noPopup"); flyingLoot()}
           
           if (unlocks.bestiary && chance(1/ (1000/nofarmToggleBonus) )) {dropMonsterCard()}
+          if (enemies[stats.currentEnemy].resource && unlocks.bestiary && chance(1/ (100/nofarmToggleBonus) )) {dropMonsterCard();}
 
           lootTable(areas[stats.currentArea].lootTable(),"enemy")
 
@@ -364,11 +399,19 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
         createPopup('🔥 Shellshock cap increased!')
         playSound("audio/startup.mp3","noPitch");
       }
+
+      if (!enemies[stats.currentEnemy].heatBeaten.heat1 && areas[stats.currentArea].heat===1) enemies[stats.currentEnemy].heatBeaten.heat1 = true
+      if (!enemies[stats.currentEnemy].heatBeaten.heat2 && areas[stats.currentArea].heat===2) enemies[stats.currentEnemy].heatBeaten.heat2 = true
+      if (!enemies[stats.currentEnemy].heatBeaten.heat3 && areas[stats.currentArea].heat===3) enemies[stats.currentEnemy].heatBeaten.heat3 = true
+      if (!enemies[stats.currentEnemy].heatBeaten.heat4 && areas[stats.currentArea].heat===4) enemies[stats.currentEnemy].heatBeaten.heat4 = true
+
+
       rpgPlayer.BossCharges--
       stats.areaBossKills++
       if (unlocks.bestiary && chance(1/ (20/nofarmToggleBonus) )) {dropMonsterCard()}
       stats.areaBossKillsLog++
       stats.currentDifficulty="easy"
+      areas[stats.currentArea].savedDifficulty = "easy"
       encounterButtonPress(); 
       deleteEnemy();
       voidAnimation("bossTimer", "gelatine 0.2s 1")
@@ -1319,10 +1362,10 @@ function enemyDamage(damage, align, icon, type){
   //if (!settings.disableDamageLog) logPrint( enemies[stats.currentEnemy].name + " receives <FONT COLOR='#e8643c'>" + beautify(finalDamage) +" "+ align+" Damage");
 
 
-  //if (finalDamage.toFixed(0) == 69) logs.L1P4.unlocked = true;
+  if (finalDamage.toFixed(0) == 69) logs.L1P4.unlocked = true;
   //if (finalDamage.toFixed(0) == 0) logs.L1P4A1.unlocked = true;
-  //if (finalDamage > 999) logs.P35.unlocked = true;
-  //if (finalDamage > 99999) logs.P35A.unlocked = true;
+  if (finalDamage > 999) logs.P35.unlocked = true;
+  if (finalDamage > 9999) logs.P35A.unlocked = true;
   //if (finalDamage > 999999) logs.P35B.unlocked = true;
   //if (finalDamage > 9999999) logs.P35BA.unlocked = true;
   //if (finalDamage > 99999999) logs.P35BB.unlocked = true;
@@ -3813,7 +3856,6 @@ function stampWeapon(tier){
 
   playSound("audio/stamp.mp3");
   stampStatUp()
-  gametipUnlock("gt4")
 
 }
 
@@ -3916,13 +3958,14 @@ function cycleAreas(direction) {
       }
 
       let newArea = areaOrder[currentIndex]
+      resetEncounter()
 
         playSound("audio/button3.mp3");
         playSound("audio/pop3.mp3");
         playSound("audio/woosh2.mp3");
         stats.currentArea = newArea;
         resetAreaButtonClass();
-        stats.currentDifficulty = "easy";
+        stats.currentDifficulty = areas[stats.currentArea].savedDifficulty;
         switchArea();
         encounterButtonPress();
         bossTime = false;
@@ -4124,7 +4167,7 @@ function areaButton(id) {
         stats.currentArea = id;
         if (!areas[id].dungeon) previousArea = id; 
         resetAreaButtonClass();
-        stats.currentDifficulty = "easy";
+        stats.currentDifficulty = areas[stats.currentArea].savedDifficulty;
         switchArea();
         encounterButtonPress();
         did("rpgCanvas").style.animation = "";
@@ -4141,7 +4184,6 @@ function areaButton(id) {
         updateHeat();
         tipJarUpdate()
 
-      if (id==="A8") gametipUnlock("gt19")
 
       if (areas[id].dungeon && (areas[id].charges>0 || items.I174.count>0)){ //dungeon voucher
 
@@ -4160,7 +4202,7 @@ function areaButton(id) {
         previousDifficulty = stats.currentDifficulty;
         stats.currentArea = id;
         resetAreaButtonClass();
-        stats.currentDifficulty = "easy";
+        stats.currentDifficulty = areas[stats.currentArea].savedDifficulty;
         switchArea();
         encounterButtonPress();
         did("rpgCanvas").style.animation = "";
@@ -4429,6 +4471,7 @@ function difficultyButton(div, difficulty){
     if (difficulty === "boss" && rpgPlayer.BossCharges<1) {playSound("audio/thud.mp3"); return}
 
     stats.currentDifficulty = difficulty;
+    if (stats.currentDifficulty !== "boss") areas[stats.currentArea].savedDifficulty = difficulty
 
     
     combatActions = 3+stat.ExtraActions
@@ -5156,16 +5199,16 @@ function mailButton(id) {
       playSound("audio/button4.mp3")
         currentMail = id;
         did("mailLeft").style.visibility = "visible"
-        did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body+'</div>'
+        did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body()+'</div>'
         
         
         
         if ("item" in mail[id]){
 
           const item = new mail[id].item()
+          item.tag = "mail"
 
-
-          did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body+'</div><div class="separator" style="margin:2rem 0; background:gray;flex-shrink: 0;"></div><div id="'+item.img+'Mail" class="inventoryItem" style="flex-shrink: 0;border-radius:0.5rem; height:4rem; width:4rem"><img src="img/src/items/I'+item.img+'.jpg"></div>'
+          did("mailLeft").innerHTML = '<div class="mailTitle">'+mail[currentMail].title+'</div><div class="mailDescription">'+mail[currentMail].body()+'</div><div class="separator" style="margin:2rem 0; background:gray;flex-shrink: 0;"></div><div id="'+item.img+'Mail" class="inventoryItem" style="flex-shrink: 0;border-radius:0.5rem; height:4rem; width:4rem"><img src="img/src/items/I'+item.img+'.jpg"></div>'
 
           did(item.img+'Mail').item = item
 

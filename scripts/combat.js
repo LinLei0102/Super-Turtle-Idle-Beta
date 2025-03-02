@@ -164,7 +164,6 @@ function playerUpdate(){ //updates player HP and checks if its dead
     clearNegativeBuffs()
     playerBuffs();
     rpgPlayer.alive = false;
-    gametipUnlock("gt8")
     logPrint(stats.turtleName + " perishes :c");
     playSound("audio/death.mp3");
     hpRegen();
@@ -586,8 +585,6 @@ setInterval(playerBuffsDecay, 1000);
 function playerBuffsDecay() { 
   for (let b in buffs) {
     if (buffs[b].time > 0){buffs[b].time--; playerBuffs()}
-    if (buffs.B84.time > 0) gametipUnlock("gt15")
-    if (buffs.B90.time > 0) gametipUnlock("gt16")
 
 
   }

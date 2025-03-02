@@ -1289,6 +1289,12 @@ function toggleSettingsUI(){
 
     }
 }
+
+
+settings.nofarmToggle ? did("fastModeInfo").style.display = "flex" : did("fastModeInfo").style.display = "none"
+settings.hardmodeToggle ? did("hardModeInfo").style.display = "flex" : did("hardModeInfo").style.display = "none"
+
+
 }
 
 //-----category button on the left----- (weird placement but oh well)
@@ -1493,7 +1499,7 @@ for (let i = 0; i < patreonTier3.length; i++) {
 
 settingsPanel ("statsCard", "estadisticas");
 
-settingsPanel ("botonGameGuide", "gameGuide");
+settingsPanel ("guideCard", "gameGuide");
 
 
 window.addEventListener('load', function () { //gets date started
@@ -1658,7 +1664,7 @@ document.addEventListener('click', function(event) {
             }
         }
 
-        did("gameGuideImage").src = 'img/src/gametips/'+imgID+'.jpg'
+        did("gameGuideImage").src = 'img/src/gametips/'+imgID+'.png'
         did("gameGuideDescription").innerHTML = gametip[itemID].description
 
         did("gameGuideLeft").style.display = "inline"
@@ -2472,6 +2478,7 @@ function save() {
   saveData.savedEnemyMedalProgress = {}; for (const i in enemies) { saveData.savedEnemyMedalProgress[i] = enemies[i].medalProgress;}
   saveData.savedEnemyNerf = {}; for (const i in enemies) { saveData.savedEnemyNerf[i] = enemies[i].nerfed;}
   saveData.savedEnemyMedal = {}; for (const i in enemies) { saveData.savedEnemyMedal[i] = enemies[i].medal;}
+  saveData.savedheatBeaten = {}; for (const i in enemies) { saveData.savedheatBeaten[i] = enemies[i].heatBeaten;}
 
   saveData.savedEnemyCard1 = {}; for (const i in enemies) { if (enemies[i].card1) saveData.savedEnemyCard1[i] = enemies[i].card1.got;}
   saveData.savedEnemyCard2 = {}; for (const i in enemies) { if (enemies[i].card2) saveData.savedEnemyCard2[i] = enemies[i].card2.got;}
@@ -2496,6 +2503,7 @@ function save() {
   saveData.savedShopProgress = {}; for (const i in areas) { saveData.savedShopProgress[i] = areas[i].shopProgress;}
   saveData.savedCurrentHeat = {}; for (const i in areas) { saveData.savedCurrentHeat[i] = areas[i].heat;}
   saveData.savedMaxHeat = {}; for (const i in areas) { saveData.savedMaxHeat[i] = areas[i].heatMax;}
+  saveData.savedDifficulty = {}; for (const i in areas) { saveData.savedDifficulty[i] = areas[i].savedDifficulty;}
 
 
 
@@ -2822,6 +2830,7 @@ function load() {
     for (const i in parsedData.savedShopProgress) if (areas[i]) { areas[i].shopProgress = parsedData.savedShopProgress[i];}
     for (const i in parsedData.savedCurrentHeat) if (areas[i]) { areas[i].heat = parsedData.savedCurrentHeat[i];}
     for (const i in parsedData.savedMaxHeat) if (areas[i]) { areas[i].heatMax = parsedData.savedMaxHeat[i];}
+    for (const i in parsedData.savedDifficulty) if (areas[i]) { areas[i].savedDifficulty = parsedData.savedDifficulty[i];}
 
 
     for (const i in parsedData.savedRecipeTime) { if (craftingRecipes[i]) craftingRecipes[i].timeCurrent = parsedData.savedRecipeTime[i];}
@@ -2859,6 +2868,7 @@ function load() {
     for (const i in parsedData.savedEnemyMedalProgress) { enemies[i].medalProgress = parsedData.savedEnemyMedalProgress[i];}
     for (const i in parsedData.savedEnemyNerf) { enemies[i].nerfed = parsedData.savedEnemyNerf[i];}
     for (const i in parsedData.savedEnemyMedal) { enemies[i].medal = parsedData.savedEnemyMedal[i];}
+    for (const i in parsedData.savedheatBeaten) { enemies[i].heatBeaten = parsedData.savedheatBeaten[i];}
 
     for (const i in parsedData.savedEnemyCard1) { enemies[i].card1.got = parsedData.savedEnemyCard1[i];}
     for (const i in parsedData.savedEnemyCard2) { enemies[i].card2.got = parsedData.savedEnemyCard2[i];}
@@ -2995,7 +3005,6 @@ function unlocksReveal(){
         did("minipenguin2").style.display = "flex"
         did("minipenguin3").style.display = "flex"
 
-        gametipUnlock("gt10") 
     }
     if (unlocks.inventorySorting) {
         //did('inventorySorters2').style.display = "flex";
@@ -3006,7 +3015,7 @@ function unlocksReveal(){
         did('addVaultButton').style.display = "flex";
 }
 
-    if (unlocks.garden) {did('gardenLockedPanel').style.display = "none"; gametipUnlock("gt13")}
+    if (unlocks.garden) {did('gardenLockedPanel').style.display = "none"; }
     if (unlocks.gardenUpgrade1) did('gardenRow3').style.display = "flex";
     if (unlocks.gardenUpgrade2) did('gardenRow4').style.display = "flex";
     if (unlocks.gardenUpgrade3) did('gardenRow5').style.display = "flex";
@@ -3018,12 +3027,11 @@ function unlocksReveal(){
     if (unlocks.fertiliser) did('gardenFertiliserButton').style.display = "flex";
 
     //if (unlocks.shop) { if (stats.currentArea !== "A7") did('shopButton').innerHTML = '<img src="img/sys/coin.png" style="margin-right: 0.3rem;">Shop'; did('shopButton').className = "contentHeaderButton" }
-    if (unlocks.dungeons) {did('dungeonButton').innerHTML = '<img src="img/src/areas/A3M.png" style="margin-right: 0.3rem;">Dungeon'; did('dungeonButton').className = "contentHeaderButton"; gametipUnlock("gt12")}
+    if (unlocks.dungeons) {did('dungeonButton').innerHTML = '<img src="img/src/areas/A3M.png" style="margin-right: 0.3rem;">Dungeon'; did('dungeonButton').className = "contentHeaderButton";}
     if (unlocks.areas) {did('areaButton').innerHTML = '<img src="img/src/icons/expedition.png" style="margin-right: 0.3rem;">Area'; did('areaButton').className = "contentHeaderButton"  }
     //if (quests.A2Q3.state==="completed") {area1Common.I126 = {}; area1Common.I126.D=30; area1Common.I126.C=1; }
     if (unlocks.skills) {
         did("expPanel").className = "expPanelUnlocked"; 
-        gametipUnlock('gt11');
         did('skillsButton').innerHTML = '<img src="img/src/icons/skillsIcon.jpg">Skills'; did('skillsButton').className = "contentHeaderButton"}
     if (unlocks.magic) {
         did('manaBox').style.display = "flex";
@@ -3035,28 +3043,12 @@ function unlocksReveal(){
         did('rpgCanvasUnder').style.background = "#19191C";
     }
 
-    //rank
-    /*
-    if (stats.questsCompleted>=7) sendMail("MR1");
-    if (stats.questsCompleted>=12) sendMail("MR2");
-    if (stats.questsCompleted>=19) sendMail("MR3");
-    if (stats.questsCompleted>=26) sendMail("MR4");
-    if (stats.questsCompleted>=36) sendMail("MR5"); //garden
-    if (stats.questsCompleted>=50) sendMail("MR6"); //garrison
 
-    //flavor
-    if (stats.questsCompleted>=4) sendMail("MF1"); //mom
-    if (stats.questsCompleted>=16) sendMail("MF2"); //spam
-    if (stats.questsCompleted>=22) sendMail("MF3"); //mom
-    if (stats.questsCompleted>=29) sendMail("MF4"); //omious warning
-    if (stats.questsCompleted>=43) sendMail("MF5"); //mom
-    if (stats.questsCompleted>=48) sendMail("MF6"); //
+    if (stats.questsCompleted>=1) sendMail("FLAVOR1"); //mom
+    if (stats.questsCompleted>=13) sendMail("FLAVOR2"); //gem
+    if (stats.questsCompleted>=17) sendMail("FLAVOR3"); //mom
+    if (stats.questsCompleted>=20) sendMail("FLAVOR4"); //mom
 
-    //other    
-    if (enemies.E23.killCount>0) sendMail("MO1");
-    if (rpgClass.noClass.level===30) sendMail("MO2");
-    if (stats.questsCompleted>=14) sendMail("MO3"); //rasmondius pre30
-    */
 
     
 }
@@ -3074,6 +3066,7 @@ VanillaTilt.init(document.querySelectorAll(".introCard"), {
 function startGameCard(mode){
 
     if (mode==="nofarm") {toggleSettings('nofarmToggle'); statsUpdate()}
+    if (mode==="hard") {toggleSettings('hardmodeToggle');}
 
     playSound("audio/button5.mp3","all")
     playSound("audio/lily.mp3","all")
@@ -3184,7 +3177,7 @@ function retroactiveUpdate(){
     if (stats.currentVersion<1.04){ Luma.upgrade = undefined }
 
     stats.currentVersion = 1.051;
-    did("versionNumber").innerHTML = `[BETA] ${stats.currentVersion.toFixed(3)}`
+    did("versionNumber").innerHTML = `📃 [BETA] ${stats.currentVersion.toFixed(3)}`
 }
 
 
@@ -3315,7 +3308,7 @@ function randomTabName(icon){ //displays a random browser tab name
 
     if (random===1) document.title = reminder+" Your Turtle Is Working Hard"; 
     if (random===2) document.title = reminder+" Where Is My Day Off?";
-    if (random===3) document.title = reminder+" They Shall Rise Again";
+    if (random===3) document.title = reminder+" They Shell Rise Again";
     if (random===4) document.title = reminder+" Slaying Beasts";
     if (random===5) document.title = reminder+" Exploring Uncharted Lands";
     if (random===6) document.title = reminder+" Adventuring In Progress";

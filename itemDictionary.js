@@ -607,6 +607,7 @@ class GemLucky1 extends Gem {
     constructor(properties = {}) {
         super(properties);
         this.name = `Lucky Gemstone I`;
+        this.source = `Reward from the Lotto in the Achievement Shop`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
         this.skillDescription = function() { return `+ 10% Luck` };
         this.img = 517;
@@ -622,29 +623,31 @@ class GemLucky2 extends Gem {
     constructor(properties = {}) {
         super(properties);
         this.name = `Lucky Gemstone II`;
+        this.source = `Reward from the Lotto in the Achievement Shop`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span> <br><span style="color:#2DD8CF">★ Merge: Combine 10 into a higher-quality item</span>` }
-        this.skillDescription = function() { return `+ 20% Luck` };
+        this.skillDescription = function() { return `+ 15% Luck` };
         this.img = 518;
         this.gemColor = 'red';
         this.quality = `Rare`;
         Object.assign(this, properties);
     }
     merge(){ this.constructor.count-=this.mergeStack; spawnItem(GemLucky3) }
-    stats(){ stat.Luck+=20 }
+    stats(){ stat.Luck+=15 }
 }
 
 class GemLucky3 extends Gem {
     constructor(properties = {}) {
         super(properties);
         this.name = `Lucky Gemstone III`;
+        this.source = `Reward from the Lotto in the Achievement Shop`;
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
-        this.skillDescription = function() { return `+ 30% Luck` };
+        this.skillDescription = function() { return `+ 25% Luck` };
         this.img = 519;
         this.gemColor = 'red';
         this.quality = `Epic`;
         Object.assign(this, properties);
     }
-    stats(){ stat.Luck+=30 }
+    stats(){ stat.Luck+=25 }
 }
 
 class GemMoon1 extends Gem {
@@ -705,6 +708,9 @@ class GemMoon3 extends Gem {
         }
     }
 }
+
+
+
 
 class GemRebound1 extends Gem {
     constructor(properties = {}) {
@@ -1160,7 +1166,6 @@ class AreaChest1 extends Consumable {
 
     use(){
         if (AreaChest1Key.count<=0) return
-
         AreaChest1Key.count--
         lootTable(this.lootTable(),"container")
         this.constructor.count--
@@ -1322,12 +1327,12 @@ class Weapon extends Equipable {
 
         this.savedInfo = {}
 
-        this.savedInfo.damageSaved = rngD(-0.5,3)
-        this.savedInfo.attackSpeedSaved = rngD(0.3,3)
-        this.savedInfo.multishotSaved = rng(-1,7)
-        this.savedInfo.skillMultishotSaved = rngD(-1,5)
-        this.savedInfo.skillChanceSaved = rngD(-1,5)
-        this.savedInfo.skillDamageSaved = rngD(-1,7)
+        this.savedInfo.damageSaved = rngD(-0.5,2)
+        this.savedInfo.attackSpeedSaved = Math.max(0.3, rngD( 0.3 + this.savedInfo.damageSaved ,2) )
+        this.savedInfo.multishotSaved = rngD(-1, 1+(this.savedInfo.attackSpeedSaved*3) )
+        this.savedInfo.skillChanceSaved = rngD(-1,2.5)
+        this.savedInfo.skillMultishotSaved = rngD(-1, 1+(this.savedInfo.skillChanceSaved*2) )
+        this.savedInfo.skillDamageSaved =  rngD(0, Math.min(2, 0+this.savedInfo.skillChanceSaved )  ) 
 
         }
         
@@ -1371,7 +1376,7 @@ class Weapon extends Equipable {
         if (this.prefix2 === "Runic") {this.skillMultishot += 1; }
         if (this.prefix2 === "Kingslaying") {this.damage *= 1.2; }
         if (this.prefix2 === "Double") {this.multishot +=1; }
-        if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.9; }
+        if (this.prefix2 === "Accelerating") {this.attackSpeed *= 0.865; }
         if (this.prefix2 === "Chancemaking") {this.skillChance *= 0.8; }
         if (this.prefix2 === "Titanic") {this.skillDamage *= 1.5; }
 
@@ -1477,7 +1482,7 @@ class Armor extends Equipable {
 
         //trinket stuff
         if (this.prefix1 === "Heirloom") {this.skillDamage = 2; }
-        if (this.prefix1 === "Hexed") {this.skillChance = 0.8;}
+        if (this.prefix1 === "Hexed") {this.skillChance = 0.75;}
         if (this.prefix1 === "Voodoo") {this.skillChance = 0.5; this.skillDamage = 0.5; }
         if (this.prefix1 === "Mystic") {this.skillChance = 2; this.skillDamage = 3; }
    
@@ -2253,6 +2258,51 @@ class WebthreadedPromise extends ArmorRing {
     }
 }
 
+function checkAchievementCompletion(area){
+    let completed = true
+
+    for (i in logs) {
+        if (logs[i].category!==area) continue
+        if (logs[i].unlocked === false) completed = false
+    }
+    
+    return completed
+}
+
+class Area1AchievementRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Hill Dominion Ring`;
+        this.flavor = `"Only for the worthy."`;
+        this.skillDescription = function() { if (checkAchievementCompletion("A1")===false) {return `<span style="color:coral">You are not worthy</span>`} else return `+ 50% Occult Bonus<br>+ 10% Luck` };
+        this.img = 594;
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        if (checkAchievementCompletion("A1")===false) return
+        stat.OccultBonus += 50
+        stat.Luck += 10
+    }
+}
+
+class Area2AchievementRing extends ArmorRing {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Dojo Dominion Ring`;
+        this.flavor = `"Only for the worthy."`;
+        this.skillDescription = function() { if (checkAchievementCompletion("A2")===false) {return `<span style="color:coral">You are not worthy</span>`} else return `+ 50% Nature Bonus<br>+ 10% Luck` };
+        this.img = 595;
+        this.quality = `Epic`;
+        Object.assign(this, properties);
+    }
+    stats(){
+        if (checkAchievementCompletion("A2")===false) return
+        stat.NatureBonus += 50
+        stat.Luck += 10
+    }
+}
+
 class LuckyCloverRing extends ArmorRing {
     constructor(properties = {}) {
         super(properties);
@@ -2482,7 +2532,7 @@ class RubberFeet extends ArmorFeet {
         this.skillDescription = function() { return `+ 10 Gathering Power` };
         this.img = 582;
         this.quality = `Uncommon`;
-        this.baseHp = 77;
+        this.baseHp = 2000;
 
         Object.assign(this, properties);
     }
@@ -2572,7 +2622,7 @@ class CraftingTools extends ArmorOffhand {
         this.flavor = `"A set of rather expensive-looking tools dedicated to crafting. As fine as they look, they will still deteriorate while working."`;
         this.skillDescription = function() { return `+ 1 Extra Second added while Crafting` };
         this.img = 593;
-        this.initialUses = 1000;
+        this.initialUses = 2500;
         this.quality = `Uncommon`;
         Object.assign(this, properties);
     }
@@ -3091,6 +3141,7 @@ class LottoTicket extends Key {
                 for (let i = 0; i < 5; i++) { loop();}
                 function loop() {
                     logs.PLOTTO.unlocked=true;
+                    if (chance(1/2)) spawnItem(GemLucky1)
                     if (chance(1/5)) spawnItem(returnArrayPick(rareLootTable2))
                     else spawnItem(returnArrayPick(rareLootTable1))
                 }
@@ -3106,6 +3157,7 @@ class LottoTicket extends Key {
                 for (let i = 0; i < 5; i++) { loop();}
                 function loop() {
                     logs.PLOTTO2.unlocked=true;
+                    if (chance(1/2)) spawnItem(GemLucky2)
                     if (chance(1/5)) spawnItem(returnArrayPick(rareLootTable3))
                     else spawnItem(returnArrayPick(rareLootTable2))
                 }
@@ -3120,6 +3172,7 @@ class LottoTicket extends Key {
                 itemInventory.splice(this.index, 1);
                 for (let i = 0; i < 5; i++) { loop();}
                 function loop() {
+                    if (chance(1/2)) spawnItem(GemLucky3)
                     spawnItem(returnArrayPick(rareLootTable3))
                 }
             }
@@ -3551,6 +3604,24 @@ class Sparkler3 extends Consumable {
         setTimeout(() => {
             itemContextMenuBegone()
         }, 1);
+    }
+}
+
+
+class Cookie extends Consumable {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Chocolate Chip Cookies`;
+        this.flavor = `"Their flavor is quite familiar. Nothing happens if you press them, though."`;
+        this.img = 14;
+        this.quality = `Common`;
+        this.description = function() { return `<span style="color:#1eff00">★ Use: Gnam</span>`}
+        Object.assign(this, properties);
+    }
+
+    use(){
+        playSound("audio/monch.mp3")
+        this.constructor.count--;
     }
 }
 

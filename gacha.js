@@ -650,7 +650,8 @@ function sellSelectedHat(){ //called w context menu
     playSound("audio/coins.mp3")
 
     if (rpgPlayer.hat.paint === contextSelectedItem.item.paint && rpgPlayer.hat.img === contextSelectedItem.item.img) rpgPlayer.hat = undefined
-    contextSelectedItem.item.locked = false
+    contextSelectedItem.item.locked = undefined
+
 
 
     if (contextSelectedItem.item.quality==="Rare"){
@@ -694,7 +695,6 @@ function contextFavoriteHat(){ //called w context menu
         itemContextMenuBegone()
         updateHatInventory()
         return
-
     }  
 
 

@@ -373,6 +373,8 @@ function updateRecipes(){
 
 function recipePanel(){
 
+    if (currentRecipe!==undefined && Object.keys(craftingRecipes[currentRecipe].item)[0]===undefined) return
+
     const parent = eval(Object.keys(craftingRecipes[currentRecipe].item)[0])
     const item = new parent()
 
@@ -552,7 +554,7 @@ function cancelCrafting() {
  function craftingProgress(){
     for (let r in craftingRecipes) {
 
-        if (craftingRecipes[r].que===0) continue
+        if (craftingRecipes[r].que===0) {craftingRecipes[r].timeCurrent=0; continue}
 
 
         if (r === currentRecipe) did('recipeTimer').innerHTML = convertSecondsToHMS((craftingRecipes[currentRecipe].time*craftingRecipes[currentRecipe].que-craftingRecipes[currentRecipe].timeCurrent), "mini") + " ⏱️";

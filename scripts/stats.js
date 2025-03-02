@@ -1229,13 +1229,13 @@ function updateStatsUI() {
     heatMultiplier *= nofarmToggleBonus
     if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
   
-    chances.enemies.poor = 100 / nofarmToggleBonus //quest items,enemy materials, very common h1 gear
-    chances.enemies.common = 500 / nofarmToggleBonus //rare enemy material
-    chances.enemies.uncommon = Math.floor(5000 / heatMultiplier) //Expected at h3
-    chances.enemies.rare = Math.floor(15000 / heatMultiplier) //Expected at h4
-    chances.enemies.epic = Math.floor(15000*3 / heatMultiplier) //A bit of time investment in h4
-    chances.enemies.mythic = Math.floor(40000 / heatMultiplier)
-    chances.enemies.legendary = Math.floor(80000 / heatMultiplier)
+    chances.enemies.poor =  Math.max( 100/nofarmToggleBonus,   100 / nofarmToggleBonus      ) //quest items,enemy materials, very common h1 gear
+    chances.enemies.common =  Math.max( 100/nofarmToggleBonus,   500 / nofarmToggleBonus      ) //rare enemy material
+    chances.enemies.uncommon =  Math.max( 100/nofarmToggleBonus,   Math.floor(5000 / heatMultiplier)      ) //Expected at h3
+    chances.enemies.rare =  Math.max( 100/nofarmToggleBonus,   Math.floor(15000 / heatMultiplier)      ) //Expected at h4
+    chances.enemies.epic =  Math.max( 100/nofarmToggleBonus,   Math.floor(15000*3 / heatMultiplier)      ) //A bit of time investment in h4
+    chances.enemies.mythic =  Math.max( 100/nofarmToggleBonus,   Math.floor(40000 / heatMultiplier)      )
+    chances.enemies.legendary =  Math.max( 100/nofarmToggleBonus,   Math.floor(80000 / heatMultiplier)      )
 
 
 
@@ -1295,9 +1295,9 @@ function updateStatsUI() {
     heatMultiplier *= nofarmToggleBonus
     if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
 
-    chances.oregem.common = Math.floor(100 / heatMultiplier)
-    chances.oregem.uncommon = Math.floor(200 / heatMultiplier)
-    chances.oregem.rare = Math.floor(300 / heatMultiplier)
+    chances.oregem.common = Math.max( 100/nofarmToggleBonus,    Math.floor(100 / heatMultiplier)     )
+    chances.oregem.uncommon = Math.max( 100/nofarmToggleBonus,    Math.floor(200 / heatMultiplier)     )
+    chances.oregem.rare = Math.max( 100/nofarmToggleBonus,    Math.floor(300 / heatMultiplier)     )
   
   }
 

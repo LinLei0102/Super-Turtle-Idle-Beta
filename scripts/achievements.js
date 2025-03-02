@@ -156,14 +156,14 @@ stats.areaBossKillsLog = 0
 
 logs.B1 = {}
 logs.B1.name = "Drop The Loot";
-logs.B1.description = "Defeat an Area Boss 10 Times";
+logs.B1.description = "Defeat an Area Boss 15 Times";
 logs.B1.hint = '"I need your materials, old man."';
-logs.B1.logic = 'stats.areaBossKillsLog>9';
+logs.B1.logic = 'stats.areaBossKillsLog>14';
 logs.B1.tag = '💀';
 logs.B1.category = "A1";
 logs.B1.repeatable = true;
-logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  -= 10};
-logs.B1.progressDescription = function() { return `${beautify(stats.areaBossKillsLog )}/10` };
+logs.B1.repeatableClick = function() {return stats.areaBossKillsLog  -= 15};
+logs.B1.progressDescription = function() { return `${beautify(stats.areaBossKillsLog )}/15` };
 
 logs.B2 = {}
 logs.B2.name = "Monster Hunter";
@@ -245,9 +245,9 @@ logs.HAT2.category = "A1";
 
 logs.HAT3 = {}
 logs.HAT3.name = "Grand Gambling";
-logs.HAT3.description = "Buy 100 Shell Co. Delivery Boxes";
+logs.HAT3.description = "Buy 110 Shell Co. Delivery Boxes";
 logs.HAT3.hint = '"At least it didn\'t drained my wallet."';
-logs.HAT3.logic = 'stats.hatsGot>99';
+logs.HAT3.logic = 'stats.hatsGot>119';
 logs.HAT3.tag = '🧢';
 logs.HAT3.category = "A1";
 
@@ -675,8 +675,8 @@ logs.PCARD.logic = 'stats.monsterCardsObtainedLog>4';
 logs.PCARD.tag = '🎴';
 logs.PCARD.category = "A2";
 logs.PCARD.repeatable = true;
-logs.PCARD.repeatableClick = function() {return stats.monsterCardsObtainedLog -= 10};
-logs.PCARD.progressDescription = function() { return `${beautify(stats.monsterCardsObtainedLog )}/10` };
+logs.PCARD.repeatableClick = function() {return stats.monsterCardsObtainedLog -= 5};
+logs.PCARD.progressDescription = function() { return `${beautify(stats.monsterCardsObtainedLog )}/5` };
 
 logs.PCARD2 = {} 
 logs.PCARD2.name = "Monster Blackjack";
@@ -1253,6 +1253,14 @@ achievementShop.I5 = {
   level: 1,
 };
 
+achievementShop.I9 = {
+  item: new Area1AchievementRing(),
+  price: 5000,
+  level: 2,
+  condition : function() { if (checkAchievementCompletion("A1")===true) return true },
+  conditionText : '<span style="color:coral">❌ Complete all achievements of Cradle Hills to purchase this item</span>'
+};
+
 achievementShop.I6 = {
   item: new StarPiece(),
   price: 600,
@@ -1266,6 +1274,24 @@ achievementShop.I7 = {
   condition : function() { if (jobs.blacksmith.level>9 && jobs.alchemy.level>9 && jobs.engineering.level>9) return true },
   conditionText : '<span style="color:coral">❌ Reach level 10 in all crafting categories to purchase this item</span>'
 };
+
+achievementShop.I8 = {
+  item: new RubberFeet(),
+  price: 2000,
+  level: 2,
+  condition : function() { if (enemies.E14.card1.got && enemies.E14.card2.got && enemies.E14.card3.got) return true },
+  conditionText : '<span style="color:coral">❌ Obtain all bestiary cards of Dayleaf Shrub to purchase this item</span>'
+};
+
+achievementShop.I10 = {
+  item: new Area2AchievementRing(),
+  price: 5000,
+  level: 3,
+  condition : function() { if (checkAchievementCompletion("A2")===true) return true },
+  conditionText : '<span style="color:coral">❌ Complete all achievements of Lost Dojo to purchase this item</span>'
+};
+
+
 
 rpgPlayer.shop = {}
 rpgPlayer.shop.achievement = {}
@@ -1311,6 +1337,7 @@ voidAnimation(id,"areaClick 0.5s 1")
 
 
 if (id==="achievementShopButton1"){
+  did("achievementShop").style.backgroundColor = "#43171B";
   voidAnimation("achievementListing","menuSlideEnter 0.4s 1")
   voidAnimation("achievementInsideShop","menuSlideExit 0.4s 1")
   setTimeout(() => {
@@ -1321,6 +1348,7 @@ if (id==="achievementShopButton1"){
 }
 
 if (id==="achievementShopButton2"){
+  did("achievementShop").style.backgroundColor = "#40132C";
   voidAnimation("achievementInsideShop","menuSlideEnter 0.4s 1")
   voidAnimation("achievementListing","menuSlideExit 0.4s 1")
   setTimeout(() => {

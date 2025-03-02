@@ -8,7 +8,7 @@ function calculateInactiveTime() { //calculates idle time
     if (lastVisitTime) {
         const currentTime = new Date().getTime();
         const inactiveTime = currentTime - parseInt(lastVisitTime);
-        const secondsInactive =  Math.min(  Math.floor(inactiveTime / 1000) , 604800 ); //max 1 week of offline
+        const secondsInactive =  Math.min(  Math.floor(inactiveTime / 1000) , 259200 ); //max 1 week of offline
         //const secondsInactive = 28800;
 
         lastofflinetime = secondsInactive
@@ -168,13 +168,19 @@ function offlineRewards(seconds){
     createPopup(`<img src="img/src/icons/turtlebot.png">You have been away for ${convertSecondsToHMS(seconds)}<br> and defeated ${beautify(times)} ${enemies[stats.currentEnemy].name}s while <br> you were out. Go check your loot!`,undefined,"long")
 
 
+    //for (let i = 0; i < times/5; i++) { setTimeout(loop, 1 * i);}
+    //for (let i = 0; i < times/5; i++) { setTimeout(loop, 1 * i);}
+    //for (let i = 0; i < times/5; i++) { setTimeout(loop, 1 * i);}
+    //for (let i = 0; i < times/5; i++) { setTimeout(loop, 1 * i);}
+    //for (let i = 0; i < times/5; i++) { setTimeout(loop, 1 * i);}
 
 
     for (let i = 0; i < times; i++) { loop();}
-
+    
     function loop() {
-        lootTable(enemies[stats.currentEnemy].lootTable(),"hidden")
+        lootTable(enemies[stats.currentEnemy].lootTable(),"offline")
         if (unlocks.bestiary && chance(1/ (1000/nofarmToggleBonus) )) {dropMonsterCard()}
+        if (enemies[stats.currentEnemy].resource && unlocks.bestiary && chance(1/ (100/nofarmToggleBonus) )) {dropMonsterCard();}
     }
 
     enemies[stats.currentEnemy].killCount+=Math.floor(times)

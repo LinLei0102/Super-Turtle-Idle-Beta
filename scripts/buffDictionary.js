@@ -87,6 +87,38 @@ buffs.PlayerSlow = {
     position: `player`,
 }
 
+buffs.HardModeCurse1 = {
+    name: 'Curse Of Fraility',
+    description: '<FONT COLOR="#8fbaff">- 30% All Align Bonus (Hard Mode Debuff)',
+    effect : function() { stat.OccultBonus-=30; stat.NatureBonus-=30; stat.ElementalBonus-=30; },
+    img : 'img/src/buffs/B60.jpg',
+    debuff: true,
+    tag: "clear",
+    position: `player`,
+}
+
+buffs.HardModeCurse2 = {
+    name: 'Curse Of Weakness',
+    description: '<FONT COLOR="#8fbaff">- 30% All Align Resist (Hard Mode Debuff)',
+    effect : function() { stat.OccultResist-=30; stat.NatureResist-=30; stat.ElementalResist-=30; },
+    img : 'img/src/buffs/B61.jpg',
+    debuff: true,
+    tag: "clear",
+    position: `player`,
+}
+
+buffs.HardModeCurse3 = {
+    name: 'Curse Of Blighting',
+    description: '<FONT COLOR="#8fbaff">- 30% Healing Bonus (Hard Mode Debuff)',
+    effect : function() { stat.HealingBonus-=30; },
+    img : 'img/src/buffs/B62.jpg',
+    debuff: true,
+    tag: "clear",
+    position: `player`,
+}
+
+
+
 buffs.KingKatDecapitator = {
     name: 'Mighty Grip',
     description: '<FONT COLOR="#8fbaff">+ 3% Crit Damage per Stack',
@@ -202,7 +234,7 @@ buffs.Bloon1Exp = {
 
 buffs.Bloon1Luma = {
     name: 'Click Boost!',
-    description: '<FONT COLOR="#8fbaff">Luma Power increased by 20%',
+    description: '<FONT COLOR="#8fbaff">Clicking Power increased by 20%',
     effect : function() { stat.LumaPower += 20 },
     img : 'img/src/buffs/B53.jpg',
     position: `global`,
@@ -242,7 +274,7 @@ buffs.Bloon2Exp = {
 
 buffs.Bloon2Luma = {
     name: 'Click Frenzy!',
-    description: '<FONT COLOR="#8fbaff">Luma Power increased by 100%',
+    description: '<FONT COLOR="#8fbaff">Clicking Power increased by 100%',
     effect : function() { stat.LumaPower += 100 },
     img : 'img/src/buffs/B54.jpg',
     position: `global`,
@@ -282,7 +314,7 @@ buffs.Bloon3Exp = {
 
 buffs.Bloon3Luma = {
     name: 'Click Mania!',
-    description: '<FONT COLOR="#8fbaff">Luma Power increased by 200%',
+    description: '<FONT COLOR="#8fbaff">Clicking Power increased by 200%',
     effect : function() { stat.LumaPower += 200 },
     img : 'img/src/buffs/B55.jpg',
     position: `global`,
