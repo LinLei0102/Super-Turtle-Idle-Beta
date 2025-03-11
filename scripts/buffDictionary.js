@@ -87,6 +87,16 @@ buffs.PlayerSlow = {
     position: `player`,
 }
 
+buffs.Skamtebord = {
+    name: 'Skamtebord',
+    description: '<FONT COLOR="#8fbaff">Increased Attack Speed with every stack',
+    effect : function() { stat.AttackSpeed += (5*this.stacks)*statHidden.skamtebord },
+    img : 'img/src/buffs/B2.jpg',
+    stacks: 0,
+    tag: "clear",
+    position: `player`,
+}
+
 buffs.HardModeCurse1 = {
     name: 'Curse Of Fraility',
     description: '<FONT COLOR="#8fbaff">- 30% All Align Bonus (Hard Mode Debuff)',

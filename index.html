@@ -703,6 +703,17 @@
             </span>
         </div>
 
+        
+        <div id="rogueCardSelect">
+
+        </div>
+
+        <div id="rogueRelicList">
+
+            
+
+        </div>
+
         <div class="introPanel" id="introPanel" style="display:none;">
             <img src="img/sys/nerd.png">
             <span>Select your preferred playstyle<br>(This can be changed at any moment from the Settings menu)</span>
@@ -753,6 +764,9 @@
         </div>
 
 
+
+
+
         <div id="upgradeMenu" class="panelOpciones" style="display:none">
             <h1>UPGRADE GEAR</h1>
             <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
@@ -777,7 +791,6 @@
 
 
             </div>
-
 
 
 
@@ -1429,6 +1442,11 @@
 
                         <div class="newStatPanel" id="statPanel">
 
+                            <div class="newStat" id="statDisplayGearscore">
+                                <svg style="background: #557FBF;" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="currentColor" d="m256 21.95l-5.4 4.03C187.5 73.41 125.4 104.5 30.58 120.3l-7.5 1.2v7.6c0 19 8.4 48.7 22.1 85.1c13.6 36.5 32.8 78.8 55.02 119.2c22.3 40.4 47.4 78.9 73.8 107.7c26.1 28.9 53.5 48.9 82 48.9s55.9-20 82.2-48.9c26.2-28.8 51.3-67.3 73.7-107.7c22.2-40.4 41.3-82.7 55-119.2c13.6-36.4 22-66.1 22-85.1v-7.6l-7.4-1.2c-94.6-15.8-156.9-46.89-220.1-94.32zm0 22.2c61.1 45.04 124.4 76.15 214.4 92.35c-1.9 15.2-9 41.4-20.3 71.5c-4.1 10.8-8.6 22.2-13.7 34H288v-48.9l64 16l-96-111.96l-96 111.96l64-16V242H75.57c-5-11.8-9.59-23.2-13.69-34c-11.2-30.1-18.4-56.3-20.3-71.5C131.6 120.3 194.8 89.19 256 44.15"/></svg>
+                                 Gear Score: <span id="statGearscore">192K</span>
+                            </div>
+
                             <div class="newStat" id="statDisplayMaxHealth">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 24 24"><path fill="currentColor" d="M2 9.137C2 14 6.02 16.591 8.962 18.911C10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138S16.5.825 12 5.501C7.5.825 2 4.274 2 9.137"/></svg>
                                  Max Health: <span id="statMaxHealth">192K</span>
@@ -1932,7 +1950,32 @@
 
         <div id="areaTransition"></div>
 
+
+        <svg
+        width="200"
+        height="200"
+        viewBox="0 0 220 220"
+        xmlns="http://www.w3.org/2000/svg">
+        <filter id="displacementFilter">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.05"
+            numOctaves="2"
+            result="turbulence" />
+          <feDisplacementMap
+            in2="turbulence"
+            in="SourceGraphic"
+            scale="50"
+            xChannelSelector="R"
+            yChannelSelector="G" />
+        </filter>
+      
+        <circle cx="100" cy="100" r="100" style="filter: url(#displacementFilter)" />
+      </svg>
+
+
         <div id="areaBg"></div>
+        <div id="areaBgFX" style="display: none;"></div>
         <div id="dayNightCycle"></div>
         <div id="dayNightCycleTint"></div>
 
@@ -1942,7 +1985,7 @@
 
 
 
-                <div class="interactableFloor" style=" left: 15%; height: 17rem; bottom: 13.5%;">
+                <div class="interactableFloor" style=" left: 15%; height: 17rem; bottom: 13.5%;" id="questInteractable">
 
 
                     <div class="interactableFloorButton" id="interactableQuestButton">
@@ -3429,6 +3472,10 @@
     <script type="text/javascript" src="scripts/crafting.js"></script>
     <script type="text/javascript" src="scripts/shop.js"></script>
     <script type="text/javascript" src="scripts/bestiary.js"></script>
+
+    <script type="text/javascript" src="scripts/relicDictionary.js"></script>
+    <script type="text/javascript" src="scripts/roguelike.js"></script>
+
     <script src="gacha.js"></script>
 
 

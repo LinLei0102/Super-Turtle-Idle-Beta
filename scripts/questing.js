@@ -68,10 +68,10 @@ quests.A1QN4 = {
   difficulty: 1,
   icon: `img/src/icons/coin.png`,
   description: `Poko-Poko Poko Poko Poko-Poko!<br><span style="color:orange;font-weight:600; font-size:1.2rem">Poko Poko-Poko Poko Poko!!!!!1!</span><br><br><br><br>Poko.`,
-  objective: function() { return `Lend 5000 Shells to Pokomuni to set up her shop <span class="questProgress">${beautify(rpgPlayer.coins)}/5000</span><br><span style="color:gray">(You can get shells by defeating enemies or by selling items from the inventory)</span>`},
-  logic : function() {return rpgPlayer.coins>=5000},
+  objective: function() { return `Lend 3000 Shells to Pokomuni to set up her shop <span class="questProgress">${beautify(rpgPlayer.coins)}/3000</span><br><span style="color:gray">(You can get shells by defeating enemies or by selling items from the inventory)</span>`},
+  logic : function() {return rpgPlayer.coins>=3000},
   effect: function() {
-    rpgPlayer.coins-=5000;
+    rpgPlayer.coins-=3000;
     unlocks.shop = true;
     did("shopInteractable").style.animation = "gelatineHigh 0.5s 1, flashNoScale 1s 1"
     unlockAnimation("Shops Unlocked!", "Pokomuni has set up shop in different areas!<br>You can also tip her to expand her inventory further", "img/src/icons/coin.png")
@@ -1398,7 +1398,17 @@ function createQuest() {
 
 } createQuest();
 
-function returnDifficulty(level){
+function returnDifficulty(level,mode){
+
+
+  if (mode==="rogue"){
+  if (level === 1) return "<strong style='color:gray; background:transparent'>★</strong>";
+  if (level === 2) return "<strong style='color:gray; background:transparent'>★★</strong>";
+  if (level === 3) return "<strong style='color:gray; background:transparent'>★★★</strong>";
+  if (level === 4) return "<strong style='color:gray; background:transparent'>★★★★</strong>";
+  if (level === 5) return "<strong style='color:gray; background:transparent'>★★★★★</strong>";
+  i
+  }
   
   if (level === 1) return "<strong style='color:gray; background:transparent'>★★★★★★</strong>";
   if (level === 2) return "<strong style='color:#524741; background:transparent'>★</strong><strong style='color:gray; background:transparent'>★★★★★</strong>";

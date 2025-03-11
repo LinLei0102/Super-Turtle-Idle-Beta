@@ -36,13 +36,18 @@ function playerTurn() {
   if (did("enemyPanel").style.display === "none") return
 
 
-    equippedItems.forEach((item) => {
+  let currentEquippedItems = equippedItems
+  if (stats.rogue.active) currentEquippedItems = equippedRogueItems 
+
+
+  currentEquippedItems.forEach((item) => {
   
       if (item===undefined) return 
 
         if (item.slot === `Weapon`) { //if a weapon is equipped
         
         playSound("audio/playerAttack.mp3") 
+        if (item.weaponMod) item.weaponMod()
         item.attack() 
       
       } 
@@ -215,7 +220,7 @@ function clickTarget(target){
      
     let lumaDamage = (stat.Power/10*lumaCharge)
     if (stat.LumaPower>0) lumaDamage += lumaDamage * (stat.LumaPower/100)
-    
+    if (stat.Power<19) lumaDamage = (20/10*lumaCharge)
 
 
     if (enemies[stats.currentEnemy].resource==="ore" || enemies[stats.currentEnemy].resource==="herb"){
@@ -787,6 +792,8 @@ const playerRectYRNG = playerRect.top - containerRect.top + playerRect.height / 
   if (buffs.EnemyBurning.time>0) particleTrackers.push(new ParticleEmber(enemyRectXRNG,enemyRectYRNG));
   if (buffs.EnemyEnrage.time>0) particleTrackers.push(new ParticleBuffEnrage(enemyRectXRNG,enemyRectYRNG));
 
+
+  if (stats.rogue.active && did("enemyPanel").style.display==="flex") particleTrackers.push(new ParticleBuffEnrage(enemyRectXRNG,enemyRectYRNG, {imageHue: 150, speedY: rngD(-0.2,-0.5), rotationSpeed: rngD(-0.005,0.005), alpha: 0.2, maxAlpha: 0.2, tSpeed: 0.005, alphaDecay: 0.003  }));
 
 
 

@@ -356,13 +356,13 @@ if (stats.cddailyPresent5>0) stats.cddailyPresent5--
 if (stats.cddailyPresent6>0) stats.cddailyPresent6--
 
 
- if (cd.jesterCooldown <= 0 && document.hasFocus() && chance(1/4)) {
+ if (!stats.rogue.active && cd.jesterCooldown <= 0 && document.hasFocus() && chance(1/4)) {
     spawnJesterTurtle();
     cd.jesterCooldown = 60;
  }
 
 
- if (cd.presentCanSpawn <= 0 && document.hasFocus() && chance(1/20)) {
+ if (!stats.rogue.active && cd.presentCanSpawn <= 0 && document.hasFocus() && chance(1/20)) {
     spawnBalloonPresent();
     cd.presentCanSpawn = 60;
  }
@@ -898,6 +898,23 @@ function weatherCheck() {
     if (stats.rpgTime>60) stats.rpgTime = 0;
 
     if (stats.rpgTime===0){
+       dayTime()
+    }
+ 
+    if (stats.rpgTime===25 || stats.rpgTime===57){
+
+        if ( stats.currentArea !== "L2" ) {
+        did("mainScreen").style.backgroundColor = "#D4A379"
+        did("dayNightCycleTint").style.background = "#D4A379"
+        }
+    }
+
+    if (stats.rpgTime===30){
+        nightTime()
+    }
+
+
+    function dayTime(){
         stats.currentWeather = 'day'
         //resets the position of the sun directly to avoid weird rotations
         did("dayNightCycle").style.transition = `none`
@@ -907,18 +924,21 @@ function weatherCheck() {
         did("mainScreen").style.backgroundColor = "#9EE9EF"
         did("dayNightCycleTint").style.background = "transparent"
 
+        if ( stats.currentArea === "L2" ) {
+            did("dayNightCycleTint").style.background = "#232D44"
+            did("mainScreen").style.backgroundColor = "#232D44"
+
+        }
+
+
         specialWeather = false
         if ( stats.currentArea!=="A2" && chance(1/10)) specialWeather = true
 
         updateItemShop()
     }
- 
-    if (stats.rpgTime===25 || stats.rpgTime===57){
-        did("mainScreen").style.backgroundColor = "#D4A379"
-        did("dayNightCycleTint").style.background = "#D4A379"
-    }
 
-    if (stats.rpgTime===30){
+
+    function nightTime(){
         stats.currentWeather = 'night'
 
         did("mainScreen").style.backgroundColor = "#232D44"
@@ -2426,7 +2446,8 @@ function save() {
       savedInfo: item.savedInfo,
       uses: item.uses,
       gemSlot: item.gemSlot,
-      
+      rogue: item.rogue,
+
     };
 
     saveData.savedItems.push(savedItem);
@@ -2685,6 +2706,7 @@ function load() {
         if (savedItem.savedInfo!=undefined) newItem.savedInfo = savedItem.savedInfo
         if (savedItem.uses!=undefined) newItem.uses = savedItem.uses
         if (savedItem.gemSlot!=undefined) newItem.gemSlot = savedItem.gemSlot
+        if (savedItem.rogue!=undefined) newItem.rogue = savedItem.rogue
 
         itemInventory.push(newItem);
 
@@ -3176,7 +3198,11 @@ function retroactiveUpdate(){
 
     if (stats.currentVersion<1.04){ Luma.upgrade = undefined }
 
-    stats.currentVersion = 1.051;
+  
+    
+
+
+    stats.currentVersion = 1.052;
     did("versionNumber").innerHTML = `📃 [BETA] ${stats.currentVersion.toFixed(3)}`
 }
 

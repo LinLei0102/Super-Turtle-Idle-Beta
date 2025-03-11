@@ -15,7 +15,7 @@ logs.L1P1.tag = '📕';
 logs.L1P1.progressTotal = 10;
 logs.L1P1.category = "A1";
 logs.L1P1.repeatable = true;
-logs.L1P1.repeatableClick = function() {return stats.logsGotLog  = 0};
+logs.L1P1.repeatableClick = function() {return stats.logsGotLog -= 10};
 logs.L1P1.progressDescription = function() { return `${beautify(stats.logsGotLog )}/10` };
 
 logs.L1P2 = {}
@@ -173,13 +173,6 @@ logs.B2.logic = 'stats.areaBossKills>54';
 logs.B2.tag = '💀';
 logs.B2.category = "A1";
 
-logs.B3 = {}
-logs.B3.name = "Local Fauna Relocation";
-logs.B3.description = "Defeat an Area Boss 150 Times";
-logs.B3.hint = '"Relocated to the void, that is."';
-logs.B3.logic = 'stats.areaBossKills>149';
-logs.B3.tag = '💀';
-logs.B3.category = "A1";
 
 logs.L1P8 = {}
 logs.L1P8.name = "Arachnophobia";
@@ -247,7 +240,7 @@ logs.HAT3 = {}
 logs.HAT3.name = "Grand Gambling";
 logs.HAT3.description = "Buy 110 Shell Co. Delivery Boxes";
 logs.HAT3.hint = '"At least it didn\'t drained my wallet."';
-logs.HAT3.logic = 'stats.hatsGot>119';
+logs.HAT3.logic = 'stats.hatsGot>109';
 logs.HAT3.tag = '🧢';
 logs.HAT3.category = "A1";
 
@@ -304,13 +297,6 @@ logs.L1P18.logic = 'stats.activeSeconds>180000';
 logs.L1P18.tag = '⌛';
 logs.L1P18.category = "A1";
 
-logs.L1P18A = {}
-logs.L1P18A.name = "Or Maybe Not?";
-logs.L1P18A.description = "Play for 100 hours";
-logs.L1P18A.hint = '"But the new update..."';
-logs.L1P18A.logic = 'stats.activeSeconds>360000';
-logs.L1P18A.tag = '⌛';
-logs.L1P18A.category = "A1";
 
 logs.L1P19 = {}
 logs.L1P19.name = "Pat Pat Pat Pat Pat";
@@ -324,20 +310,20 @@ stats.upgradedItemsLog = 0
 
 logs.UPG1 = {}
 logs.UPG1.name = "Enhancer";
-logs.UPG1.description = "Upgrade gear 10 times";
+logs.UPG1.description = "Upgrade gear 4 times";
 logs.UPG1.hint = "'I don\'t claim to be the best blacksmith in Cradle Hills.'";
-logs.UPG1.logic = 'stats.upgradedItemsLog>9';
+logs.UPG1.logic = 'stats.upgradedItemsLog>3';
 logs.UPG1.tag = '⬆️';
 logs.UPG1.category = "A1";
 logs.UPG1.repeatable = true;
-logs.UPG1.repeatableClick = function() {return stats.upgradedItemsLog  -= 10};
-logs.UPG1.progressDescription = function() { return `${beautify(stats.upgradedItemsLog )}/10` };
+logs.UPG1.repeatableClick = function() {return stats.upgradedItemsLog  -= 4};
+logs.UPG1.progressDescription = function() { return `${beautify(stats.upgradedItemsLog )}/4` };
 
 logs.UPG2 = {}
 logs.UPG2.name = "Limit Breaker";
-logs.UPG2.description = "Upgrade gear 35 times";
+logs.UPG2.description = "Upgrade gear 20 times";
 logs.UPG2.hint = "'Beyond any known lines.'";
-logs.UPG2.logic = 'stats.upgradedItems>34';
+logs.UPG2.logic = 'stats.upgradedItems>19';
 logs.UPG2.tag = '⬆️';
 logs.UPG2.category = "A1";
 
@@ -387,13 +373,7 @@ logs.P35.logic = '';
 logs.P35.tag = '⚔️';
 logs.P35.category = "A1";
 
-logs.P35A = {}
-logs.P35A.name = "Ultrakill";
-logs.P35A.description = "Deal 10K Damage in one hit";
-logs.P35A.hint = '"You make even the DEVIL CRY!"';
-logs.P35A.logic = '';
-logs.P35A.tag = '⚔️';
-logs.P35A.category = "A1";
+
 
 /*
 logs.P35B = {}
@@ -458,14 +438,6 @@ logs.J2.repeatable = true;
 logs.J2.repeatableClick = function() {return stats.jesterTurtleClicksLog  -= 10};
 logs.J2.progressDescription = function() { return `${beautify(stats.jesterTurtleClicksLog )}/10` };
 
-logs.J3 = {}
-logs.J3.name = "99 Turtballons";
-logs.J3.description = "Click on 99 Jester Turtles";
-logs.J3.hint = '"ZOMG INCOMING!"';
-logs.J3.logic = 'stats.jesterTurtleClicks>98';
-logs.J3.tag = '🎈';
-logs.J3.category = "A1";
-
 logs.P42 = {}
 logs.P42.name = "Critical Thinking";
 logs.P42.description = "Deal a Critical Hit";
@@ -492,16 +464,6 @@ logs.P43.category = "A1";
 
 stats.stampsUsedLog = 0
 
-logs.P45 = {}
-logs.P45.name = "Officework";
-logs.P45.description = "Use 50 Stampers";
-logs.P45.hint = '"This is not the adventure I signed for."';
-logs.P45.logic = 'stats.stampsUsedLog>49';
-logs.P45.tag = '🗳️';
-logs.P45.category = "A1";
-logs.P45.repeatable = true;
-logs.P45.repeatableClick = function() {return stats.stampsUsedLog  -= 50};
-logs.P45.progressDescription = function() { return `${beautify(stats.stampsUsedLog )}/49` };
 
 
 
@@ -550,9 +512,9 @@ logs.L1P13A.category = "A2";
 
 logs.UPG3 = {}
 logs.UPG3.name = "Limit Surpasser";
-logs.UPG3.description = "Upgrade gear 105 times";
+logs.UPG3.description = "Upgrade gear 70 times";
 logs.UPG3.hint = "'Now we are the ones drawing the lines.'";
-logs.UPG3.logic = 'stats.upgradedItems>104';
+logs.UPG3.logic = 'stats.upgradedItems>69';
 logs.UPG3.tag = '⬆️';
 logs.UPG3.category = "A2";
 
@@ -726,6 +688,48 @@ logs.PGEM2.tag = '💎';
 logs.PGEM2.category = "A2";
 logs.PGEM2.logic = 'stats.socketedGems>49';
 
+logs.P35A = {}
+logs.P35A.name = "Ultrakill";
+logs.P35A.description = "Deal 10K Damage in one hit";
+logs.P35A.hint = '"You make even the DEVIL CRY!"';
+logs.P35A.logic = '';
+logs.P35A.tag = '⚔️';
+logs.P35A.category = "A2";
+
+logs.B3 = {}
+logs.B3.name = "Local Fauna Relocation";
+logs.B3.description = "Defeat an Area Boss 150 Times";
+logs.B3.hint = '"Relocated to the void, that is."';
+logs.B3.logic = 'stats.areaBossKills>149';
+logs.B3.tag = '💀';
+logs.B3.category = "A2";
+
+logs.L1P18A = {}
+logs.L1P18A.name = "Or Maybe Not?";
+logs.L1P18A.description = "Play for 100 hours";
+logs.L1P18A.hint = '"But the new update..."';
+logs.L1P18A.logic = 'stats.activeSeconds>360000';
+logs.L1P18A.tag = '⌛';
+logs.L1P18A.category = "A2";
+
+logs.J3 = {}
+logs.J3.name = "99 Turtballons";
+logs.J3.description = "Click on 99 Jester Turtles";
+logs.J3.hint = '"ZOMG INCOMING!"';
+logs.J3.logic = 'stats.jesterTurtleClicks>98';
+logs.J3.tag = '🎈';
+logs.J3.category = "A2";
+
+logs.P45 = {}
+logs.P45.name = "Officework";
+logs.P45.description = "Use 50 Stampers";
+logs.P45.hint = '"This is not the adventure I signed for."';
+logs.P45.logic = 'stats.stampsUsedLog>49';
+logs.P45.tag = '🗳️';
+logs.P45.category = "A2";
+logs.P45.repeatable = true;
+logs.P45.repeatableClick = function() {return stats.stampsUsedLog  -= 50};
+logs.P45.progressDescription = function() { return `${beautify(stats.stampsUsedLog )}/49` };
 
 
 /*
@@ -1291,6 +1295,14 @@ achievementShop.I10 = {
   conditionText : '<span style="color:coral">❌ Complete all achievements of Lost Dojo to purchase this item</span>'
 };
 
+achievementShop.I11 = {
+  item: new GemCaptor1(),
+  price: 900,
+  level: 3,
+  condition : function() { if (stats.monsterCardsObtained>19) return true },
+  conditionText : '<span style="color:coral">❌ Obtain 20 monster cards to purchase this item</span>'
+};
+
 
 
 rpgPlayer.shop = {}
@@ -1499,17 +1511,21 @@ function createLog() {
 
     
 
-    div.addEventListener("contextmenu", function () {
-      if (items.I222.count>0 && !logs[i].revealed && !logs[i].unlocked) {
-        playSound("audio/button6.mp3");
-        animParticleBurst(5 , "particleSpark", "cursor", 0);
-        items.I222.count--;
+    div.addEventListener("click", function () {
+      if (GoldenGlass.count>0 && !logs[i].revealed && !logs[i].unlocked) {
+        playSound("audio/talent.mp3","all");
+        div.style.animation = "";
+        void div.offsetWidth;
+        div.style.animation = "gelatineHigh 0.3s 1, flashNoScale 0.5s 1";
+        setTimeout(() => {
+          particleTrackers.push(new ParticleSellPulse(mousePositionX, mousePositionY, {x:mousePositionX,y:mousePositionY}));
+        }, 10);
+        GoldenGlass.count--;
         logs[i].revealed = true;
-        did("tooltipDescription").innerHTML = logs[i].description;
-
-        did(i+"log").style.animation = "";
-        void did(i+"log").offsetWidth;
-        did(i+"log").style.animation = "useSkill 0.4s 1 ease";
+        let logName = `<span style="display:flex;align-items:center;white-space: nowrap; font-size:1.4rem">🏆 ${logs[i].name}&nbsp;&nbsp;<div class="separator"></div></span>`
+        did("tooltipDescription").innerHTML = logName+logs[i].description;
+        updateInventory()
+      
 
 
       }
@@ -1637,7 +1653,7 @@ function tooltipLog(i) {
     did("tooltipRarity").style.color = "gray";
     did("tooltipName").style.color = "gray";
     did("tooltipDescription").innerHTML = logName+`<span style="color:gray">Locked Achievement</span>`;
-    if (items.I222.count>0) did("tooltipDescription").innerHTML = bestiaryTag(colorTag("Right Click to use a Golden Magnifying Glass", "#966c38"), "transparent");
+    if (GoldenGlass.count>0) did("tooltipDescription").innerHTML += bestiaryTag(colorTag("Click to use a Golden Magnifying Glass", "#966c38"), "transparent");
     if (logs[i].revealed) did("tooltipDescription").innerHTML = logName+logs[i].description;
     did('tooltipImage').src = "img/src/icons/pageLocked.jpg";     
     }
