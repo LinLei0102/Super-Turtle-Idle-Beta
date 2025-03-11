@@ -3042,6 +3042,7 @@ class FlowerGarland extends ArmorHead {
         this.img = 397;
         this.quality = `Common`;
         this.gearscoreBase = 3;
+        this.noScrap = true;
         this.upgradeMaterial = UpgradeMaterial1
         Object.assign(this, properties);
     }
