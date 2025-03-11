@@ -694,6 +694,7 @@ stat.ExtraActions = 0
 stat.Lifesteal = 0
 stat.OfflineBonus = 0
 stat.LumaPower = 0
+stat.Gearscore = 0
 
 statHidden = {}
 
@@ -726,18 +727,30 @@ function statsUpdate(){
 
   stat.Income = 10
   stat.MaxHealth = 100
-  stat.Power = 100
+  stat.Power = 0
 
-  equippedItems.forEach((item) => {
+
+  let currentEquippedItems = equippedItems
+  if (stats.rogue.active) currentEquippedItems = equippedRogueItems 
+
+  currentEquippedItems.forEach((item) => {
 
     if (item != undefined && item.slot === `Weapon`) {
       stat.AttackSpeed = (100 / (100*item.attackSpeed) * 100) -100
     }
 
+    if (item != undefined && item.gearscore ) {
+
+      stat.Gearscore += item.gearscore
+
+    }
+
   });
 
+  stat.Gearscore = stat.Gearscore/5
 
-  equippedItems.forEach((item) => {
+
+  currentEquippedItems.forEach((item) => {
 
     if (item !== undefined){
 
@@ -758,6 +771,27 @@ function statsUpdate(){
     }
 
   });
+
+
+
+
+  if (stats.rogue.active) {
+
+
+    rpgPlayer.relicInventory.forEach((item) => {
+
+      if (item.stats) {
+        item.stats();
+
+        if (item.itemData==="rainbow") item.stats();
+    }
+  
+    });
+
+
+
+
+  }
 
 
   
@@ -1068,7 +1102,67 @@ function updateStatsUI() {
     for (i in stat) {
         if (did("statDisplay"+i)) did("statDisplay"+i).style.display = stat[i] != 0 ? "flex" : "none";
         if (did("stat"+i)) did("stat"+i).innerHTML = beautify(stat[i]);
+        if (i === "Gearscore") did("stat"+i).innerHTML = Math.ceil(stat[i]);
     }
+
+}
+
+
+
+
+
+function damageCalc(mode){
+
+
+  let currentAlignBonus = 0
+  if (equippedWeapon?.align === "Nature"){ currentAlignBonus = stat.NatureBonus }
+  if (equippedWeapon?.align === "Occult"){ currentAlignBonus = stat.OccultBonus }
+  if (equippedWeapon?.align === "Elemental"){ currentAlignBonus = stat.ElementalBonus }
+
+
+  let alignEffective = false
+  if (equippedWeapon?.align === "Nature" && enemies[stats.currentEnemy].align === 'occult') alignEffective = true
+  if (equippedWeapon?.align === "Elemental" && enemies[stats.currentEnemy].align === 'nature') alignEffective = true
+  if (equippedWeapon?.align === "Occult" && enemies[stats.currentEnemy].align === 'elemental') alignEffective = true
+
+  //const alignFormula = (stat.Power) * (1+currentAlignBonus/100)
+  //if (alignEffective !== "") alignFormula = ( (stat.Power) * (1+currentAlignBonus/100) ) * typestrength
+  //const finalDamage = `${beautify((alignFormula*0.95).toFixed(0))}-${beautify((alignFormula*1.05).toFixed(0))}`
+
+  let damagestep = stat.Power  //base factor
+
+  if (currentAlignBonus!==0) { //factor align bonus
+    damagestep = (stat.Power) * (1+currentAlignBonus/100)
+    if (mode==="align") return  ((stat.Power) * (1+currentAlignBonus/100)) - stat.Power
+  }
+
+  if (alignEffective) { //factor effective bonus
+    if (mode==="effective") return damagestep * typestrength - damagestep
+    damagestep = damagestep * typestrength
+  }
+  
+  if (returnEnemyLevelGap("difference")>0) { //factor level bonus
+    if (mode==="level") return damagestep * (1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2)) - damagestep
+    damagestep = damagestep * (1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2))
+  }
+
+  if (stat.CritChance>0){ //factor crit damage
+    let critdmg = 1.5*1+stat.CritDamage/100
+    if (mode==="crit") return damagestep*critdmg
+  }
+
+
+  if (mode==="dps"){ //dps
+    return (damagestep*(1+statHidden.extraMultishot)) / (playerTurnSpeed/1000)
+  }
+
+  if (mode==="kps"){ //dps
+    return  Math.min(1, damageCalc("dps") / enemies[stats.currentEnemy].hp()  )
+  }
+
+  return damagestep
+
+
 
 }
 
@@ -1149,8 +1243,121 @@ function updateStatsUI() {
     did(id).addEventListener("mouseenter", function () {
       let statDesc = ``
 
+
+      if (id==="statDisplayGearscore") statDesc = `Your averaged equipped item level`;
+
       if (id==="statDisplayMaxHealth") statDesc = `Determines your total HP. Your passive regeneration is 5% of this stat per second (${beautify(stat.MaxHealth/20)})`;
-      if (id==="statDisplayPower") statDesc = `Determines your attack damage, aswell as item and skill damage, before modifiers such as align bonuses;<br><span style="color:#62B26A">Nature</span> is effective against <span style="color:#9758df">Occult</span>, <span style="color:#9758df">Occult</span> is effective against <span style="color:#DD794E">Elemental</span> and <span style="color:#DD794E">Elemental</span> is effective against <span style="color:#62B26A">Nature</span>`;
+
+
+      /*
+      let currentAlignBonus = 0
+
+      if (equippedWeapon?.align === "Nature"){ currentAlignBonus = stat.NatureBonus }
+      if (equippedWeapon?.align === "Occult"){ currentAlignBonus = stat.OccultBonus }
+      if (equippedWeapon?.align === "Elemental"){ currentAlignBonus = stat.ElementalBonus }
+
+
+      let alignEffective = ""
+      if (equippedWeapon?.align === "Nature" && enemies[stats.currentEnemy].align === 'occult') alignEffective = "(Super Effective)"
+      if (equippedWeapon?.align === "Elemental" && enemies[stats.currentEnemy].align === 'nature') alignEffective = "(Super Effective)"
+      if (equippedWeapon?.align === "Occult" && enemies[stats.currentEnemy].align === 'elemental') alignEffective = "(Super Effective)"
+
+      let formula = (stat.Power) * (1+currentAlignBonus/100)
+      if (alignEffective !== "") formula = ( (stat.Power) * (1+currentAlignBonus/100) ) * typestrength
+
+      const finalDamage = `${beautify((formula*0.95).toFixed(0))}-${beautify((formula*1.05).toFixed(0))}`
+
+      let damagestep = 0
+
+      let calcBase = ``
+      if (stat.Power!==0) {
+        damagestep = stat.Power
+        calcBase = `<br>+ ${beautify(stat.Power)} Base Power`}
+
+
+      let calcAlign = ``
+      if (currentAlignBonus!==0) {
+        damagestep = (stat.Power) * (1+currentAlignBonus/100)
+        calcAlign = `<br>+ ${beautify((    ((stat.Power) * (1+currentAlignBonus/100)) - stat.Power    ).toFixed(0))} Align Bonus (${currentAlignBonus}%)`
+        }
+      
+      let calcEffective = ``
+      if (alignEffective!=="") {
+        calcEffective = `<br>+ ${beautify(  ( (stat.Power) * (1+currentAlignBonus/100) * typestrength - ((stat.Power) * (1+currentAlignBonus/100)) ).toFixed(0)   ) } ▲ Effective (x${typestrength})`
+        damagestep = (stat.Power) * (1+currentAlignBonus/100) * typestrength
+      }
+      
+      let calcLevel = ``
+      if (returnEnemyLevelGap("difference")>0) {
+        calcLevel = `<br>+ ${  beautify( (( damagestep * (1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2))   ) - damagestep ).toFixed(0) )  } Level Bonus (x${1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2)})`
+        damagestep = (damagestep * (1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2))).toFixed(0)
+      
+      }
+
+
+      let calcCrit = ""
+      if (stat.CritChance>0){ 
+        let critdmg = 1.5*1+stat.CritDamage/100
+        calcCrit = `<span style="color:gray"> with a ${stat.CritChance}% chance to deal ${beautify(((damagestep*critdmg)*0.95).toFixed(0))} - ${beautify(((damagestep*critdmg)*1.05).toFixed(0))} (x${critdmg})</span>`
+      }
+
+      let calcFinalDamage = `<br><span style="color:gray; opacity:0.5">-------------------------</span><br>Final Damage: ${beautify(damagestep*0.95)} - ${beautify(damagestep*1.05)}${calcCrit}`
+
+      let calcDPS = `<br>DPS: ~${beautify( (damagestep*(1+statHidden.extraMultishot)) / (playerTurnSpeed/1000) )}`
+
+      let calcKPS = `<br>Kills /s: ~${beautify( (damagestep*(1+statHidden.extraMultishot)) / (playerTurnSpeed/1000) )}`
+
+      */
+
+
+
+      let currentAlignBonus = 0
+      if (equippedWeapon?.align === "Nature"){ currentAlignBonus = stat.NatureBonus }
+      if (equippedWeapon?.align === "Occult"){ currentAlignBonus = stat.OccultBonus }
+      if (equippedWeapon?.align === "Elemental"){ currentAlignBonus = stat.ElementalBonus }
+    
+    
+      let alignEffective = false
+      if (equippedWeapon?.align === "Nature" && enemies[stats.currentEnemy].align === 'occult') alignEffective = true
+      if (equippedWeapon?.align === "Elemental" && enemies[stats.currentEnemy].align === 'nature') alignEffective = true
+      if (equippedWeapon?.align === "Occult" && enemies[stats.currentEnemy].align === 'elemental') alignEffective = true
+    
+
+
+      let calcBase = ``
+      if (stat.Power!==0) { calcBase = `<br>+ ${beautify(stat.Power)} Base Power` }
+      
+
+      let calcAlign = ``
+      if (currentAlignBonus!==0) {
+        calcAlign = `<br>+ ${beautify(damageCalc("align"))} Align Bonus (${currentAlignBonus}%)`
+      }
+
+      let calcEffective = ``
+      if (alignEffective) {
+        calcEffective = `<br>+ ${beautify(damageCalc("effective")) } ▲ Effective (x${typestrength})`
+      }
+
+      let calcLevel = ``
+      if (returnEnemyLevelGap("difference")>0) {
+        calcLevel = `<br>+ ${  beautify( damageCalc("level") )  } Level Bonus (x${1 + (    Math.min(3,returnEnemyLevelGap("difference"))  *0.2)})`
+      }
+
+      let calcCrit = ""
+      if (stat.CritChance>0){ 
+        let critdmg = 1.5*1+stat.CritDamage/100
+        calcCrit = `<span style="color:gray"> with a ${stat.CritChance}% chance to deal ${beautify(((damageCalc("crit"))*0.95).toFixed(0))} - ${beautify(((damageCalc("crit"))*1.05).toFixed(0))} (x${critdmg} Crit Damage)</span>`
+      }
+
+      let calcFinalDamage = `<br><span style="color:gray; opacity:0.5">-------------------------</span><br>❖ Final Damage: ${beautify(damageCalc()*0.95)} - ${beautify(damageCalc()*1.05)}${calcCrit}`
+
+      let calcDPS = `<br><span style="color:#C78D88">◈ DPS: ~${beautify( damageCalc("dps") )}</span>`
+
+      let calcKPS = `<span style="color:#C788A9"><br>⬖ Kills /s: ~${ damageCalc("kps").toFixed(1) }</span>`
+
+
+      if (id==="statDisplayPower") statDesc = `Determines your raw damage before calculations<br><br>${colorTag("Damage Calculator","#007CA8")}${calcBase}${calcAlign}${calcEffective}${calcLevel}${calcFinalDamage}${calcDPS}${calcKPS}`;
+      
       if (id==="statDisplayNatureBonus") statDesc = `Increases damage dealt of all Nature Damage sources`;
       if (id==="statDisplayElementalBonus") statDesc = `Increases damage dealt of all Elemental Damage sources`;
       if (id==="statDisplayOccultBonus") statDesc = `Increases damage dealt of all Occult Damage sources`;
@@ -1189,13 +1396,15 @@ function updateStatsUI() {
       did("tooltipFlavor").textContent = "";
       did("tooltipImage").style.display = "none";
       const referenceDiv = did(id);
-      const movingDiv = did('tooltip');
-      const referenceRect = referenceDiv.getBoundingClientRect();
-      const tooltipRect = movingDiv.getBoundingClientRect();
-      const newLeft = referenceRect.right/(stats.zoomLevel/100);
-      const newTop = referenceRect.top/(stats.zoomLevel/100) + (referenceRect.height / 2) - (tooltipRect.height / 2);
-      movingDiv.style.left = newLeft + 10 +'px';
-      movingDiv.style.top = newTop + 'px';
+const movingDiv = did('tooltip');
+const referenceRect = referenceDiv.getBoundingClientRect();
+const tooltipRect = movingDiv.getBoundingClientRect();
+
+const newLeft = referenceRect.right / (stats.zoomLevel / 100); 
+const newTop = referenceRect.top / (stats.zoomLevel / 100);
+
+movingDiv.style.left = `${newLeft+10}px`;
+movingDiv.style.top = `${newTop}px`;
 
     });
 
@@ -1239,6 +1448,18 @@ function updateStatsUI() {
 
 
 
+    if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(4, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
+    heatMultiplier *= nofarmToggleBonus
+    if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
+
+
+    chances.enemies.h0 =  Math.max( 100/nofarmToggleBonus,   500 / nofarmToggleBonus      ) //rare non scaling mat
+    chances.enemies.h1 =  Math.max( 100/nofarmToggleBonus,   Math.floor(100 / heatMultiplier)      )
+    chances.enemies.h2 =  Math.max( 100/nofarmToggleBonus,   Math.floor(500 / heatMultiplier)      )
+    chances.enemies.h3 =  Math.max( 100/nofarmToggleBonus,   Math.floor(2000 / heatMultiplier)      )
+    chances.enemies.h4 =  Math.max( 100/nofarmToggleBonus,   Math.floor(10000 / heatMultiplier)      )
+    chances.enemies.h5 =  Math.max( 100/nofarmToggleBonus,   Math.floor(50000 / heatMultiplier)      )
+
 
 
 
@@ -1259,7 +1480,6 @@ function updateStatsUI() {
 
 
     if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(1.5, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
-
     heatMultiplier *= nofarmToggleBonus
     if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
 
@@ -1273,6 +1493,22 @@ function updateStatsUI() {
     chances.boss.epic = Math.floor(100 / heatMultiplier)
     chances.boss.mythic = Math.floor(300 / heatMultiplier)
     chances.boss.legendary = Math.floor(1000 / heatMultiplier)
+
+
+
+    if (areas[stats.currentArea].heat>1) {heatMultiplier = ( Math.pow(2, areas[stats.currentArea].heat-1) )} else heatMultiplier = 1
+    heatMultiplier *= nofarmToggleBonus
+    if (stat.Luck!==0) heatMultiplier += heatMultiplier * (stat.Luck/100)
+
+      
+      chances.boss.h1 = Math.max(Math.ceil(5/nofarmToggleBonus), Math.floor(10 / heatMultiplier) )
+      chances.boss.h2 = Math.max(Math.ceil(5/nofarmToggleBonus), Math.floor(20 / heatMultiplier) )
+      chances.boss.h3 = Math.max(Math.ceil(5/nofarmToggleBonus), Math.floor(40 / heatMultiplier) )
+      chances.boss.h4 = Math.max(Math.ceil(5/nofarmToggleBonus), Math.floor(80 / heatMultiplier) )
+      chances.boss.h5 = Math.max(Math.ceil(5/nofarmToggleBonus), Math.floor(160 / heatMultiplier) )
+
+
+    
 
 
 

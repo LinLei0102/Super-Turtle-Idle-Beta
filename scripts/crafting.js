@@ -30,6 +30,16 @@ craftingRecipes.ShurikenFan = {
     locked: true,
 }
 
+craftingRecipes.KingKatDecapitator = {
+    category: `SA`,
+    item: {KingKatDecapitator:1},
+    reagents: {StripedPelt:2,CopperOre:10},
+    time: 2.5*60,
+    level: 9,
+    exp: 30,
+    locked: true,
+}
+
 craftingRecipes.ExplorerHead = {
     category: `SG`,
     item: {ExplorerHead:1},
@@ -64,6 +74,46 @@ craftingRecipes.ExplorerFeet = {
     time: 2*60,
     level: 4,
     exp: 15,
+}
+
+
+
+///
+
+craftingRecipes.TigerHead = {
+    category: `SG`,
+    item: {TigerHead:1},
+    reagents: {StripedPelt:1,CopperOre:5},
+    time: 2*60,
+    level: 7,
+    exp: 25,
+}
+
+craftingRecipes.TigerChest = {
+    category: `SG`,
+    item: {TigerChest:1},
+    reagents: {StripedPelt:1,CopperOre:5},
+    time: 2*60,
+    level: 7,
+    exp: 25,
+}
+
+craftingRecipes.TigerLegs = {
+    category: `SG`,
+    item: {TigerLegs:1},
+    reagents: {StripedPelt:1,CopperOre:5},
+    time: 2*60,
+    level: 8,
+    exp: 25,
+}
+
+craftingRecipes.TigerFeet = {
+    category: `SG`,
+    item: {TigerFeet:1},
+    reagents: {StripedPelt:1,CopperOre:5},
+    time: 2*60,
+    level: 8,
+    exp: 25,
 }
 
 
@@ -373,7 +423,7 @@ function updateRecipes(){
 
 function recipePanel(){
 
-    if (currentRecipe!==undefined && Object.keys(craftingRecipes[currentRecipe].item)[0]===undefined) return
+    if (currentRecipe==undefined) return
 
     const parent = eval(Object.keys(craftingRecipes[currentRecipe].item)[0])
     const item = new parent()
@@ -612,10 +662,7 @@ function cancelCrafting() {
             }
 
             
-            craftingRecipes[r].timeCurrent -= craftingRecipes[r].time //controls overflow of crafting time, used for offline
-            if (craftingRecipes[r].timeCurrent>craftingRecipes[r].time) craftingProgress()
-            if (craftingRecipes[r].que === 0) craftingRecipes[r].timeCurrent = 0
-            updateRecipes()
+   
 
 
             const category = craftingRecipes[r].category
@@ -634,7 +681,16 @@ function cancelCrafting() {
             jobs[recipeJob].exp += Math.floor(craftingRecipes[r].exp*expmult);
             
             jobExp()
+
+
+            craftingRecipes[r].timeCurrent -= craftingRecipes[r].time //controls overflow of crafting time, used for offline
+            if (craftingRecipes[r].timeCurrent>craftingRecipes[r].time) setTimeout(() => { craftingProgress() }, 1); 
+            if (craftingRecipes[r].que === 0) craftingRecipes[r].timeCurrent = 0
             updateRecipes()
+
+
+
+
             recipePanel()
 
 

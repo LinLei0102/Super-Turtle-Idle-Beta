@@ -66,6 +66,24 @@
     transition: 0.3s all;
 }
 
+#areaBgFX{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    background-image: url(img/sys/bhole.png);
+    background-size: contain ;
+    background-repeat: no-repeat;
+    background-position: center;
+    top: 10%;
+    right: 0;
+    z-index: 0;
+    transition: 0.3s all;
+    animation: rotate 200s infinite linear;
+    opacity: 0.9;
+}
+
+
 #dayNightCycleTint{
     position: absolute;
     height: 100%;
@@ -3171,7 +3189,7 @@ background: transparent;
 }
 
 @keyframes colorRainbow {
-    0% { color: rgb(240, 72, 72); }
+    0% { color: rgb(218, 106, 106); }
     14% { color: orange; }
     28% { color: rgb(221, 221, 94); }
     42% { color: rgb(105, 201, 105); }
@@ -3179,6 +3197,17 @@ background: transparent;
     70% { color: rgb(156, 107, 190); }
     84% { color: rgb(216, 142, 216); }
     100% { color: rgb(218, 106, 106); }
+}
+
+@keyframes backgroundRainbow {
+    0% { background-color: rgb(218, 106, 106); }
+    14% { background-color: orange; }
+    28% { background-color: rgb(221, 221, 94); }
+    42% { background-color: rgb(105, 201, 105); }
+    56% { background-color: rgb(97, 97, 197); }
+    70% { background-color: rgb(156, 107, 190); }
+    84% { background-color: rgb(216, 142, 216); }
+    100% { background-color: rgb(218, 106, 106); }
 }
 
 
@@ -4763,6 +4792,141 @@ background: transparent;
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
+}
+
+#rogueRelicList{
+    background: transparent;
+    position: fixed;
+    height: 50%;
+    width: 20%;
+    left: 9%;
+    top: 25%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: visible;
+    z-index: 3;
+    pointer-events: none;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+}
+
+#rogueRelicList img {
+    height: 3rem;
+    width: 3rem;
+    background: transparent;
+    margin: -0.5rem -0.5rem;
+    flex-basis: 3rem; /* Fija un tamaño base para evitar desbordes */
+    pointer-events: initial;
+    transition: 0.6s;
+    opacity: 0.5;
+}
+
+#rogueRelicList img:hover {
+    transition: 0.1s;
+    scale: 1.2;
+    translate: 0 -0.5rem;
+    z-index: 1;
+    opacity: 1;
+}
+
+#rogueCardSelect{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40%;
+    width: auto;
+    background: transparent;
+    position: fixed;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 30%;
+    left: 0;
+    z-index: 100;
+    gap: 2rem;
+    overflow: visible;
+    pointer-events: none;
+
+}
+
+.rogueCard{
+    height: 18rem;
+    width: 12rem;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    border: white solid 2px;
+    background: #23232D;
+    outline: #23232D solid 6px;
+    transition: 0.6s;
+    animation: holdFloat 5s infinite,rogueCardSlide 0.5s 1;
+    position: relative;
+    pointer-events: none;
+}
+
+@keyframes rogueCardSlide{
+    0%{opacity: 0; translate: 0 -4rem;}
+    100%{opacity: 1; translate: 0 0rem;}
+
+}
+
+.rogueCard:hover{
+    translate: 0 -2rem;
+    transition: 0.3s;
+}
+
+.rogueCard span{
+    height: 100%;
+    width: 100%;
+    border-radius: 0.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.4rem;
+    background: #353541;
+    text-align: center;
+    color: white;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.rogueCard strong{
+    height: 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    font-weight: 900;
+
+}
+
+.rogueCard img{
+    height: 5rem;
+    width: 5rem;
+    background: #353541;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    flex-shrink: 0;
+}
+
+.rogueCard svg{
+    height: 5rem;
+    width: 5rem;
+    background: rgb(76, 106, 151);
+    padding: 0.5rem;
+    border-radius: 1rem;
+    flex-shrink: 0;
+    color: white;
 }
 
 .introPanel2{
@@ -11909,8 +12073,9 @@ flex-shrink: 0;
     z-index: 3;
     pointer-events: none;
     gap: 0.3rem;
-
 }
+
+
 
 
 #globalBuffWrapper .playerBuffIcon{
@@ -14972,6 +15137,20 @@ border: white solid 1px;
     }
     75% {
         transform: scale(0.98, 1.02);
+    }
+}
+
+@keyframes holdFloat {
+    from,
+    to {
+        transform: translateY(3%);
+    }
+    25% {
+    }
+    50% {
+    transform: translateY(0);
+    }
+    75% {
     }
 }
 

@@ -243,7 +243,7 @@ function updateBestiary() {
 
 
           enemies[i].medalProgress-=3000
-
+          did("bestiaryShopWidget").style.animation = "none"
 
           updateCounters()
 

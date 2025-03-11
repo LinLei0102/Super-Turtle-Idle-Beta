@@ -7628,16 +7628,23 @@ areas.A2.category = "area"
 
 areas.L1 = {};
 areas.L1.name = '🏆 Monster Arena';
-areas.L1.level = 10;
 areas.L1.description = '"Welcoming all brave turtles, this thunderdome is a place of glory and riches. Fight against powerful foes and claim prize for yourself!"';
-//areas.L1.boss = 'E8';
-//areaL1A2.bossKey = 'I127';
 areas.L1.empty = true;
 areas.L1.lootTable = function() { return { AreaChest1 : { c : 300, a : 1} } };
 areas.L1.value = 500 //determines quest reward money and vendor trash sell value
 areas.L1.category = "landmark"
 areas.L1.locked = "Complete Fine Furs in Lost Dojo to access this area"
 areas.L1.value = 2000 //determines quest reward money and vendor trash sell value
+
+areas.L2 = {};
+areas.L2.name = '💤 Rem Corridor';
+areas.L2.description = '"Welcoming all brave turtles, this thunderdome is a place of glory and riches. Fight against powerful foes and claim prize for yourself!"';
+areas.L2.empty = true;
+areas.L2.lootTable = function() { return { AreaChest1 : { c : 300, a : 1} } };
+areas.L2.value = 500 //determines quest reward money and vendor trash sell value
+areas.L2.category = "landmark"
+areas.L2.locked = "Locked by forces unknown"
+areas.L2.value = 2000 //determines quest reward money and vendor trash sell value
 
 /*
 
@@ -9221,6 +9228,14 @@ rpgClass.noClass.nextExp = 1000;
 rpgClass.noClass.level = 1;
 rpgClass.noClass.color = "gray";
 rpgClass.noClass.maxLevel = 80;
+
+rpgClass.Dreamer = {};
+rpgClass.Dreamer.name = "Dreamer"
+rpgClass.Dreamer.currentExp = 0;
+rpgClass.Dreamer.nextExp = 1000;
+rpgClass.Dreamer.level = 1;
+rpgClass.Dreamer.color = "cyan";
+rpgClass.Dreamer.maxLevel = 1000000;
 
 rpgClass.TA0 = {};
 rpgClass.TA0.name = "Apprentice"

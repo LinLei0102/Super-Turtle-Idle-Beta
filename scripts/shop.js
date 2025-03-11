@@ -34,7 +34,8 @@ areaShop.A1I5 = {
 areaShop.A1I10 = {
   item: new AreaChest1Key(),
   price: 1000,
-  stock: 10,
+  stock: 20,
+  condition : function() { if (areas[stats.currentArea].heatMax>2) return true },
 };
 
 areaShop.A1I11 = {

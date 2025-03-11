@@ -288,6 +288,8 @@ function spawnItem(id,amount,source){
   if (amount != undefined) toAdd = amount
   const item = new id()
 
+  let inventory = itemInventory
+
 
   let notification = true
   if (source?.startsWith("craft") && settings.disableCraftPopup) notification = false
@@ -304,17 +306,22 @@ function spawnItem(id,amount,source){
 
   if (chance(1/77777)) spawnItem(GoldenClover)
 
-  if (item.isStackable) {
-    
-    if (item.constructor.count === 0) itemInventory.push(item)
 
+
+  if (item.isStackable) {
+
+    if (item.init) item.init(source)
+    if (stats.rogue.active) item.rogue = true
+
+    
+    if (!(inventory.some(existingItem => areItemsExact(existingItem, item)))) inventory.push(item)
+    //if (item.constructor.count === 0) inventory.push(item)
 
     if (amount === undefined) item.constructor.count++
     else item.constructor.count += amount
 
     item.constructor.timesGot += toAdd
 
-    if (item.init) item.init(source)
 
     if (notification) createPopup(`<span style="color:${returnQualityColor(item.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${item.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${item.name} x${beautify(toAdd)} got!</span>`)
 
@@ -327,6 +334,11 @@ function spawnItem(id,amount,source){
     function loop(){
 
       const iteminstance = new id()
+      if (stats.rogue.active) iteminstance.rogue = true
+
+      if (stats.rogue.active)  iteminstance.rogueStats()
+
+      
       if (item.init && source==="container") iteminstance.init(source)
       else if (item.init) iteminstance.init(source)
 
@@ -337,7 +349,7 @@ function spawnItem(id,amount,source){
         
       
       // autoscrapping
-      if (iteminstance.prefix5 === undefined && itemInventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
+      if (!stats.rogue.active && iteminstance.prefix5 === undefined && inventory.some(existingItem => areItemsEqual(existingItem, iteminstance))) {
 
         if (source==="offline" && !iteminstance.noScrap) {
           spawnItem(returnScrapMaterial(iteminstance),1,"offline")
@@ -359,7 +371,7 @@ function spawnItem(id,amount,source){
 
       if (notification) createPopup(`<span style="color:${returnQualityColor(iteminstance.quality)}; display:flex; justify-content:center; align-items:center;background:transparent;"><img src="img/src/items/I${iteminstance.img}.jpg" style="height:1.3rem; width:1.3rem;margin-right:0.6rem;border-radius:0.2rem"> ${prefixName} ${iteminstance.name} got!</span>`)
       
-      itemInventory.push(iteminstance)
+      inventory.push(iteminstance)
       item.constructor.timesGot ++
 
       if (source!=="offline" && item.sort!=currentSort && item.sort!="Hat"){ // got inventory notification
@@ -491,8 +503,10 @@ did(`inventory${sort}Target`).className = "inventoryTab inventoryTabActive"
 
 function updateInventory(mode) {
 
+  let inventory = itemInventory
 
-  itemInventory.forEach((item, index) => {
+
+  inventory.forEach((item, index) => {
     if (did(item.img+"Count") && item.isStackable && item.constructor.count > 0){
       did(item.img+"Count").innerHTML = beautify(item.constructor.count)
     }
@@ -505,9 +519,9 @@ function updateInventory(mode) {
   //sortInventory()
   did("inventoryListing").innerHTML = "";
 
-  itemInventory.forEach((item, index) => {
+  inventory.forEach((item, index) => {
 
-
+    if (stats.rogue.active && !item.rogue) return
     if (item.loadouts==undefined && item.sort!==currentSort) return // if it doesnt belong on that category
     if (item.sort!==currentSort && item.loadouts!==undefined && !item.loadouts.includes(rpgPlayer.currentLoadout)) return //prevents equipped items from disapearing
 
@@ -619,14 +633,19 @@ function updateInventory(mode) {
 
 function fadeInventoryTabs(){
 
+  let inventory = itemInventory
+
   if (currentInventoryTab !== "inventoryMainPage" || stats.leftUi === "contracted"){ return}
 
   document.querySelectorAll('.inventoryTab').forEach(div => { div.style.opacity = '0.3'; });
 
   
-  itemInventory.forEach((item, index) => {
+  inventory.forEach((item, index) => {
 
-    if (equippedItems.some(equippedItem => equippedItem === item)) return //skip equipped items
+    if (stats.rogue.active && !item.rogue) return
+
+    if (stats.rogue.active && equippedRogueItems.some(equippedItem => equippedItem === item)) return
+    else if (equippedItems.some(equippedItem => equippedItem === item)) return //skip equipped items
 
     if ( did(`inventory${item.sort}Target`) && did(`inventory${item.sort}Target`).style.opacity != 1) did(`inventory${item.sort}Target`).style.opacity = 1
 
@@ -677,6 +696,12 @@ function sortInventory() {
     if (quality1 > quality2) {return -1;}
     if (quality1 < quality2) {return 1;}
 
+        //image
+        const img1 = a.img !== undefined ? a.img : '';
+        const img2 = b.img !== undefined ? b.img : '';
+        if (img1 > img2) {return -1;}
+        if (img1 < img2) {return 1;}
+
     //hp
     const hp1 = a.baseHp !== undefined ? a.baseHp : '';
     const hp2 = b.baseHp !== undefined ? b.baseHp : '';
@@ -690,11 +715,7 @@ function sortInventory() {
     if (atk1 < atk2) {return 1;}
 
 
-    //image
-    const img1 = a.img !== undefined ? a.img : '';
-    const img2 = b.img !== undefined ? b.img : '';
-    if (img1 > img2) {return -1;}
-    if (img1 < img2) {return 1;}
+
 
 
     //glimmer
@@ -953,9 +974,9 @@ document.addEventListener('click', function(event) { //context menus
 
     else if (item.slot!=undefined) { //if its equipable
       did("itemContextMenuButtonEquip").style.display = "flex"
-      if (item.slot!=="Offhand" && item.noScrap !== true) did("itemContextMenuButtonScrap").style.display = "flex"
-      if (itemDiv.item.constructor.upgrade!==undefined) did("itemContextMenuButtonUpgrade").style.display = "flex"
-      if ( item.prefixTier && item.prefixTier<4 && returnStamper(item.prefixTier).constructor.count >= 1 ) did("itemContextMenuButtonReforge").style.display = "flex"
+      if (!stats.rogue.active) if (item.slot!=="Offhand" && item.noScrap !== true) did("itemContextMenuButtonScrap").style.display = "flex"
+      if (!stats.rogue.active) if (itemDiv.item.constructor.upgrade!==undefined) did("itemContextMenuButtonUpgrade").style.display = "flex"
+      if (!stats.rogue.active) if ( item.prefixTier && item.prefixTier<4 && returnStamper(item.prefixTier).constructor.count >= 1 ) did("itemContextMenuButtonReforge").style.display = "flex"
       did("itemContextMenuButtonSell").style.display = "flex"
     } else if (item.isStackable && item.constructor.count>1){
       did("itemContextMenuButtonSellMenu").style.display = "flex"
@@ -1018,7 +1039,8 @@ return Math.floor(item.finalDamage() * Math.pow(1.5, (level)))
 }
 
 
-function returnUpgradeMaterial(quality){
+function returnUpgradeMaterial(item){
+  return new item.upgradeMaterial()
   if (quality==="Common") return new UpgradeMaterial1();
   if (quality==="Uncommon") return new UpgradeMaterial2();
   if (quality==="Rare") return new UpgradeMaterial3();
@@ -1033,12 +1055,12 @@ function returnStamper(tier){
 }
 
 function returnUpgradeMaterialAmount(currentLevel){
-  if (currentLevel===0) return 10;
-  if (currentLevel===1) return 50;
-  if (currentLevel===2) return 250;
-  if (currentLevel===3) return 6250;
-  if (currentLevel===4) return 31250;
-  if (currentLevel===5) return 156250;
+  if (currentLevel===0) return 8;
+  if (currentLevel===1) return 32;
+  if (currentLevel===2) return 128;
+  if (currentLevel===3) return 512;
+  //if (currentLevel===4) return 31250;
+  //if (currentLevel===5) return 156250;
   }
 
 
@@ -1057,17 +1079,13 @@ function upgradeMenuTooltip(){
   let swordIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>`
   if (item.hp !== undefined) swordIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M2 9.137C2 14 6.02 16.591 8.962 18.911C10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138S16.5.825 12 5.501C7.5.825 2 4.274 2 9.137"/></svg>`
 
-  let materialToUseName = `&nbsp;<span style="color:${returnQualityColor(returnUpgradeMaterial(item.quality).quality)}">${returnUpgradeMaterial(item.quality).name}</span>&nbsp;`
-  let materialToUseImg = returnUpgradeMaterial(item.quality).img
-  let materialToUseCount = returnUpgradeMaterial(item.quality).constructor.count
+  let materialToUseName = `&nbsp;<span style="color:${returnQualityColor(returnUpgradeMaterial(item).quality)}">${returnUpgradeMaterial(item).name}</span>&nbsp;`
+  let materialToUseImg = returnUpgradeMaterial(item).img
+  let materialToUseCount = returnUpgradeMaterial(item).constructor.count
 
-  let dmgorhp = "";
-  if (item.hp !== undefined) dmgorhp =   Math.floor( ( (item.baseHp * item.hp) * Math.pow(prefixTierMod, item.prefixTier)  ) * (  Math.pow(upgradeMod, item.constructor.upgrade+1) ) );
-  else dmgorhp = Math.floor(  ( (item.baseDamage * item.damage) * Math.pow(prefixTierMod, item.prefixTier) ) * ( Math.pow(upgradeMod, item.constructor.upgrade+1) )  );
+  const dmgorhpnext = 10 + ( Math.pow( item.gearscore+2, gearscoreMod)   )
 
-  const dmgorhpnext = dmgorhp
-
-  if ( UpgradeMaterial0.count>=returnUpgradeMaterialAmount(item.constructor.upgrade) &&  returnUpgradeMaterial(item.quality).constructor.count < returnUpgradeMaterialAmount(item.constructor.upgrade) ) {
+  if ( UpgradeMaterial0.count>=returnUpgradeMaterialAmount(item.constructor.upgrade) &&  returnUpgradeMaterial(item).constructor.count < returnUpgradeMaterialAmount(item.constructor.upgrade) ) {
 
     let universalupgradeitem = new UpgradeMaterial0()
     materialToUseName = `&nbsp;<span style="color:${returnQualityColor(universalupgradeitem.quality)}">${universalupgradeitem.name}</span>&nbsp;`
@@ -1085,11 +1103,11 @@ function upgradeMenuTooltip(){
   <div class="upgradeTooltipWidget2">${beautify(dmgorhpnext)}${swordIcon}${arrowIcon2}</div>
 
   <div class="separator"></div>
-  <div class="upgradeTooltipWidget3" style="outline:none;color:gray"><strong>✨</strong>Upgrade the base stats of all items of the same type by using same-quality materials</span></div>
+  <div class="upgradeTooltipWidget3" style="outline:none;color:gray;display:flex;justify-content:center;align-items:center; padding: 0.3rem 0">✨ Upgrades the base stats of all items of the same type!</span></div>
   <div class="upgradeTooltipWidget3"><img src="img/src/items/I${materialToUseImg}.jpg"><span>Will use${materialToUseName}x${beautify(returnUpgradeMaterialAmount(item.constructor.upgrade))}  &nbsp;<span style="color:gray">(${beautify(materialToUseCount)} in bag)</span></span></div>
   `;
 
-  if (item.constructor.upgrade===6) did("tooltipDescription").innerHTML = `
+  if (item.constructor.upgrade===4) did("tooltipDescription").innerHTML = `
   <div class="upgradeTooltipWidget">${returnUpgradeLevelStars(item.constructor.upgrade)}</div>
   <div class="upgradeTooltipWidget2">Max upgrade level reached</div>
   `;
@@ -1133,9 +1151,9 @@ function upgradeSelectedItem(){
 
   if (item.constructor.upgrade>5) return 
 
-  if ( returnUpgradeMaterial(item.quality).constructor.count >= returnUpgradeMaterialAmount(item.constructor.upgrade) ){
+  if ( returnUpgradeMaterial(item).constructor.count >= returnUpgradeMaterialAmount(item.constructor.upgrade) ){
 
-    returnUpgradeMaterial(item.quality).constructor.count -= returnUpgradeMaterialAmount(item.constructor.upgrade);
+    returnUpgradeMaterial(item).constructor.count -= returnUpgradeMaterialAmount(item.constructor.upgrade);
     upgradeItem()
 
 
@@ -1153,6 +1171,10 @@ function upgradeSelectedItem(){
     stats.upgradedItems++
     stats.upgradedItemsLog++
     item.constructor.upgrade++;
+    
+    itemInventory.forEach((invitem, index) => {
+      if (invitem.img===item.img && invitem.invInit) invitem.invInit()
+    })
     voidAnimation("tooltip", "areaClick 0.4s ease 1, interactableTooltipIdle 3s infinite");
     upgradeMenuTooltip();
     updateInventory();
@@ -1170,6 +1192,7 @@ function upgradeSelectedItem(){
 
     playSound("audio/talent.mp3")
     playSound("audio/pop2.mp3")
+
 
     equipGear()
     statsUpdate()
@@ -1785,7 +1808,12 @@ function changeLoadout(number){
 
 
 
-if (number!==undefined) rpgPlayer.currentLoadout = number;
+
+
+if (stats.rogue.active) rpgPlayer.currentLoadout = 100;
+else if (number!==undefined) rpgPlayer.currentLoadout = number;
+
+if (rpgPlayer.currentLoadout === 100 && !stats.rogue.active) rpgPlayer.currentLoadout = 1
 
 let loadoutIcon = `🔥`;
 if (rpgPlayer.currentLoadout===2) loadoutIcon = `🍃`;
@@ -1884,7 +1912,7 @@ document.addEventListener('mouseover', function(event) {
     } 
 
 
-
+    if (  ( itemDiv.tag2 === "shopArea" || itemDiv.tag === "crafting" || itemDiv.tag2 === "shopAchievement" ) && item.invInit) item.invInit()
 
     let coinValue = 
 
@@ -1918,7 +1946,7 @@ document.addEventListener('mouseover', function(event) {
 
     if (itemDiv.tag2 === "shopArea") did("tooltipFlavor").innerHTML = ""
 
-    if (item.contextTooltip!==undefined && itemDiv.tag2 !== "shopArea") {
+    if (item.contextTooltip!==undefined && itemDiv.tag2 !== "shopArea" && equippedItems.some(equippedItem => equippedItem === item)  ) {
 
       did("contextList").innerHTML = ""
       const lista = item.contextTooltip()
@@ -1930,6 +1958,7 @@ document.addEventListener('mouseover', function(event) {
       });
     
     }
+
 
 
     if (item.sort==="Hat") {
@@ -1989,7 +2018,8 @@ document.addEventListener('mouseover', function(event) {
 
 
 
-      const slotItem = eval('equipped' + item.slot);
+      let slotItem = eval('equipped' + item.slot);
+      if (stats.rogue.active) slotItem = eval('equippedRogue' + item.slot);
 
       if (slotItem===undefined || slotItem === item) return
 
@@ -2192,7 +2222,9 @@ function returnGemstoneUi(item){
 
 function returnUpgradeLevel(item){ 
 
-  if (item.constructor.upgrade===undefined) return ""
+  if (item.constructor.upgrade>4) item.constructor.upgrade = 4 //safefail
+
+  if (item.constructor.upgrade===undefined || stats.rogue.active) return ""
 
   return `<div class="tooltipUpgradeLevel">${returnUpgradeLevelStars(item.constructor.upgrade)}</div>`
 
@@ -2229,18 +2261,18 @@ function returnPrefixSkills(item){
 
   //t2
   if (item.prefix2 === `Runic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Weapon Skill Attack</span>`;}
-  if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Weapon Damage</span>`;}
+  if (item.prefix2 === `Kingslaying`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.15 Weapon Damage</span>`;}
   if (item.prefix2 === `Double`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack</span>`;}
   if (item.prefix2 === `Accelerating`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.15 Attack Speed</span>`;}
-  if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Chance</span>`;}
-  if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
+  if (item.prefix2 === `Chancemaking`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.3 Weapon Skill Chance</span>`;}
+  if (item.prefix2 === `Titanic`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Weapon Skill Damage</span>`;}
 
   //t3
-  if (item.prefix3 === `THE`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+2 Extra Weapon Skill Attacks</span>`;}
-  if (item.prefix3 === `Ultimate`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+2 Extra Attacks</span>`;}
-  if (item.prefix3 === `Final`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x2 Weapon Skill Damage</span>`;}
+  if (item.prefix3 === `THE`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Weapon Skill Attacks</span>`;}
+  if (item.prefix3 === `Ultimate`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attacks</span>`;}
+  if (item.prefix3 === `Final`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Skill Damage</span>`;}
   if (item.prefix3 === `Polychrome`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">+1 Extra Attack, +1 Extra Weapon Skill Attack</span>`;}
-  if (item.prefix3 === `Godslaying`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.5 Weapon Damage</span>`;}
+  if (item.prefix3 === `Godslaying`) {prefix3 = `<span style="display:flex;align-items:center;white-space: nowrap;">🌠 ${item.prefix3}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">x1.2 Weapon Damage</span>`;}
  
   //if (item.prefix2 === `Vampiric`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">1/2 chance to steal life</span>`;}
   //if (item.prefix2 === `Fulgurant`) {prefix2 = `<span style="display:flex;align-items:center;white-space: nowrap;">✨ ${item.prefix2}&nbsp;&nbsp;<div class="separator"></div></span><span style="color:#1eff00;">1/2 chance to chain lightning</span>`;}
@@ -2340,13 +2372,13 @@ return `img/sys/${slot.toLowerCase()}Slot.png`
 function returnUpgradeLevelStars(level){
 
 
-  if (level===0) return `<span style="color:gray">✦✦✦✦✦✦</span>`
-  if (level===1) return `<span style="color:#8c7fff">✦</span><span style="color:gray">✦✦✦✦✦</span>`
-  if (level===2) return `<span style="color:#D97FFF">✦✦</span><span style="color:gray">✦✦✦✦</span>`
-  if (level===3) return `<span style="color:#FF927F">✦✦✦</span><span style="color:gray">✦✦✦</span>`
-  if (level===4) return `<span style="color:#C1FF7F">✦✦✦✦</span><span style="color:gray">✦✦</span>`
-  if (level===5) return `<span style="color:#3EFFD9">✦✦✦✦✦</span><span style="color:gray">✦</span>`
-  if (level===6) return `<span style="animation:colorRainbow 8s infinite">✦✦✦✦✦✦</span>`
+  if (level===0) return `<span style="color:gray">✦✦✦✦</span>`
+  if (level===1) return `<span style="color:#8c7fff">✦</span><span style="color:gray">✦✦✦</span>`
+  if (level===2) return `<span style="color:#D97FFF">✦✦</span><span style="color:gray">✦✦</span>`
+  if (level===3) return `<span style="color:#FF927F">✦✦✦</span><span style="color:gray">✦</span>`
+  //if (level===4) return `<span style="color:#C1FF7F">✦✦✦✦</span><span style="color:gray">✦✦</span>`
+  //if (level===5) return `<span style="color:#3EFFD9">✦✦✦✦✦</span><span style="color:gray">✦</span>`
+  if (level===4) return `<span style="animation:colorRainbow 8s infinite">✦✦✦✦</span>`
 
 
 }
@@ -2370,35 +2402,76 @@ function returnRarity(item) {
   let itemslot = ""
   if (item.slot!==undefined) itemslot = eval('equipped' + item.slot);
 
-  if (item.slot === `Weapon` && equippedWeapon!==undefined){
+  let currentEquippedItems = equippedWeapon
+  if (stats.rogue.active) currentEquippedItems = equippedRogueWeapon 
 
-    if (equippedWeapon.finalDamage()<item.finalDamage()) color = "#62C347"
-    if (equippedWeapon.finalDamage()>item.finalDamage()) color = "#CC444C"
+  let gearscore = ""
+  if (item.gearscore) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${item.gearscore}</span>`
+  if (item.constructor.upgrade>0) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${item.gearscore - item.constructor.upgrade*gearscoreUpgradeMod} (+${item.constructor.upgrade*gearscoreUpgradeMod})</span>`
+  if (item.slot==="Weapon" && statHidden.fixedGearscore>0 ) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${statHidden.fixedGearscore}</span>`
+
+  if (item.slot === `Weapon` && currentEquippedItems!==undefined){
+
+    if (stats.rogue.active){
+    if (currentEquippedItems.finalRogueDamage()<item.finalRogueDamage()) color = "#62C347"
+    if (currentEquippedItems.finalRogueDamage()>item.finalRogueDamage()) color = "#CC444C"
+    } else {
+    if (currentEquippedItems.finalDamage()<item.finalDamage()) color = "#62C347"
+    if (currentEquippedItems.finalDamage()>item.finalDamage()) color = "#CC444C"
+    }
+ 
   
   }
 
   if (item.baseHp !== undefined && itemslot!==undefined){
 
+
+    if (stats.rogue.active){
+    if (itemslot.finalRogueHp()<item.finalRogueHp()) color = "#62C347"
+    if (itemslot.finalRogueHp()>item.finalRogueHp()) color = "#CC444C"
+    }
+    else {
     if (itemslot.finalHp()<item.finalHp()) color = "#62C347"
     if (itemslot.finalHp()>item.finalHp()) color = "#CC444C"
+    }
+
+
   
   }
 
 
   if (item.slot === "Offhand" && item.div !== undefined) { 
-    return `${returnQualityName(item.quality)}<br><span class="tooltipStat" style="color:${color}">${beautify(item.uses)}/${beautify(item.initialUses)}
+    return `${returnQualityName(item.quality)}${gearscore}<br><span class="tooltipStat" style="color:${color}">${beautify(item.uses)}/${beautify(item.initialUses)}
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="m261.695 75.809l-5.246-1.142l-171.115 37.281V236.22l.273 11.328c4.7 96.674 69.051 154.562 117.399 184.636l2.571 1.393l71.533-166.91h-95.777zm-18.232 377.68l.859.384l5.725 2.379l6.402 2.415l6.126-2.308l12.415-5.365l8.181-3.936l9.239-4.811l15.418-8.92l11.037-7.124c48.792-32.968 108.311-93.445 107.75-192.113l-.119-22.879l-.05-83.956l.221-15.532l-122.565-26.682L245.593 224h96.223z" clip-rule="evenodd"/></svg>
     </span>`
   }
   
 
-if (item.slot === `Weapon`) return `${returnQualityName(item.quality)}<br><span class="tooltipStat" style="color:${color}">${beautify(item.finalDamage())}
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>
+if (item.slot === `Weapon`) {
+
+  if (stats.rogue.active) return `${returnQualityName(item.quality)}${gearscore}<br><span class="tooltipStat" style="color:${color}">${beautify(item.finalRogueDamage())}
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>
 </span>`
 
-if (item.hp !== undefined) return `${returnQualityName(item.quality)}<br><span class="tooltipStat" style="color:${color}">${beautify(item.finalHp())}
+  return `${returnQualityName(item.quality)}${gearscore}<br><span class="tooltipStat" style="color:${color}">${beautify(item.finalDamage())}
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>
+</span>`
+
+} 
+
+
+if (item.hp !== undefined) {
+
+  if (stats.rogue.active) return `${returnQualityName(item.quality)}${gearscore}<br><span class="tooltipStat" style="color:${color}">${beautify(item.finalRogueHp())}
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M2 9.137C2 14 6.02 16.591 8.962 18.911C10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138S16.5.825 12 5.501C7.5.825 2 4.274 2 9.137"/></svg>
 </span>`
+
+
+  return `${returnQualityName(item.quality)}${gearscore}<br><span class="tooltipStat" style="color:${color}">${beautify(item.finalHp())}
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M2 9.137C2 14 6.02 16.591 8.962 18.911C10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138S16.5.825 12 5.501C7.5.825 2 4.274 2 9.137"/></svg>
+  </span>`
+
+} 
 
 
 
@@ -2432,6 +2505,18 @@ let equippedOffhand = undefined
 
 let equippedItems = [equippedHead, equippedChest, equippedLegs, equippedFeet];
 
+let equippedRogueWeapon = undefined
+let equippedRogueHead = undefined
+let equippedRogueChest = undefined
+let equippedRogueLegs = undefined
+let equippedRogueFeet = undefined
+let equippedRogueRing = undefined
+let equippedRogueTrinket = undefined
+let equippedRogueLuma = undefined
+let equippedRogueOffhand = undefined
+
+let equippedRogueItems = [equippedRogueHead, equippedRogueChest, equippedRogueLegs, equippedRogueFeet];
+
 
 function equipGear(){
 
@@ -2442,6 +2527,7 @@ function equipGear(){
   did("playerWeaponEnchantGlitch").style.display = "none"
 
   itemInventory.forEach((item) => {
+    if (stats.rogue.active) {eval('equippedRogue' + item.slot + ' = undefined'); return}
     eval('equipped' + item.slot + ' = undefined');
   })
 
@@ -2449,6 +2535,9 @@ function equipGear(){
   itemInventory.forEach((item) => {
 
 if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout)){
+
+
+  //const itemInstance = equippedWeapon
 
   if (item.slot === `Weapon`) { 
     did("playerWeapon").src = `img/src/weaponModels/I${item.img}.png`;
@@ -2478,8 +2567,8 @@ if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout
 
 
 
-
-  eval('equipped' + item.slot + ' = item');
+  if (stats.rogue.active) {eval('equippedRogue' + item.slot + ' = item'); return}
+  if (!stats.rogue.active) eval('equipped' + item.slot + ' = item');
 
 
 
@@ -2492,6 +2581,7 @@ if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout
 
 
   equippedItems = [equippedHead, equippedChest, equippedLegs, equippedFeet, equippedLuma, equippedWeapon, equippedRing, equippedTrinket, equippedOffhand];
+  equippedRogueItems = [equippedRogueHead, equippedRogueChest, equippedRogueLegs, equippedRogueFeet, equippedRogueLuma, equippedRogueWeapon, equippedRogueRing, equippedRogueTrinket, equippedRogueOffhand];
   tierCheck();
   statsUpdate();
   updateStatsUI();
@@ -2831,7 +2921,7 @@ function dropMonsterCard(){
       return
     }
 
-    if (!enemies[stats.currentEnemy].card2.got && chance(1/4)){
+    if (!enemies[stats.currentEnemy].card2.got && chance(     0.2*(1+statHidden.cardChance)  )){
       item.init(2)
       if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) { return }
       itemInventory.push(item)
@@ -2841,7 +2931,7 @@ function dropMonsterCard(){
 
     }
 
-    if (!enemies[stats.currentEnemy].card3.got && chance(1/7)){
+    if (!enemies[stats.currentEnemy].card3.got && chance(     0.1*(1+statHidden.cardChance)  )){
       item.init(3)
       if (itemInventory.some(existingItem => areItemsExact(existingItem, item))) { return }
       itemInventory.push(item)

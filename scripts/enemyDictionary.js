@@ -3,29 +3,39 @@
 
 function returnEnemyHp(level){
     //return Math.floor(1000 * Math.pow(1.5, (level-1)))
-    let baseHp = 100
-    if (level>=18) baseHp = 150
-    if (level>=23) baseHp = 250 //a2 start
-    if (level>=28) baseHp = 500
-    if (level>=33) baseHp = 700
-    if (level>=38) baseHp = 900
 
-    return Math.floor(baseHp * (level*1.25))
+    if (stats.rogue.active) return Math.floor(300 * (level* (1.1 * (1+stats.rogue.areaDifficulty/10) ) ))
+
+      let baseHp = 6
+      if (level>=6) baseHp = 10
+      if (level>=16) baseHp = 20
+      if (level>=21) baseHp = 30 //start a2
+      if (level>=23) baseHp = 50 
+      if (level>=26) baseHp = 60
+
+
+
+
+      return Math.floor(baseHp * (level*gearscoreMod))
+
+
 }
 
 function returnEnemyAttack(level){
   //return Math.floor(1000 * Math.pow(1.5, (level-1)))
 
+  if (stats.rogue.active) return Math.floor(3 * (level * (1 * (1+stats.rogue.areaDifficulty/10) ) ))
 
-  let baseAtk = 4
-  if (level>=8) baseAtk = 5
-  if (level>=18) baseAtk = 8
-  if (level>=21) baseAtk = 10 //a2 start
-  if (level>=28) baseAtk = 16
-  if (level>=33) baseAtk = 25
-  if (level>=38) baseAtk = 45 
+    let baseAtk = 1
+    if (level>=23) baseAtk = 2 //start a2
+    if (level>=26) baseAtk = 2.3
+    if (level>=31) baseAtk = 2.4
+    if (level>=36) baseAtk = 2.8
 
-  return Math.floor(baseAtk * (level*1))
+
+    return Math.floor(baseAtk * (level*gearscoreMod))
+    
+
 }
 
 
@@ -91,7 +101,7 @@ enemies.E1 = {
     description: 'A slug so passionate about vegetables that he raised one on its shell. Scientists are in absolute awe.',
     area: 'A1',
     difficulty: 'easy',
-    lootTable: function() { return { CaesarSalad : { c : chances.enemies.poor, a : 1, l : function(){return (areas[stats.currentArea].heat>3 && quests.A1QN13.state!=="completed")}}, SlimyResidue : { c : chances.enemies.poor, a : 1}, WoodenSword : { c : chances.enemies.poor, a : 1}, ClothHead : { c : chances.enemies.poor, a : 1},  CabbageBoots : { c : chances.enemies.uncommon, a : 1} } },
+    lootTable: function() { return { CaesarSalad : { c : chances.enemies.h1, a : 1, l : function(){return (areas[stats.currentArea].heat>3 && quests.A1QN13.state!=="completed")}}, SlimyResidue : { c : chances.enemies.h1, a : 1}, WoodenSword : { c : chances.enemies.h1, a : 1}, ClothHead : { c : chances.enemies.h1, a : 1},  CabbageBoots : { c : chances.enemies.h3, a : 1} } },
     align: 'nature',
     passive: true,
     ai: function () {
@@ -116,7 +126,7 @@ enemies.E3 = {
   description: 'Recognized for their loud croaking sound, numerous noise complaints have been filled wherever they reside. But they never listen...',
   area: 'A1',
   difficulty: 'medium',
-  lootTable: function() { return { FrogLeg : { c : chances.enemies.poor, a : 1, l : function(){return (areas[stats.currentArea].heat>1 && quests.A1QN9.state!=="completed")}}, ClothLegs : { c : chances.enemies.poor, a : 1},  ClothChest : { c : chances.enemies.poor, a : 1},  SilverRing : { c : chances.enemies.poor, a : 1},  RanaHat : { c : chances.enemies.epic, a : 1}, } },
+  lootTable: function() { return { FrogLeg : { c : chances.enemies.h0, a : 1, l : function(){return (areas[stats.currentArea].heat>1 && quests.A1QN9.state!=="completed")}}, ClothLegs : { c : chances.enemies.h1, a : 1},  ClothChest : { c : chances.enemies.h1, a : 1},  SilverRing : { c : chances.enemies.h2, a : 1},  RanaHat : { c : chances.enemies.h4, a : 1}, } },
   align: 'nature',
   card1 : { description:"x1.05 Gathering Power", effect: function() {stat.GatheringPower*=1.05} },
   card2 : { description:"x1.1 Gathering Power", effect: function() {stat.GatheringPower*=1.1}},
@@ -147,15 +157,15 @@ function heatDesc(desc, heat){
 
 enemies.E4 = {
   name: 'Hoopperoona',
-  initialLevel: function() { return 7},
+  initialLevel: function() { return 5},
   description: 'An overgrown arachnid that doesn\'t seem too up for conversation.',
   area: 'A1',
   difficulty: 'boss',
   tag: 'areaBoss',
-  hp: function() {return returnEnemyHp(this.level)*6},
+  hp: function() {return returnEnemyHp(this.level)*10},
   attack : function() {return returnEnemyAttack(this.level) / 2},
   ai: function () { castHoopperoona() },
-  lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : Math.pow(5,areas[stats.currentArea].heat)*nofarmToggleBonus },  HopperoonaPhylactery : { c : chances.boss.uncommon, a : 1},  WebthreadedPromise : { c : chances.boss.uncommon, a : 1}, ChrysalisRecurver : { c : chances.boss.rare, a : 1}, PoisonScroll2 : { c : chances.boss.epic, a : 1}, } },
+  lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : Math.pow(4,areas[stats.currentArea].heat)*nofarmToggleBonus }, WebthreadedPromise : { c : chances.boss.h1, a : 1},  HopperoonaPhylactery : { c : chances.boss.h2, a : 1}, ChrysalisRecurver : { c : chances.boss.h4, a : 1, l : function(){return (areas[stats.currentArea].heat>2)} }, PoisonScroll2 : { c : chances.boss.h5, a : 1}, } },
   align: 'occult',
   bestiarySkills : function() { return `❖${buffIcon("B57")}Ravenous Bite: Inflicts 2 ${heatDesc(`(4 in${colorTag("🔥3","orange")})`,3)} stacks of${buffIcon("B1")}Poison<br>
   ${heatDesc(`❖${buffIcon("B58")}Web Shot${colorTag("🔥2","orange")}: Inflicts 2 ${heatDesc(`(4 in${colorTag("🔥4","orange")})`,4)}  stacks of${buffIcon("B36")}Slow`,2)}` },
@@ -171,7 +181,13 @@ enemies.E4 = {
       //if (areas[stats.currentArea].heat===4) return 2
       return 0
   },
-  onDeath: function () { if (areas[stats.currentArea].heat>2) sendMail("Shellshine")},
+  onDeath: function () {
+      
+    
+    if (areas[stats.currentArea].heat>1 && !enemies[stats.currentEnemy].heatBeaten.heat2) {     setTimeout(() => { createPopup('<img src="img/src/icons/goldmedal.png"> New items are available on the shop', 'savePopUp'); updateItemShop(); }, 100);
+   } 
+    if (areas[stats.currentArea].heat>2) sendMail("Shellshine");
+  }
 }
 
 
@@ -237,7 +253,7 @@ enemies.E5 = {
   description: 'Although it lacks poison or claws, does it really look like it couldn\'t hurt you?',
   area: 'A2',
   difficulty: 'easy',
-  lootTable: function() { return { RabbitHide : { c : chances.enemies.poor, a : 1, l : function(){return (areas[stats.currentArea].heat>1 && quests.A2Q5.state!=="completed")}}, TinyLifeMote : { c : chances.enemies.common, a : 1}, BoxingGloves : { c : chances.enemies.uncommon, a : 1}, MonkHead : { c : chances.enemies.epic, a : 1}, } },
+  lootTable: function() { return { RabbitHide : { c : chances.enemies.h1, a : 1, l : function(){return (areas[stats.currentArea].heat>1 && quests.A2Q5.state!=="completed")}}, TinyLifeMote : { c : chances.enemies.h0, a : 1}, BoxingGloves : { c : chances.enemies.h3, a : 1}, MonkHead : { c : chances.enemies.h5, a : 1}, } },
   align: 'nature',
   card1 : { description:"x1.05 Max Health", effect: function() {stat.MaxHealth*=1.05} },
   card2 : { description:"x1.08 Max Health", effect: function() {stat.MaxHealth*=1.08}},
@@ -250,7 +266,7 @@ enemies.E6 = {
   description: 'A common red squirrel that has found its ways into martial arts. Not so common anymore.',
   area: 'A2',
   difficulty: 'medium',
-  lootTable: function() { return { Acorn : { c : chances.enemies.poor, a : 1, l : function(){return (areas[stats.currentArea].heat>2 && quests.A2Q7.state!=="completed")}}, LumaSquirrel : { c : chances.enemies.poor, a : 1}, BlackBelt : { c : chances.enemies.uncommon, a : 1},  ShinigamiChest : { c : chances.enemies.uncommon, a : 1}, RecipeShurikenFan : { c : chances.enemies.rare, a : 1, l: function(){  return (RecipeShurikenFan.timesGot===0)  }},  } },
+  lootTable: function() { return { Acorn : { c : chances.enemies.h1, a : 1, l : function(){return (areas[stats.currentArea].heat>2 && quests.A2Q7.state!=="completed")}}, LumaSquirrel : { c : chances.enemies.h1, a : 1}, BlackBelt : { c : chances.enemies.h2, a : 1},  ShinigamiChest : { c : chances.enemies.h3, a : 1}, RecipeShurikenFan : { c : chances.enemies.h4, a : 1, l: function(){  return (RecipeShurikenFan.timesGot===0)  }},  } },
   align: 'nature',
   card1 : { description:"x1.05 Crit Damage", effect: function() {stat.CritDamage*=1.05} },
   card2 : { description:"x1.1 Crit Damage", effect: function() {stat.CritDamage*=1.1}},
@@ -263,7 +279,7 @@ enemies.E7 = {
   description: 'A hen proficient in full body combat. This one doesn\'t even want to cross the road.',
   area: 'A2',
   difficulty: 'hard',
-  lootTable: function() { return { SashHead : { c : chances.enemies.poor, a : 1}, MonkFeet : { c : chances.enemies.epic, a : 1}, BushidoMedallion : { c : chances.enemies.epic, a : 1} } },
+  lootTable: function() { return { SashHead : { c : chances.enemies.h1, a : 1}, BushidoMedallion : { c : chances.enemies.h4, a : 1}, MonkFeet : { c : chances.enemies.h5, a : 1},  } },
   align: 'nature',
   card1 : { description:"x1.05 Clicking Power", effect: function() {stat.LumaPower*=1.05} },
   card2 : { description:"x1.1 Clicking Power", effect: function() {stat.LumaPower*=1.1}},
@@ -364,16 +380,21 @@ enemies.E7.bestiaryItem = 'bestiaryItem("I25","drop")';
 
 enemies.E8 = {
   name: 'King-Kat',
-  initialLevel: function() { return 27},
+  initialLevel: function() { return 25},
   description: 'King of the jungle and king of all fighting styles.',
   area: 'A2',
   difficulty: 'boss',
   tag: 'areaBoss',
-  hp: function() {return returnEnemyHp(this.level)*8},
+  hp: function() {return returnEnemyHp(this.level)*10},
   attack : function() {return returnEnemyAttack(this.level) / 2},
   ai: function () { castKingKat() },
-  lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : Math.pow(5,areas[stats.currentArea].heat)*nofarmToggleBonus },  HopperoonaPhylactery : { c : chances.boss.uncommon, a : 1},  WebthreadedPromise : { c : chances.boss.uncommon, a : 1}, PoisonScroll : { c : chances.boss.rare, a : 1}, ChrysalisRecurver : { c : chances.boss.rare, a : 1}, PoisonScroll2 : { c : chances.boss.epic, a : 1}, } },
-  lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : Math.pow(5,areas[stats.currentArea].heat+4)*nofarmToggleBonus },  TigerHead : { c : chances.boss.rare, a : 1},  TigerChest : { c : chances.boss.rare, a : 1}, TigerLegs : { c : chances.boss.rare, a : 1}, TigerFeet : { c : chances.boss.rare, a : 1}, LumaTiger : { c : chances.boss.epic, a : 1}, KingKatDecapitator : { c : chances.boss.epic, a : 1}, } },
+  lootTable: function() { return { 
+    UpgradeMaterial2 : { c : 1, a : Math.pow(4,areas[stats.currentArea].heat)*nofarmToggleBonus },
+    GemGearscore1 : { c : chances.boss.h3, a : 1, l : function(){return (areas[stats.currentArea].heat>2)} },
+    StripedPelt : { c : chances.boss.h3, a : 1, l : function(){return (areas[stats.currentArea].heat>2)} }, LumaTiger : { c : chances.boss.h5, a : 1},
+    RecipeKingKatDecapitator : { c : chances.boss.h4, a : 1, l : function(){return (areas[stats.currentArea].heat>2 && RecipeKingKatDecapitator.timesGot===0)} },
+    }},
+
   align: 'nature',
    bestiarySkills : function() { return `
     ❖${miniIcon("items/I69.jpg")}King Punch: Deal x2 enemy attack as Occult Damage
@@ -438,6 +459,49 @@ enemies.E28 = {
      ❖${buffIcon("B42")}Basilisk Stare: If you are Poisoned, inflict Petrify
     ` },
   contextTooltip: function() { return [ contextTooltipPlayerPoison(), contextTooltipPlayerPetrify()] },
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+enemies.E52 = {
+  name: 'Dream Visage',
+  initialLevel: function() { return 21},
+  description: 'Although it lacks poison or claws, does it really look like it couldn\'t hurt you?',
+}
+
+
+
+enemies.R1 = {
+  name: 'Dream Visage',
+  initialLevel: function() { return 21},
+  description: 'Although it lacks poison or claws, does it really look like it couldn\'t hurt you?',
 }
 
 

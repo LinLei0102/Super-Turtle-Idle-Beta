@@ -167,6 +167,43 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
 
    enemies[currentEnemy].level = enemies[currentEnemy].initialLevel() + (1*areas[stats.currentArea].heat-1) + ((areas[stats.currentArea].heat-1)*4)
 
+
+
+
+
+
+
+
+
+   if (stats.rogue.active){ 
+    
+    
+    enemies[currentEnemy].level = stats.rogue.stageEnemy*5 
+    enemies[currentEnemy].align = stats.rogue.areaAlign
+
+  
+  }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
    if (enemies[currentEnemy].resource)  enemies[currentEnemy].level = 1
 
   if (document.hasFocus() && !settings.disableAnimations && stats.currentCategory === "rpgContainer"){if (!gatherDifficulty.includes(enemies[stats.currentEnemy].difficulty)) div.style.animation= "enemySpawn 0.5s 1";}
@@ -393,6 +430,20 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
         expBar();
         dropLoot(stats.currentEnemy)
 
+
+        if (stats.rogue.active) {
+          stats.rogue.stage=1
+          stats.rogue.stageEnemy += 1
+          rpgClass.Dreamer.level += 5
+          updateClass()
+          rogueStageHandler()
+          did("enemyPanel").style.display="none"
+          repositionQuickAccessMenu()
+          hpRegen()
+          rogueEndBattle()
+          
+        }
+
     if (enemies[stats.currentEnemy].tag==="areaBoss"){
       if (areas[stats.currentArea].heat===areas[stats.currentArea].heatMax && areas[stats.currentArea].heatMax<4) {
         areas[stats.currentArea].heatMax++;
@@ -499,6 +550,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
   
     enemies[stats.currentEnemy].killCount++;
     if (unlocks.bestiary) enemies[stats.currentEnemy].medalProgress++
+    if (unlocks.bestiary && enemies[stats.currentEnemy].medalProgress>3000) did("bestiaryShopWidget").style.animation = "widgetAlert 2s infinite"
     stats.totalKills++;
     if (bossTime) {stats.totalBossKills++;};
 
@@ -847,6 +899,7 @@ function hpRegen() { //additionally manages death
     if (rpgPlayer.hp < stat.MaxHealth && (!bossTime && !dungeonTime && !showdownTime && !skirmishTime )) {
 
     rpgPlayer.hp += stat.MaxHealth/20;
+    if (stats.rogue.active && did("enemyPanel").style.display=="none") rpgPlayer.hp += stat.MaxHealth
 
     } else if (talent.TG2C2.active) rpgPlayer.hp += stat.MaxHealth/100;
     playerUpdate()
@@ -1288,6 +1341,8 @@ function enemyDamage(damage, align, icon, type){
     critMark = " !"
     crit = 1.5*1+stat.CritDamage/100
     stats.criticalHitsDealt++;
+    if (statHidden.skamtebord>0) {buffs.Skamtebord.time = 10; if (buffs.Skamtebord.stacks<3) buffs.Skamtebord.stacks++}
+    if (statHidden.gemstoneHeart>0) {playerHealingDamage( (damage*0.05)* statHidden.gemstoneHeart )}
     if (talent.TA1C.active && rpgPlayer.mana<playerMaxMana) rpgPlayer.mana += playerMaxMana*0.02
     playSound("audio/hit2.mp3")
 
@@ -1322,6 +1377,8 @@ function enemyDamage(damage, align, icon, type){
   if (icon==="strong" && (enemies[stats.currentEnemy].dynamic || did(stats.currentEnemy+"enemy").classList.contains('gilded')) ) damageDealt = 1000 * dynamicCalc * typestrength * enemyDefenseMultiplier * crit;
 
   }
+
+
 
   let finalDamage = rng(damageDealt*0.95, damageDealt*1.05)
 
@@ -1468,6 +1525,7 @@ function enemyOccultDamage(damage, type){
     //if (enemies[stats.currentEnemy].align === 'might') {damageDealt *= typeResist; icon='weak';}
     if (enemies[stats.currentEnemy].align === 'elemental') {damageDealt *= typestrength; icon='strong';} 
   }
+
 
   enemyDamage(damageDealt, "Occult", icon, type)
 
@@ -4396,14 +4454,16 @@ function specialButtonUi() { //shows or hides special buttons depending on zone
       did("turtleBot").style.display = "flex";
       did("heatIcon").style.display = "flex";
       if (unlocks.shop) did("shopInteractable").style.display = "flex";
+      did("questInteractable").style.display = "flex";
 
-      if (stats.currentArea === "L1"){
+
+      if (stats.currentArea === "L1" || stats.currentArea === "L2"){
         did("enemyPanel").style.display = "none";
         did("areaEncounters").style.display = "none";
         did("turtleBot").style.display = "none";
         did("heatIcon").style.display = "none";
         did("shopInteractable").style.display = "none";
-
+        did("questInteractable").style.display = "none";
       }
 
       /*
@@ -4468,7 +4528,7 @@ function difficultyButton(div, difficulty){
     resetEncounter()
 
 
-    if (difficulty === "boss" && rpgPlayer.BossCharges<1) {playSound("audio/thud.mp3"); return}
+    if (difficulty === "boss" && rpgPlayer.BossCharges<1 && !rpgPlayer.debug) {playSound("audio/thud.mp3"); return}
 
     stats.currentDifficulty = difficulty;
     if (stats.currentDifficulty !== "boss") areas[stats.currentArea].savedDifficulty = difficulty
@@ -5467,9 +5527,9 @@ document.querySelectorAll('.dailyPresent').forEach(element => {
 });
 
 
-let rareLootTable1 = [Stamp1,CoinPile1,ScutePile1,ChanceDie1]
+let rareLootTable1 = [Stamp1,CoinPile1,ScutePile1,ChanceDie1, GoldenGlassShard]
 let rareLootTable2 = [Stamp2,DungeonKey1,UpgradeMaterial0,MonsterSoul,Geode1]
-let rareLootTable3 = [ScutePile2,CoinPile2,DungeonKey3,ChanceDie2,Stamp3,DungeonKey2]
+let rareLootTable3 = [ScutePile2,CoinPile2,DungeonKey3,ChanceDie2,Stamp3,DungeonKey2, GoldenGlass]
 
 
 
