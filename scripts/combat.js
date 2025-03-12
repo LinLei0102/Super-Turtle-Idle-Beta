@@ -19,7 +19,6 @@ function playerTurnTimer() {
   }
 
   requestPlayerAttackTime = currentTime;
-
   setTimeout(playerTurnTimer, 200);
 }
 
@@ -74,6 +73,7 @@ function playerTurn() {
     enemyAdd1CurrentHp = 0
     enemyAdd2CurrentHp = 0
     enemyUpdate()
+    contractEnemyInfobar()
 
 
   }
@@ -663,6 +663,7 @@ function playerBuffs() { //only UI
       
       if (!did(b + "buff")) {  //if it doesnt exist
        
+        if (buffs[b].hidden) return
         const bufdiv = document.createElement("div");
         bufdiv.id = b + "buff";
 
@@ -791,6 +792,17 @@ const playerRectYRNG = playerRect.top - containerRect.top + playerRect.height / 
 
   if (buffs.EnemyBurning.time>0) particleTrackers.push(new ParticleEmber(enemyRectXRNG,enemyRectYRNG));
   if (buffs.EnemyEnrage.time>0) particleTrackers.push(new ParticleBuffEnrage(enemyRectXRNG,enemyRectYRNG));
+
+
+  if (buffs.BossAura1.time>0) {
+
+    particleTrackers.push(new ParticleGlimmerGhostAuraParticlesBoss())
+    if (chance(1/5)) particleTrackers.push(new ParticleBossAngry1())
+    else if ((chance(1/5))) particleTrackers.push(new ParticleBossAngry2())
+    else if ((chance(1/5))) particleTrackers.push(new ParticleBossAngry3())
+    else if ((chance(1/5))) particleTrackers.push(new ParticleBossAngry4())
+
+  }
 
 
   if (stats.rogue.active && did("enemyPanel").style.display==="flex") particleTrackers.push(new ParticleBuffEnrage(enemyRectXRNG,enemyRectYRNG, {imageHue: 150, speedY: rngD(-0.2,-0.5), rotationSpeed: rngD(-0.005,0.005), alpha: 0.2, maxAlpha: 0.2, tSpeed: 0.005, alphaDecay: 0.003  }));

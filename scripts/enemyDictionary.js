@@ -162,7 +162,7 @@ enemies.E4 = {
   area: 'A1',
   difficulty: 'boss',
   tag: 'areaBoss',
-  hp: function() {return returnEnemyHp(this.level)*10},
+  hp: function() {return returnEnemyHp(this.level)*8},
   attack : function() {return returnEnemyAttack(this.level) / 2},
   ai: function () { castHoopperoona() },
   lootTable: function() { return { UpgradeMaterial1 : { c : 1, a : Math.pow(4,areas[stats.currentArea].heat)*nofarmToggleBonus }, WebthreadedPromise : { c : chances.boss.h1, a : 1},  HopperoonaPhylactery : { c : chances.boss.h2, a : 1}, ChrysalisRecurver : { c : chances.boss.h4, a : 1, l : function(){return (areas[stats.currentArea].heat>2)} }, PoisonScroll2 : { c : chances.boss.h5, a : 1}, } },
@@ -385,7 +385,7 @@ enemies.E8 = {
   area: 'A2',
   difficulty: 'boss',
   tag: 'areaBoss',
-  hp: function() {return returnEnemyHp(this.level)*10},
+  hp: function() {return returnEnemyHp(this.level)*8},
   attack : function() {return returnEnemyAttack(this.level) / 2},
   ai: function () { castKingKat() },
   lootTable: function() { return { 
