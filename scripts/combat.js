@@ -663,7 +663,7 @@ function playerBuffs() { //only UI
       
       if (!did(b + "buff")) {  //if it doesnt exist
        
-        if (buffs[b].hidden) return
+        if (buffs[b].hidden===true) continue
         const bufdiv = document.createElement("div");
         bufdiv.id = b + "buff";
 
