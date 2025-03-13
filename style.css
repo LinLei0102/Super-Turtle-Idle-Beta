@@ -198,7 +198,8 @@
     overflow: visible;
     translate: 0 -100%;
     box-shadow: rgba(0, 0, 0, 0.2) 0 5px 3px -1px;
-
+    transition: 0.5s;
+    animation-fill-mode: forwards !important;
 }
 
 .enemyInfo {
@@ -5506,6 +5507,17 @@ animation: growFadeIn 0.5s 1;
 
 
 }
+
+
+@keyframes infobarExpand {
+0% { width: 19rem;}
+100% { width: 28rem;}
+}
+
+@keyframes infobarContract {
+    0% { width: 28rem;}
+    100% { width: 19rem;}
+    }
 
 .upgradeTooltipWidget3 strong{
     font-size: 1.5rem !important;

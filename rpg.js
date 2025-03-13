@@ -146,6 +146,29 @@ function spawnEnemy(enemy) { //spawns enemy based on current difficulty and area
       playerBuffs()
   }
 
+  if (enemies[currentEnemy].tag==="areaBoss"){
+
+    if (!enemies[currentEnemy].heatBeaten.heat1 && areas[stats.currentArea].heat===1) { currentBreakBar++; expandBar() }
+    if (!enemies[currentEnemy].heatBeaten.heat2 && areas[stats.currentArea].heat===2) { currentBreakBar++; expandBar() }
+    if (!enemies[currentEnemy].heatBeaten.heat3 && areas[stats.currentArea].heat===3) { currentBreakBar++; expandBar() }
+    if (!enemies[currentEnemy].heatBeaten.heat4 && areas[stats.currentArea].heat===4) { currentBreakBar++; expandBar() }
+
+    function expandBar(){
+
+    buffs.BossAura1.time = 324234
+    playerBuffs()
+    voidAnimation("enemyInfobar",  "infobarExpand 0.2s 1, gelatine 0.5s 1, flash 0.4s 1")
+    did("enemyAnimation").style.animation = "gelatine 0.5s 1, flash 0.4s 1";
+
+    }
+
+  }
+
+
+
+
+
+
   setBreakBarColor()
 
 
@@ -451,10 +474,12 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
         playSound("audio/startup.mp3","noPitch");
       }
 
-      if (!enemies[stats.currentEnemy].heatBeaten.heat1 && areas[stats.currentArea].heat===1) enemies[stats.currentEnemy].heatBeaten.heat1 = true
-      if (!enemies[stats.currentEnemy].heatBeaten.heat2 && areas[stats.currentArea].heat===2) enemies[stats.currentEnemy].heatBeaten.heat2 = true
-      if (!enemies[stats.currentEnemy].heatBeaten.heat3 && areas[stats.currentArea].heat===3) enemies[stats.currentEnemy].heatBeaten.heat3 = true
-      if (!enemies[stats.currentEnemy].heatBeaten.heat4 && areas[stats.currentArea].heat===4) enemies[stats.currentEnemy].heatBeaten.heat4 = true
+      if (!enemies[stats.currentEnemy].heatBeaten.heat1 && areas[stats.currentArea].heat===1) {enemies[stats.currentEnemy].heatBeaten.heat1 = true; contractEnemyInfobar()  }
+      if (!enemies[stats.currentEnemy].heatBeaten.heat2 && areas[stats.currentArea].heat===2) {enemies[stats.currentEnemy].heatBeaten.heat2 = true; contractEnemyInfobar()  }
+      if (!enemies[stats.currentEnemy].heatBeaten.heat3 && areas[stats.currentArea].heat===3) {enemies[stats.currentEnemy].heatBeaten.heat3 = true; contractEnemyInfobar()  }
+      if (!enemies[stats.currentEnemy].heatBeaten.heat4 && areas[stats.currentArea].heat===4) {enemies[stats.currentEnemy].heatBeaten.heat4 = true; contractEnemyInfobar()  }
+
+
 
 
       rpgPlayer.BossCharges--
@@ -700,6 +725,11 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
 
 
+}
+
+
+function contractEnemyInfobar(){
+    did("enemyInfobar").style.animation = "infobarContract 0.2s 1, gelatine 0.5s 1, flash 0.4s 1";
 }
 
 
@@ -4464,6 +4494,10 @@ function specialButtonUi() { //shows or hides special buttons depending on zone
         did("heatIcon").style.display = "none";
         did("shopInteractable").style.display = "none";
         did("questInteractable").style.display = "none";
+      }
+
+      if (stats.currentArea === "L1"){
+        did("questInteractable").style.display = "flex";
       }
 
       /*

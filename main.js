@@ -3207,6 +3207,9 @@ function retroactiveUpdate(){
 }
 
 
+
+
+
 function sanityCheck(){
 for (i in items){ if (!(equipCheck(i)) && items[i].sort==="equipable") {eval(items[i].remove)} }
 }

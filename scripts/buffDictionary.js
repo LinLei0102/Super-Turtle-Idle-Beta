@@ -24,7 +24,15 @@ buffs.EnemyEnrage = {
     position: `enemy`,
     stacks: 0,
     tag: "clear",
+} 
 
+buffs.BossAura1 = {
+    name: 'BossAura1',
+    hidden : true,
+    description: '<FONT COLOR="#8fbaff">Increased Attack',
+    img : 'img/src/buffs/B26.jpg',
+    position: `enemy`,
+    tag: "clear",
 } 
 
 buffs.EnemyInvulnerable = {

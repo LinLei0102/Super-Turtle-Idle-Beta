@@ -738,6 +738,68 @@ class ParticleGlimmerGhostAuraParticles3 extends ParticleGlimmerGhostAuraParticl
     }
 }
 
+class ParticleGlimmerGhostAuraParticlesBoss extends ParticleGlimmerGhostAuraParticles1 { //yellow
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.x = this.enemyCenterX
+        this.y = this.enemyCenterY
+        this.size = 80; //m
+        this.alpha = 0.4;
+        this.maxAlpha = 0.4
+        this.offsetX = rngD(-100,100);
+        this.offsetY = rngD(-100,100);
+        this.imageHue = -50; //optional
+        Object.assign(this, options);
+    }
+}
+
+class ParticleBossAngry1 extends NewParticle { //green
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.x = this.enemyCenterX
+        this.y = this.enemyCenterY
+        this.offsetX = rngD(-100,100);
+        this.offsetY = rngD(-100,100);
+        this.tSpeed = 0.01
+        this.size = 15; //m
+        this.maxSize = this.size
+        this.speedY = -1;
+        this.sizeDecay = 0.5;
+        this.simpleColor = "transparent"
+        this.offsetX = rngD(-100,100);
+        this.offsetY = rngD(-100,100);
+        this.image = new Image(); //optional
+        this.image.src = "img/src/projectiles/angry1.png"; //optional
+        this.spawnStyle = "increase" //"increase", "fade", optional
+        this.rotationSpeed = rngD(0.005,-0.005); 
+        this.rotation = rngD(-0.2,0.2); 
+        Object.assign(this, options);
+    }
+}
+
+class ParticleBossAngry2 extends ParticleBossAngry1 { //green
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/angry2.png"; //optional
+        Object.assign(this, options);
+    }
+}
+
+class ParticleBossAngry3 extends ParticleBossAngry1 { //green
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/angry3.png"; //optional
+        Object.assign(this, options);
+    }
+}
+
+class ParticleBossAngry4 extends ParticleBossAngry1 { //green
+    constructor(x, y, options = {}) {
+        super(x, y);
+        this.image.src = "img/src/projectiles/angry4.png"; //optional
+        Object.assign(this, options);
+    }
+}
 
 
 

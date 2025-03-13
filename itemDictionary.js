@@ -530,7 +530,12 @@ class Gem extends Stackable {
         if (this.gemColor==="yellow") equippedWeapon.gemSlot.yellow = this.constructor.name; 
         playSound("audio/gemSlot.mp3")
         this.constructor.count--
-        setTimeout(() => { itemContextMenuBegone() }, 10);
+        setTimeout(() => { itemContextMenuBegone() 
+
+            
+        }, 10);
+        //equippedWeapon.invInit()
+        statsUpdate();
         statsUpdate();
         updateStatsUI();
     }
@@ -639,13 +644,9 @@ class GemGearscore1 extends Gem {
         Object.assign(this, properties);
     }
     stats(){ 
-        
         statHidden.fixedGearscore=35 
-    
-    
         equippedWeapon.gearscore = statHidden.fixedGearscore
         equippedWeapon.baseDamage = 10 + ( Math.pow( equippedWeapon.gearscore, gearscoreMod)   )
-
     }
 }
 
@@ -2625,7 +2626,7 @@ class MoonNecklace extends ArmorTrinket {
         this.skillDescription = function() { return `1/${Math.ceil(this.baseSkillChance*this.skillChance)} chance to gain Blessing of the Moon for 15 seconds, summoning stars with your attacks that deal x${this.baseSkillDamage*this.skillDamage} of your Power as Occult Damage` };
         this.img = 412;
         this.baseSkillChance = 10;
-        this.baseSkillDamage = 1;
+        this.baseSkillDamage = 1.5;
         this.quality = `Uncommon`;
         this.noScrap = true
         Object.assign(this, properties);
@@ -3041,6 +3042,7 @@ class FlowerGarland extends ArmorHead {
         this.skillDescription = function() { return `+ 15% Nature Bonus` };
         this.img = 397;
         this.quality = `Common`;
+        this.noScrap = true
         this.gearscoreBase = 3;
         this.upgradeMaterial = UpgradeMaterial1
         Object.assign(this, properties);
@@ -3335,6 +3337,7 @@ class LottoTicket extends Key {
         this.savedInfo = {expired:false,number:rng(0,999)}
     }
     invInit(){
+    if (this.savedInfo===undefined) return
     if (this.savedInfo.expired===true){
 
         let winText = 'Better luck next time!'
