@@ -207,6 +207,14 @@ buffs.LuckyTincture = {
     effect : function() { stat.Luck += 20 },
 }
 
+buffs.WeekendBuff = {
+    name: 'Turtle Weekend',
+    description: '<FONT COLOR="#8fbaff">+ 20% Luck & x1.5 Income',
+    img : 'img/src/buffs/B63.jpg',
+    position: `global`,
+    effect : function() { stat.Luck += 20; stat.Income*=1.5 },
+}
+
 buffs.NatureFlask = {
     name: 'Nature Flask',
     description: '<FONT COLOR="#8fbaff">+ 60% Nature Bonus',

@@ -497,16 +497,72 @@ did(`inventory${sort}Target`).className = "inventoryTab inventoryTabActive"
   did(`inventory${sort}Indicator`).innerHTML = 0
 
   inventoryCulling()
+  changeInventoryPage()
+
 
 }
+
+
+const inventoryMaxSlots = 7*9
+let inventoryCurrentSlots = 0
+let inventoryCurrentPage = 1
+let inventoryCurrentVisibleSlots = 0
+
+
+function changeInventoryPage(direction){
+
+  if (direction === +1 && inventoryCurrentVisibleSlots!=inventoryMaxSlots) {
+    return
+  }
+
+
+  if (direction!==undefined){
+    inventoryCurrentPage = Math.max(1,inventoryCurrentPage + direction)
+    playSound("audio/button4.mp3")
+    updateInventory()
+  }
+
+  if (direction===undefined){
+    inventoryCurrentPage = 1
+  }
+
+ 
+  /*
+    if (inventoryCurrentPage===1 && did("inventoryPageNumber") && did("inventoryPageButton1") && did("inventoryPageButton2") && inventoryCurrentVisibleSlots>=inventoryMaxSlots){
+      did("inventoryPageNumber").style.display = "flex"
+      did("inventoryPageButton1").style.display = "flex"
+      did("inventoryPageButton2").style.display = "flex"
+    } else if (inventoryCurrentPage===1 && did("inventoryPageNumber") && did("inventoryPageButton1") && did("inventoryPageButton2")){
+      did("inventoryPageNumber").style.display = "none"
+      did("inventoryPageButton1").style.display = "none"
+      did("inventoryPageButton2").style.display = "none"
+    }
+  */
+
+}
+
+
+
 
 
 function updateInventory(mode) {
 
   let inventory = itemInventory
+  inventoryCurrentSlots=0
+  inventoryCurrentVisibleSlots = 0
+
+  const startIndex = (inventoryCurrentPage - 1) * inventoryMaxSlots;
+  const endIndex = startIndex + inventoryMaxSlots;
+  
+
+const swordIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.071 3.929a1 1 0 0 1 1 1v5.657a1 1 0 0 1-.405.804l-7.198 5.32l.946.947a1 1 0 0 1 0 1.414L12 20.485a1 1 0 0 1-1.154.187l-2.184-1.091l-1.612 1.611a1 1 0 0 1-1.414 0l-2.828-2.828a1 1 0 0 1 0-1.414l1.611-1.612l-1.091-2.184A1 1 0 0 1 3.515 12l1.414-1.414a1 1 0 0 1 1.414 0l.947.946l5.32-7.198a1 1 0 0 1 .804-.405z"/></g></svg>`
+const qualityIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m19.467 8.694l.246-.566a4.36 4.36 0 0 1 2.22-2.25l.759-.339a.53.53 0 0 0 0-.963l-.717-.319a4.37 4.37 0 0 1-2.251-2.326l-.253-.611a.506.506 0 0 0-.942 0l-.253.61a4.37 4.37 0 0 1-2.25 2.327l-.718.32a.53.53 0 0 0 0 .962l.76.338a4.36 4.36 0 0 1 2.219 2.251l.246.566c.18.414.753.414.934 0m-6.08-2.355q.411.65 1.124.961l.565.247q.855.373 1.223 1.198l.338.76c.727 1.637 2.891 1.894 4.072.774l.091.121a1 1 0 0 1-.057 1.269l-9 10a1 1 0 0 1-1.486 0l-9-10A1 1 0 0 1 1.2 10.4l3-4A1 1 0 0 1 5 6h8.206q.077.174.18.339"/></svg>`
+const arrowRight = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="currentColor" d="M58.79 439.13A16 16 0 0 1 48 424c0-73.1 14.68-131.56 43.65-173.77c35-51 90.21-78.46 164.35-81.87V88a16 16 0 0 1 27.05-11.57l176 168a16 16 0 0 1 0 23.14l-176 168A16 16 0 0 1 256 424v-79.77c-45 1.36-79 8.65-106.07 22.64c-29.25 15.12-50.46 37.71-73.32 67a16 16 0 0 1-17.82 5.28Z"/></svg>`
+const arrowLeft = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="currentColor" d="M448 440a16 16 0 0 1-12.61-6.15c-22.86-29.27-44.07-51.86-73.32-67C335 352.88 301 345.59 256 344.23V424a16 16 0 0 1-27 11.57l-176-168a16 16 0 0 1 0-23.14l176-168A16 16 0 0 1 256 88v80.36c74.14 3.41 129.38 30.91 164.35 81.87C449.32 292.44 464 350.9 464 424a16 16 0 0 1-16 16"/></svg>`
 
 
   inventory.forEach((item, index) => {
+    if (item.index != undefined && !item.selected) item.index = undefined
     if (did(item.img+"Count") && item.isStackable && item.constructor.count > 0){
       did(item.img+"Count").innerHTML = beautify(item.constructor.count)
     }
@@ -517,9 +573,21 @@ function updateInventory(mode) {
 
   purgeItems()
   //sortInventory()
-  did("inventoryListing").innerHTML = "";
+
+
+
+  did("inventoryListing").innerHTML = `<div id="inventoryControls"></div>`
+
+
+  
 
   inventory.forEach((item, index) => {
+
+    //if (inventoryCurrentSlots>=inventoryMaxSlots) return
+
+
+    //if (inventoryCurrentSlots <= inventoryCurrentPage*inventoryMaxSlots) return
+
 
     if (stats.rogue.active && !item.rogue) return
     if (item.loadouts==undefined && item.sort!==currentSort) return // if it doesnt belong on that category
@@ -528,8 +596,13 @@ function updateInventory(mode) {
     //if (item.sort!==currentSort) return
     //if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout)) return
 
+
+    if (inventoryCurrentSlots < startIndex || inventoryCurrentSlots >= endIndex) {
+      inventoryCurrentSlots++;
+      return;
+    }
+
     const itemDiv = document.createElement("div");
-    
     if (item.invInit && item.isInvInit === undefined) {item.invInit(); item.isInvInit = true; }
     
  
@@ -562,10 +635,17 @@ function updateInventory(mode) {
     
     itemDiv.innerHTML = `${itemLock} ${gemIndicator} <div class="itemSelect"></div> ${itemCDScreen} ${itemCount} ${returnAlign()} ${returnPrefixAura(item.prefix)} <img src="img/src/items/I${item.img}.jpg">`;
     itemDiv.className = "inventoryItem";
+
+   
+
     itemDiv.item = item; 
-    itemDiv.item.index = index; 
     itemDiv.tag = "inventory"; 
-    item.div = itemDiv
+
+    itemDiv.id = `IndexSlot`+index
+
+    //itemDiv.item.index = index; 
+
+  
     item.index = index
 
     itemDiv.style.outline = `0.2rem solid ${returnQualityColor(item.quality)}`; 
@@ -575,18 +655,28 @@ function updateInventory(mode) {
 
 
 
-    
-
-
-
-
 
     if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout)) { //moves equiped items to the gear slots
+      
+      //dont count equipped items torward inventory slots
+      inventoryCurrentSlots--
+      inventoryCurrentVisibleSlots--
+      
+
+
 
       did(`rpg${item.slot}Slot`).innerHTML = ""
       did(`rpg${item.slot}Slot`).appendChild(itemDiv);
 
     }
+
+
+    inventoryCurrentSlots++
+    inventoryCurrentVisibleSlots++
+
+
+
+    
 
     function returnAlign(){
       if (item.align === `Elemental`) return `<span class="itemAlign">🔥</span>`;
@@ -614,7 +704,7 @@ function updateInventory(mode) {
   });
 
 
-  for (let i = 0; i < 50; i++) { loop() }
+  for (let i = 0; i < inventoryMaxSlots-inventoryCurrentVisibleSlots; i++) { loop() }
 
   function loop(){
   const emptySlot = document.createElement("div");
@@ -627,6 +717,34 @@ function updateInventory(mode) {
 
 
   fadeInventoryTabs()
+
+
+
+
+  
+
+  let paginatedInventoryButtons = ""
+
+  if ((inventoryCurrentPage===1 && inventoryCurrentVisibleSlots>=inventoryMaxSlots )|| inventoryCurrentPage!==1){
+    paginatedInventoryButtons = `
+    <div id="inventoryPageNumber" class="inventoryControlButton">1/99</div>
+                    <button id="inventoryPageButton1" class="inventoryControlButton" onclick="changeInventoryPage(-1)"> ${arrowLeft}  </button>
+                    <button id="inventoryPageButton2" class="inventoryControlButton" onclick="changeInventoryPage(+1)"> ${arrowRight}  </button>
+    `
+  } 
+
+
+  did("inventoryControls").innerHTML = `
+
+                   <div class="inventoryControlButton">Sort by</div>
+                   <button class="inventoryControlButton" onClick="stats.inventorySort = 'ilvl'; sortInventory(); updateInventory(); playSound('audio/button4.mp3')"  >${swordIcon}</button>
+                   <button class="inventoryControlButton" onClick="stats.inventorySort = 'quality'; sortInventory();  updateInventory(); playSound('audio/button4.mp3')" style="margin-right:auto;">${qualityIcon}</button>
+
+                    ${paginatedInventoryButtons}
+                    `;
+
+                    
+  if (did("inventoryPageNumber")) did("inventoryPageNumber").innerHTML = `Page ${inventoryCurrentPage}`
 
 
 }
@@ -668,6 +786,10 @@ function equippedTriggers(){
 }
 
 
+
+
+stats.inventorySort = "quality"
+
 function sortInventory() {
   itemInventory.sort((a, b) => {
 
@@ -690,17 +812,31 @@ function sortInventory() {
     if (lock1 < lock2) {return 1;}
 
 
+    if (stats.inventorySort === "ilvl") {
+    //ilvl
+    const ilvl1 = a.gearscore !== undefined ? a.gearscore : '';
+    const ilvl2 = b.gearscore !== undefined ? b.gearscore : '';
+    if (ilvl1 > ilvl2) {return -1;}
+    if (ilvl1 < ilvl2) {return 1;}
+    }
+
     //quality
     const quality1 = returnQualityNumber(a.quality) !== undefined ? returnQualityNumber(a.quality) : '';
     const quality2 = returnQualityNumber(b.quality) !== undefined ? returnQualityNumber(b.quality) : '';
     if (quality1 > quality2) {return -1;}
     if (quality1 < quality2) {return 1;}
 
-        //image
-        const img1 = a.img !== undefined ? a.img : '';
-        const img2 = b.img !== undefined ? b.img : '';
-        if (img1 > img2) {return -1;}
-        if (img1 < img2) {return 1;}
+    //basegearscore
+    const gsBase1 = a.gearscoreBase !== undefined ? a.gearscoreBase : '';
+    const gsBase2 = b.gearscoreBase !== undefined ? b.gearscoreBase : '';
+    if (gsBase1 > gsBase2) {return -1;}
+    if (gsBase1 < gsBase2) {return 1;}
+
+    //image
+    const img1 = a.img !== undefined ? a.img : '';
+    const img2 = b.img !== undefined ? b.img : '';
+    if (img1 > img2) {return -1;}
+    if (img1 < img2) {return 1;}
 
     //hp
     const hp1 = a.baseHp !== undefined ? a.baseHp : '';
@@ -1364,7 +1500,7 @@ function sellSelectedItem(mode){
     if (itemContextSellInput.value !== "" && itemContextSellInput.value<=item.constructor.count) toSell = itemContextSellInput.value
 
   
-          divRect = item.div;
+          divRect = did(`IndexSlot`+item.index);
           selectedItemRect = divRect.getBoundingClientRect();
   
           if (toSell > 9) particleTrackers.push(new ParticleSellCoins());
@@ -1409,7 +1545,7 @@ function sellSelectedItem(mode){
         if (item.value()===0) {playSound("audio/thud.mp3"); continue}
 
 
-          divRect = item.div;
+          divRect = did(`IndexSlot`+item.index);
           selectedItemRect = divRect.getBoundingClientRect();
   
           if (item.constructor.count > 9) particleTrackers.push(new ParticleSellCoins());
@@ -1487,12 +1623,17 @@ function scrapSelectedItem(){
   for (let i = itemInventory.length - 1; i >= 0; i--) {
     let item = itemInventory[i];
 
-    if (item.selected === true && item.locked!==true && item.slot!==undefined) {
-        divRect = item.div;
+
+
+
+    if (item.selected === true && item.locked!==true && item.slot!==undefined && item.index!==undefined) {
+
+
+        divRect = did(`IndexSlot`+item.index);
         selectedItemRect = divRect.getBoundingClientRect();
 
 
-        
+        console.log(item.name)
 
 
       
@@ -1551,7 +1692,14 @@ function selectAllItems(){
     if (item.sort!==currentSort && item.loadouts!==undefined && !item.loadouts.includes(rpgPlayer.currentLoadout)) return //prevents equipped items from disapearing
     if (item.loadouts!==undefined && item.loadouts.includes(rpgPlayer.currentLoadout)) return
 
-    const itemdiv = item.div
+    if (item.index==undefined) return
+
+    const itemdiv = did(`IndexSlot`+item.index)
+
+    //console.log(itemdiv)
+    
+    //if (item.div===undefined) return
+
     const itemSelect = itemdiv.querySelector('.itemSelect');
 
 
@@ -1621,7 +1769,7 @@ function useSelectedItem(amount,tag){
   }
 
   if (tag===undefined){
-    let divRect = item.div;
+  let divRect = did(`IndexSlot`+item.index);
   selectedItemRect = divRect.getBoundingClientRect();
 
   divRect.style.animation = "";
@@ -1661,7 +1809,7 @@ function useSelectedItem(amount,tag){
 function mergeSelectedItem(){
 
   let item = contextSelectedItem.item
-  let divRect = item.div;
+  let divRect = did(`IndexSlot`+item.index);
   selectedItemRect = divRect.getBoundingClientRect();
 
   divRect.style.animation = "";
@@ -2408,7 +2556,7 @@ function returnRarity(item) {
   let gearscore = ""
   if (item.gearscore) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${item.gearscore}</span>`
   if (item.constructor.upgrade>0) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${item.gearscore - item.constructor.upgrade*gearscoreUpgradeMod} (+${item.constructor.upgrade*gearscoreUpgradeMod})</span>`
-  if (item.slot==="Weapon" && statHidden.fixedGearscore>0 ) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${statHidden.fixedGearscore}</span>`
+  if (statHidden.fixedGearscore>0 && currentEquippedItems===item) gearscore = ` <span style="color:gray; background:transparent; margin-left:0.2rem; opacity:0.6; font-size:1.1rem">Level ${statHidden.fixedGearscore}</span>`
 
   if (item.slot === `Weapon` && currentEquippedItems!==undefined){
 
@@ -2440,7 +2588,7 @@ function returnRarity(item) {
   }
 
 
-  if (item.slot === "Offhand" && item.div !== undefined) { 
+  if (item.slot === "Offhand" && item.index !== undefined) { 
     return `${returnQualityName(item.quality)}${gearscore}<br><span class="tooltipStat" style="color:${color}">${beautify(item.uses)}/${beautify(item.initialUses)}
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="m261.695 75.809l-5.246-1.142l-171.115 37.281V236.22l.273 11.328c4.7 96.674 69.051 154.562 117.399 184.636l2.571 1.393l71.533-166.91h-95.777zm-18.232 377.68l.859.384l5.725 2.379l6.402 2.415l6.126-2.308l12.415-5.365l8.181-3.936l9.239-4.811l15.418-8.92l11.037-7.124c48.792-32.968 108.311-93.445 107.75-192.113l-.119-22.879l-.05-83.956l.221-15.532l-122.565-26.682L245.593 224h96.223z" clip-rule="evenodd"/></svg>
     </span>`
@@ -2768,9 +2916,8 @@ function updateQuickItemAcessMenu(){
       itemDiv.innerHTML = ` ${itemCDScreen} ${itemCount} <img src="img/src/items/I${item.img}.jpg">`;
       itemDiv.className = "inventoryItem";
       itemDiv.item = item; 
-      itemDiv.item.index = index; 
+      //itemDiv.item.index = index; 
       itemDiv.tag = "quickUse"; 
-      //item.div = itemDiv
       item.index = index
   
       itemDiv.style.outline = `0.2rem solid ${returnQualityColor(item.quality)}`; 
@@ -2956,6 +3103,7 @@ function dropMonsterCard(){
 document.getElementById('inventoryListing').addEventListener('scroll', () => {inventoryCulling()  });
 
   function inventoryCulling(){
+    return
 
     if (!settings.disableCulling){
 
@@ -3002,5 +3150,6 @@ document.addEventListener('DOMContentLoaded', inventoryInitialisation);
 function inventoryInitialisation(){
   updateInventory();
   changeLoadout();
+  changeInventoryPage()
 
 }

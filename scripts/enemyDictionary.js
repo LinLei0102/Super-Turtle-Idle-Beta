@@ -139,7 +139,7 @@ enemies.E2 = {
   description: 'It is said that the poison of these scorpids is more lethal the whiter their tails are. It is also said that they kinda look like a baguette.',
   area: 'A1',
   difficulty: 'hard',
-  lootTable: function() { return  { WhiteStinger : { c : chances.enemies.poor, a : 1}, ClothFeet : { c : chances.enemies.poor, a : 1}, AncientChestplate : { c : chances.enemies.uncommon, a : 1}, ScorpionRing : { c : chances.enemies.epic, a : 1}, } },
+  lootTable: function() { return  { WhiteStinger : { c : chances.enemies.h1, a : 1}, ClothFeet : { c : chances.enemies.h1, a : 1}, AncientChestplate : { c : chances.enemies.h3, a : 1}, ScorpionRing : { c : chances.enemies.h4, a : 1}, } },
   align: 'occult',
   card1 : { description:"+ 1 Income", effect: function() {stat.Income+=1} },
   card2 : { description:"+ 2 Income", effect: function() {stat.Income+=2} },

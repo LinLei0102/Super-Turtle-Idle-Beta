@@ -219,7 +219,9 @@
 }
 
 
-
+#enemyInfoBar{
+    animation:infobarContract 0.2s 1, gelatine 0.5s 1, flash 0.4s 1
+}
 
 
 #enemyInfo{    right: -3rem;
@@ -1853,7 +1855,7 @@ color: white;
 }
 
 #inventoryListing{
-    height: 150%;
+    height: 100%;
     width: 100%;
     display: flex;
     align-content: flex-start;
@@ -1978,6 +1980,53 @@ color: white;
     background: transparent;
     z-index: 1;
 }
+
+#inventoryControls{
+    height: auto;
+    width: 100%;
+    background: #885036;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: start;
+    justify-content: end;
+    align-items: center;
+    padding: 0 0.3rem;
+    gap: 0.2rem;
+}
+
+.inventoryControlButton{
+    height: 2rem;
+    font-size: 1.6rem;
+    color: white;
+    background: #6F4029;
+    padding: 0.2rem 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    border-radius: 0.4rem;
+    font-weight: 500;
+}
+
+#inventoryControls button{
+    border: none;
+    outline: none;
+    background: #492615;
+    transition: 0.15s;
+}
+
+#inventoryControls button:hover{
+    background: white;
+    color: black !important;
+}
+
+#inventoryControls button svg{
+    width: 1.6rem;
+    height: auto;
+    background: transparent;
+}
+
+
 
 .inventorySorters{
     height: 100%;
