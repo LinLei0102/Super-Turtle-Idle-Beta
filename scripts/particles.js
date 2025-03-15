@@ -13,9 +13,10 @@ setInterval(() => {
     //particleTrackers.push(new ParticleExplosionShockwave2())
     //particleTrackers.push(new ParticleExplosionLinger1())
 
+    //particleTrackers.push(new ParticleFirework());
 
 
-}, 1000);
+}, 2000);
 
 
 setInterval(() => {
@@ -853,7 +854,7 @@ class ParticleFirework extends NewParticle {
 
         super(x, y);
         this.freeflow = false
-        this.tSpeed = 0.005 ; // Track Speed
+        this.tSpeed = 0.008 ; // Track Speed
         this.simpleColor = "transparent"; //optional
         this.playerCenterX = containerRect.width / rngD(1.5,2.5);
         this.playerCenterY = containerRect.height;
@@ -862,14 +863,19 @@ class ParticleFirework extends NewParticle {
         this.controlPointX = containerRect.height*0.9;
         this.controlPointY = containerRect.height/3;
         this.trailParticle = ParticleAlignTrail
+        this.trailParticle2 = ParticleShinyStar
         this.particleDensity = 1; //optional
+        this.particleDensity2 = 0.3; //optional
         this.particleConfig = {
             size : 7,
+        }; 
+        this.particleConfig2 = {
+            size : 4,
         }; 
         //this.trailParticle2 = ParticleStars1;
         this.wobbleY = 0; 
         this.wobbleX = 10; 
-        this.wobbleFrequency = 30; 
+        this.wobbleFrequency = 10; 
        
         Object.assign(this, options);
 
@@ -879,6 +885,9 @@ class ParticleFirework extends NewParticle {
         particleTrackers.push(new ParticleFireworkExplosion(this.x, this.y));
         particleTrackers.push(new ParticleFireworkExplosion2(this.x, this.y));
         particleTrackers.push(new ParticleFireworkExplosion2(this.x, this.y));
+        particleTrackers.push(new ParticleFireworkExplosion3(this.x, this.y));
+        particleTrackers.push(new ParticleFireworkExplosion3(this.x, this.y));
+        particleTrackers.push(new ParticleFireworkExplosion3(this.x, this.y));
         particleTrackers.push(new ParticleFireworkExplosion3(this.x, this.y));
         particleTrackers.push(new ParticleFireworkExplosion3(this.x, this.y));
         particleTrackers.push(new ParticleFireworkExplosion3(this.x, this.y));
@@ -893,11 +902,11 @@ class ParticleFireworkExplosion extends NewParticle {
         this.y = y;
         this.simpleColor = "transparent"; //optional
         this.tSpeed = 0.01;
-        this.size = 1;
+        this.size = 100;
         this.image = new Image(); //optional
-        this.image.src = "img/src/projectiles/halo3.png"; //optional
+        this.image.src = "img/src/projectiles/halo4.png"; //optional
         this.sizeDecay = -5
-        this.alpha = 0.8
+        this.alpha = 0.9
         this.alphaDecay = 0.04
         this.rotation = rngD(0,5)
         this.imageHue = rngD(0,360)
@@ -909,9 +918,10 @@ class ParticleFireworkExplosion2 extends ParticleFireworkExplosion {
     constructor(x, y, options = {}) {
         super(x, y);
         this.image = new Image(); //optional
-        this.image.src = "img/src/projectiles/halo5.png"; //optional
-        this.sizeDecay = -15
-        this.alphaDecay = 0.03
+        this.image.src = "img/src/projectiles/halo.png"; //optional
+        this.sizeDecay = -5
+        this.size = 20
+        this.alphaDecay = 0.02
         Object.assign(this, options);
     }
 }
@@ -919,21 +929,24 @@ class ParticleFireworkExplosion2 extends ParticleFireworkExplosion {
 class ParticleFireworkExplosion3 extends NewParticle {
     constructor(x, y, options = {}) {
         super(x, y);
+
         this.x = x;
         this.y = y;
-        this.simpleColor = "transparent"; //optional
-        this.speedY = rngD(-30,30);
-        this.speedX = rngD(-30,30);
-        this.accelerationY = 0;
-        this.friction = 0.95 //optional
-
-        this.image = new Image(); //optional
-        this.image.src = "img/src/projectiles/drop_star.png"; //optional
-        this.rotationSpeed = rngD(-0.3,0.3)
-        this.sizeDecay = 0.2
-        this.size = 10;
+        this.simpleColor = undefined; //optional
+        this.tSpeed = 0.01; // Age Speed
+        this.speedY = choice(-20,20 );
+        this.speedX = choice(-20,20 );
+        this.friction = 0.9 //optional
+        this.rainbow = true
+        this.size = 7;
+        this.particletra
+        this.width = this.size*8
+        this.widthDecay = 1.5;
+        this.rotationLock = true;
+        this.alphaDecay = 0.01
+        this.alpha = 0.8
         this.trailParticle = ParticleFireworkExplosion4; //optional
-        this.particleDensity = 0.3; //optional
+        this.particleDensity = 0.1
         
 
         Object.assign(this, options);
@@ -946,20 +959,15 @@ class ParticleFireworkExplosion4 extends NewParticle { //green
         this.x = x;
         this.y = y;
         this.tSpeed = 0.005
-        this.size = 13; //m
-        this.speedY = 2;
-        this.sizeDecay = 0.4;
-        this.offsetX = rngD(-400,400);
-        this.offsetY = rngD(-400,400);
+        this.size = 10; //m
+        this.sizeDecay = 1;
+        this.offsetX = rngD(-40,40);
+        this.offsetY = rngD(-40,40);
         this.simpleColor = "transparent"
         this.image = new Image(); //optional
         this.image.src = "img/src/projectiles/drop_star.png"; //optional
-        this.spawnStyle = "fade" //"increase", "fade", optional
-        this.rotationSpeed = rngD(0.1,-0.1); 
+        this.rotationSpeed = rngD(0.05,-0.05); 
         this.rotation = rngD(0,5); 
-        this.wobbleY = rngD(-1,1); 
-        this.wobbleX = rngD(-1,1); 
-        this.wobbleFrequency = rngD(-1,1); 
 
         Object.assign(this, options);
     }

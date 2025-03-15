@@ -534,7 +534,7 @@ class Gem extends Stackable {
 
             
         }, 10);
-        //equippedWeapon.invInit()
+        equippedWeapon.invInit()
         statsUpdate();
         statsUpdate();
         updateStatsUI();
@@ -639,6 +639,7 @@ class GemGearscore1 extends Gem {
         this.description = function() { return ` <span style="color:#1eff00">★ Use: Engrave this gem into your currently equipped weapon</span>` }
         this.skillDescription = function() { return `Sets Item Level to 35` };
         this.img = 526;
+        this.mergeStack = undefined;
         this.gemColor = 'red';
         this.quality = `Uncommon`;
         Object.assign(this, properties);
@@ -2734,7 +2735,7 @@ class RubberFeet extends ArmorFeet {
 function updateOffhandDurability(item){
 
     let percentageEXP = (item.uses / item.initialUses) * 100;
-    did(item.index+"usebar").style.background = `linear-gradient(90deg, lawngreen ${percentageEXP}%, rgba(55,42,60,1) ${percentageEXP}%)`
+    if (did(item.index+"usebar")) did(item.index+"usebar").style.background = `linear-gradient(90deg, lawngreen ${percentageEXP}%, rgba(55,42,60,1) ${percentageEXP}%)`
 
     if (item.uses<1){
         itemInventory.splice(item.index, 1);

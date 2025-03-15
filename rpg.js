@@ -481,7 +481,6 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
 
 
 
-
       rpgPlayer.BossCharges--
       stats.areaBossKills++
       if (unlocks.bestiary && chance(1/ (20/nofarmToggleBonus) )) {dropMonsterCard()}
@@ -492,6 +491,8 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
       deleteEnemy();
       voidAnimation("bossTimer", "gelatine 0.2s 1")
       resetEncounter()
+      updateOfflineIndicator()
+
 
     }
     
@@ -2413,9 +2414,9 @@ function itemCooldownTick(){
 
     if (item.constructor.cd>0) item.constructor.cd--
 
-    if (item.constructor.cd>0 && (item.sort===currentSort || item.quickAccess)){
+    if (item.constructor.cd>0 && (item.sort===currentSort || item.quickAccess) && item.index!==undefined){
 
-      const itemDiv = item.div
+      const itemDiv = did(`IndexSlot`+item.index)
       const itemCDText = itemDiv.querySelector('.itemCooldownTimerText');
       const itemCDBar = itemDiv.querySelector('.itemCooldownTimer');
 
@@ -5571,6 +5572,7 @@ let rareLootTable3 = [ScutePile2,CoinPile2,DungeonKey3,ChanceDie2,Stamp3,Dungeon
 setInterval(() => {
   dailyLocalReset()
   biWeeklyReset()
+  if (weekendBuff()) buffs.WeekendBuff.time=60*60
 }, 60000);
 
 stats.lastDailyReset = undefined;
@@ -5590,6 +5592,12 @@ function dailyLocalReset() {
   const secondsRemaining = (midnight.getTime() - now.getTime()) / 1000;
 
   return Math.floor(secondsRemaining);
+}
+
+
+function weekendBuff(){
+  const day = new Date().getDay();
+  return day === 0 || day === 6;
 }
 
 function dailyLocalCooldowns(){

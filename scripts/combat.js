@@ -841,6 +841,8 @@ function updateCombatActions(){
     const fullAction = '<div></div>'
     let emtpyActionList = ""
 
+    console.log(combatActions) 
+
     function returnEmptyActionList(number){
 
         const emptyAction = '<div style="background:#4B4B4B"></div>'

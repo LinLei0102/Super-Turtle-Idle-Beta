@@ -95,8 +95,9 @@ function tooltipTurtleBot() {
     if (offlineFarmCheck()==="health") requirementMsg = `${colorTag("Not enough Max Health!","#F44049")}<br><span style="color:gray">Increase this stat to allow offline farming</span> `
 
 
-    let offlineFormula = 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power)*(1+stat.OfflineBonus/100)
-    if (enemies[stats.currentEnemy].resource) offlineFormula = 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.GatheringPower)*(1+stat.OfflineBonus/100)
+    let offlineFormula = 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power)*(1+stat.OfflineBonus/100) 
+    offlineFormula = 5/Math.max(1,enemies[stats.currentEnemy].hp() /  damageCalc("dps") / (1+stat.OfflineBonus/100) ) 
+    if (enemies[stats.currentEnemy].resource) offlineFormula = 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.GatheringPower)*(1+stat.OfflineBonus/100) 
 
     if (offlineFarmCheck()===true) requirementMsg = `<span style="color:gray">You will farm the current enemy while offline at a rate of</span><br><br><span style="font-size:1.1rem">${colorTag(  (offlineFormula).toFixed(1)+" Kills per minute", "#E68B29" )      }</span>  `
 
@@ -132,7 +133,7 @@ function offlineFarmCheck(){
 if (enemies[stats.currentEnemy].resource && equippedWeapon?.tool!=="mattock") return "mattock"
 if (bossTime) return "boss"
 if ( returnEnemyLevelGap()==="red") return "level"
-if ( (enemies[stats.currentEnemy].hp()/25) >= stat.Power) return "power"
+if ( (enemies[stats.currentEnemy].hp()/25) >= stat.Power && !enemies[stats.currentEnemy].resource) return "power"
 if ( (enemies[stats.currentEnemy].attack()*10) >= stat.MaxHealth) return "health"
 
 
@@ -161,8 +162,8 @@ function offlineRewards(seconds){
 
     if (offlineFarmCheck()===true){
 
-    const times = ( 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power) * (1+stat.OfflineBonus/100) ) * (seconds/60)
-
+    let times = ( 7/Math.max(1,enemies[stats.currentEnemy].hp() / stat.Power) * (1+stat.OfflineBonus/100) ) * (seconds/60)
+    times = 5/Math.max(1,enemies[stats.currentEnemy].hp() /  damageCalc("dps") / (1+stat.OfflineBonus/100) ) * (seconds/60)
 
 
     createPopup(`<img src="img/src/icons/turtlebot.png">You have been away for ${convertSecondsToHMS(seconds)}<br> and defeated ${beautify(times)} ${enemies[stats.currentEnemy].name}s while <br> you were out. Go check your loot!`,undefined,"long")
