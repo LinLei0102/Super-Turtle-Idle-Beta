@@ -12093,6 +12093,53 @@ flex-shrink: 0;
     gap: 0.3rem;
 }
 
+#clickingPowerWrapper{
+    background: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0rem;
+    right: -3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    overflow: visible;
+    padding-right: 0.3rem;
+}
+
+#clickingPowerWrapper div{
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 20rem;
+    border: #363636 solid 3px;
+    background: gray;
+    margin: 0 -0.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+#clickingPowerWrapper div svg{
+    background: transparent;
+    color: white;
+
+}
+
+#clickingPowerMeter {
+    height: 100%;
+    width: 100%;
+    animation: backgroundRainbow 6s infinite linear;
+    position: absolute;
+    z-index: -1;
+    transition: 0.1s linear;
+    bottom: 0;
+    background: cadetblue;
+}
+
 
 #playerActionsWrapper{
     background: transparent;
