@@ -130,6 +130,7 @@ function tooltipTurtleBot() {
 
 function offlineFarmCheck(){
 
+if (stats.currentArea === "L1" || stats.currentArea === "L2") return "boss"
 if (enemies[stats.currentEnemy].resource && equippedWeapon?.tool!=="mattock") return "mattock"
 if (bossTime) return "boss"
 if ( returnEnemyLevelGap()==="red") return "level"

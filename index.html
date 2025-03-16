@@ -674,13 +674,14 @@
         </span>
         </div>
 
-        <div id="deleteData" class="panelOpciones" style="display:none">
-            <h1>DELETE DATA</h1>
-            <div class="separatorHeader"><div class="separator"></div>(Click outside the window to close)<div class="separator"></div></div>
-            <span class="settingsFlex">
-            <img src="img/sys/deleteData.png">
-            <p><br>Are you sure you want to delete <strong>all</strong> saved data?<br><br> This action is <strong>irreversible</strong> and will <strong>forever</strong> delete all progress of the game with the exception of <strong style="color: #B5DD7B;">Soulbound</strong> items</p>
-            <button style="border: white solid 2px; color:white; background: red; font-weight: 400;" onclick="deleteSave()">DELETE DATA</button>
+        <div id="deleteData" class="panelOpciones" style="display:none; z-index: 100;">
+            <span class="settingsFlex" style="display: flex; justify-content: center; align-items: center; padding: 5rem;">
+            <img src="img/sys/deleteData.png" style="height: 10rem; width: 10rem; rotate: 180deg;">
+            <p><br>Are you sure you want to <strong>delete</strong> the saved data of this character?<br><br><span id="deleteDataCharacter"></span><br><br> This action is <strong>irreversible</strong> and will <strong>forever</strong> delete all progress of the character <br>with the exception of <strong style="color: #7bd2dd;">Account-wide items and achievements</strong></p>
+            
+            <button style="border: white solid 2px; color:white; background: rgb(112, 134, 143); font-weight: 400; scale: 1.3;" onclick="did('deleteData').style.display='none';playSound('audio/close.mp3','all')">NOPE</button>
+            <button style="border: white solid 2px; color:white; background: red; font-weight: 400; margin-top: 2rem; scale: 1.3;" onclick="deleteSaveSlot()">DELETE DATA</button>
+            
             </span>
         </div>
 
@@ -731,6 +732,105 @@
                 <div class="resolutionCheckButtons"><button onclick="resolutionIncrease('more')">+</button><button onclick="resolutionIncrease('less')">-</button><button style="width: auto;" onclick="playSound('audio/button5.mp3','all');did('introPanel2').style.height='0%' ">DONE!</button></div>
                 <img class ="resolutionCheckImage" src="img/src/icons/resolutionCheck.png">
                 <div class="resolutionCheckBox"></div>
+            </div>
+        </div>
+
+        <div class="introPanel" id="characterPanel" style="display:none;">
+
+
+
+            <img src="img/src/icons/tortulogo.png" style="height: 20rem;width: 20rem;margin-top: -10rem;">
+
+            <div style="background: transparent;overflow: visible;">
+
+                <div class="saveSlot">
+                    <div id="saveSlot" class="saveSlotInside" onclick="selectCharacter(1)">
+                    
+                        <div style="color:gray;font-size: 1.5rem; display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">Create New Character</div>
+                    </div>
+
+                    <div class="saveSlotControls">
+                        
+                    <span class="importSave" onclick="importJSON(1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" d="M3 5a2 2 0 0 1 2-2h1v3.5A1.5 1.5 0 0 0 7.5 8h4A1.5 1.5 0 0 0 13 6.5V3h.379a2 2 0 0 1 1.414.586l1.621 1.621A2 2 0 0 1 17 6.621V9.6a5.5 5.5 0 0 0-2.5-.6c-1.177 0-2.268.37-3.163 1H6.5A1.5 1.5 0 0 0 5 11.5V17a2 2 0 0 1-2-2zm6 9.5c0-1.33.472-2.55 1.257-3.5H6.5a.5.5 0 0 0-.5.5V17h3.6a5.5 5.5 0 0 1-.6-2.5M12 3H7v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5zm-2 11.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 0 0-9 0m6.5-3a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5H15a.5.5 0 0 1 0-1h.468a2 2 0 0 0-2.383.336a.5.5 0 0 1-.706-.707A3 3 0 0 1 16 12.152V12a.5.5 0 0 1 .5-.5m-.876 5.532A3 3 0 0 1 13 16.848V17a.5.5 0 0 1-1 0v-1.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 0 1h-.468q.075.042.155.077a2 2 0 0 0 2.227-.413a.5.5 0 0 1 .707.707c-.284.285-.624.51-.997.66"/></svg>
+                    </span>
+
+                    <span class="deleteSave" onclick="saveToDelete=1;deleteSavePrompt();" style="display: none;" id="saveSlotDelete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"/></svg>
+                    </span>
+                    </div>
+                </div>
+
+
+                <div class="saveSlot">
+                    <div id="saveSlot2" class="saveSlotInside" onclick="selectCharacter(2)">
+                        <div style="color:gray;font-size: 1.5rem; display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">Create New Character</div>
+                    </div>
+
+                    <div class="saveSlotControls">
+                        
+                    <span class="importSave" onclick="importJSON(2)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" d="M3 5a2 2 0 0 1 2-2h1v3.5A1.5 1.5 0 0 0 7.5 8h4A1.5 1.5 0 0 0 13 6.5V3h.379a2 2 0 0 1 1.414.586l1.621 1.621A2 2 0 0 1 17 6.621V9.6a5.5 5.5 0 0 0-2.5-.6c-1.177 0-2.268.37-3.163 1H6.5A1.5 1.5 0 0 0 5 11.5V17a2 2 0 0 1-2-2zm6 9.5c0-1.33.472-2.55 1.257-3.5H6.5a.5.5 0 0 0-.5.5V17h3.6a5.5 5.5 0 0 1-.6-2.5M12 3H7v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5zm-2 11.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 0 0-9 0m6.5-3a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5H15a.5.5 0 0 1 0-1h.468a2 2 0 0 0-2.383.336a.5.5 0 0 1-.706-.707A3 3 0 0 1 16 12.152V12a.5.5 0 0 1 .5-.5m-.876 5.532A3 3 0 0 1 13 16.848V17a.5.5 0 0 1-1 0v-1.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 0 1h-.468q.075.042.155.077a2 2 0 0 0 2.227-.413a.5.5 0 0 1 .707.707c-.284.285-.624.51-.997.66"/></svg>
+                    </span>
+
+                    <span class="deleteSave" onclick="saveToDelete=2;deleteSavePrompt();" style="display: none;" id="saveSlot2Delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"/></svg>
+                    </span>
+                    </div>
+                </div>
+
+                <div class="saveSlot">
+                    <div id="saveSlot3" class="saveSlotInside" onclick="selectCharacter(3)">
+                        <div style="color:gray;font-size: 1.5rem; display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">Create New Character</div>
+                    </div>
+
+                    <div class="saveSlotControls">
+                        
+                    <span class="importSave" onclick="importJSON(3)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" d="M3 5a2 2 0 0 1 2-2h1v3.5A1.5 1.5 0 0 0 7.5 8h4A1.5 1.5 0 0 0 13 6.5V3h.379a2 2 0 0 1 1.414.586l1.621 1.621A2 2 0 0 1 17 6.621V9.6a5.5 5.5 0 0 0-2.5-.6c-1.177 0-2.268.37-3.163 1H6.5A1.5 1.5 0 0 0 5 11.5V17a2 2 0 0 1-2-2zm6 9.5c0-1.33.472-2.55 1.257-3.5H6.5a.5.5 0 0 0-.5.5V17h3.6a5.5 5.5 0 0 1-.6-2.5M12 3H7v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5zm-2 11.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 0 0-9 0m6.5-3a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5H15a.5.5 0 0 1 0-1h.468a2 2 0 0 0-2.383.336a.5.5 0 0 1-.706-.707A3 3 0 0 1 16 12.152V12a.5.5 0 0 1 .5-.5m-.876 5.532A3 3 0 0 1 13 16.848V17a.5.5 0 0 1-1 0v-1.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 0 1h-.468q.075.042.155.077a2 2 0 0 0 2.227-.413a.5.5 0 0 1 .707.707c-.284.285-.624.51-.997.66"/></svg>
+                    </span>
+
+                    <span class="deleteSave" onclick="saveToDelete=3;deleteSavePrompt();" style="display: none;" id="saveSlot3Delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"/></svg>
+                    </span>
+                    </div>
+                </div>
+
+                <div class="saveSlot">
+                    <div id="saveSlot4" class="saveSlotInside" onclick="selectCharacter(4)">
+                        <div style="color:gray;font-size: 1.5rem; display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">Create New Character</div>
+                    </div>
+
+                    <div class="saveSlotControls">
+                        
+                    <span class="importSave" onclick="importJSON(4)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" d="M3 5a2 2 0 0 1 2-2h1v3.5A1.5 1.5 0 0 0 7.5 8h4A1.5 1.5 0 0 0 13 6.5V3h.379a2 2 0 0 1 1.414.586l1.621 1.621A2 2 0 0 1 17 6.621V9.6a5.5 5.5 0 0 0-2.5-.6c-1.177 0-2.268.37-3.163 1H6.5A1.5 1.5 0 0 0 5 11.5V17a2 2 0 0 1-2-2zm6 9.5c0-1.33.472-2.55 1.257-3.5H6.5a.5.5 0 0 0-.5.5V17h3.6a5.5 5.5 0 0 1-.6-2.5M12 3H7v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5zm-2 11.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 0 0-9 0m6.5-3a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5H15a.5.5 0 0 1 0-1h.468a2 2 0 0 0-2.383.336a.5.5 0 0 1-.706-.707A3 3 0 0 1 16 12.152V12a.5.5 0 0 1 .5-.5m-.876 5.532A3 3 0 0 1 13 16.848V17a.5.5 0 0 1-1 0v-1.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 0 1h-.468q.075.042.155.077a2 2 0 0 0 2.227-.413a.5.5 0 0 1 .707.707c-.284.285-.624.51-.997.66"/></svg>
+                    </span>
+
+                    <span class="deleteSave" onclick="saveToDelete=4;deleteSavePrompt();" style="display: none;" id="saveSlot4Delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"/></svg>
+                    </span>
+                    </div>
+                </div>
+
+                <div class="saveSlot">
+                    <div id="saveSlot5" class="saveSlotInside" onclick="selectCharacter(5)">
+                        <div style="color:gray;font-size: 1.5rem; display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">Create New Character</div>
+                    </div>
+
+                    <div class="saveSlotControls">
+                        
+                    <span class="importSave" onclick="importJSON(5)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" d="M3 5a2 2 0 0 1 2-2h1v3.5A1.5 1.5 0 0 0 7.5 8h4A1.5 1.5 0 0 0 13 6.5V3h.379a2 2 0 0 1 1.414.586l1.621 1.621A2 2 0 0 1 17 6.621V9.6a5.5 5.5 0 0 0-2.5-.6c-1.177 0-2.268.37-3.163 1H6.5A1.5 1.5 0 0 0 5 11.5V17a2 2 0 0 1-2-2zm6 9.5c0-1.33.472-2.55 1.257-3.5H6.5a.5.5 0 0 0-.5.5V17h3.6a5.5 5.5 0 0 1-.6-2.5M12 3H7v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5zm-2 11.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 0 0-9 0m6.5-3a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5H15a.5.5 0 0 1 0-1h.468a2 2 0 0 0-2.383.336a.5.5 0 0 1-.706-.707A3 3 0 0 1 16 12.152V12a.5.5 0 0 1 .5-.5m-.876 5.532A3 3 0 0 1 13 16.848V17a.5.5 0 0 1-1 0v-1.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 0 1h-.468q.075.042.155.077a2 2 0 0 0 2.227-.413a.5.5 0 0 1 .707.707c-.284.285-.624.51-.997.66"/></svg>
+                    </span>
+
+                    <span class="deleteSave" onclick="saveToDelete=5;deleteSavePrompt();" style="display: none;" id="saveSlot5Delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"/></svg>
+                    </span>
+                    </div>
+                </div>
+
+
             </div>
         </div>
 
@@ -1320,16 +1420,19 @@
 
         <div class="widgetUI" style="right: 0; left: auto;">
 
+
+
             <span style="display: none;" id="bestiaryWidget"><img onclick='openDedicatedShop("bestiaryShop"); updateBestiary()' src="img/src/icons/monsterIcon.png" id="bestiaryShopWidget"></span>
             <span style="display: none;" id="exportWidget" onclick='exportJSON()'><img src="img/src/icons/exportIcon.png" style="animation: widgetAlert 2s infinite" ></span>
             <span style="display: none;" id="dailyPresent" onclick="dailyPresentMenu()"><img id="dailyPresentImg" src="img/src/icons/presentIcon.png"></span>
             <span><img onclick='openDedicatedShop("achievementShop"); did("achievementShopWidget").style.animation = "none"; updateAchievementShop()' src="img/src/icons/achievementIcon.png" id="achievementShopWidget" ></span>
             <span style="display: none;"><img src="img/src/icons/collectibleIcon.png"></span>
-            
+
             <span style="display: none;" id="gachaWidget"><img onclick="openGacha()" src="img/src/icons/gachaIcon.png" ></span>
             <span style="display: none;" id="mailButton" onclick='did("mailWidget").style.animation = "none"'><img src="img/src/icons/mailIcon.png" id="mailWidget"></span>
             <span ><img onclick="openSettings()" src="img/src/icons/settingsIcon.png"  id="settingsWidget"></span>
 
+            <span onclick="gotoCharacters()" id="exitWidget"><img src="img/src/icons/doorIcon.png"></span>
 
 
         </div>

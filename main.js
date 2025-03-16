@@ -723,7 +723,7 @@ function changeVolume(){
 
 
 
-function playSound(filename, type){
+/*function playSound(filename, type){
 
 
 
@@ -747,7 +747,7 @@ function playSound(filename, type){
 }
 
 }
-}
+}*/
 
 
 
@@ -763,6 +763,8 @@ function playSound(filename, type) {
 
         const visibleShops = document.querySelector('.dedicatedShop[style*="display: flex"]');
         if (visibleShops && type !== "all") return;
+        if (did("characterPanel").style.display === "flex" && type !== "all") return
+
 
         if (type === "all" || (did("gachaMenu").style.display !== "flex" && did("introPanel").style.display !== "flex")) {
 
@@ -1051,6 +1053,9 @@ tooltipTopWidget("bossButton",`Fight the boss of the area<br><br>Can only be fou
 tooltipTopWidget("miningNode","Area Resource")
 tooltipTopWidget("herbNode","Area Resource")
 tooltipTopWidget("pondNode","Area Resource")
+tooltipTopWidget("exitWidget","Character Selection")
+
+
 
 
 tooltipTopWidget("randomHat","Random Favorited Cosmetic")
@@ -1458,11 +1463,27 @@ function closePanels(){
     }
 }
 
+let saveToDelete = undefined
  
 function deleteSavePrompt(){
-    playSound("audio/button3.mp3")
+    playSound("audio/button3.mp3","all")
     did("opciones").style.display = "none";
     did("deleteData").style.display = "flex";
+
+
+    let slot = saveToDelete
+    if (saveToDelete===1) slot = ""
+
+    const character = localStorage.getItem('saveData'+slot);
+    const parsedData = JSON.parse(character);
+            
+    did("deleteDataCharacter").innerHTML = `
+            ${parsedData.savedStatsData.turtleName} (Slot ${saveToDelete})
+            <br>
+            Started on ${parsedData.savedStatsData.startedSince}
+            `
+
+
 }
 
 //-----statistics-------
@@ -2387,6 +2408,7 @@ did("masteryCompletion").innerHTML = `<img src="img/src/icons/insight.png" style
 settings.disableAutosavePopup = false
 
 function autosave() {
+    if (did("characterPanel").style.display === "flex") return
 
 
     if (!did('savePopUp') && !settings.disableAutosavePopup) createPopup('<img src="img/sys/saved.png"> Game Saved', 'savePopUp')
@@ -2400,7 +2422,7 @@ setInterval(function() { if (!settings.disableAutosave) { autosave(); } }, 60000
 
 document.addEventListener("keydown", function (event) {
     if (event.code === "KeyS" && turtleRename.style.display === "none") {
-
+        if (did("characterPanel").style.display === "flex") return
         save()
         if (!did('savePopUp')) createPopup('<img src="img/sys/saved.png"> Game Saved', 'savePopUp')
     } 
@@ -2410,9 +2432,18 @@ document.addEventListener("keydown", function (event) {
 
 //----save and load----
 
+
+
+stats.beginLoad = false
+stats.canOffline = false
+
 function save() {
 
-    
+
+    if (offlineFarmCheck()===true) stats.canOffline = true
+    else stats.canOffline = false
+
+    if (did("characterPanel").style.display === "flex") return
 
     stats.lastVisitTime = new Date().getTime()
     
@@ -2421,8 +2452,11 @@ function save() {
 
 
   saveData.savedItems = [];
+  let soulboundItems = []
+
 
   for (const item of itemInventory) {
+
     const savedItem = {
       className: item.constructor.name,
       upgrade: item.constructor.upgrade,
@@ -2447,12 +2481,14 @@ function save() {
       uses: item.uses,
       gemSlot: item.gemSlot,
       rogue: item.rogue,
-
     };
 
-    saveData.savedItems.push(savedItem);
-  }
+    if (item.quality!=="Soulbound") saveData.savedItems.push(savedItem);
 
+    if (item.quality==="Soulbound") soulboundItems.push(item.constructor.name)
+    //soulbound items code is a bit borken, will be fixed when a soulbound item gets added
+            
+  }
 
   saveData.savedItemsMemory = [];
 
@@ -2636,25 +2672,60 @@ function save() {
   saveData.savedDungeonCharges = {}; for (const i in areas) { saveData.savedDungeonCharges[i] = areas[i].charges;}
 
 
-  const datosGuardados = localStorage.getItem('saveData');
+
+
+  let datosGuardados = localStorage.getItem('saveData');
+  if (localStorage.getItem('characterSlot')!=="1") datosGuardados = localStorage.getItem('saveData'+localStorage.getItem('characterSlot'));
   const parsedData = JSON.parse(datosGuardados);
 
 
   if (datosGuardados && parsedData.savedTotalSeconds){
   if (parsedData.savedTotalSeconds <= stats.totalSeconds){
     
-  const JSONData = JSON.stringify(saveData);
-  localStorage.setItem('saveData', JSONData); 
+
+  assignCharacterData()
+
+
+
   }
 } else {
+    assignCharacterData()
+}
+
+
+function assignCharacterData(){
+
+
+
     const JSONData = JSON.stringify(saveData);
-    localStorage.setItem('saveData', JSONData); 
-}
+    const saveSlot = localStorage.getItem('characterSlot')
+
+    console.log("character saved in slot "+saveSlot)
+
+    if (saveSlot==="1") localStorage.setItem('saveData', JSONData); 
+    if (saveSlot==="2") localStorage.setItem('saveData2', JSONData); 
+    if (saveSlot==="3") localStorage.setItem('saveData3', JSONData); 
+    if (saveSlot==="4") localStorage.setItem('saveData4', JSONData); 
+    if (saveSlot==="5") localStorage.setItem('saveData5', JSONData); 
+
+    if (soulboundItems.length>0) localStorage.setItem('soulboundItems', soulboundItems); 
+
+
 
 }
 
-function load() {
-  const datosGuardados = localStorage.getItem('saveData');
+}
+
+function load(slot) {
+
+  let datosGuardados = localStorage.getItem('saveData');
+
+  const localSaveSlot = localStorage.getItem('characterSlot')
+
+  if (localSaveSlot!=1 && localSaveSlot!==undefined) datosGuardados = localStorage.getItem('saveData'+localSaveSlot);
+
+
+
   if (datosGuardados) { //checks if savedata available
     const parsedData = JSON.parse(datosGuardados);
 
@@ -2662,6 +2733,25 @@ function load() {
 
     //console.log(parsedData.savedItems)
     //itemInventory.push(...parsedData.savedItems);
+
+
+    if (localStorage.getItem('soulboundItems')!==null) {
+
+        console.log(localStorage.getItem('soulboundItems'))
+        let soulItemArray = localStorage.getItem('soulboundItems').split(',');
+
+        soulItemArray.forEach((item) => {
+            const soulItem = eval(item)
+            spawnItem(soulItem,1,"offline")
+          });
+
+    }
+    
+    
+    
+   
+
+
 
     if (parsedData.savedItems){
     for (const savedItem of parsedData.savedItems) {
@@ -2925,6 +3015,20 @@ function deleteSave() {
     location.reload();
 };
 
+
+function deleteSaveSlot(){
+
+
+
+
+    if (saveToDelete!==1) localStorage.removeItem('saveData'+saveToDelete);
+    else localStorage.removeItem('saveData');
+    location.reload();
+}
+
+
+
+
 stats.lastVisitTime = new Date().getTime()
 
 function exportJSON() {
@@ -2942,9 +3046,12 @@ function exportJSON() {
     save();
 
     
-    if (!localStorage.getItem('saveData')){ if (!did('importPopUp')) {createPopup('&#10060; No SaveData Found', '#913c3c', 'importPopUp')} } else {
+    //if (!localStorage.getItem('saveData')){ if (!did('importPopUp')) {createPopup('&#10060; No SaveData Found', '#913c3c', 'importPopUp')} } else {
     
-    const datosGuardados = localStorage.getItem('saveData');
+    let datosGuardados = localStorage.getItem('saveData');
+    if (localStorage.getItem('characterSlot')!=="1") datosGuardados = localStorage.getItem('saveData'+localStorage.getItem('characterSlot'));
+    
+
     const jsonData = JSON.parse(datosGuardados);
     
     const jsonStr = JSON.stringify(jsonData, null, 2);
@@ -2953,15 +3060,16 @@ function exportJSON() {
     
     const a = document.createElement("a");
     a.href = url;
-    a.download = "[BETA]-SuperSaveData-"+stats.currentVersion+".json";
+    a.download = `STI[B]${stats.currentVersion}-${stats.turtleName}.json`;
+
     a.click();
     URL.revokeObjectURL(url);
         
         
-    }
+    //}
 }
 
-function importJSON() {
+function importJSON(slot) {
     
     
     
@@ -2975,7 +3083,10 @@ function importJSON() {
             reader.onload = function(e) {
                 const importedData = JSON.parse(e.target.result);
                 const JSONData = JSON.stringify(importedData);
-                localStorage.setItem('saveData', JSONData);
+
+                if (slot!==1) localStorage.setItem('saveData'+slot, JSONData);
+                else localStorage.setItem('saveData', JSONData);
+                
                 location.reload();
             };
             reader.readAsText(file);
@@ -3091,7 +3202,6 @@ function startGameCard(mode){
     if (mode==="hard") {toggleSettings('hardmodeToggle');}
 
     playSound("audio/button5.mp3","all")
-    playSound("audio/lily.mp3","all")
 
 did("introPanel").style.height = "0%"
 
@@ -3202,7 +3312,7 @@ function retroactiveUpdate(){
     
 
 
-    stats.currentVersion = 1.052;
+    stats.currentVersion = 1.053;
     did("versionNumber").innerHTML = `📃 [BETA] ${stats.currentVersion.toFixed(3)}`
 }
 
@@ -3413,11 +3523,176 @@ function openFullscreen() {
 }
 
 
+function returnInactiveTime(lastvisit) {
+
+    const lastVisitTime = lastvisit
+    const currentTime = new Date().getTime();
+    const inactiveTime = currentTime - parseInt(lastVisitTime);
+    const secondsInactive = Math.min(  Math.floor(inactiveTime / 1000) , 259200 ); 
+    return convertSecondsToDHM(secondsInactive)
+
+}
+
+function introCharacterData(){
+
+    if (localStorage.getItem('loadIntro')!=="false") did("characterPanel").style.display = "flex"
+
+
+
+    saveSlotData("")
+    saveSlotData(2)
+    saveSlotData(3)
+    saveSlotData(4)
+    saveSlotData(5)
+
+
+    function saveSlotData(slot){
+
+
+        const character = localStorage.getItem('saveData'+slot);
+        if (character) {
+            const parsedData = JSON.parse(character);
+            did("saveSlot"+slot+"Delete").style.display = "flex"
+            
+            let offlineActivity = `Farming ${enemies[parsedData.savedStatsData.currentEnemy].name}s since ${returnInactiveTime(parsedData.savedStatsData.lastVisitTime)}`
+            if (parsedData.savedStatsData.canOffline===false) offlineActivity = `Doing nothing since ${returnInactiveTime(parsedData.savedStatsData.lastVisitTime)}`
+    
+            let portraitHat = ""
+            if (parsedData.savedPlayerData.hat!==undefined) portraitHat = `<img class="characterPortraitHead" src="img/src/hats/${parsedData.savedPlayerData.hat.img}.png" style="filter:hue-rotate(${parsedData.savedPlayerData.hat.paint}deg)">`
+    
+            did("saveSlot"+slot).innerHTML = `
+            <div class="saveSlotBg" style="background-image: url(img/src/areas/${parsedData.savedStatsData.currentArea}.png)"></div>
+            <div class="characterPortrait">
+            <img class="characterPortraitHead" src="img/src/armor/A0.png">
+            ${portraitHat}
+            </div>
+            <div class="characterInfo">
+            ${parsedData.savedStatsData.turtleName}
+            <br>
+            Started on ${parsedData.savedStatsData.startedSince}
+            <br>
+            ${offlineActivity}
+            </div>
+            `
+    
+        }
+
+
+
+
+
+
+    }
+
+
+    /*
+
+    const character = localStorage.getItem('saveData');
+    if (character) {
+        const parsedData = JSON.parse(character);
+        did("saveSlotDelete").style.display = "flex"
+        
+        let offlineActivity = `Farming ${enemies[parsedData.savedStatsData.currentEnemy].name}s since ${returnInactiveTime(parsedData.savedStatsData.lastVisitTime)}`
+        if (parsedData.savedStatsData.canOffline===false) offlineActivity = `Doing nothing since ${returnInactiveTime(parsedData.savedStatsData.lastVisitTime)}`
+
+        let portraitHat = ""
+        if (parsedData.savedPlayerData.hat!==undefined) portraitHat = `<img class="characterPortraitHead" src="img/src/hats/${parsedData.savedPlayerData.hat.img}.png" style="filter:hue-rotate(${parsedData.savedPlayerData.hat.paint}deg)">`
+
+        did("saveSlot").innerHTML = `
+        <div class="saveSlotBg" style="background-image: url(img/src/areas/${parsedData.savedStatsData.currentArea}.png)"></div>
+        <div class="characterPortrait">
+        <img class="characterPortraitHead" src="img/src/armor/A0.png">
+        ${portraitHat}
+        </div>
+        <div class="characterInfo">
+        ${parsedData.savedStatsData.turtleName}
+        <br>
+        Started on ${parsedData.savedStatsData.startedSince}
+        <br>
+        ${offlineActivity}
+        </div>
+        `
+
+    }
+
+    const character2 = localStorage.getItem('saveData2');
+    if (character2) {
+        const parsedData = JSON.parse(character2);
+        did("saveSlot2").innerHTML = parsedData.savedStatsData.turtleName
+        did("saveSlot2Delete").style.display = "flex"
+
+    }
+
+    const character3 = localStorage.getItem('saveData3');
+    if (character3) {
+        const parsedData = JSON.parse(character3);
+        did("saveSlot3").innerHTML = parsedData.savedStatsData.turtleName
+        did("saveSlot3Delete").style.display = "flex"
+
+    }
+
+    const character4 = localStorage.getItem('saveData4');
+    if (character4) {
+        const parsedData = JSON.parse(character4);
+        did("saveSlot4").innerHTML = parsedData.savedStatsData.turtleName
+        did("saveSlot4Delete").style.display = "flex"
+
+    }
+
+    const character5 = localStorage.getItem('saveData5');
+    if (character5) {
+        const parsedData = JSON.parse(character5);
+        did("saveSlot5").innerHTML = parsedData.savedStatsData.turtleName
+        did("saveSlot5Delete").style.display = "flex"
+
+    }
+
+    */
+
+}
+
+
+
+function selectCharacter(slot){
+
+
+
+
+playSound("audio/button3.mp3","all");
+playSound("audio/lily.mp3","all");
+
+setTimeout(() => {
+localStorage.setItem('characterSlot', slot);
+localStorage.setItem('loadIntro', false);
+location.reload();
+}, 500);
+
+
+
+
+
+
+}
+
+function gotoCharacters(){
+
+    save()
+    localStorage.setItem('characterSlot', undefined);
+    localStorage.setItem('loadIntro', true);
+    location.reload();
+
+
+}
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', initialization);
 
 function initialization() {
-    load();
+    if (localStorage.getItem('loadIntro')==="false" && localStorage.getItem('characterSlot')!==undefined  ) load(  localStorage.getItem('characterSlot')   )
     toggleSettingsUI();
     displayTurtleName();
     oneSecond();
@@ -3445,7 +3720,7 @@ function initialization() {
     weatherStartup();
 
     resolutionIncrease()
-
+    introCharacterData()
     
 }
 //#endregion

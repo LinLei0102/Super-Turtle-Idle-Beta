@@ -295,6 +295,7 @@ function spawnItem(id,amount,source){
   if (source?.startsWith("craft") && settings.disableCraftPopup) notification = false
   if (source==="noPopup") notification = false
   if (source==="offline") notification = false
+  if (source==="hidden") notification = false
 
 
   if (item.img===103) item.init() //hack for recipes. i hate this
