@@ -1539,7 +1539,7 @@ function sellSelectedItem(mode){
     for (let i = itemInventory.length - 1; i >= 0; i--) {
       let item = itemInventory[i];
   
-      if (item.selected === true && item.locked!==true) {
+      if (item.selected === true && item.locked!==true && item.index!==undefined) {
 
 
 
