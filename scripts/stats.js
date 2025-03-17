@@ -62,7 +62,7 @@ function returnQualityColor(quality){
   if (quality === "Collectible") return "#e6cc80"
   if (quality === "Quest") return "yellow"
   if (quality === "Upgrade") return "#00FFCA"
-  if (quality === "Soulbound") return "#B5DD7B"
+  if (quality === "Soulbound") return "#00C0FF"
 
   if (quality.startsWith("TA")) return rpgClass.TA0.color;
   if (quality.startsWith("TG")) return rpgClass.TG0.color;
@@ -122,7 +122,9 @@ function returnQualityName(quality) {
   if (quality === "Epic") return "Epic ✦✦✦"
   if (quality === "Mythic") return "Mythic ✦✦✦✦"
   if (quality === "Legendary") return "Legendary ✦✦✦✦✦"
-}
+  if (quality === "Soulbound") return "Soulbound ⚯"
+}  
+
 
 
 function returnGearPrice(i){

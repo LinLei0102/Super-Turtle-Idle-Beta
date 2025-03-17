@@ -141,6 +141,7 @@ function returnItemValue(item){
     if (item.quality === `Uncommon`) return 500 * multiplier
     if (item.quality === `Rare`) return 800 * multiplier
     if (item.quality === `Epic`) return 1000 * multiplier
+    if (item.quality === `Soulbound`) return 0
 }
 
 class Stackable extends Item {
@@ -3405,6 +3406,32 @@ class MysteriousPackage extends Key {
         this.name = `Mysterious Package`;
         this.flavor = `"No peeking!"`;
         this.quality = `Quest`;
+        this.img = 16;
+        this.value = function() { return 0 }
+        Object.assign(this, properties);
+    }
+}
+
+class SoulboundPackage extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Soulbound Package`;
+        this.flavor = `"No peeking!"`;
+        this.isStackable = false
+        this.quality = `Soulbound`;
+        this.img = 16;
+        this.value = function() { return 0 }
+        Object.assign(this, properties);
+    }
+}
+
+class SoulboundPackage2 extends Key {
+    constructor(properties = {}) {
+        super(properties);
+        this.name = `Soulbound Package 2`;
+        this.flavor = `"No peeking!"`;
+        this.isStackable = false
+        this.quality = `Soulbound`;
         this.img = 16;
         this.value = function() { return 0 }
         Object.assign(this, properties);

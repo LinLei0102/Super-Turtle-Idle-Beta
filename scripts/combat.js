@@ -254,6 +254,25 @@ let lumaCharge = 0
 
 setInterval(() => { // weapon damage * lumaCharge (min 0.1)
 
+  if (lumaCharge<10){
+    did("clickingPowerMeter").style.height = `${lumaCharge*10}%`
+    did("clickingPowerMeter").style.animation = "none"
+    did("clickingPowerGauge").style.animation = "none"
+    //console.log("a")
+
+  }
+
+  if (lumaCharge>10) {
+    if (did("clickingPowerMeter").style.height!="100%"){
+      did("clickingPowerMeter").style.height = `100%`
+      did("clickingPowerGauge").style.animation = "areaClick 0.3s 1,flash 0.2s 1"
+      did("clickingPowerMeter").style.animation = "backgroundRainbow 6s infinite linear"
+      playSound("audio/throw.mp3");
+      //console.log("e")
+    }
+ 
+  }
+
   if (lumaCharge>10) return
   lumaCharge+= 1
 
@@ -841,7 +860,6 @@ function updateCombatActions(){
     const fullAction = '<div></div>'
     let emtpyActionList = ""
 
-    console.log(combatActions) 
 
     function returnEmptyActionList(number){
 

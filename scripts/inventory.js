@@ -295,6 +295,7 @@ function spawnItem(id,amount,source){
   if (source?.startsWith("craft") && settings.disableCraftPopup) notification = false
   if (source==="noPopup") notification = false
   if (source==="offline") notification = false
+  if (source==="hidden") notification = false
 
 
   if (item.img===103) item.init() //hack for recipes. i hate this
@@ -1538,7 +1539,7 @@ function sellSelectedItem(mode){
     for (let i = itemInventory.length - 1; i >= 0; i--) {
       let item = itemInventory[i];
   
-      if (item.selected === true && item.locked!==true) {
+      if (item.selected === true && item.locked!==true && item.index!==undefined) {
 
 
 

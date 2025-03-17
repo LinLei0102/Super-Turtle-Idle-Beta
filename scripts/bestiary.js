@@ -106,7 +106,7 @@ function updateBestiary() {
     let dropDesc = "<span style='color:gray'>This enemy has no drops</span>"
 
     if ("lootTable" in enemies[currentBestiaryEntry]){
-      console.log("e")
+      //console.log("e")
       const returnedOdds = enemies[currentBestiaryEntry].lootTable()
       dropDesc = "";
       for (i in returnedOdds) {

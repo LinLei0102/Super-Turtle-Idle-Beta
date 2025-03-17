@@ -4766,13 +4766,23 @@ background: transparent;
 }
 
 #deleteData,#outdatedData  {
-    height: 60%;
-    width: 30%;
+    height: 95%;
+    width: 97%;
     text-align: center;
     overflow: visible;
     background: url(img/src/icons/bgPatternWarning.png), #111111;
-    animation: bgPatternDiagonal 200s infinite linear, gelatine 0.3s;
+    animation: bgPatternDiagonal 200s infinite linear, growFadeIn 0.2s;
     background-size: 20%;
+    outline: red solid 6px;
+    border: none;
+    display: flex;
+}
+
+#deleteDataCharacter{
+    font-size: 2rem;
+    margin-top: 1rem;
+    background: transparent;
+    color: coral;
 }
 
 #deleteData .settingsFlex, #outdatedData  .settingsFlex, #tipPanel .settingsFlex {
@@ -12093,6 +12103,53 @@ flex-shrink: 0;
     gap: 0.3rem;
 }
 
+#clickingPowerWrapper{
+    background: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0rem;
+    right: -3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    overflow: visible;
+    padding-right: 0.3rem;
+}
+
+#clickingPowerWrapper div{
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 20rem;
+    border: #363636 solid 3px;
+    background: gray;
+    margin: 0 -0.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+#clickingPowerWrapper div svg{
+    background: transparent;
+    color: white;
+
+}
+
+#clickingPowerMeter {
+    height: 100%;
+    width: 100%;
+    animation: backgroundRainbow 6s infinite linear;
+    position: absolute;
+    z-index: -1;
+    transition: 0.1s linear;
+    bottom: 0;
+    background: cadetblue;
+}
+
 
 #playerActionsWrapper{
     background: transparent;
@@ -12158,6 +12215,128 @@ flex-shrink: 0;
     z-index: 10;
     animation: growFadeIn 0.2s 1;
     border-radius: 0.3rem;
+}
+
+.saveSlot{
+    height: 5rem;
+    width: 30rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.3rem;
+    margin-bottom: 0.5rem;
+    color: white;
+    position: relative;
+    overflow: visible;
+    transition: 0.5s;
+    animation: growFadeIn 0.3s 1;
+}
+
+.saveSlot:hover{
+    scale: 1.1;
+    transition: 0.1s;
+}
+
+.saveSlot:active{
+    animation: areaClick 0.3s 1;
+
+}
+
+.saveSlotBg{
+    background-image: url(img/src/areas/A1.png);
+    background-size: 100%;
+    opacity: 0.3;
+    position: absolute;
+    height: 100%;
+    width:  100%;
+    left: 0;
+    z-index: 0;
+    
+}
+
+.saveSlotInside{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    justify-content: start;
+    align-items: center;
+    padding-left: 0.5rem;
+    background: transparent;
+}
+
+.characterPortraitHead{
+    position: absolute;
+    top: -70%;
+    left: -120%;
+}
+
+.characterPortrait{
+    height: 4rem;
+    width: 4rem;
+    background: #302B46;
+    border-radius: 0.2rem;
+    outline: white solid 2px;
+    margin-right: 0.5rem;
+    position: relative;
+}
+
+.characterInfo{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    z-index: 1;
+    background: transparent;
+}
+
+
+.saveSlotControls{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    top: 0;
+    right: -100%;
+    justify-content: start;
+    align-items: center;
+    background: transparent;
+    overflow: visible;
+    padding-left: 1rem;
+    gap: 1rem;
+}
+
+.saveSlot span{
+height: 3rem;
+width: 3rem;
+right: -4rem;
+z-index: 10000;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 0.4rem;
+background: #302B46;
+border: white solid 2px;
+outline: solid 3px #302B46;
+}
+
+
+.saveSlot span svg{
+    height: 150%;
+    color: white;
+    background: transparent;
+}
+
+.deleteSave{
+    background: rgb(255, 69, 69) !important;
+}
+
+.importSave, .deleteSave{
+    transition: 0.2s;
+}
+
+.importSave:hover, .deleteSave:hover{
+    scale: 1.1;
+
 }
 
 #lumaCharge{
