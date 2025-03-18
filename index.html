@@ -424,13 +424,12 @@
             <h2>General</h2>
             <h3>Save manually <strong style="color: rgb(85, 80, 80);">[Shortcut: "S"]</strong><button onclick="autosave(); playSound('audio/button1.mp3')">Save</button></h3>
             <h3 id="exportSave">Export save in a JSON file<button onclick="exportJSON(); playSound('audio/button1.mp3')">Export</button></h3>
-            <h3>Import JSON file <strong style="color: rgb(240, 92, 92);"> [⚠ Only import trusted saves!]</strong><button onclick="importJSON(); playSound('audio/button1.mp3')">Import</button></h3>
-            <h3 id="warningButton">Wipe all progress<button onclick="deleteSavePrompt();" style="background: #B23E3E;">DELETE</button></h3>
 
             <h2>Game Settings</h2>
             <h3>Game audio<button id="volumeSliderBox"><input type="range" id="volumeSlider" min="0" max="100" value="30" oninput="changeVolume()"></button></h3>
             <h3>Mute game<button id="disableAudio" onclick="toggleSettings('disableAudio')">OFF</button></h3>
             <h3>Disable autosave <strong style="color: rgb(85, 80, 80);"> (Autosaves every minute)</strong><button id="disableAutosave" onclick="toggleSettings('disableAutosave')">OFF</button></h3>
+            <h3>Disable tab refresh while afk<button id="disableAfkTimer" onclick="toggleSettings('disableAfkTimer')">OFF</button></h3>
             <h3>Colorblind Mode<button id="disableColorblind" onclick="toggleSettings('disableColorblind')">OFF</button></h3>
 
             <h2>Notifications</h2>

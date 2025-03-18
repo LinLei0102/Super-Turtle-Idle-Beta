@@ -11934,14 +11934,12 @@ flex-shrink: 0;
     align-items: center;
     height: 100%;
     width: 100%;
-    background: blue;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
+    background: transparent;
+    margin: 0rem;
     border-radius: 0.4rem;
     padding: 1rem;
-    background: #23232D;
     font-weight: 500;
-
+    
 }
 
 .statInfobox svg{

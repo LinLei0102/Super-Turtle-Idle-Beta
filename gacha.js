@@ -408,7 +408,7 @@ async function openGachaBox(){
 
     if (gachaBoxClicks<6) gachaBoxClicks++
 
-    console.log(gachaBoxClicks)
+    //console.log(gachaBoxClicks)
 
 
     const elementos = document.querySelectorAll('.gachaBox');
@@ -560,7 +560,7 @@ function updateHatInventory() {
       
       itemDiv.innerHTML = `${itemFavorite} ${itemSelected} <img style="filter:hue-rotate(${item.paint}deg)" src="img/src/hats/H${item.img}.jpg">`;
       itemDiv.className = "inventoryItem";
-      itemDiv.id = item.img
+      //itemDiv.id = item.img
       itemDiv.item = item; 
       itemDiv.tag = "hat"; 
       did("hatListing").appendChild(itemDiv);
@@ -597,9 +597,11 @@ function updateHatInventory() {
       
       itemDiv.innerHTML = `${itemFavorite} ${itemGlimmer} ${itemSelected} <img style="filter:hue-rotate(${item.paint}deg)" src="img/src/hats/H${item.img}.jpg">`;
       itemDiv.className = "inventoryItem";
-      itemDiv.id = item.img
+      //itemDiv.id = item.img
       itemDiv.item = item; 
       itemDiv.tag = "hat"; 
+      itemDiv.id = `IndexSlot`+index
+
       //item.div = itemDiv
       //item.index = index
 
@@ -645,6 +647,7 @@ function contextEquipHat(){ //called w context menu
 
 function sellSelectedHat(){ //called w context menu
 
+    if (contextSelectedItem.item.sort!=="Hat") return
  
     playSound("audio/use.mp3")
     playSound("audio/coins.mp3")
@@ -673,7 +676,7 @@ function sellSelectedHat(){ //called w context menu
 
 
 
-    const itemDiv = contextSelectedItem
+    const itemDiv = did(`IndexSlot`+contextSelectedItem.item.index);
     selectedItemRect = itemDiv.getBoundingClientRect();
     particleTrackers.push(new ParticleSellPulse());
 
