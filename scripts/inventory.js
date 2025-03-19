@@ -978,6 +978,7 @@ document.addEventListener('click', function(event) { //context menus
 
     const item = itemDiv.item;       
     contextSelectedItem = itemDiv
+    item.selected = true
 
 
     did("itemContextMenuButtonHatEquip").style.display = "flex"
