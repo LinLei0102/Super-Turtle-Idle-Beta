@@ -1542,6 +1542,8 @@ settingsPanel ("statsCard", "estadisticas");
 
 settingsPanel ("guideCard", "gameGuide");
 
+rpgPlayer.playerSeed = 0
+
 
 window.addEventListener('load', function () { //gets date started
     if (stats.startedSince === 0) {
@@ -1549,6 +1551,7 @@ window.addEventListener('load', function () { //gets date started
         did('botonGameGuide').style.animation = "newGameTip 1.5s infinite linear"
     }
     did('estadisticaStartDate').textContent = stats.startedSince;
+    if (rpgPlayer.playerSeed === 0) rpgPlayer.playerSeed = rng(10000,99999)
 });
 
 
@@ -2307,7 +2310,32 @@ function createPopup(inner,id) {
 }*/
 
 
+stats.afkTimer = 3600/100
+stats.afkMode = false
 
+setInterval(() => {
+
+
+
+    if (stats.afkMode) {did("afkDarken").style.display = "flex"}
+    
+
+    if (did("afkDarken").style.display === "none") stats.afkTimer = 3600/100
+
+    if (!document.hasFocus() && !settings.disableAfkTimer) stats.afkTimer--
+    if (document.hasFocus()) stats.afkMode = false
+
+    if (stats.afkTimer < 0 && did("afkDarken").style.display === "flex") {
+
+        stats.afkTimer = 3600/100
+        stats.afkMode = true
+        save()
+        location.reload();
+        
+    
+    }
+
+}, 1000*100);
 
 let popupQueue = Promise.resolve();
 
@@ -2316,6 +2344,8 @@ settings.disableTabPopup = false
 async function createPopup(inner, id,type) {
 
     if (settings.disableTabPopup && !document.hasFocus()) return
+
+    if (did("popupListing").childNodes.length>30) return
     
     await (popupQueue = popupQueue.then(async () => {
         const popupdiv = document.createElement('div');
@@ -2700,7 +2730,7 @@ function assignCharacterData(){
     const JSONData = JSON.stringify(saveData);
     const saveSlot = localStorage.getItem('characterSlot')
 
-    console.log("character saved in slot "+saveSlot)
+    //console.log("character saved in slot "+saveSlot)
 
     if (saveSlot==="1") localStorage.setItem('saveData', JSONData); 
     if (saveSlot==="2") localStorage.setItem('saveData2', JSONData); 
@@ -2737,7 +2767,7 @@ function load(slot) {
 
     if (localStorage.getItem('soulboundItems')!==null) {
 
-        console.log(localStorage.getItem('soulboundItems'))
+        //console.log(localStorage.getItem('soulboundItems'))
         let soulItemArray = localStorage.getItem('soulboundItems').split(',');
 
         soulItemArray.forEach((item) => {
@@ -3070,6 +3100,7 @@ function exportJSON() {
 }
 
 function importJSON(slot) {
+
     
     
     
@@ -3083,6 +3114,44 @@ function importJSON(slot) {
             reader.onload = function(e) {
                 const importedData = JSON.parse(e.target.result);
                 const JSONData = JSON.stringify(importedData);
+
+
+                const char1 = JSON.parse(localStorage.getItem('saveData')) || {};
+                const char2 = JSON.parse(localStorage.getItem('saveData2')) || {};
+                const char3 = JSON.parse(localStorage.getItem('saveData3')) || {};
+                const char4 = JSON.parse(localStorage.getItem('saveData4')) || {};
+                const char5 = JSON.parse(localStorage.getItem('saveData5')) || {};
+
+                            
+                if (
+                    !rpgPlayer.debug && importedData.savedPlayerData.playerSeed != undefined && (
+                        char1?.savedPlayerData?.playerSeed === importedData.savedPlayerData.playerSeed ||
+                        char2?.savedPlayerData?.playerSeed === importedData.savedPlayerData.playerSeed ||
+                        char3?.savedPlayerData?.playerSeed === importedData.savedPlayerData.playerSeed ||
+                        char4?.savedPlayerData?.playerSeed === importedData.savedPlayerData.playerSeed ||
+                        char5?.savedPlayerData?.playerSeed === importedData.savedPlayerData.playerSeed
+                    )
+                ) {
+                    
+                    setTimeout(() => {
+                        playSound("audio/close.mp3","all");
+                    }, 1000);
+
+                    createPopup("❌ This character is already present!")
+                    return
+                }
+
+
+
+
+
+
+
+
+
+
+
+
 
                 if (slot!==1) localStorage.setItem('saveData'+slot, JSONData);
                 else localStorage.setItem('saveData', JSONData);

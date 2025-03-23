@@ -978,6 +978,7 @@ document.addEventListener('click', function(event) { //context menus
 
     const item = itemDiv.item;       
     contextSelectedItem = itemDiv
+    item.selected = true
 
 
     did("itemContextMenuButtonHatEquip").style.display = "flex"
@@ -1436,7 +1437,7 @@ function reforgeSelectedItem(){
       if (invItem.prefixTier===3) {invItem.prefix1 = returnArrayPick(trinketPrefix1); invItem.prefix2 = returnArrayPick(miscPrefix2); invItem.prefix3 = returnArrayPick(miscPrefix3);}
     }
 
-    else if (invItem.slot==="Ring"){
+    else if (invItem.slot==="Ring" || invItem.slot==="Luma"){
       if (invItem.prefixTier===1) {invItem.prefix1 = returnArrayPick(miscPrefix1); }
       if (invItem.prefixTier===2) {invItem.prefix1 = returnArrayPick(miscPrefix1); invItem.prefix2 = returnArrayPick(miscPrefix2);}
       if (invItem.prefixTier===3) {invItem.prefix1 = returnArrayPick(miscPrefix1); invItem.prefix2 = returnArrayPick(miscPrefix2); invItem.prefix3 = returnArrayPick(miscPrefix3);}
@@ -2050,7 +2051,7 @@ document.addEventListener('mouseover', function(event) {
     let itemDiv = event.target.parentElement;
     let itemDivNoParent = event.target;
 
-    if (itemDiv.item || itemDivNoParent.item) {
+    if (itemDiv?.item || itemDivNoParent?.item) {
     let item = itemDiv.item; 
 
     if (itemDivNoParent && itemDivNoParent.item!==undefined) {

@@ -23,7 +23,7 @@ quests.A1QN1 = {
     difficulty: 1,
     icon: `img/src/items/I8.jpg`,
     description: `To all the turtles that venture into the wildlife, remember that <span style="color:orange;font-weight:600; font-size:1.2rem">clicking on enemies damages them!</span> While not very reliable, it will suffice if you are not armed!`,
-    objective: function() { return `Defeat a bunch of slugs by clicking on them <span class="questProgress">${beautify(enemies.E1.killCount)}/5</span>`},
+    objective: function() { return `Defeat a bunch of slugs by clicking on them <span class="questProgress">${beautify(enemies.E1.killCount)}/5</span><br><span style="color:gray">(Tip: Click when the meter on the right side of your health is full to deal more damage)</span>`},
     logic : function() {return enemies.E1.killCount>4},
     effect: function() {
         spawnItem(WoodenSword);
@@ -132,9 +132,9 @@ quests.A1QN8 = {
   objective: function() { return `Upgrade 2 pieces of equipment <span class="questProgress">${beautify(stats.upgradedItems)}/2</span>`},
   logic : function() {return stats.upgradedItems>1},
   effect: function() {
-      spawnItem(UpgradeMaterial1,5);
+      spawnItem(UpgradeMaterial1,10);
   },
-  reward: `${itemData(UpgradeMaterial1)} x5`
+  reward: `${itemData(UpgradeMaterial1)} x10`
 }
 
 quests.A1QN9 = {
@@ -210,12 +210,12 @@ quests.A1QN13 = {
 }
 
 quests.A1QN14 = {
-  name: 'Hare Control',
+  name: 'Squirrel Control',
   difficulty: 7,
   icon: `img/src/items/I69.jpg`,
-  description: `Giant boxing rabbits are leaking through the colliding dojo in the north. They simply reproduce too fast, and it\'s going to be an ecological tragedy`,
-  objective: function() { return `Defeat 10 Jabbits in Lost Dojo <span class="questProgress">${enemies.E5.killCount}/10</span> <span style="color:gray"><br>(Tip: Switch areas at any time by clicking the area name at the top of the screen)</span>`},
-  logic : function() {return enemies.E5.killCount>9},
+  description: `Bone-breaking squirrels are leaking through the colliding dojo in the north, and it\'s going to be an ecological tragedy`,
+  objective: function() { return `Defeat 5 Karateil in Lost Dojo <span class="questProgress">${enemies.E6.killCount}/5</span> <span style="color:gray"><br>(Tip: Switch areas at any time by clicking the area name at the top of the screen)</span>`},
+  logic : function() {return enemies.E6.killCount>4},
   effect: function() {
       spawnItem(ScrapMaterial2,2);
   },
@@ -245,9 +245,9 @@ quests.A2Q1 = {
   name: 'Blacksmith Request',
   difficulty: 1,
   icon: `img/src/items/I84.jpg`,
-  description: `We could use some help here in the mines, where the turtles yearn. Might teach you one or two secrets of the trade as a reward`,
-  objective: function() { return `Hand over 10 Copper Ore <span class="questProgress">${CopperOre.count}/10</span> <span style="color:gray"><br>(Tip: Herbs and ores can be gathered with a mattock)</span>`},
-  logic : function() {return CopperOre.count>9},
+  description: `We could use some help here in the mines, where the turtles yearn. Might teach you one or two secrets of the trade as a reward. Also, since youre here, might aswell help control the local hare population`,
+  objective: function() { return `Hand over 10 Copper Ore <span class="questProgress">${CopperOre.count}/10</span><br>Defeat 50 Jabbits <span class="questProgress">${enemies.E5.killCount}/50</span><span style="color:gray"><br>(Tip: Herbs and ores can be gathered with a mattock)</span>`},
+  logic : function() {return CopperOre.count>9 && enemies.E5.killCount>49},
   effect: function() {
       CopperOre.count-=10
       unlocks.crafting = true;

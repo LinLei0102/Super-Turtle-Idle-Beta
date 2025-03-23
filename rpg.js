@@ -609,7 +609,7 @@ function enemyUpdate() { //updates enemy HP and checks if enemy is dead
     
 
 
-    if (rpgPlayer.debug)console.log("defeated")
+    //if (rpgPlayer.debug)console.log("defeated")
 
 
     enemyIsDefeated = true
@@ -2181,7 +2181,7 @@ function rollTable(table, rolls, offline) { //droptable rolls
           if (items[dt].rarity===4) rareItemDrop(dt, Math.max(32000/Math.ceil(offline,1)));
           if (items[dt].rarity===5) rareItemDrop(dt, Math.max(64000/Math.ceil(offline,1)));
 
-          console.log(Math.max(4000/Math.ceil(offline,1)))
+          //console.log(Math.max(4000/Math.ceil(offline,1)))
 
 
         } else {
@@ -2265,7 +2265,7 @@ while ((match = regex.exec(enemies[stats.currentEnemy].drop)) !== null) {
       did(itemGot + "ItemOverlay").style.animation = "newItemGot 50s 1, useSkill 0.5s 1";
     }
 
-    console.log('PITY TRIGGERED! YOU WOULD HAD GOTTEN '+items[id].name+' BUT GOT INSTEAD '+items[itemGot].name)
+    //console.log('PITY TRIGGERED! YOU WOULD HAD GOTTEN '+items[id].name+' BUT GOT INSTEAD '+items[itemGot].name)
 
 
   } 
@@ -3159,9 +3159,6 @@ if (state!==undefined) rpgPlayer.debug = state
 
 if (rpgPlayer.debug) {
   console.log("surely youre just trying to debug the game :^)")
-  for (i in logs) logs[i].revealed=true
-
-
 } 
 
 if (!rpgPlayer.debug) did("debugPanel").style.display = "none"; else did("debugPanel").style.display = "flex"; 
@@ -5533,7 +5530,7 @@ function updateDailyPresents(){
 document.querySelectorAll('.dailyPresent').forEach(element => {
   element.onclick = function() {
 
-    console.log(eval("stats.cd"+element.id))
+    //console.log(eval("stats.cd"+element.id))
     if (eval("stats.cd"+element.id)>0) return
     particleTrackers.push(new ParticleSellPulse(mousePositionX, mousePositionY,{x:mousePositionX,y:mousePositionY}));
     eval("stats."+element.id+"Claimed = true")

@@ -120,8 +120,8 @@ class Equipable extends Item {
         if (this.prefix2 === "Runic") {statHidden.extraSkillMultishot += 1; }
         if (this.prefix2 === "Double") {statHidden.extraMultishot +=1; }
         if (this.prefix3 === "Ultimate") {statHidden.extraMultishot +=1; }
-        if (this.prefix3 === "Polychrome") {statHidden.extraMultishot } //missing skill multishot
-        if (this.prefix3 === "THE") {statHidden.extraSkillMultishot += 2; }
+        if (this.prefix3 === "Polychrome") {statHidden.extraSkillMultishot += 1; statHidden.extraMultishot +=1; }
+        if (this.prefix3 === "THE") {statHidden.extraSkillMultishot += 1; }
 
 
 
@@ -2772,14 +2772,14 @@ class WoodenShield extends ArmorOffhand {
         super(properties);
         this.name = `Tattered Wooden Shield`;
         this.flavor = `"Hope you dont mind splinters."`;
-        this.skillDescription = function() { return `+ 100 Max Health` };
+        this.skillDescription = function() { return `+ 70 Max Health` };
         this.img = 563;
         this.quality = `Common`;
 
         Object.assign(this, properties);
     }
     stats(){
-        stat.MaxHealth += 100
+        stat.MaxHealth += 70
     }
     receiveDamage(){
        this.uses--

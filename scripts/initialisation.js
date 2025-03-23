@@ -44,7 +44,8 @@ did("afkDarken").style.display = "flex"
 
   window.addEventListener("focus", function() {
 
-did("afkDarken").style.display = "none";
+    stats.afkMode = false
+    did("afkDarken").style.display = "none";
 
 
 const popupListing = document.getElementById('popupListing');

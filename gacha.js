@@ -408,7 +408,7 @@ async function openGachaBox(){
 
     if (gachaBoxClicks<6) gachaBoxClicks++
 
-    console.log(gachaBoxClicks)
+    //console.log(gachaBoxClicks)
 
 
     const elementos = document.querySelectorAll('.gachaBox');
@@ -560,7 +560,7 @@ function updateHatInventory() {
       
       itemDiv.innerHTML = `${itemFavorite} ${itemSelected} <img style="filter:hue-rotate(${item.paint}deg)" src="img/src/hats/H${item.img}.jpg">`;
       itemDiv.className = "inventoryItem";
-      itemDiv.id = item.img
+      //itemDiv.id = item.img
       itemDiv.item = item; 
       itemDiv.tag = "hat"; 
       did("hatListing").appendChild(itemDiv);
@@ -571,7 +571,6 @@ function updateHatInventory() {
 
         if (item.sort!=="Hat") return
   
-        item.index = index; 
 
   
       const itemDiv = document.createElement("div");
@@ -597,9 +596,17 @@ function updateHatInventory() {
       
       itemDiv.innerHTML = `${itemFavorite} ${itemGlimmer} ${itemSelected} <img style="filter:hue-rotate(${item.paint}deg)" src="img/src/hats/H${item.img}.jpg">`;
       itemDiv.className = "inventoryItem";
-      itemDiv.id = item.img
+      //itemDiv.id = item.img
       itemDiv.item = item; 
       itemDiv.tag = "hat"; 
+
+      item.index = index; 
+      item.selected = false; 
+
+      console.log(item.name + " " + item.index)
+
+      itemDiv.id = `IndexSlot`+index
+
       //item.div = itemDiv
       //item.index = index
 
@@ -642,12 +649,15 @@ function contextEquipHat(){ //called w context menu
 }
 
 
-
+/* replaced by a safer method below
 function sellSelectedHat(){ //called w context menu
 
+    if (contextSelectedItem.item.sort!=="Hat") return
  
     playSound("audio/use.mp3")
     playSound("audio/coins.mp3")
+    itemContextMenuBegone()
+
 
     if (rpgPlayer.hat.paint === contextSelectedItem.item.paint && rpgPlayer.hat.img === contextSelectedItem.item.img) rpgPlayer.hat = undefined
     contextSelectedItem.item.locked = undefined
@@ -673,15 +683,84 @@ function sellSelectedHat(){ //called w context menu
 
 
 
-    const itemDiv = contextSelectedItem
+    const itemDiv = did(`IndexSlot`+contextSelectedItem.item.index);
     selectedItemRect = itemDiv.getBoundingClientRect();
     particleTrackers.push(new ParticleSellPulse());
 
 
 
     equipHat()
-    itemContextMenuBegone()
     updateHatInventory()
+
+}
+*/
+
+function sellSelectedHat(){ //called w context menu
+
+
+    for (let i = itemInventory.length - 1; i >= 0; i--) {
+        const item = itemInventory[i];
+
+    
+    
+        if (item.selected === true && item.locked!==true && item.sort==="Hat") {
+
+
+            playSound("audio/use.mp3")
+            playSound("audio/coins.mp3")
+        
+        
+            if (rpgPlayer.hat?.paint === item.paint && rpgPlayer.hat?.img === item.img) rpgPlayer.hat = undefined
+            item.locked = undefined
+
+            const itemDiv = did(`IndexSlot`+item.index);
+            if (itemDiv!==null) selectedItemRect = itemDiv.getBoundingClientRect();
+            if (itemDiv!==null) particleTrackers.push(new ParticleSellPulse());
+        
+        
+        
+            if (item.quality==="Rare"){
+                rpgPlayer.sheddings += 400
+                createPopup('💎 Cosmetic sold for 400 Sheddings')
+            }
+            
+            else if (item.quality==="Epic"){
+                rpgPlayer.sheddings += 700
+                createPopup('💎 Cosmetic sold for 700 Sheddings')
+            }
+        
+            else{
+                rpgPlayer.sheddings += 150
+                createPopup('💎 Cosmetic sold for 150 Sheddings')
+            }
+        
+            itemInventory.splice(i, 1);
+        
+        
+        
+        
+        
+        
+            itemContextMenuBegone()
+            equipHat()
+            updateHatInventory()
+
+
+    
+    
+    
+    
+        }
+    
+    
+    
+    
+    
+    
+    }
+
+ 
+    
 
 }
 
